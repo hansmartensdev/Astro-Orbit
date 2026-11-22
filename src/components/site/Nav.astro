@@ -75,14 +75,24 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
 
     <div class="sw-nav__actions">
       {
-        /* The studio's number, one tap away on every page. The digits drop
-          on narrow screens and the handset stays. */
+        /* A call, one tap away on every page: the handset only, so the
+          number itself is not printed in the bar. */
       }
       <a class="sw-nav__phone" href={'tel:' + siteConfig.phoneHref}>
         <Icon name="fa6-solid:phone" aria-hidden="true" />
-        <span class="sw-nav__phone-number label-mono">{siteConfig.phone}</span>
         <span class="sr-only">Call {siteConfig.name}</span>
       </a>
+
+      {
+        /* Light / dark. Same pill and colour as the number, so it follows the
+          bar over media and into the open overlay. The icon shows the mode a
+          press switches to; the choice is stored, and an unset choice follows
+          the system (see the theme script in BaseLayout). */
+      }
+      <button class="sw-nav__theme" type="button" data-theme-toggle aria-label="Switch to dark mode">
+        <Icon class="sw-nav__theme-moon" name="fa6-solid:moon" aria-hidden="true" />
+        <Icon class="sw-nav__theme-sun" name="fa6-solid:sun" aria-hidden="true" />
+      </button>
 
       <button
         class="burger"
@@ -170,10 +180,6 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
         <a href={'mailto:' + siteConfig.email}>
           <Icon name="fa6-solid:envelope" aria-hidden="true" />
           {siteConfig.email}
-        </a>
-        <a href={'tel:' + siteConfig.phoneHref}>
-          <Icon name="fa6-solid:phone" aria-hidden="true" />
-          {siteConfig.phone}
         </a>
       </div>
       <div class="sw-menu__meta label-mono">
@@ -342,8 +348,9 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
   .sw-nav__phone {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    padding: 8px 12px;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
     border-radius: var(--radius-full);
     color: inherit;
     text-decoration: none;
@@ -360,9 +367,43 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     flex: none;
   }
 
-  .sw-nav__phone-number {
+  .sw-nav__theme {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    margin-left: -10px;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-full);
+    background: transparent;
     color: inherit;
-    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .sw-nav__theme:hover {
+    background: color-mix(in srgb, currentColor 10%, transparent);
+  }
+
+  .sw-nav__theme:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  .sw-nav__theme :global(svg) {
+    width: 15px;
+    height: 15px;
+  }
+
+  .sw-nav__theme :global(.sw-nav__theme-sun),
+  :global(.dark) .sw-nav__theme :global(.sw-nav__theme-moon) {
+    display: none;
+  }
+
+  :global(.dark) .sw-nav__theme :global(.sw-nav__theme-sun) {
+    display: block;
   }
 
   .burger {
@@ -674,18 +715,12 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
   }
 
   @media (max-width: 700px) {
-    .sw-nav__phone {
-      padding: 10px;
-    }
-
-    .sw-nav__phone-number {
-      display: none;
-    }
-
+    /* On a phone the sheet is as tall as what it holds, and its foot clears
+       the liquid edge, which overlaps the sheet by --edge-overlap: a fixed
+       share of the screen and a 36px foot left the location under it. */
     .sw-menu {
-      max-height: 70vh;
-      max-height: 70svh;
-      padding-bottom: 36px;
+      max-height: none;
+      padding-bottom: calc(var(--edge-overlap) + 20px);
     }
 
     .sw-menu__inner {
@@ -877,4 +912,29 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
 
   initNav();
   document.addEventListener('astro:after-swap', initNav);
+
+  // Theme toggle. Delegated from the document, so it survives page swaps
+  // without re-binding; the label is refreshed on every load and swap.
+  function syncThemeLabel() {
+    const dark = document.documentElement.classList.contains('dark');
+    document.querySelectorAll('[data-theme-toggle]').forEach((el) => {
+      el.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+    });
+  }
+
+  document.addEventListener('click', (event) => {
+    const target = event.target as Element | null;
+    if (!target?.closest('[data-theme-toggle]')) return;
+    const dark = !document.documentElement.classList.contains('dark');
+    document.documentElement.classList.toggle('dark', dark);
+    try {
+      localStorage.setItem('theme', dark ? 'dark' : 'light');
+    } catch {
+      /* private mode: the choice lasts for this page only */
+    }
+    syncThemeLabel();
+  });
+
+  syncThemeLabel();
+  document.addEventListener('astro:after-swap', syncThemeLabel);
 </script>

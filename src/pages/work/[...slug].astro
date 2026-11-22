@@ -89,7 +89,7 @@ const shots = feature && cover ? [{ src: cover, alt: coverAlt ?? title }, ...gal
 const half = Math.ceil(shots.length / 2);
 const bands = [
   { key: 'problem', label: 'THE PROBLEM', prose: challenge, shots: shots.slice(0, half) },
-  { key: 'solution', label: 'WHAT WE BUILT', prose: solution, shots: shots.slice(half) },
+  { key: 'solution', label: 'WHAT I BUILT', prose: solution, shots: shots.slice(half) },
 ].filter((band) => band.prose || band.shots.length > 0);
 
 const hasBuild = technologies.length > 0 || features.length > 0;
@@ -102,7 +102,7 @@ const nextImage = next.data.feature ?? next.data.cover;
   image={hero?.src}
   imageAlt={coverAlt ?? title}
   navContext={client ?? title}
-  navOverMedia={Boolean(hero)}
+  navOverMedia /* the hero is ink with or without a picture, so the bar reads light over it */
 >
   <article class="case">
     {/* --- hero: full-bleed, viewport tall, type over the picture -------- */}
@@ -120,7 +120,9 @@ const nextImage = next.data.feature ?? next.data.cover;
             fetchpriority="high"
           />
         ) : (
-          <Placeholder class="case__hero-img rounded-none" label={placeholder ?? title} />
+          <div class="case__hero-img">
+            <Placeholder class="h-full w-full rounded-none" invert label={placeholder ?? title} />
+          </div>
         )
       }
 

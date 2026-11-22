@@ -49,8 +49,8 @@ interface Props {
 const {
   src,
   poster,
-  title = 'Bold ideas, built to ship.',
-  blurb = 'Ideas, design and engineering under one roof — from the first sketch to the last deploy.',
+  title = 'Fast sites, built to last.',
+  blurb = 'Design and Astro development in one pair of hands, from the first sketch to the last deploy.',
   hold = '160vh',
   class: className,
 } = Astro.props;
@@ -182,7 +182,7 @@ const isStill = /\.(jpe?g|png|webp|avif|gif)(\?.*)?$/i.test(src);
 
   /* The headline shares its row with the blurb, and the shell stops growing
      at --shell-max while the section size keeps climbing to 116px. Past
-     ~1740px that pushed "Bold ideas, built to ship." onto two lines, which
+     ~1740px that pushed the headline onto two lines, which
      the ball's landing also relies on being one. 94px is the largest size
      the line fits at in the capped shell (924px next to the blurb). */
   .reel__head h2 {
