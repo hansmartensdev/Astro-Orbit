@@ -239,6 +239,7 @@ uniform float uCard;     // 1 = the picture is a work card at rest
 uniform vec3 uCardRest;  // grayscale, contrast, opacity of that rest look
 uniform vec3 uCardBg;    // the card's own backdrop, sRGB
 uniform vec3 uInk, uMid, uSilver, uBg, uBg2, uWarm, uCool;
+uniform vec3 uAccent;    // the ball's own colour (--hero-accent)
 
 varying vec2 vUv;
 
@@ -262,11 +263,13 @@ vec3 chrome(vec2 dq, float r) {
   vec3 L = normalize(KEY);
   float ndl = max(dot(n, L), 0.0);
   float fres = pow(1.0 - max(dot(n, v), 0.0), 5.0);
-  vec3 albedo = dropletColor(0.95);
+  // Glossy lacquer in the accent colour, matching the hero's stray droplet.
+  // Lifted a little so the lit side reads as the brand colour itself.
+  vec3 albedo = uAccent * 1.2;
   // The underside picks up the bright floor it floats over.
   float bounce = smoothstep(0.2, -1.0, n.y);
   vec3 diffuse = albedo * ((0.22 + 0.62 * ndl) + bounce * 0.3 * uBg);
-  vec3 spec = env(refl) * mix(0.05, 1.0, fres);
+  vec3 spec = env(refl) * mix(0.05, 1.0, fres) * 0.45;
   vec3 h = normalize(L + v);
   spec += pow(max(dot(n, h), 0.0), 160.0) * 0.7;
   return finish(diffuse + spec);
@@ -369,8 +372,9 @@ function makeColorReader(scope: HTMLElement) {
   };
 }
 
-function readPalette(read: ReturnType<typeof makeColorReader>): ScenePalette {
+function readPalette(read: ReturnType<typeof makeColorReader>): ScenePalette & { accent: Color } {
   return {
+    accent: read('var(--hero-accent, #f94c10)', '#f94c10'),
     ink: read('var(--hero-ink, var(--color-foreground))', '#0c1016'),
     mid: read('var(--hero-mid, var(--gray-500))', '#7a7f86'),
     silver: read('var(--hero-chrome, var(--gray-200))', '#e2e5e8'),
@@ -428,6 +432,7 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
     uInk: { value: new Color() },
     uMid: { value: new Color() },
     uSilver: { value: new Color() },
+    uAccent: { value: new Color() },
     uBg: { value: new Color() },
     uBg2: { value: new Color() },
     uWarm: { value: new Color() },
@@ -440,6 +445,7 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
     colors.uInk.value.copy(p.ink);
     colors.uMid.value.copy(p.mid);
     colors.uSilver.value.copy(p.silver);
+    colors.uAccent.value.copy(p.accent);
     colors.uBg.value.copy(p.bg);
     colors.uBg2.value.copy(p.bg2);
     colors.uWarm.value.copy(p.warm);

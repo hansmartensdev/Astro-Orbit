@@ -1,9 +1,9 @@
 {
-  "name": "southwell-media",
+  "name": "hansmartens-dev",
   "version": "0.1.0",
-  "description": "Southwell Astro Boilerplate - A production-ready starter template built on Astro 6 and Tailwind CSS v4",
+  "description": "Personal site of Hans Martens, Astro developer — hansmartens.dev",
   "type": "module",
-  "author": "Southwell Media",
+  "author": "Hans Martens",
   "license": "MIT",
   "keywords": [
     "astro",

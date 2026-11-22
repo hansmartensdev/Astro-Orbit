@@ -36,13 +36,13 @@ export const footerColumns: FooterColumn[] = [
     links: [
       {
         label: 'LinkedIn',
-        href: 'https://www.linkedin.com/in/michael-froseth/',
+        href: 'https://www.linkedin.com/in/hansmartensdev/',
         external: true,
         icon: 'fa6-brands:linkedin-in',
       },
       {
         label: 'GitHub',
-        href: 'https://github.com/southwellmedia-dev',
+        href: 'https://github.com/hansmartensdev',
         external: true,
         icon: 'fa6-brands:github',
       },

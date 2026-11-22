@@ -29,7 +29,12 @@
   --border-strong: rgb(12 16 22 / 0.18);
   --border-subtle: rgb(12 16 22 / 0.05);
 
-  /* The studio has no accent colour — ink is the primary. */
+  /* Ink is the primary. The one colour on the site is the droplet that falls
+     out of the hero and travels down the page (HeroScene.tsx, reel/morph.ts),
+     in Velocity's International Orange — the value of Velocity's own
+     --brand-500, written out because the brand ramp below is remapped to ink. */
+  --hero-accent: #f94c10;
+
   --primary: var(--ink-950);
   --primary-hover: var(--ink-800);
   --primary-foreground: var(--ice-100);

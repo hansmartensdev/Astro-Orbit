@@ -55,32 +55,29 @@ export interface SiteConfig {
 }
 
 const siteConfig: SiteConfig = {
-  name: 'Southwell Media',
+  name: 'Hans Martens',
   description:
-    'Southwell Media is a Dallas studio building original websites, apps and brands — no templates, no themes, shipped in weeks.',
-  url: SITE_URL || 'https://southwell.media',
+    'Hans Martens is an Astro developer based in Veghel, the Netherlands, building fast, original websites.',
+  url: SITE_URL || 'https://hansmartens.dev',
   ogImage: '/og-default.png',
-  author: 'Southwell Media',
-  email: 'hello@southwellmedia.com',
-  phone: '945-397-0408',
-  phoneHref: '+19453970408',
-  location: 'Dallas, TX',
-  mark: 'sw/',
+  author: 'Hans Martens',
+  email: 'hello@hansmartens.dev',
+  phone: '+31 6 5188 8008',
+  phoneHref: '+31651888008',
+  location: 'Veghel, the Netherlands',
+  mark: 'hm/',
   // TODO: add the street address to promote Organization schema to
   // LocalBusiness. Deliberately absent rather than guessed — a wrong postal
   // address in structured data is worse than none at all.
   // Feeds Organization.sameAs in the JSON-LD.
-  socialLinks: [
-    'https://www.linkedin.com/in/michael-froseth/',
-    'https://github.com/southwellmedia-dev',
-  ],
+  socialLinks: ['https://www.linkedin.com/in/hansmartensdev/', 'https://github.com/hansmartensdev'],
   verification: {
     google: GOOGLE_SITE_VERIFICATION,
     bing: BING_SITE_VERIFICATION,
   },
   branding: {
     logo: {
-      alt: 'Southwell Media',
+      alt: 'Hans Martens',
     },
     favicon: {
       svg: '/favicon.svg',
