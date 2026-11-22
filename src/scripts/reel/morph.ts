@@ -264,8 +264,8 @@ vec3 chrome(vec2 dq, float r) {
   float ndl = max(dot(n, L), 0.0);
   float fres = pow(1.0 - max(dot(n, v), 0.0), 5.0);
   // Glossy lacquer in the accent colour, matching the hero's stray droplet.
-  // Lifted so the body of the ball reads as the accent colour itself.
-  vec3 albedo = uAccent * 1.18;
+  // Lifted a little so the lit side reads as the brand colour itself.
+  vec3 albedo = uAccent * 1.2;
   // The underside picks up the bright floor it floats over.
   float bounce = smoothstep(0.2, -1.0, n.y);
   vec3 diffuse = albedo * ((0.22 + 0.62 * ndl) + bounce * 0.3 * uBg);
@@ -374,7 +374,7 @@ function makeColorReader(scope: HTMLElement) {
 
 function readPalette(read: ReturnType<typeof makeColorReader>): ScenePalette & { accent: Color } {
   return {
-    accent: read('var(--hero-accent, #ccf541)', '#ccf541'),
+    accent: read('var(--hero-accent, #a855f7)', '#a855f7'),
     ink: read('var(--hero-ink, var(--color-foreground))', '#0c1016'),
     mid: read('var(--hero-mid, var(--gray-500))', '#7a7f86'),
     silver: read('var(--hero-chrome, var(--gray-200))', '#e2e5e8'),
