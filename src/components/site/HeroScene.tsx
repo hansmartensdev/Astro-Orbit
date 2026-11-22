@@ -202,7 +202,9 @@ const marchFragment = /* glsl */ `
     float ndl = max(dot(n, L), 0.0);
     float fres = pow(1.0 - max(dot(n, v), 0.0), 5.0);
 
-    vec3 albedo = mix(dropletColor(tint), uAccent, accent);
+    // The accent is lifted a little so its lit side reads as the brand colour
+    // itself rather than a shaded version of it.
+    vec3 albedo = mix(dropletColor(tint), uAccent * 1.2, accent);
     // Bounce from the bright floor lifts the underside (and the reflection).
     float bounce = smoothstep(0.2, -1.0, n.y) * smoothstep(1.5, FLOOR_Y, p.y);
     vec3 diffuse = albedo * ((0.22 + 0.62 * ndl * sh) * ao + bounce * 0.35 * uBg);
@@ -486,7 +488,7 @@ function cssColor(scope: HTMLElement, expr: string, fallback: string): THREE.Col
  *   --hero-ink     darkest droplet / resolved slab   (--color-foreground)
  *   --hero-mid     mid droplet                        (--gray-500)
  *   --hero-chrome  brightest droplet                  (--gray-200)
- *   --hero-accent  the stray droplet that travels      (orange)
+ *   --hero-accent  the stray droplet that travels      (#f94c10)
  *   --hero-warm    key-light tint, floor tint         (white)
  *   --hero-cool    fill-light tint, backdrop top      (ice white)
  */
@@ -495,7 +497,7 @@ function readPalette(scope: HTMLElement): Palette {
     ink: cssColor(scope, 'var(--hero-ink, var(--color-foreground))', '#0c1016'),
     mid: cssColor(scope, 'var(--hero-mid, var(--gray-500))', '#7a7f86'),
     silver: cssColor(scope, 'var(--hero-chrome, var(--gray-200))', '#e2e5e8'),
-    accent: cssColor(scope, 'var(--hero-accent, #ff5a1f)', '#ff5a1f'),
+    accent: cssColor(scope, 'var(--hero-accent, #f94c10)', '#f94c10'),
     bg: cssColor(scope, 'var(--color-background-secondary)', '#e6ebef'),
     bg2: cssColor(scope, 'var(--color-background-tertiary)', '#d9dfe4'),
     warm: cssColor(scope, 'var(--hero-warm, #ffffff)', '#ffffff'),
