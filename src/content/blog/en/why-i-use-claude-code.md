@@ -23,6 +23,8 @@ While I build, I talk with Claude Code the whole time. We brainstorm first, then
 
 In another developer's theme, [Gothsec's Astro portfolio](https://github.com/Gothsec/Astro-portfolio), I found a canvas effect of flickering letters. I showed the code to Claude Code, and from it Claude built a new component for Astro Rocket: a field of letters in the theme's brand colours behind a call-to-action card, with a glass card on top to keep the text readable. We wrote a post about it on the Astro Rocket blog: [Add a LetterGlitch Effect to Astro 7](https://astrorocket.dev/blog/letter-glitch-astro-7).
 
+In August 2026 another user of Astro Rocket reported a performance problem with the component ([issue #646](https://github.com/hansmartensdev/Astro-Rocket/issues/646)). Claude Code solved it: the animation no longer runs while the effect is off screen, and the colours are no longer worked out again on every frame. The component works fine now.
+
 ## A fork grows into a new theme
 
 It starts with a fork. I fork a theme on GitHub, Velocity for example, and with Claude Code I build what I need for myself and the fork doesn't have. After a lot of work, the build has grown into a new theme of its own, and other developers use it for their websites.
