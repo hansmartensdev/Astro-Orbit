@@ -1,7 +1,7 @@
 ---
 import BlogLayout from '@/layouts/BlogLayout.astro';
 import { getCollection, render } from 'astro:content';
-import { coverPath } from '@/lib/og';
+import { coverIcon, coverPath } from '@/lib/og';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => {
@@ -33,6 +33,7 @@ const readingTime = Math.max(1, Math.round((post.body ?? '').split(/\s+/).filter
   slug={post.id}
   headings={post.data.toc ? headings : []}
   readingTime={readingTime}
+  icon={coverIcon(post.data.icon, post.data.tags)}
 >
   <Content />
 </BlogLayout>

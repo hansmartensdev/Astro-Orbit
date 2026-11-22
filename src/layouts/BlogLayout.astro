@@ -24,6 +24,8 @@ interface Props {
   slug?: string;
   /** The post's headings, for the table of contents (empty hides it). */
   headings?: MarkdownHeading[];
+  /** The cover's Lucide icon, for the hero's corner. */
+  icon?: string;
   /** Minutes to read, shown in the hero. */
   readingTime?: number;
 }
@@ -41,6 +43,7 @@ const {
   slug = '',
   headings = [],
   readingTime,
+  icon,
 } = Astro.props;
 
 // The same rule as the component: H2 + H3, at least three of them.
@@ -82,6 +85,7 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
     image={image}
     imageAlt={imageAlt}
     readingTime={readingTime}
+    icon={icon}
   />
 
   <article class="py-12">

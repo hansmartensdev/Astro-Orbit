@@ -140,7 +140,7 @@ const TAG_ICONS: [RegExp, string][] = [
 const DEFAULT_ICON = 'pen-line';
 
 let lucide: Record<string, { body: string }> | null = null;
-function lucideBody(name: string): string | undefined {
+export function lucideBody(name: string): string | undefined {
   if (!lucide) {
     const path = resolve(process.cwd(), 'node_modules/@iconify-json/lucide/icons.json');
     lucide = JSON.parse(readFileSync(path, 'utf8')).icons;
