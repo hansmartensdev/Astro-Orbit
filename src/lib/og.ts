@@ -11,86 +11,91 @@ export interface OGImageOptions {
   type?: 'website' | 'article';
 }
 
-// Load Inter font for OG images (Satori requires TTF/OTF, not WOFF2)
-// Bundled locally in public/fonts/ to avoid CDN dependency during builds
-let fontCache: ArrayBuffer | null = null;
+// Geist, the site's own face, as static instances (Satori reads TTF/OTF, not
+// WOFF2 or variable fonts). Made from @fontsource-variable/geist (SIL OFL).
+//
+// Read fresh for every image, as a standalone ArrayBuffer holding exactly the
+// file's bytes. On Vercel a cached, shared copy reached Satori as other data
+// ("Unsupported OpenType signature") and failed the build; a Buffer's .buffer
+// is the memory it lives in, not the file, and need not stay put. 64 KB per
+// image is nothing next to that.
+function loadFont(weight: 400 | 600): ArrayBuffer {
+  const file = readFileSync(resolve(process.cwd(), `public/fonts/geist-latin-${weight}-normal.ttf`));
+  const copy = new Uint8Array(file.byteLength);
+  copy.set(file);
+  return copy.buffer;
+}
 
-function loadFont(): ArrayBuffer {
-  if (!fontCache) {
-    const fontPath = resolve(process.cwd(), 'public/fonts/inter-latin-400-normal.ttf');
-    fontCache = readFileSync(fontPath).buffer as ArrayBuffer;
+/** Ink, ice and the violet accent, as plain values: Satori cannot read CSS variables. */
+const INK = '#0c1016';
+const ICE = '#eef2f4';
+const VIOLET = '#7c3aed';
+const VIOLET_ON_INK = '#8b5cf6';
+
+/**
+ * satori-html escapes interpolated text (& → &amp;) but hands the parsed tree
+ * to Satori without decoding it again, so an ampersand in a title would be
+ * drawn as "&amp;". Undo the escaping on every text node.
+ */
+type Node = string | { props?: { children?: Node | Node[] } } | null | undefined;
+function decodeText<T extends Node>(node: T): T {
+  if (typeof node === 'string') {
+    return node
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&amp;/g, '&') as T;
   }
-  return fontCache;
+  const children = node?.props?.children;
+  if (node?.props && children !== undefined) {
+    node.props.children = Array.isArray(children) ? children.map(decodeText) : decodeText(children);
+  }
+  return node;
 }
 
 export async function generateOGImage(options: OGImageOptions): Promise<Buffer> {
-  const { title, description, type = 'website' } = options;
-
-  const fontData = loadFont();
+  const { title, description } = options;
 
   const truncatedDescription = description
-    ? description.length > 120
-      ? description.slice(0, 117) + '...'
+    ? description.length > 130
+      ? description.slice(0, 127) + '…'
       : description
     : '';
+  const titleSize = title.length > 56 ? 56 : title.length > 34 ? 64 : 76;
 
-  // Create the OG image markup using satori-html
-  // Note: All divs must have explicit display property for Satori
-  // HTML elements must be in the template literal, not interpolated as strings
+  // A share card in the site's terms: ink, a violet glow rising from the
+  // bottom-right corner (the droplet's colour), the hm/ tile and name, the
+  // page's title and line, and the domain under a short violet rule.
+  // Note: every div needs an explicit display for Satori.
   const markup = html`
-    <div style="height: 100%; width: 100%; display: flex; flex-direction: column; background: #0c1016; padding: 60px 80px; font-family: 'Inter'; position: relative;">
-      <div style="display: flex; position: absolute; top: 0; left: 0; width: 8px; height: 100%; background: #eef2f4;"></div>
-      <div style="display: flex; flex-direction: column; justify-content: space-between; height: 100%; padding-left: 20px;">
-        <div style="display: flex; align-items: center;">
-          <div style="display: flex; padding: 8px 16px; background: rgba(238, 242, 244, 0.08); border: 1px solid rgba(238, 242, 244, 0.24); border-radius: 9999px; color: #c8d3d8; font-size: 14px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;">${type === 'article' ? 'Article' : 'Page'}</div>
+    <div style="height: 100%; width: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 64px 76px 60px; font-family: 'Geist'; background-color: ${INK}; background-image: radial-gradient(circle at 100% 100%, rgba(124, 58, 237, 0.55) 0%, rgba(124, 58, 237, 0.18) 38%, rgba(124, 58, 237, 0) 68%);">
+      <div style="display: flex; align-items: center; gap: 18px;">
+        <div style="display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; background: ${VIOLET}; border-radius: 14px;">
+          <span style="font-size: 23px; font-weight: 600; color: #ffffff; letter-spacing: -0.04em;">${siteConfig.mark}</span>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 24px;">
-          <div style="display: flex; font-size: ${title.length > 50 ? '48px' : '64px'}; font-weight: 700; color: #eef2f4; line-height: 1.2; letter-spacing: -0.04em;">${title}</div>
-          <div style="display: ${truncatedDescription ? 'flex' : 'none'}; font-size: 24px; color: #aebcc4; line-height: 1.5; max-width: 800px;">${truncatedDescription}</div>
-        </div>
-        <div style="display: flex; align-items: center; justify-content: space-between;">
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <div style="display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; background: #eef2f4; border-radius: 12px;">
-              <span style="font-size: 22px; font-weight: 700; color: #0c1016;">hm/</span>
-            </div>
-            <span style="font-size: 20px; font-weight: 600; color: #eef2f4;">${siteConfig.name}</span>
-          </div>
-          <span style="font-size: 16px; color: #6a737f;">${new URL(siteConfig.url).hostname}</span>
-        </div>
+        <span style="font-size: 30px; font-weight: 600; color: ${ICE}; letter-spacing: -0.02em;">${siteConfig.name}</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 22px;">
+        <div style="display: flex; font-size: ${titleSize}px; font-weight: 600; color: #ffffff; line-height: 1.08; letter-spacing: -0.035em; max-width: 1020px;">${title}</div>
+        <div style="display: ${truncatedDescription ? 'flex' : 'none'}; font-size: 27px; color: #aebcc4; line-height: 1.45; max-width: 900px;">${truncatedDescription}</div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 18px;">
+        <div style="display: flex; width: 44px; height: 4px; border-radius: 4px; background: ${VIOLET_ON_INK};"></div>
+        <span style="font-size: 23px; color: #8b97a1;">${new URL(siteConfig.url).hostname}</span>
       </div>
     </div>
   `;
 
   // Generate SVG with satori
+  decodeText(markup as unknown as Node);
   // @ts-expect-error satori-html VNode is compatible with satori
   const svg = await satori(markup, {
     width: 1200,
     height: 630,
     fonts: [
-      {
-        name: 'Inter',
-        data: fontData,
-        weight: 400,
-        style: 'normal',
-      },
-      {
-        name: 'Inter',
-        data: fontData,
-        weight: 500,
-        style: 'normal',
-      },
-      {
-        name: 'Inter',
-        data: fontData,
-        weight: 600,
-        style: 'normal',
-      },
-      {
-        name: 'Inter',
-        data: fontData,
-        weight: 700,
-        style: 'normal',
-      },
+      { name: 'Geist', data: loadFont(400), weight: 400, style: 'normal' },
+      { name: 'Geist', data: loadFont(600), weight: 600, style: 'normal' },
     ],
   });
 

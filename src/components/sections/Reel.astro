@@ -46,9 +46,9 @@ interface Props {
 const {
   title = 'Fast sites, built to last.',
   blurb = 'Design and Astro development in one pair of hands, from the first sketch to the last deploy.',
-  // Long enough to read the statement: the card opens over the first quarter,
-  // the words light up over the next half (READ_* in morph.ts).
-  hold = '300vh',
+  // Long enough to read the statement without dwelling: the card opens over
+  // the first fifth, the words light up over about a third (READ_* in morph.ts).
+  hold = '200vh',
   class: className,
 } = Astro.props;
 ---
@@ -143,6 +143,14 @@ const {
     font-size: clamp(46px, 4.2vw + 24px, 94px);
   }
 
+  /* On a phone it steps down with the rest of the section scale, under the
+     hero's H1 (see .display-section in southwell.css). */
+  @media (max-width: 700px) {
+    .reel__head h2 {
+      font-size: clamp(32px, 9vw, 46px);
+    }
+  }
+
   /* The empty slot the picture starts in. 5/12 of the shell, like the lead
      column of the grid below. It only defines a rectangle. */
   .reel__thumb {
@@ -210,7 +218,7 @@ const {
     opacity: 1;
     visibility: visible;
     transition:
-      opacity 0.6s var(--ease-sw) 0.1s,
+      opacity 0.3s var(--ease-sw),
       visibility 0s;
   }
 

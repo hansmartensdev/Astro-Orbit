@@ -74,16 +74,6 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     </div>
 
     <div class="sw-nav__actions">
-      {
-        /* A call, one tap away on every page: the handset only, so the
-          number itself is not printed in the bar. */
-      }
-      <a class="sw-nav__phone" href={'tel:' + siteConfig.phoneHref}>
-        <Icon name="fa6-solid:phone" aria-hidden="true" />
-        <span class="sr-only">Call {siteConfig.name}</span>
-      </a>
-
-
       <button
         class="burger"
         id="sw-nav-toggle"
@@ -164,7 +154,7 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     }
     <aside class="sw-menu__aside">
       <p class="sw-menu__blurb">
-        An Astro developer based in Veghel, the Netherlands, building fast, original websites.
+        An Astro developer based in Veghel, the Netherlands, building fast &amp; beautiful websites.
       </p>
       <div class="sw-menu__contact">
         <a href={'mailto:' + siteConfig.email}>
@@ -332,31 +322,6 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     align-items: center;
     gap: 18px;
   }
-
-  /* The number: a mono label with the handset, in the bar's current colour
-     so it follows the bar over media and into the open overlay. */
-  .sw-nav__phone {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    border-radius: var(--radius-full);
-    color: inherit;
-    text-decoration: none;
-    transition: background 0.3s ease;
-  }
-
-  .sw-nav__phone:hover {
-    background: color-mix(in srgb, currentColor 10%, transparent);
-  }
-
-  .sw-nav__phone :global(svg) {
-    width: 14px;
-    height: 14px;
-    flex: none;
-  }
-
 
   .burger {
     display: inline-flex;

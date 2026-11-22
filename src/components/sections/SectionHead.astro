@@ -9,12 +9,15 @@
  */
 interface Props {
   title: string;
+  /** The heading level: h1 when this header titles the page (About, Work,
+   *  Blog, Contact), h2 when it heads a section on a page that has one. */
+  as?: 'h1' | 'h2';
   blurb: string;
   id?: string;
   class?: string;
 }
 
-const { title, blurb, id, class: className } = Astro.props;
+const { title, blurb, id, as: Heading = 'h2', class: className } = Astro.props;
 ---
 
 <header
@@ -24,9 +27,9 @@ const { title, blurb, id, class: className } = Astro.props;
     className,
   ]}
 >
-  <h2 class="display-section m-0" id={id}>
+  <Heading class:list={['display-section m-0', Heading === 'h1' && 'sh__title--page']} id={id}>
     <span class="sh__mask"><span class="sh__word" data-reveal="rise">{title}</span></span>
-  </h2>
+  </Heading>
   <p
     class="text-foreground-secondary m-0 max-w-[380px] text-[18px] leading-[1.55] max-[800px]:text-base"
     data-reveal
@@ -37,6 +40,14 @@ const { title, blurb, id, class: className } = Astro.props;
 </header>
 
 <style>
+  /* A page title leads the phone scale, a step above the section heads on
+     the same page. Desktop keeps the shared size. */
+  @media (max-width: 700px) {
+    .sh__title--page {
+      font-size: clamp(38px, 11.2vw, 52px);
+    }
+  }
+
   /* Padded so the mask never shears a descender off the title. */
   .sh__mask {
     display: block;

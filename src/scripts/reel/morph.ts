@@ -140,15 +140,15 @@ export interface ReelMorph {
 // --- The timeline before the pin lives in handoff.ts (EXIT_*, FALL_END, REST_END).
 // --- The pinned hold, as fractions of the hold distance -----------------------
 /** The frame is fully open at this point of the hold. */
-const OPEN_SPAN = 0.25;
+const OPEN_SPAN = 0.22;
 /** The statement's words light up, first to last, over this stretch … */
-const READ_START = 0.27;
-const READ_END = 0.72;
+const READ_START = 0.24;
+const READ_END = 0.6;
 /** … it folds back into a ball over this one … */
-const CLOSE_START = 0.8;
-const CLOSE_END = 0.9;
+const CLOSE_START = 0.68;
+const CLOSE_END = 0.82;
 /** … and drops out from here. */
-const DROP_START = 0.92;
+const DROP_START = 0.85;
 /** Delivery ends when the lead card's centre reaches this viewport height … */
 const DELIVER_AT = 0.45;
 /** … or, if that comes first, when its top is this far below the fixed nav.
@@ -829,7 +829,7 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
       travel = 1;
       opacity = 1;
       geometry = 'frame';
-      const toCentre = smoothstep(0.74, CLOSE_START, f);
+      const toCentre = smoothstep(0.62, CLOSE_START, f);
       tx = lerp(thumbCx, fullCx, toCentre);
       ty = lerp(thumbCy, fullCy, toCentre);
       tr = lerp(landR, closeR, toCentre);
