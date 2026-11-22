@@ -162,7 +162,9 @@
     font-family: var(--font-display);
     font-weight: var(--display-weight);
     text-transform: var(--display-case);
-    font-size: clamp(46px, 4.2vw + 24px, 116px);
+    /* Capped under the hero's own cap, so a wide monitor never sets a section
+       head above the page's H1. */
+    font-size: clamp(46px, 4.2vw + 24px, 100px);
     line-height: 1;
     letter-spacing: var(--display-tracking);
   }
@@ -199,7 +201,7 @@
      sat above the hero headline on a 390px screen. */
   @media (max-width: 700px) {
     .display-section {
-      font-size: clamp(32px, 9vw, 46px);
+      font-size: clamp(28px, 9vw, 46px);
     }
 
     .display-service {
