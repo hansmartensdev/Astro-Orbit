@@ -179,12 +179,12 @@
        04 shade — slate green, glow from the bottom-left
      ------------------------------------------------------------------------- */
   /* The nav's contextual label — the client name after the wordmark slash.
-     The one place the site allows itself a hue, and it is the studio's own:
-     the spring green off southwellmedia.com. Darkened here so 22px at weight
-     300 still holds on ice. */
-  --nav-context: rgb(0 122 85);
-  /* The brand green itself, for use over a dark hero image or on ink. */
-  --nav-context-on-media: rgb(0 212 146);
+     The same orange as the droplet: Velocity's International Orange. On ice
+     it is the darker step (Velocity's --brand-600) so 22px at weight 300
+     still holds. */
+  --nav-context: oklch(53.2% 0.19 38);
+  /* The orange itself, for use over a dark hero image or on ink. */
+  --nav-context-on-media: var(--hero-accent);
 
   --service-white-bg: #ffffff;
   --service-white-fg: var(--ink-950);
@@ -323,7 +323,7 @@
   /* Service cards in dark: the pile inverts, and card 03 still breaks the
      pattern — it goes to ice while the others stay on ink. */
   /* Lifted so it holds up on ink at the same perceived weight. */
-  --nav-context: rgb(0 212 146);
+  --nav-context: var(--hero-accent);
 
   --service-white-bg: var(--ink-900);
   --service-white-fg: var(--ice-100);

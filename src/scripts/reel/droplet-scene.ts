@@ -258,7 +258,9 @@ void main() {
   // Vignette, filmic roll-off, grain, sRGB encode — as the hero does it.
   col *= 1.0 - 0.18 * smoothstep(0.45, 1.2, length(uv * vec2(0.8, 1.3)));
   col = finish(col);
-  col = clamp(col + (hash(gl_FragCoord.xy * 0.37) - 0.5) * 0.028, 0.0, 1.0);
+  // Dither of about one 8-bit step: keeps gradients smooth without a visible
+  // grain on the dark theme.
+  col = clamp(col + (hash(gl_FragCoord.xy * 0.37) - 0.5) * (1.5 / 255.0), 0.0, 1.0);
   fragColor = vec4(col, 1.0);
 }
 `;

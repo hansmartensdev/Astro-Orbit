@@ -79,6 +79,8 @@ const facts = [
 // The feature photograph leads the page the way it leads the card. The mockup
 // is not dropped — it becomes the first capture in the bands below.
 const hero = feature ?? cover;
+// The hero is ink with or without a picture, so the nav always reads light
+// over it (navOverMedia below).
 const shots = feature && cover ? [{ src: cover, alt: coverAlt ?? title }, ...gallery] : gallery;
 
 /* The written half of a case study, split across two bands. Most projects have
@@ -102,7 +104,7 @@ const nextImage = next.data.feature ?? next.data.cover;
   image={hero?.src}
   imageAlt={coverAlt ?? title}
   navContext={client ?? title}
-  navOverMedia /* the hero is ink with or without a picture, so the bar reads light over it */
+  navOverMedia
 >
   <article class="case">
     {/* --- hero: full-bleed, viewport tall, type over the picture -------- */}

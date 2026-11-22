@@ -1,10 +1,7 @@
 ---
 /**
- * Lab index
+ * Blog index
  * URL: /blog
- *
- * "Lab" is what the studio calls its writing; the route stays /blog so the
- * RSS feed, sitemap entries and Pagefind index keep their addresses.
  *
  * The listing is an editorial list rather than Velocity's card grid — the
  * identity is built on big type and hairline rules, not cards.
@@ -25,13 +22,13 @@ const postUrl = (id: string) => '/blog/' + id.replace('en/', '');
 ---
 
 <SiteLayout
-  title="Lab"
-  description="Notes from the studio — what we are building, and what we learned building it."
+  title="Blog"
+  description="Notes on Astro, web performance and building fast websites, by Hans Martens."
 >
   <header class="shell pt-[180px] max-[800px]:pt-[130px]">
     <SectionHead
-      title="Lab"
-      blurb="Notes from the studio — what we are building, and what we learned building it."
+      title="Blog"
+      blurb="Notes on Astro, web performance and building fast websites: what I'm working on, and what I learn along the way."
     />
   </header>
 
@@ -43,7 +40,7 @@ const postUrl = (id: string) => '/blog/' + id.replace('en/', '');
       id="lab-search-input"
       type="search"
       autocomplete="off"
-      placeholder="Search the lab"
+      placeholder="Search the blog"
       class="mt-3 w-full max-w-[560px] border-0 border-b border-border bg-transparent pb-4 text-[clamp(1.25rem,2.4vw,1.75rem)] tracking-[-0.03em] outline-none placeholder:text-foreground-subtle focus:border-foreground"
     />
   </div>
