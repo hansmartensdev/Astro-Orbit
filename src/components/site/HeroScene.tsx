@@ -421,11 +421,12 @@ const compositeFragment = /* glsl */ `
     // Vignette, filmic roll-off, grain, sRGB encode.
     col *= 1.0 - 0.2 * smoothstep(0.4, 1.15, length(uv * vec2(0.8, 1.3)));
     col = clamp((col * (2.51 * col + 0.03)) / (col * (2.43 * col + 0.59) + 0.14), 0.0, 1.0);
-    // Fine static grain, in place of the CSS feTurbulence layer that used to
-    // blend over the canvas — a mix-blend-mode layer over a live canvas is
-    // recomposited every frame. Per pixel and still, so it reads as paper.
-    col = clamp(col + (hash(gl_FragCoord.xy * 0.37) - 0.5) * 0.028, 0.0, 1.0);
     col = pow(col, vec3(1.0 / 2.2));
+    // Dither, after the sRGB encode: about one 8-bit step, enough to keep the
+    // wide gradients from banding without being seen. Added before the encode
+    // (as it was), the curve multiplied it near black into a coarse speckle
+    // that read as carpet on the dark theme.
+    col = clamp(col + (hash(gl_FragCoord.xy * 0.37) - 0.5) * (1.5 / 255.0), 0.0, 1.0);
 
     fragColor = vec4(col, 1.0);
   }

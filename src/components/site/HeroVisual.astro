@@ -124,6 +124,13 @@ const { class: className, quiet = false } = Astro.props;
     pointer-events: none;
   }
 
+  /* On the dark theme an overlay grain reads as texture rather than film, so
+     it is kept to a whisper there. (Only seen before the scene is up, or
+     without WebGL.) */
+  :global(.dark) .hv__grain {
+    opacity: 0.03;
+  }
+
   /* Once the WebGL scene is up it carries its own grain in-shader; a blended
      layer over a live canvas would be recomposited every frame for nothing. */
   .hv:has(.hero-scene.is-ready) .hv__grain {
