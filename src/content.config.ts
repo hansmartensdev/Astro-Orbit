@@ -19,6 +19,8 @@ const blog = defineCollection({
       category: z.string().optional(),
       draft: z.boolean().default(false),
       featured: z.boolean().default(false),
+      /** Set false to hide the table of contents on this post. */
+      toc: z.boolean().default(true),
       /** The cover's icon: any Lucide name (lucide.dev/icons). Without it,
        *  one is picked from the tags. See generateBlogCover in lib/og.ts. */
       icon: z.string().optional(),

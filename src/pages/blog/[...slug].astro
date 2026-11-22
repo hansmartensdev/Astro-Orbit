@@ -15,7 +15,7 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 ---
 
 <BlogLayout
@@ -29,6 +29,7 @@ const { Content } = await render(post);
   cover={coverPath(post.id.replace(/^en\//, ''))}
   tags={post.data.tags}
   slug={post.id}
+  headings={post.data.toc ? headings : []}
 >
   <Content />
 </BlogLayout>

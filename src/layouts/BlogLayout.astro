@@ -7,6 +7,8 @@ import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
 import ArticleHero from '@/components/blog/ArticleHero.astro';
 import ShareButtons from '@/components/blog/ShareButtons.astro';
 import RelatedPosts from '@/components/blog/RelatedPosts.astro';
+import TableOfContents from '@/components/blog/TableOfContents.astro';
+import type { MarkdownHeading } from 'astro';
 
 interface Props {
   title: string;
@@ -20,6 +22,8 @@ interface Props {
   cover?: string;
   tags?: string[];
   slug?: string;
+  /** The post's headings, for the table of contents (empty hides it). */
+  headings?: MarkdownHeading[];
 }
 
 const {
@@ -33,7 +37,11 @@ const {
   cover,
   tags = [],
   slug = '',
+  headings = [],
 } = Astro.props;
+
+// The same rule as the component: H2 + H3, at least three of them.
+const hasToc = headings.filter((h) => h.depth >= 2 && h.depth <= 3).length >= 3;
 
 const ogImage = image?.src || cover || `/og${Astro.url.pathname.replace(/\/$/, '')}.png`;
 
@@ -75,9 +83,17 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
   />
 
   <article class={`py-12 ${image ? 'pt-24' : ''}`}>
-    <div class="mx-auto max-w-4xl px-6">
+    <div class:list={['mx-auto px-6', hasToc ? 'max-w-4xl xl:max-w-7xl' : 'max-w-4xl']}>
+      <div class:list={[hasToc && 'xl:grid xl:grid-cols-[minmax(0,1fr)_16rem] xl:gap-14']}>
+      <div class="min-w-0 xl:max-w-4xl">
       <!-- Breadcrumbs -->
       <Breadcrumbs items={breadcrumbs} class="mb-8" />
+
+      {hasToc && (
+        <div class="mb-10 xl:hidden">
+          <TableOfContents headings={headings} collapsible />
+        </div>
+      )}
 
       <!-- Article Content -->
       <div
@@ -113,6 +129,14 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
           <ShareButtons title={title} url={fullUrl} />
         </div>
       </footer>
+      </div>
+
+      {hasToc && (
+        <aside class="hidden xl:block">
+          <TableOfContents headings={headings} sticky />
+        </aside>
+      )}
+      </div>
     </div>
   </article>
 
