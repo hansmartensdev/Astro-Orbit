@@ -70,8 +70,7 @@ const siteConfig: SiteConfig = {
   // LocalBusiness. Deliberately absent rather than guessed — a wrong postal
   // address in structured data is worse than none at all.
   // Feeds Organization.sameAs in the JSON-LD.
-  // GitHub and LinkedIn to come.
-  socialLinks: [],
+  socialLinks: ['https://www.linkedin.com/in/hansmartensdev/', 'https://github.com/hansmartensdev'],
   verification: {
     google: GOOGLE_SITE_VERIFICATION,
     bing: BING_SITE_VERIFICATION,
