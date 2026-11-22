@@ -1,0 +1,291 @@
+---
+/**
+ * Table of Contents
+ *
+ * Ported from Astro Rocket (hansmartensdev/Astro-Rocket), Hans's own Velocity
+ * theme, onto this site: the violet accent instead of Rocket's brand scale,
+ * plain English labels (no i18n here) and astro-icon glyphs.
+ *
+ * Built from the post's Markdown headings. Renders nothing below
+ * `minHeadings` headings, so short posts stay uncluttered.
+ *
+ * - Server-rendered; the only script is the scroll-spy and the collapsed
+ *   card's close-then-jump.
+ * - `sticky`: the sidebar card on wide screens, highlighting the section
+ *   being read.
+ * - `collapsible`: a closed card on narrower screens (native details /
+ *   summary) with a Show/Hide hint; a link folds it before jumping, so the
+ *   landing is exact.
+ */
+import type { MarkdownHeading } from 'astro';
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  headings: MarkdownHeading[];
+  /** Deepest level to include (2 = H2 only, 3 = H2 + H3, 4 = H2 + H3 + H4). */
+  maxDepth?: 2 | 3 | 4;
+  /** Minimum headings before the TOC renders at all. */
+  minHeadings?: number;
+  /** When true, the card sticks below the header in its column. */
+  sticky?: boolean;
+  /** The collapsed-card variant for small screens. */
+  collapsible?: boolean;
+}
+
+const { headings, maxDepth = 3, minHeadings = 3, sticky = false, collapsible = false } = Astro.props;
+
+// A closed card must name its contents; an always-visible list only needs a label.
+const tocTitle = collapsible ? 'Table of contents' : 'On this page';
+
+const items = headings.filter((h) => h.depth >= 2 && h.depth <= maxDepth);
+const shouldRender = items.length >= minHeadings;
+// Unique per instance: the sidebar and the collapsed card mount on the same
+// page, and duplicate ids would be invalid and break aria-labelledby.
+const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
+---
+
+{
+  shouldRender &&
+    (() => {
+      const Wrapper = collapsible ? 'details' : 'nav';
+      return (
+        <Wrapper
+          class:list={['toc not-prose', !collapsible && 'p-5', sticky && 'toc-sticky']}
+          aria-labelledby={collapsible ? undefined : headingId}
+          data-toc
+        >
+          {collapsible ? (
+            <summary class="toc__summary">
+              <Icon name="lucide:list" class="toc__icon" aria-hidden="true" />
+              {tocTitle}
+              <span class="toc-hint">
+                <span class="toc-hint-show">Show</span>
+                <span class="toc-hint-hide">Hide</span>
+                <Icon name="lucide:chevron-down" class="toc-chevron" aria-hidden="true" />
+              </span>
+            </summary>
+          ) : (
+            <p id={headingId} class="toc__title">
+              <Icon name="lucide:list" class="toc__icon" aria-hidden="true" />
+              {tocTitle}
+            </p>
+          )}
+          <ul class:list={['toc__list', collapsible && 'toc__list--card']}>
+            {items.map((h) => (
+              <li style={`padding-left: ${(h.depth - 2) * 0.875}rem`}>
+                <a
+                  href={`#${h.slug}`}
+                  data-toc-link={h.slug}
+                  class:list={['toc-link', collapsible ? 'py-1.5' : 'py-1']}
+                >
+                  {h.text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </Wrapper>
+      );
+    })()
+}
+
+<style>
+  .toc {
+    border: 1px solid rgb(124 58 237 / 0.35);
+    border-radius: 14px;
+    background: var(--color-background-elevated, #fff);
+  }
+
+  .toc__title,
+  .toc__summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-foreground);
+  }
+
+  .toc__title {
+    margin-bottom: 12px;
+  }
+
+  .toc__summary {
+    padding: 20px;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .toc__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .toc :global(.toc__icon) {
+    width: 16px;
+    height: 16px;
+    color: var(--hero-accent, #7c3aed);
+  }
+
+  .toc-hint {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-foreground-muted);
+  }
+
+  .toc :global(.toc-chevron) {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.2s ease;
+  }
+
+  .toc__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-left: 2px solid var(--color-border);
+    font-size: 14px;
+  }
+
+  .toc__list > li + li {
+    margin-top: 6px;
+  }
+
+  .toc__list--card {
+    margin: 0 20px 20px;
+  }
+
+  .toc-link {
+    display: block;
+    margin-left: -2px;
+    padding-left: 12px;
+    border-left: 2px solid transparent;
+    color: var(--color-foreground-muted);
+    text-decoration: none;
+    transition:
+      color 0.2s ease,
+      border-color 0.2s ease;
+  }
+
+  .toc-link:hover {
+    color: var(--color-foreground);
+    border-left-color: var(--hero-accent, #7c3aed);
+  }
+
+  /* The section being read: the violet rule and full ink. */
+  .toc-link[data-active='true'] {
+    color: var(--color-foreground);
+    border-left-color: var(--hero-accent, #7c3aed);
+    font-weight: 500;
+  }
+
+  /* Sticky sidebar: clears the fixed header and scrolls itself if long. */
+  .toc-sticky {
+    position: sticky;
+    top: calc(var(--sw-nav-h, 84px) + 24px);
+    max-height: calc(100vh - var(--sw-nav-h, 84px) - 48px);
+    overflow-y: auto;
+  }
+
+  details[data-toc][open] :global(.toc-chevron) {
+    transform: rotate(180deg);
+  }
+
+  .toc-hint-hide {
+    display: none;
+  }
+
+  details[data-toc][open] .toc-hint-show {
+    display: none;
+  }
+
+  details[data-toc][open] .toc-hint-hide {
+    display: inline;
+  }
+</style>
+
+<script>
+  // Scroll-spy and the collapsed card's jump. Re-run on every page load, as
+  // the site keeps a ClientRouter.
+  function initToc() {
+    const tocs = document.querySelectorAll<HTMLElement>('[data-toc]');
+    for (const toc of tocs) {
+      if (toc.dataset.tocReady) continue;
+      toc.dataset.tocReady = 'true';
+
+      const links = Array.from(toc.querySelectorAll<HTMLAnchorElement>('[data-toc-link]'));
+      const headings = links
+        .map((a) => document.getElementById(a.dataset.tocLink!))
+        .filter((el): el is HTMLElement => el !== null);
+
+      // The collapsed card folds before the jump, or the open panel above the
+      // target makes the landing short. Caught on the window in the capture
+      // phase, ahead of the site's smooth-scroll handler on the document, so
+      // the scroll is measured against the folded layout.
+      if (toc.tagName === 'DETAILS') {
+        window.addEventListener(
+          'click',
+          (event) => {
+            const link = (event.target as Element | null)?.closest<HTMLAnchorElement>('[data-toc-link]');
+            if (!link || !toc.contains(link)) return;
+            event.preventDefault();
+            toc.removeAttribute('open');
+            const slug = link.dataset.tocLink!;
+            requestAnimationFrame(() => {
+              const target = document.getElementById(slug);
+              if (!target) return;
+              history.pushState(null, '', `#${slug}`);
+              const lenis = window.__lenis;
+              const nav = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sw-nav-h'));
+              if (lenis) lenis.scrollTo(target, { offset: -((nav || 84) + 24) });
+              else target.scrollIntoView();
+            });
+          },
+          true
+        );
+      }
+
+      if (headings.length === 0) continue;
+
+      let active = '';
+      const setActive = (slug: string) => {
+        if (slug === active) return;
+        active = slug;
+        let activeLink: HTMLAnchorElement | null = null;
+        for (const a of links) {
+          const on = a.dataset.tocLink === slug;
+          a.dataset.active = on ? 'true' : 'false';
+          if (on) activeLink = a;
+        }
+        // Keep the active link in view when the sticky card scrolls itself.
+        if (activeLink && toc.scrollHeight > toc.clientHeight) {
+          const link = activeLink.getBoundingClientRect();
+          const box = toc.getBoundingClientRect();
+          const pad = 12;
+          const delta =
+            link.top < box.top + pad ? link.top - box.top - pad : link.bottom > box.bottom - pad ? link.bottom - box.bottom + pad : 0;
+          if (delta) toc.scrollBy({ top: delta, behavior: 'smooth' });
+        }
+      };
+
+      const io = new IntersectionObserver(
+        (entries) => {
+          // The topmost heading crossing the upper part of the viewport,
+          // from the entries' own cached rects (no forced reflow).
+          const visible = entries
+            .filter((e) => e.isIntersecting)
+            .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+          if (visible[0]?.target.id) setActive(visible[0].target.id);
+        },
+        { rootMargin: '-96px 0px -70% 0px', threshold: 0 }
+      );
+      for (const h of headings) io.observe(h);
+    }
+  }
+
+  initToc();
+  document.addEventListener('astro:page-load', initToc);
+</script>

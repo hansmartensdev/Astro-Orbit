@@ -980,3 +980,9 @@
     visibility: visible;
   }
 }
+
+/* Article headings clear the fixed nav when a table-of-contents link (or
+   any #anchor) jumps to them. */
+[data-pagefind-body] :is(h2, h3, h4) {
+  scroll-margin-top: calc(var(--sw-nav-h, 84px) + 24px);
+}

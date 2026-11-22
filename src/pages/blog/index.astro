@@ -11,6 +11,7 @@ import SectionHead from '@/components/sections/SectionHead.astro';
 import Cta from '@/components/sections/Cta.astro';
 import { getCollection } from 'astro:content';
 import { formatDate } from '@/lib/utils';
+import { coverPath } from '@/lib/og';
 
 const posts = (
   await getCollection('blog', ({ data }) => (import.meta.env.PROD ? data.draft !== true : true))
@@ -35,46 +36,62 @@ const postUrl = (id: string) => '/blog/' + id.replace('en/', '');
 
   <!-- Pagefind search. Hidden until the index is confirmed present, so it
        never shows up broken in `astro dev`, where no index has been built. -->
-  <div class="mt-16 shell max-[800px]:mt-10" id="lab-search" hidden>
+  <div class="shell mt-16 max-[800px]:mt-10" id="lab-search" hidden>
     <label class="label-mono text-foreground-muted" for="lab-search-input">SEARCH</label>
     <input
       id="lab-search-input"
       type="search"
       autocomplete="off"
       placeholder="Search the blog"
-      class="mt-3 w-full max-w-[560px] border-0 border-b border-border bg-transparent pb-4 text-[clamp(1.25rem,2.4vw,1.75rem)] tracking-[-0.03em] outline-none placeholder:text-foreground-subtle focus:border-foreground"
+      class="border-border placeholder:text-foreground-subtle focus:border-foreground mt-3 w-full max-w-[560px] border-0 border-b bg-transparent pb-4 text-[clamp(1.25rem,2.4vw,1.75rem)] tracking-[-0.03em] outline-none"
     />
   </div>
 
-  <section class="mt-14 shell max-[800px]:mt-10">
+  <section class="shell mt-14 max-[800px]:mt-10">
     <ul class="m-0 list-none p-0" id="lab-results" hidden></ul>
 
     <ul class="m-0 list-none p-0" id="lab-list">
       {
         posts.map((post) => (
-          <li class="border-t border-border last:border-b" data-reveal>
-            <a class="group block py-10 max-[800px]:py-7" href={postUrl(post.id)}>
-              <span class="label-mono text-foreground-muted">
-                {formatDate(post.data.publishedAt).toUpperCase()}
-              </span>
+          <li class="border-border border-t last:border-b" data-reveal>
+            <a
+              class="group grid grid-cols-[minmax(0,1fr)_minmax(0,360px)] items-center gap-12 py-10 max-[800px]:grid-cols-1 max-[800px]:gap-6 max-[800px]:py-7"
+              href={postUrl(post.id)}
+            >
+              <div class="max-[800px]:order-2">
+                <span class="label-mono text-foreground-muted">
+                  {formatDate(post.data.publishedAt).toUpperCase()}
+                </span>
 
-              <h2 class="font-display [text-transform:var(--display-case)] mt-4 mb-0 text-[clamp(1.75rem,4.4vw,3.25rem)] leading-[1.05] font-semibold tracking-[var(--display-tracking)] transition-opacity group-hover:opacity-60">
-                {post.data.title}
-              </h2>
+                <h2 class="font-display mt-4 mb-0 text-[clamp(1.75rem,4.4vw,3.25rem)] leading-[1.05] font-semibold tracking-[var(--display-tracking)] [text-transform:var(--display-case)] transition-opacity group-hover:opacity-60">
+                  {post.data.title}
+                </h2>
 
-              <p class="mt-4 mb-0 max-w-[620px] text-[17px] leading-[1.55] text-foreground-secondary">
-                {post.data.description}
-              </p>
+                <p class="text-foreground-secondary mt-4 mb-0 max-w-[620px] text-[17px] leading-[1.55]">
+                  {post.data.description}
+                </p>
 
-              {post.data.tags.length > 0 && (
-                <div class="mt-5 flex flex-wrap gap-2">
-                  {post.data.tags.map((tag) => (
-                    <span class="rounded-full border border-border px-3.5 py-1.5 text-[13px] font-medium">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
+                {post.data.tags.length > 0 && (
+                  <div class="mt-5 flex flex-wrap gap-2">
+                    {post.data.tags.map((tag) => (
+                      <span class="border-border rounded-full border px-3.5 py-1.5 text-[13px] font-medium">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+              {/* The cover, beside the text (above it on a phone). Decorative:
+                  it is the title set as artwork. */}
+              <img
+                class="border-border w-full rounded-[12px] border transition-transform duration-500 group-hover:-translate-y-1 max-[800px]:order-1"
+                src={post.data.image?.src ?? coverPath(post.id.replace(/^en\//, ''))}
+                alt=""
+                width="1200"
+                height="630"
+                loading="lazy"
+                decoding="async"
+              />
             </a>
           </li>
         ))
@@ -83,7 +100,7 @@ const postUrl = (id: string) => '/blog/' + id.replace('en/', '');
 
     {
       posts.length === 0 && (
-        <p class="py-10 text-[17px] text-foreground-secondary">Nothing published yet.</p>
+        <p class="text-foreground-secondary py-10 text-[17px]">Nothing published yet.</p>
       )
     }
   </section>

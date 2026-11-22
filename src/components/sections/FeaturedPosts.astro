@@ -14,6 +14,7 @@ import { Icon } from 'astro-icon/components';
 import SectionHead from '@/components/sections/SectionHead.astro';
 import PillButton from '@/components/site/PillButton.astro';
 import { formatDate } from '@/lib/utils';
+import { coverPath } from '@/lib/og';
 
 interface Props {
   /** How many posts to show: one or two. */
@@ -47,6 +48,16 @@ const postUrl = (id: string) => '/blog/' + id.replace('en/', '');
           {shown.map((post) => (
             <li data-reveal>
               <a class="post" href={postUrl(post.id)}>
+                {/* Decorative: the cover is the title set as artwork. */}
+                <img
+                  class="post__cover"
+                  src={post.data.image?.src ?? coverPath(post.id.replace(/^en\//, ''))}
+                  alt=""
+                  width="1200"
+                  height="630"
+                  loading="lazy"
+                  decoding="async"
+                />
                 <span class="label-mono text-foreground-muted">
                   {formatDate(post.data.publishedAt).toUpperCase()}
                 </span>
@@ -114,6 +125,18 @@ const postUrl = (id: string) => '/blog/' + id.replace('en/', '');
   .post:focus-visible {
     outline: 2px solid var(--hero-accent, #7c3aed);
     outline-offset: 4px;
+  }
+
+  /* Full-bleed across the top of the card, cancelling its padding. */
+  .post__cover {
+    display: block;
+    width: calc(100% + 2 * clamp(28px, 3.4vw, 48px));
+    max-width: none;
+    height: auto;
+    aspect-ratio: 1200 / 630;
+    margin: calc(-1 * clamp(28px, 3.4vw, 48px)) calc(-1 * clamp(28px, 3.4vw, 48px)) 28px;
+    border-radius: 13px 13px 0 0;
+    object-fit: cover;
   }
 
   .post__title {
