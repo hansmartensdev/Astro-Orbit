@@ -6,7 +6,6 @@ author: "Hans Martens"
 tags: ["Claude Code", "AI", "Astro", "Open Source", "GitHub"]
 icon: "sparkles"
 featured: true
-draft: true
 locale: en
 ---
 
