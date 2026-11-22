@@ -81,6 +81,12 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
         aria-expanded="false"
         aria-controls="sw-menu"
       >
+        {
+          /* Said in words too, so nobody has to know what the icon means. In
+            the wordmark's face and case; it reads "close" while the menu is
+            open. The screen-reader label below carries the full phrase. */
+        }
+        <span class="burger__word" id="sw-nav-toggle-word" aria-hidden="true">menu</span>
         <span class="burger__lines" aria-hidden="true">
           <span class="burger__line"></span>
           <span class="burger__line"></span>
@@ -327,10 +333,10 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 44px;
+    gap: 12px;
     height: 44px;
     margin-right: -10px;
-    padding: 0;
+    padding: 0 10px 0 14px;
     border: 0;
     border-radius: var(--radius-full);
     background: transparent;
@@ -341,6 +347,19 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
 
   .burger:hover {
     background: color-mix(in srgb, currentColor 10%, transparent);
+  }
+
+  .burger__word {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    text-transform: var(--display-case);
+    /* The two words differ in width; hold the wider so the icon never shifts
+       when the label swaps. */
+    min-width: 2.6em;
+    text-align: right;
   }
 
   .burger__lines {
@@ -672,6 +691,7 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     if (!nav || !toggle || !menu) return;
 
     const label = document.getElementById('sw-nav-toggle-label');
+    const word = document.getElementById('sw-nav-toggle-word');
     const scrim = document.getElementById('sw-menu-scrim');
     const list = menu.querySelector<HTMLElement>('.sw-menu__list');
     let open = false;
@@ -729,6 +749,7 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
       menu.dataset.state = next ? 'open' : 'closed';
       toggle.setAttribute('aria-expanded', String(next));
       if (label) label.textContent = next ? 'Close menu' : 'Open menu';
+      if (word) word.textContent = next ? 'close' : 'menu';
 
       // inert keeps the closed overlay out of the tab order and the
       // accessibility tree — visibility: hidden alone would not.
