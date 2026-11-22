@@ -42,15 +42,12 @@ import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
       <ArrowFillButton href="/contact" icon="fa6-solid:comment" data-chat-open=""
         >Start a conversation</ArrowFillButton
       >
-      {
-        /* Links to siteConfig.bookingUrl once there is one; until then it is a
-          plain button with no destination, keeping its place and look. */
-      }
+      {/* Messages, not meetings: WhatsApp opens a chat with Hans. */}
       <ArrowFillButton
-        href={siteConfig.bookingUrl}
-        target={siteConfig.bookingUrl ? '_blank' : undefined}
-        icon="fa6-solid:calendar"
-        variant="outline">Book a meeting</ArrowFillButton
+        href={siteConfig.whatsapp}
+        target="_blank"
+        icon="fa6-brands:whatsapp"
+        variant="outline">WhatsApp me</ArrowFillButton
       >
     </div>
   </div>
