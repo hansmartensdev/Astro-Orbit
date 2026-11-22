@@ -1,0 +1,45 @@
+---
+/**
+ * Work index: every case study. Rendered by src/pages/work/index.astro and
+ * src/pages/[lang]/work/index.astro.
+ */
+import PageLayout from '@/layouts/PageLayout.astro';
+import PageHero from '@/components/blocks/PageHero.astro';
+import Section from '@/components/patterns/Section.astro';
+import EmptyState from '@/components/patterns/EmptyState.astro';
+import CtaBand from '@/components/blocks/CtaBand.astro';
+import Button from '@/components/ui/form/Button/Button.astro';
+import ProjectCard from '@/components/site/ProjectCard.astro';
+import { localizeRoute, useTranslations, type Locale } from '@/i18n';
+import { getProjects } from '@/lib/projects';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const projects = await getProjects(locale);
+---
+
+<PageLayout title={t('workPage.title')} description={t('workPage.description')}>
+  <PageHero eyebrow={t('workPage.eyebrow')} title={t('workPage.title')} lead={t('workPage.description')} />
+
+  <Section>
+    {
+      projects.length > 0 ? (
+        <div class="grid gap-x-8 gap-y-14 md:grid-cols-2">
+          {projects.map((project, i) => (
+            <ProjectCard project={project} headingLevel="h2" priority={i === 0} />
+          ))}
+        </div>
+      ) : (
+        <EmptyState icon="folder-open" title={t('workPage.empty')} description={t('workPage.emptyHint')} />
+      )
+    }
+  </Section>
+
+  <CtaBand title={t('workPage.cta.title')} lead={t('workPage.cta.lead')} tone="invert">
+    <Button size="lg" variant="brand" href={localizeRoute('contact', locale)}>{t('workPage.cta.button')}</Button>
+  </CtaBand>
+</PageLayout>

@@ -1,0 +1,32 @@
+---
+/**
+ * Contact page. Rendered by src/pages/contact.astro and src/pages/[lang]/[...contact].astro.
+ */
+import PageLayout from '@/layouts/PageLayout.astro';
+import PageHero from '@/components/blocks/PageHero.astro';
+import ContactSection from '@/components/blocks/ContactSection.astro';
+import siteConfig from '@/config/site.config';
+import { useTranslations, type Locale } from '@/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<PageLayout title={t('contactPage.title')} description={t('contactPage.description')}>
+  <PageHero eyebrow={t('contactPage.eyebrow')} title={t('contactPage.title')} lead={t('contactPage.description')} />
+
+  <ContactSection
+    title={t('contactPage.formTitle')}
+    lead={t('contactPage.formLead')}
+    details={[
+      { icon: 'mail', label: t('contactPage.details.email'), value: siteConfig.email, href: `mailto:${siteConfig.email}` },
+      { icon: 'map-pin', label: t('contactPage.details.location'), value: t('contactPage.details.locationValue') },
+      { icon: 'link', label: t('contactPage.details.elsewhere'), value: t('contactPage.details.elsewhereValue') },
+    ]}
+    form={{ submitLabel: t('contactPage.submit'), successMessage: t('contactPage.success') }}
+  />
+</PageLayout>

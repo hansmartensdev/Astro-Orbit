@@ -10,6 +10,7 @@
  * - variant: 'default' | 'solid' | 'transparent'
  * - colorScheme: 'default' | 'invert' (use 'invert' for dark backgrounds)
  * - shape: 'bar' | 'floating' (use 'floating' for capsule header)
+ * - breakpoint: 'md' | 'lg' | 'xl' (width where the desktop nav replaces the mobile menu)
  *
  * Features:
  * - Dynamic navigation from nav.config.ts (default) or custom nav prop
@@ -23,7 +24,9 @@
  */
 import type { HTMLAttributes } from 'astro/types';
 import { cn } from '@/lib/cn';
-import { getNavItems, type NavItem as NavConfigItem } from '@/config/nav.config';
+import { getNavItems, headerConfig, type NavItem as NavConfigItem } from '@/config/nav.config';
+import { getLocale, isMultilingual, localizePath, localizeRoute, useTranslations, type Locale } from '@/i18n';
+import LanguageSwitcher from '@/components/layout/LanguageSwitcher.astro';
 import { headerVariants, headerInnerVariants } from './header.variants';
 import Button from '@/components/ui/form/Button/Button.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
@@ -32,8 +35,9 @@ import ThemeToggle from '@/components/layout/ThemeToggle.astro';
 import siteConfig from '@/config/site.config';
 
 export interface NavItem {
+  /** Translation key or plain text */
   label: string;
-  href: string;
+  href?: string;
 }
 
 export interface HeaderAction {
@@ -57,6 +61,8 @@ interface Props extends HTMLAttributes<'header'> {
   colorScheme?: 'default' | 'invert';
   /** Shape: 'bar' (full-width, default) or 'floating' (centered capsule) */
   shape?: 'bar' | 'floating';
+  /** Width at which the desktop nav replaces the mobile menu. Raise it for long or translated nav labels. Defaults to headerConfig.breakpoint, then 'md'. */
+  breakpoint?: 'md' | 'lg' | 'xl';
   /** Override default navigation (replaces getNavRoutes()) */
   nav?: NavItem[];
   /** Additional navigation items (e.g., #features for landing pages) */
@@ -77,8 +83,10 @@ interface Props extends HTMLAttributes<'header'> {
   logoText?: string;
   /** Hide logo entirely */
   hideLogo?: boolean;
-  /** Show language switcher */
+  /** Show language switcher (default: when more than one locale is enabled) */
   showLanguageSwitcher?: boolean;
+  /** Translations of this page, for the language switcher */
+  alternates?: { locale: Locale; href: string }[];
 }
 
 const {
@@ -88,39 +96,65 @@ const {
   variant = 'default',
   colorScheme = 'default',
   shape = 'bar',
+  breakpoint = (headerConfig as { breakpoint?: Props['breakpoint'] }).breakpoint ?? 'md',
   nav,
-  extraNav = [],
+  extraNav = headerConfig.extraNav,
   showCta = false,
-  cta = { label: 'View Docs', href: 'https://docs.deployvelocity.com' },
-  actions = [],
+  cta = headerConfig.cta,
+  actions = headerConfig.actions,
   showThemeToggle = true,
   showMobileMenu = true,
   showActiveState = true,
   logoText,
   hideLogo = false,
+  showLanguageSwitcher = isMultilingual,
+  alternates,
   class: className,
   ...attrs
 } = Astro.props;
+
+// Written out in full so Tailwind generates each class
+const bp = {
+  md: { flex: 'md:flex', block: 'md:block', hidden: 'md:hidden' },
+  lg: { flex: 'lg:flex', block: 'lg:block', hidden: 'lg:hidden' },
+  xl: { flex: 'xl:flex', block: 'xl:block', hidden: 'xl:hidden' },
+}[breakpoint];
 
 // Shape + color scheme helpers
 const isFloating = shape === 'floating';
 const isInvert = colorScheme === 'invert';
 
-// Get navigation items
-const defaultNav = getNavItems().map((item: NavConfigItem) => ({
-  label: item.label,
-  href: item.href,
-}));
-const navItems: NavItem[] = nav || [...extraNav, ...defaultNav];
+// Locale-aware labels and links (labels may be translation keys or plain text)
+const locale = getLocale(Astro);
+const t = useTranslations(locale);
+const homeHref = localizeRoute('home', locale);
 
 // Current path for active state
-const currentPath = Astro.url.pathname;
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 
 // Check if we're on the landing page
-const isLandingPage = currentPath === '/';
+const isLandingPage = currentPath === homeHref;
 
-// Process CTA href for landing page anchor links
-const ctaHref = cta.href?.startsWith('#') && !isLandingPage ? `/${cta.href}` : cta.href;
+/** Resolve an href for this locale. Bare #anchors point at the home page unless we're on it. */
+function resolveHref(href: string): string {
+  if (href.startsWith('#')) return isLandingPage ? href : `${homeHref === '/' ? '' : homeHref}/${href}`;
+  return localizePath(href, locale);
+}
+
+type ResolvedNavItem = { label: string; href: string };
+
+function toNavItem(item: NavConfigItem | NavItem): ResolvedNavItem {
+  const route = 'route' in item ? item.route : undefined;
+  const href = route ? localizeRoute(route, locale) : resolveHref(item.href ?? '/');
+  return { label: t(item.label), href };
+}
+
+// Get navigation items
+const navItems: ResolvedNavItem[] = nav ? nav.map(toNavItem) : [...extraNav, ...getNavItems()].map(toNavItem);
+
+const ctaHref = cta?.href ? resolveHref(cta.href) : undefined;
+const ctaLabel = cta?.label ? t(cta.label) : undefined;
+const ctaTarget = ctaHref && /^https?:/.test(ctaHref) ? '_blank' : undefined;
 
 // Check slots
 const hasLogoSlot = Astro.slots.has('logo');
@@ -141,7 +175,8 @@ const innerClasses = headerInnerVariants({ size, shape });
 // Check if a nav item is active
 function isActive(href: string): boolean {
   if (!showActiveState) return false;
-  if (href.startsWith('#')) return false;
+  if (href.includes('#')) return false;
+  if (href === homeHref) return currentPath === homeHref;
   return currentPath === href || currentPath.startsWith(href + '/');
 }
 
@@ -157,6 +192,7 @@ const buttonId = `${menuId}-button`;
   data-header-shape={shape}
   data-header-variant={variant}
   data-header-color-scheme={colorScheme}
+  data-breakpoint={{ md: '48rem', lg: '64rem', xl: '80rem' }[breakpoint]}
   {...attrs}
 >
   <div class={innerClasses}>
@@ -166,8 +202,8 @@ const buttonId = `${menuId}-button`;
         (hasLogoSlot ? (
           <slot name="logo" />
         ) : (
-          <a href="/" class="flex items-center gap-2">
-            <Logo size={size === 'lg' ? 'md' : 'sm'} forceDark={isInvert} />
+          <a href={homeHref} class="flex items-center gap-2">
+            <Logo size={size === 'lg' ? 'md' : 'sm'} forceDark={isInvert} decorative />
             <span
               class={cn(
                 'font-display text-xl font-bold tracking-tight',
@@ -184,14 +220,14 @@ const buttonId = `${menuId}-button`;
     {
       layout !== 'minimal' &&
         (hasNavSlot ? (
-          <nav class="hidden items-center gap-1 md:flex" aria-label="Main navigation">
+          <nav class={cn('hidden items-center gap-1', bp.flex)} aria-label={t('a11y.mainNav')}>
             <slot name="nav" />
           </nav>
         ) : (
-          <nav class="hidden items-center gap-1 md:flex" aria-label="Main navigation">
+          <nav class={cn('hidden items-center gap-1', bp.flex)} aria-label={t('a11y.mainNav')}>
             {navItems.map(({ label, href }) => (
               <a
-                href={href.startsWith('#') && !isLandingPage ? `/${href}` : href}
+                href={href}
                 class={cn(
                   'nav-link relative rounded-md px-3 py-2 text-sm',
                   'transition-all duration-(--transition-fast)',
@@ -220,6 +256,10 @@ const buttonId = `${menuId}-button`;
           <slot name="actions" />
         ) : (
           <>
+            {showLanguageSwitcher && (
+              <LanguageSwitcher alternates={alternates} class={cn('hidden', bp.block, isFloating ? 'hdr-invert-text' : undefined)} />
+            )}
+
             {showThemeToggle && (
               <ThemeToggle class={isFloating ? 'hdr-invert-text' : undefined} />
             )}
@@ -231,22 +271,22 @@ const buttonId = `${menuId}-button`;
                 icon={action.iconOnly}
                 href={action.href}
                 target={action.target}
-                aria-label={action.label}
+                aria-label={t(action.label)}
                 class={isFloating ? 'hdr-invert-text' : undefined}
               >
                 <Icon name={action.icon} size="sm" />
-                {!action.iconOnly && action.label}
+                {!action.iconOnly && t(action.label)}
               </Button>
             ))}
 
-            {showCta && (
+            {showCta && ctaHref && (
               <Button
                 size="sm"
                 href={ctaHref}
-                target="_blank"
+                target={ctaTarget}
                 class={isFloating ? 'hdr-invert-cta rounded-full' : undefined}
               >
-                {cta.label}
+                {ctaLabel}
               </Button>
             )}
           </>
@@ -260,7 +300,8 @@ const buttonId = `${menuId}-button`;
             type="button"
             id={buttonId}
             class={cn(
-              'inline-flex items-center justify-center rounded-md p-2 md:hidden',
+              'inline-flex items-center justify-center rounded-md p-2',
+              bp.hidden,
               'transition-colors',
               'focus-visible:ring-ring focus-visible:ring-2 focus-visible:outline-none',
               isFloating
@@ -269,7 +310,7 @@ const buttonId = `${menuId}-button`;
             )}
             aria-expanded="false"
             aria-controls={menuId}
-            aria-label="Toggle menu"
+            aria-label={t('a11y.toggleMenu')}
           >
             <span class="menu-icon">
               <Icon name="menu" size="md" />
@@ -291,13 +332,14 @@ const buttonId = `${menuId}-button`;
         <div
           id={menuId}
           class={cn(
-            'hidden origin-top scale-y-0 opacity-0 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.12)] md:hidden',
+            'hidden origin-top scale-y-0 opacity-0 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.12)]',
+            bp.hidden,
             isFloating
               ? 'rounded-b-2xl bg-background/95 backdrop-blur-xl'
               : 'border-border bg-background border-t'
           )}
           role="navigation"
-          aria-label="Mobile navigation"
+          aria-label={t('a11y.mobileNav')}
         >
           <slot name="mobile-menu" />
         </div>
@@ -305,13 +347,14 @@ const buttonId = `${menuId}-button`;
         <div
           id={menuId}
           class={cn(
-            'hidden origin-top scale-y-0 opacity-0 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.12)] md:hidden',
+            'hidden origin-top scale-y-0 opacity-0 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.12)]',
+            bp.hidden,
             isFloating
               ? 'rounded-b-2xl bg-background/95 backdrop-blur-xl'
               : 'border-border bg-background border-t'
           )}
           role="navigation"
-          aria-label="Mobile navigation"
+          aria-label={t('a11y.mobileNav')}
         >
           <div class={cn(
             'space-y-1 py-4',
@@ -319,7 +362,7 @@ const buttonId = `${menuId}-button`;
           )}>
             {navItems.map(({ label, href }) => (
               <a
-                href={href.startsWith('#') && !isLandingPage ? `/${href}` : href}
+                href={href}
                 class={cn(
                   'mobile-nav-link block rounded-md px-3 py-2 text-sm',
                   'transition-all duration-(--transition-fast)',
@@ -333,10 +376,16 @@ const buttonId = `${menuId}-button`;
               </a>
             ))}
 
-            {showCta && (
+            {showLanguageSwitcher && (
               <div class="border-border mt-3 border-t pt-3">
-                <Button fullWidth href={ctaHref} target="_blank">
-                  {cta.label}
+                <LanguageSwitcher variant="list" alternates={alternates} />
+              </div>
+            )}
+
+            {showCta && ctaHref && (
+              <div class="border-border mt-3 border-t pt-3">
+                <Button fullWidth href={ctaHref} target={ctaTarget}>
+                  {ctaLabel}
                 </Button>
               </div>
             )}
@@ -351,7 +400,7 @@ const buttonId = `${menuId}-button`;
   showMobileMenu && layout !== 'minimal' && (
     <div
       id={`${menuId}-backdrop`}
-      class="pointer-events-none fixed inset-0 z-40 opacity-0 transition-opacity duration-200 md:hidden"
+      class={cn('pointer-events-none fixed inset-0 z-40 opacity-0 transition-opacity duration-200', bp.hidden)}
       aria-hidden="true"
     />
   )
@@ -377,6 +426,16 @@ const buttonId = `${menuId}-button`;
       let isOpen = false;
       let isAnimating = false;
 
+      function setPageInert(on: boolean) {
+        const main = document.querySelector<HTMLElement>('main');
+        const footer = Array.from(document.querySelectorAll<HTMLElement>('footer')).find((el) => !el.closest('main, header'));
+        [main, footer].forEach((el) => {
+          if (!el) return;
+          el.classList.toggle('mobile-menu-blur', on);
+          el.inert = on;
+        });
+      }
+
       function open() {
         if (isOpen || isAnimating) return;
         isAnimating = true;
@@ -395,11 +454,9 @@ const buttonId = `${menuId}-button`;
           header.classList.add('!bg-background');
         }
 
-        // Fade out and blur the page content
-        const mainContent = document.querySelector('main');
-        const footer = document.querySelector('footer');
-        if (mainContent) mainContent.classList.add('mobile-menu-blur');
-        if (footer) footer.classList.add('mobile-menu-blur');
+        // Fade out and blur the page content, and make it inert so keyboard
+        // and screen reader users stay in the menu instead of the blurred page
+        setPageInert(true);
 
         // Show menu and backdrop with animations
         menu!.classList.remove('hidden', 'animate-menu-up', 'opacity-0', 'scale-y-0');
@@ -429,10 +486,7 @@ const buttonId = `${menuId}-button`;
         }
 
         // Restore page content
-        const mainContent = document.querySelector('main');
-        const footer = document.querySelector('footer');
-        if (mainContent) mainContent.classList.remove('mobile-menu-blur');
-        if (footer) footer.classList.remove('mobile-menu-blur');
+        setPageInert(false);
 
         // Wait for animation to complete before hiding
         setTimeout(() => {
@@ -473,11 +527,19 @@ const buttonId = `${menuId}-button`;
         backdrop.addEventListener('click', close);
       }
 
-      // Close on Escape key
+      // Close on Escape key and return focus to the toggle
       document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape' && isOpen) {
           close();
+          button!.focus();
         }
+      });
+
+      // Widening past the breakpoint hides the toggle: close the menu so the
+      // page is not left inert behind a menu nobody can see.
+      const desktop = window.matchMedia(`(min-width: ${header.dataset.breakpoint ?? '48rem'})`);
+      desktop.addEventListener('change', (e) => {
+        if (e.matches && isOpen) close();
       });
 
       // Close when clicking on mobile menu links
@@ -493,45 +555,47 @@ const buttonId = `${menuId}-button`;
 </script>
 
 <script>
+  // The floating header turns solid once the page has scrolled past 60px. A
+  // 1px sentinel at that offset and an IntersectionObserver flip the state,
+  // so nothing runs on every scroll frame. data-scrolled is a discrete state
+  // (the mobile menu also forces it, and other styles key off it), which is
+  // why this isn't a scroll-driven animation.
   const SCROLL_THRESHOLD = 60;
 
   function initScrollWatcher() {
-    document.querySelectorAll<HTMLElement>('header[data-header-shape="floating"]').forEach((header) => {
-      if (header.dataset.scrollInit) return;
-      header.dataset.scrollInit = 'true';
+    const headers = document.querySelectorAll<HTMLElement>('header[data-header-shape="floating"]');
+    if (!headers.length || document.documentElement.dataset.headerScrollInit) return;
+    document.documentElement.dataset.headerScrollInit = 'true';
 
-      let ticking = false;
+    const sentinel = document.createElement('div');
+    sentinel.setAttribute('aria-hidden', 'true');
+    sentinel.dataset.headerSentinel = '';
+    sentinel.style.cssText = `position:absolute;top:${SCROLL_THRESHOLD}px;left:0;width:1px;height:1px;pointer-events:none;visibility:hidden`;
+    document.body.prepend(sentinel);
 
-      function onScroll() {
-        if (ticking) return;
-        ticking = true;
-
-        requestAnimationFrame(() => {
-          if (window.scrollY > SCROLL_THRESHOLD) {
-            header.setAttribute('data-scrolled', '');
-          } else {
-            // Don't remove if mobile menu is open
-            const menuId = header.dataset.menuId;
-            const menu = menuId ? document.getElementById(menuId) : null;
-            const menuOpen = menu && !menu.classList.contains('hidden');
-            if (!menuOpen) {
-              header.removeAttribute('data-scrolled');
-            }
-          }
-          ticking = false;
-        });
-      }
-
-      window.addEventListener('scroll', onScroll, { passive: true });
-
-      // Set initial state
-      onScroll();
-    });
+    new IntersectionObserver((entries) => {
+      // Notifications can be batched; the last entry is the current position.
+      const entry = entries[entries.length - 1];
+      const scrolled = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+      document.querySelectorAll<HTMLElement>('header[data-header-shape="floating"]').forEach((header) => {
+        if (scrolled) {
+          header.setAttribute('data-scrolled', '');
+          return;
+        }
+        // Don't remove if mobile menu is open
+        const menuId = header.dataset.menuId;
+        const menu = menuId ? document.getElementById(menuId) : null;
+        const menuOpen = menu && !menu.classList.contains('hidden');
+        if (!menuOpen) header.removeAttribute('data-scrolled');
+      });
+    }).observe(sentinel);
   }
 
   initScrollWatcher();
-  document.addEventListener('astro:page-load', initScrollWatcher);
-  document.addEventListener('astro:after-swap', initScrollWatcher);
+  document.addEventListener('astro:after-swap', () => {
+    delete document.documentElement.dataset.headerScrollInit;
+    initScrollWatcher();
+  });
 </script>
 
 <style is:global>

@@ -4,30 +4,36 @@
    Vercel-inspired: Clean, minimal, sophisticated
    ============================================================================= */
 
-@import 'tailwindcss';
+/* Scan src/ only. Without this, Tailwind 4.3 reads all of node_modules when the
+   project sits in a folder ignored by a parent git repo, and dev requests time out. */
+@import 'tailwindcss' source('..');
 @import './tokens/colors.css';
 @import './tokens/typography.css';
+
+/* Prose styles for Markdown/MDX content (BlogLayout uses `prose` + modifiers) */
+@plugin '@tailwindcss/typography';
 @import './tokens/spacing.css';
 
-/* Self-hosted fonts via Fontsource (CSP-safe, no external requests) */
-/* Archivo carries the whole identity — upright for everything, italic for the
-   light <em> inside display lines. IBM Plex Mono is the meta/label face. */
-/* Body, UI and - for now - display. Candidate display faces are loaded only
-   by the dev-only font switcher, never in a production build. */
-@import '@fontsource-variable/archivo/wght.css';
-@import '@fontsource-variable/archivo/wght-italic.css';
+/* Last, so a theme can override any token above. */
+@import './theme.css';
 
-/* Display face. themes/southwell.css points --theme-font-display at Outfit;
-   it has to be loaded here, on purpose, not by the dev-only font switcher. */
-@import '@fontsource-variable/outfit/wght.css';
+/* Fonts are self-hosted via the Astro Fonts API — see `fonts` in astro.config.mjs
+   and <Font /> in BaseLayout. Themes reference --font-manrope / --font-outfit /
+   --font-jetbrains-mono. */
 
-/* Meta and eyebrow labels. */
-@import '@fontsource/ibm-plex-mono/400.css';
-@import '@fontsource/ibm-plex-mono/500.css';
+/* Native cross-document view transitions (replaces <ClientRouter />).
+   Zero JavaScript and CSP-compatible: supporting browsers cross-fade between
+   pages, others navigate normally. Opt elements into shared-element morphs
+   with `view-transition-name`. */
+@view-transition {
+  navigation: auto;
+}
 
-/* Southwell site layer — display type, reveals, placeholders.
-   Re-add this import after `create-velocity-astro upgrade`. */
-@import './southwell.css';
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+}
 
 /* Dark mode variant */
 @custom-variant dark (&:where(.dark, .dark *));
@@ -70,6 +76,10 @@
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-error: var(--error);
+  /* Themes define --destructive; without these, every *-destructive utility
+     (destructive buttons, field error borders and text) compiled to nothing. */
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
 
   /* Inverted/Contrast Sections */
   --color-surface-invert: var(--surface-invert);
@@ -97,19 +107,22 @@
   --color-brand-700: var(--brand-700);
   --color-brand-800: var(--brand-800);
   --color-brand-900: var(--brand-900);
+  --color-brand-fill: var(--brand-fill);
+  --color-brand-fill-hover: var(--brand-fill-hover);
+  --color-brand-ink: var(--brand-ink);
 
   /* Font Sizes - matches original design scale */
-  --font-size-xs: 0.75rem; /* 12px */
-  --font-size-sm: 0.875rem; /* 14px */
-  --font-size-base: 1rem; /* 16px */
-  --font-size-lg: 1.125rem; /* 18px */
-  --font-size-xl: 1.25rem; /* 20px */
-  --font-size-2xl: 1.5rem; /* 24px */
-  --font-size-3xl: 1.875rem; /* 30px */
-  --font-size-4xl: 2.25rem; /* 36px */
-  --font-size-5xl: 3rem; /* 48px */
-  --font-size-6xl: 3.75rem; /* 60px */
-  --font-size-7xl: 4.5rem; /* 72px */
+  --font-size-xs: 0.75rem;     /* 12px */
+  --font-size-sm: 0.875rem;    /* 14px */
+  --font-size-base: 1rem;      /* 16px */
+  --font-size-lg: 1.125rem;    /* 18px */
+  --font-size-xl: 1.25rem;     /* 20px */
+  --font-size-2xl: 1.5rem;     /* 24px */
+  --font-size-3xl: 1.875rem;   /* 30px */
+  --font-size-4xl: 2.25rem;    /* 36px */
+  --font-size-5xl: 3rem;       /* 48px */
+  --font-size-6xl: 3.75rem;    /* 60px */
+  --font-size-7xl: 4.5rem;     /* 72px */
 
   /* Border Radius - theme-controlled */
   --radius-sm: var(--theme-radius-sm);
@@ -146,17 +159,23 @@
     border-color: var(--color-border);
   }
 
+  /* Native UI (scrollbars, form controls, <select> popups, autofill) follows
+     the rendered theme. Velocity's colors switch on the .dark class rather than
+     the media query, so color-scheme tracks the class too: `light dark` here
+     would paint dark scrollbars over a light page whenever the visitor or
+     defaultTheme overrides a dark OS. */
+  html {
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+
   html {
     font-family: var(--font-sans);
-    /* No scroll-behavior: smooth here. Inertial scrolling is Lenis
-       (src/scripts/smooth-scroll.ts); native smooth scrolling on top of it
-       double-eases every anchor jump. */
+    scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* The scrollbar's gutter is reserved whether or not the page can scroll,
-       so locking scroll while the menu is open (overflow: hidden) does not
-       shift the page sideways on systems with a visible scrollbar. */
-    scrollbar-gutter: stable;
   }
 
   body {
@@ -168,12 +187,7 @@
   }
 
   /* Typography - headings inherit color by default for flexibility */
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  h1, h2, h3, h4, h5, h6 {
     font-weight: var(--theme-heading-weight);
     line-height: 1.1;
     letter-spacing: var(--theme-heading-tracking);
@@ -186,8 +200,7 @@
     text-decoration: none;
   }
 
-  code,
-  pre {
+  code, pre {
     font-family: var(--font-mono);
   }
 
@@ -278,6 +291,32 @@
     --color-primary-foreground: var(--surface-invert);
   }
 
+  /* Brand section - a band filled with --brand-fill (Band tone="brand").
+     Text uses --brand-ink, which passes AA on the fill, and primary buttons
+     become ink with brand-coloured text. Same in light and dark mode. */
+  .brand-section,
+  .dark .brand-section {
+    color: var(--color-foreground);
+
+    --color-background: var(--brand-fill);
+    --color-foreground: var(--brand-ink);
+    --color-foreground-secondary: var(--brand-ink);
+    --color-foreground-muted: var(--brand-ink);
+    --color-foreground-subtle: var(--brand-ink);
+    --color-border: color-mix(in oklch, var(--brand-ink) 25%, transparent);
+    --color-border-strong: color-mix(in oklch, var(--brand-ink) 45%, transparent);
+    --color-secondary: color-mix(in oklch, var(--brand-ink) 10%, var(--brand-fill));
+    --color-secondary-foreground: var(--brand-ink);
+    --color-secondary-hover: color-mix(in oklch, var(--brand-ink) 18%, var(--brand-fill));
+    --color-card: color-mix(in oklch, var(--brand-ink) 8%, var(--brand-fill));
+    --color-card-border: color-mix(in oklch, var(--brand-ink) 25%, transparent);
+    --color-muted: color-mix(in oklch, var(--brand-ink) 10%, var(--brand-fill));
+    --color-muted-foreground: var(--brand-ink);
+    --color-ring: var(--brand-ink);
+    --color-primary: var(--brand-ink);
+    --color-primary-foreground: var(--brand-fill);
+  }
+
   /* Container */
   .container {
     width: 100%;
@@ -307,7 +346,11 @@
 
   /* Subtle gradient background */
   .bg-gradient-subtle {
-    background: linear-gradient(to bottom, var(--gradient-start) 0%, var(--gradient-end) 100%);
+    background: linear-gradient(
+      to bottom,
+      var(--gradient-start) 0%,
+      var(--gradient-end) 100%
+    );
   }
 
   /* Glow effect */
@@ -348,9 +391,7 @@
       var(--color-border-strong) 100%
     );
     border-radius: inherit;
-    mask:
-      linear-gradient(#fff 0 0) content-box,
-      linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask-composite: exclude;
     pointer-events: none;
   }
@@ -358,14 +399,24 @@
   /* Grid pattern */
   .bg-grid {
     background-size: 24px 24px;
-    background-image:
-      linear-gradient(to right, var(--color-border) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--color-border) 1px, transparent 1px);
+    background-image: linear-gradient(
+      to right,
+      var(--color-border) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      var(--color-border) 1px,
+      transparent 1px
+    );
   }
 
   /* Dot pattern */
   .bg-dots {
-    background-image: radial-gradient(var(--color-border-strong) 1px, transparent 1px);
+    background-image: radial-gradient(
+      var(--color-border-strong) 1px,
+      transparent 1px
+    );
     background-size: 16px 16px;
   }
 
@@ -397,12 +448,8 @@
   }
 
   @keyframes fade-in {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 
   @keyframes slide-up {
@@ -449,12 +496,8 @@
   }
 
   @keyframes backdrop-fade {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 
   /* Dropdown animations */
@@ -543,39 +586,22 @@
   }
 
   @keyframes backdrop-fade-out {
-    from {
-      opacity: 1;
-    }
-    to {
-      opacity: 0;
-    }
+    from { opacity: 1; }
+    to { opacity: 0; }
   }
 
   /* Stagger delays */
-  .delay-0 {
-    animation-delay: 0ms;
-  }
-  .delay-1 {
-    animation-delay: 50ms;
-  }
-  .delay-2 {
-    animation-delay: 100ms;
-  }
-  .delay-3 {
-    animation-delay: 150ms;
-  }
-  .delay-4 {
-    animation-delay: 200ms;
-  }
-  .delay-5 {
-    animation-delay: 250ms;
-  }
+  .delay-0 { animation-delay: 0ms; }
+  .delay-1 { animation-delay: 50ms; }
+  .delay-2 { animation-delay: 100ms; }
+  .delay-3 { animation-delay: 150ms; }
+  .delay-4 { animation-delay: 200ms; }
+  .delay-5 { animation-delay: 250ms; }
 
   /* Hover transitions */
   .hover-lift {
-    transition:
-      transform var(--transition-fast) var(--ease-out),
-      box-shadow var(--transition-fast) var(--ease-out);
+    transition: transform var(--transition-fast) var(--ease-out),
+                box-shadow var(--transition-fast) var(--ease-out);
   }
 
   .hover-lift:hover {
@@ -599,12 +625,8 @@
   }
 
   @keyframes spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
   }
 
   /* Pulse */
@@ -613,13 +635,8 @@
   }
 
   @keyframes pulse {
-    0%,
-    100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.5;
-    }
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
   }
 
   /* Input error shake */
@@ -628,18 +645,9 @@
   }
 
   @keyframes shake {
-    0%,
-    100% {
-      transform: translateX(0);
-    }
-    20%,
-    60% {
-      transform: translateX(-4px);
-    }
-    40%,
-    80% {
-      transform: translateX(4px);
-    }
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-4px); }
+    40%, 80% { transform: translateX(4px); }
   }
 
   /* Tab content crossfade */
@@ -668,9 +676,7 @@
       opacity: 0;
       transform: translateX(100%);
     }
-    60% {
-      transform: translateX(-4px);
-    }
+    60% { transform: translateX(-4px); }
     to {
       opacity: 1;
       transform: translateX(0);
@@ -693,14 +699,42 @@
     }
   }
 
-  /* Reduced motion: disable micro-animations */
+  /* Reduced motion: finish every animation and transition immediately
+     (entrance fades, staggers, micro-interactions) while keeping end states. */
   @media (prefers-reduced-motion: reduce) {
-    .animate-shake,
-    .animate-tab-enter,
-    .animate-toast-in,
-    .animate-tooltip-in {
-      animation: none;
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-delay: 0ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
     }
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Anchored popovers (Popover, Dropdown) — see src/lib/anchor.ts.
+   Unlayered so it wins over m-0 utilities. Only under @supports: without anchor positioning, inset: auto would strand
+   the panel at the top-left, so the script fallback places it instead.
+   ------------------------------------------------------------------------- */
+@supports (anchor-name: --a) and (position-area: block-end) {
+  [popover][data-anchored] {
+    position: fixed;
+    inset: auto;
+    margin: 0.5rem 0;
+    position-area: block-end span-inline-end;
+    position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+  }
+  [popover][data-anchored][data-align='end'] {
+    position-area: block-end span-inline-start;
+  }
+  [popover][data-anchored][data-placement='top'] {
+    position-area: block-start span-inline-end;
+  }
+  [popover][data-anchored][data-placement='top'][data-align='end'] {
+    position-area: block-start span-inline-start;
   }
 }
 
@@ -708,6 +742,56 @@
    Components
    ------------------------------------------------------------------------- */
 @layer components {
+  /* -------------------------------------------------------------------------
+     Dialog (Dialog.astro and Dialog.tsx share these): native <dialog> enter
+     and exit transitions, plus scroll containment for the modal.
+     ------------------------------------------------------------------------- */
+  .velocity-dialog {
+    max-height: calc(100dvh - 2rem);
+    /* Exit: fade and shrink, staying in the top layer until it finishes */
+    opacity: 0;
+    scale: 0.95;
+    transition:
+      opacity 200ms ease-out,
+      scale 200ms ease-out,
+      overlay 200ms ease-out allow-discrete,
+      display 200ms ease-out allow-discrete;
+  }
+  .velocity-dialog[open] {
+    opacity: 1;
+    scale: 1;
+  }
+  @starting-style {
+    .velocity-dialog[open] {
+      opacity: 0;
+      scale: 0.95;
+    }
+  }
+
+  /* Keep scroll gestures from reaching the page behind the modal. */
+  .velocity-dialog:modal {
+    overscroll-behavior: contain;
+  }
+  .velocity-dialog::backdrop {
+    overflow: hidden;
+    overscroll-behavior: contain;
+    background: color-mix(in oklch, var(--color-foreground) 50%, transparent);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    transition:
+      opacity 200ms ease-out,
+      overlay 200ms ease-out allow-discrete,
+      display 200ms ease-out allow-discrete;
+  }
+  .velocity-dialog[open]::backdrop {
+    opacity: 1;
+  }
+  @starting-style {
+    .velocity-dialog[open]::backdrop {
+      opacity: 0;
+    }
+  }
+
   /* -------------------------------------------------------------------------
      Navigation Component Tokens
      Customize header navigation via these CSS custom properties
@@ -785,10 +869,7 @@
     line-height: 1.75;
   }
 
-  .prose h1,
-  .prose h2,
-  .prose h3,
-  .prose h4 {
+  .prose h1, .prose h2, .prose h3, .prose h4 {
     color: var(--color-foreground);
     margin-top: 2em;
     margin-bottom: 0.75em;
@@ -844,8 +925,7 @@
     font-size: 0.875rem;
   }
 
-  .prose ul,
-  .prose ol {
+  .prose ul, .prose ol {
     margin: 1.25em 0;
     padding-left: 1.5em;
   }
@@ -912,50 +992,50 @@
   }
 
   /* Position: Top (default) */
-  [data-tooltip-position='top'] .tooltip-bubble {
+  [data-tooltip-position="top"] .tooltip-bubble {
     bottom: calc(100% + 8px);
     top: auto;
     left: 50%;
     right: auto;
     transform: translateX(-50%) scale(0.96);
   }
-  [data-tooltip-position='top'] .tooltip-bubble.visible {
+  [data-tooltip-position="top"] .tooltip-bubble.visible {
     transform: translateX(-50%) scale(1);
   }
 
   /* Position: Bottom */
-  [data-tooltip-position='bottom'] .tooltip-bubble {
+  [data-tooltip-position="bottom"] .tooltip-bubble {
     top: calc(100% + 8px);
     bottom: auto;
     left: 50%;
     right: auto;
     transform: translateX(-50%) scale(0.96);
   }
-  [data-tooltip-position='bottom'] .tooltip-bubble.visible {
+  [data-tooltip-position="bottom"] .tooltip-bubble.visible {
     transform: translateX(-50%) scale(1);
   }
 
   /* Position: Left */
-  [data-tooltip-position='left'] .tooltip-bubble {
+  [data-tooltip-position="left"] .tooltip-bubble {
     right: calc(100% + 8px);
     left: auto;
     top: 50%;
     bottom: auto;
     transform: translateY(-50%) scale(0.96);
   }
-  [data-tooltip-position='left'] .tooltip-bubble.visible {
+  [data-tooltip-position="left"] .tooltip-bubble.visible {
     transform: translateY(-50%) scale(1);
   }
 
   /* Position: Right */
-  [data-tooltip-position='right'] .tooltip-bubble {
+  [data-tooltip-position="right"] .tooltip-bubble {
     left: calc(100% + 8px);
     right: auto;
     top: 50%;
     bottom: auto;
     transform: translateY(-50%) scale(0.96);
   }
-  [data-tooltip-position='right'] .tooltip-bubble.visible {
+  [data-tooltip-position="right"] .tooltip-bubble.visible {
     transform: translateY(-50%) scale(1);
   }
 

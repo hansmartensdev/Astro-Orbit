@@ -7,8 +7,8 @@ export const GET: APIRoute = ({ site }) => {
 User-agent: *
 Allow: /
 
-# Block API routes
-Disallow: /api/
+# Block Astro Actions endpoints
+Disallow: /_actions/
 
 Sitemap: ${siteUrl}sitemap-index.xml
 `.trim();

@@ -1,37 +1,9 @@
 ---
 /**
- * Homepage
- * URL: /
+ * Home page (default locale). Content lives in src/views/HomeView.astro.
  */
-import SiteLayout from '@/layouts/SiteLayout.astro';
-import Hero from '@/components/sections/Hero.astro';
-import Reel from '@/components/sections/Reel.astro';
-import WorkGrid from '@/components/sections/WorkGrid.astro';
-import Services from '@/components/sections/Services.astro';
-import Cta from '@/components/sections/Cta.astro';
-import siteConfig from '@/config/site.config';
+import HomeView from '@/views/HomeView.astro';
+import { defaultLocale } from '@/i18n';
 ---
 
-<SiteLayout
-  title="Dallas Creative Studio for Websites, Apps & Brands"
-  description={siteConfig.description}
-  includeOrgSchema
->
-  <Hero />
-  {
-    /* No teaser cut yet: a 16:9 still stands in. Swap in /reel/teaser.mp4 and
-      a poster when the loop exists; Reel takes either without other changes. */
-  }
-  <Reel src="/reel/teaser-still.webp" poster="/reel/teaser-still.webp" />
-  {
-    /* Six lands on a row boundary: the full-width lead over two rows, then the
-      first five of the pattern over three. Any of 1, 6 or 11 tiles cleanly. */
-  }
-  <WorkGrid count={6} deliverLead />
-  <Services />
-  {
-    /* The founder section (@/components/sections/Founder.astro) is parked
-      off the homepage for now; it still runs on /studio. */
-  }
-  <Cta />
-</SiteLayout>
+<HomeView locale={defaultLocale} />

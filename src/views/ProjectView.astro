@@ -1,0 +1,98 @@
+---
+/**
+ * One case study. Rendered by src/pages/work/[...slug].astro and
+ * src/pages/[lang]/work/[...slug].astro.
+ */
+import { render } from 'astro:content';
+import PageLayout from '@/layouts/PageLayout.astro';
+import PageHero from '@/components/blocks/PageHero.astro';
+import Band from '@/components/blocks/Band.astro';
+import CtaBand from '@/components/blocks/CtaBand.astro';
+import MediaSlot from '@/components/patterns/MediaSlot.astro';
+import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
+import Button from '@/components/ui/form/Button/Button.astro';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+import { localizeRoute, useTranslations } from '@/i18n';
+import { getProjects, getProjectUrl, type Project } from '@/lib/projects';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const { title, description, client, year, role, cover, coverAlt, url, locale } = project.data;
+const t = useTranslations(locale);
+const { Content } = await render(project);
+
+// The next project in order, wrapping round to the first.
+const all = await getProjects(locale);
+const index = all.findIndex((p) => p.id === project.id);
+const next = all.length > 1 ? all[(index + 1) % all.length] : undefined;
+
+const facts = [
+  { label: t('workPage.client'), value: client },
+  { label: t('workPage.year'), value: year },
+  { label: t('workPage.role'), value: role.join(', ') },
+].filter((f) => f.value);
+---
+
+<PageLayout title={title} description={description}>
+  <PageHero title={title} lead={description} size="lg">
+    <Breadcrumbs
+      slot="breadcrumbs"
+      items={[
+        { label: t('nav.home'), href: localizeRoute('home', locale) },
+        { label: t('nav.work'), href: localizeRoute('work', locale) },
+        { label: title },
+      ]}
+    />
+    <dl class="mt-8 grid gap-6 sm:grid-cols-3">
+      {
+        facts.map((f) => (
+          <div>
+            <dt class="text-foreground-muted font-mono text-xs tracking-wide uppercase">{f.label}</dt>
+            <dd class="text-foreground mt-1 font-medium">{f.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+    {
+      url && (
+        <Button class="mt-8" variant="outline" href={url} target="_blank">
+          {t('workPage.visit')}
+          <Icon name="external-link" size="sm" />
+        </Button>
+      )
+    }
+  </PageHero>
+
+  <Band pad="sm">
+    <MediaSlot photo={cover} alt={coverAlt} label={title} ratio="16/10" priority class="border-border rounded-2xl border" />
+  </Band>
+
+  <Band width="narrow">
+    <div class="prose prose-lg prose-headings:font-display prose-a:text-brand-600 dark:prose-invert dark:prose-a:text-brand-400 max-w-none">
+      <Content />
+    </div>
+  </Band>
+
+  {
+    next && (
+      <Band tone="secondary" width="narrow" pad="sm">
+        <a href={getProjectUrl(next)} class="group flex items-center justify-between gap-6 py-4">
+          <span>
+            <span class="text-foreground-muted block font-mono text-xs tracking-wide uppercase">{t('workPage.next')}</span>
+            <span class="font-display text-foreground group-hover:text-brand-600 dark:group-hover:text-brand-400 mt-1 block text-2xl font-semibold transition-colors">
+              {next.data.title}
+            </span>
+          </span>
+          <Icon name="arrow-right" size="lg" class="text-foreground-muted shrink-0 transition-transform group-hover:translate-x-1" />
+        </a>
+      </Band>
+    )
+  }
+
+  <CtaBand title={t('workPage.cta.title')} lead={t('workPage.cta.lead')} tone="brand">
+    <Button size="lg" variant="secondary" href={localizeRoute('contact', locale)}>{t('workPage.cta.button')}</Button>
+  </CtaBand>
+</PageLayout>

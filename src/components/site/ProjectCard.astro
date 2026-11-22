@@ -1,0 +1,34 @@
+---
+/**
+ * A case study as a card: cover, client and year, title, one-line summary.
+ * Used on the home page and the work index.
+ */
+import MediaSlot from '@/components/patterns/MediaSlot.astro';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+import { getProjectUrl, type Project } from '@/lib/projects';
+
+interface Props {
+  project: Project;
+  headingLevel?: 'h2' | 'h3';
+  /** Load the cover straight away (the first card on a page). */
+  priority?: boolean;
+}
+
+const { project, headingLevel = 'h3', priority = false } = Astro.props;
+const { title, description, client, year, cover, coverAlt } = project.data;
+const Heading = headingLevel;
+---
+
+<a href={getProjectUrl(project)} class="group focus-visible:ring-ring block rounded-xl focus-visible:ring-2 focus-visible:ring-offset-4 focus-visible:outline-none">
+  <div class="border-border overflow-hidden rounded-xl border transition-transform duration-300 group-hover:-translate-y-1">
+    <MediaSlot photo={cover} alt={coverAlt} label={title} ratio="16/10" priority={priority} />
+  </div>
+  <p class="text-foreground-muted mt-5 font-mono text-xs tracking-wide uppercase">
+    {client}<span aria-hidden="true"> · </span>{year}
+  </p>
+  <Heading class="font-display text-foreground group-hover:text-brand-600 dark:group-hover:text-brand-400 mt-2 flex items-center gap-2 text-xl font-semibold transition-colors">
+    {title}
+    <Icon name="arrow-up-right" size="sm" class="opacity-0 transition-opacity group-hover:opacity-100" />
+  </Heading>
+  <p class="text-foreground-muted mt-2 leading-relaxed">{description}</p>
+</a>
