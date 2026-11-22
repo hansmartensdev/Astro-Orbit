@@ -194,6 +194,23 @@
     letter-spacing: var(--display-tracking);
   }
 
+  /* On a phone the section scale steps down so the page's H1 (the hero, or a
+     page title) leads it: the desktop clamps bottom out at 46/36/48px, which
+     sat above the hero headline on a 390px screen. */
+  @media (max-width: 700px) {
+    .display-section {
+      font-size: clamp(32px, 9vw, 46px);
+    }
+
+    .display-service {
+      font-size: clamp(27px, 7.4vw, 36px);
+    }
+
+    .display-cta {
+      font-size: clamp(36px, 10.4vw, 48px);
+    }
+  }
+
   /* The emphasised word is where the type does the talking - see
      --display-em-* in themes/southwell.css for why it is not an italic. */
   .display-hero em,

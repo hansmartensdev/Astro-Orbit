@@ -786,8 +786,27 @@
   .prose h3,
   .prose h4 {
     color: var(--color-foreground);
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
     margin-top: 2em;
     margin-bottom: 0.75em;
+  }
+
+  /* Sized so an article reads in levels: a post's own title is the page's
+     H1, outside the prose; inside it, H2 sections, H3 subsections. */
+  .prose h1,
+  .prose h2 {
+    font-size: 1.75em;
+  }
+
+  .prose h3 {
+    font-size: 1.35em;
+  }
+
+  .prose h4 {
+    font-size: 1.1em;
   }
 
   .prose h1:first-child,

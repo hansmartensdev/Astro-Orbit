@@ -125,6 +125,17 @@ import HeroScene from '@/components/site/HeroScene.tsx';
     font-size: 7.7cqi;
   }
 
+  /* On a phone, one row per line would make the page's H1 smaller than every
+     H2 under it (7.7cqi is about 26px at 390px). There the lines may wrap,
+     and the headline is set to lead the scale instead. The droplet still
+     lands at the end of the second line: its marker rides the wrap. */
+  @media (max-width: 700px) {
+    .hero__headline {
+      font-size: min(11.8vw, 56px);
+      line-height: 0.92;
+    }
+  }
+
   /* Each line masks its word so it rises out from behind the line above.
      A line-height under 1 makes the line box SHORTER than the glyphs, so the
      mask has to be padded out vertically or it shears the ascenders and
