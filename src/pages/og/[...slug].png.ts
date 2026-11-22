@@ -11,7 +11,7 @@ import siteConfig from '@/config/site.config';
 const STATIC_PAGES = [
   { slug: 'index', title: 'An Astro developer for fast & beautiful websites.', description: siteConfig.description },
   { slug: 'about', title: 'About', description: `Who ${siteConfig.name} is, and what drives the work.` },
-  { slug: 'work', title: 'Selected work', description: 'Websites designed and built from scratch: fast, accessible and original.' },
+  { slug: 'projects', title: 'Projects', description: 'Websites I have designed and built, each one fast, accessible and made with love for the craft.' },
   { slug: 'blog', title: 'Blog', description: 'Notes on Astro, web performance and building fast websites.' },
   { slug: 'contact', title: 'Let’s talk Astro', description: 'An idea for a website, a question about a theme, a blog post or something on GitHub: say hello.' },
 ];
@@ -32,13 +32,13 @@ export const getStaticPaths: GetStaticPaths = async () => {
     },
   }));
 
-  // Case studies: /og/work/<id>.png, used while a project has no picture of
+  // Case studies: /og/projects/<id>.png, used while a project has no picture of
   // its own to share.
   const projects = await getCollection('work', ({ data }) =>
     import.meta.env.PROD ? data.draft !== true : true
   );
   const workPaths = projects.map((project) => ({
-    params: { slug: `work/${project.id}` },
+    params: { slug: `projects/${project.id}` },
     props: {
       title: project.data.title,
       description: project.data.description,

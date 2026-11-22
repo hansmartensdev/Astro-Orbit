@@ -9,9 +9,12 @@ import vercel from '@astrojs/vercel';
 export default defineConfig({
   site: process.env.SITE_URL || 'https://hansmartens.dev',
 
-  // The about page used to be the studio page; keep old links working.
+  // Old addresses keep working: the about page used to be the studio page,
+  // and the projects used to live under /work.
   redirects: {
     '/studio': '/about',
+    '/work': '/projects',
+    '/work/[...slug]': '/projects/[...slug]',
   },
 
   // Static by default; only /api/contact opts out (prerender = false) so the
