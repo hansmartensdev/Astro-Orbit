@@ -3,7 +3,7 @@
  * WorkGrid
  *
  * A bento grid of projects. Reads the work collection, so the homepage and
- * /work stay in step with one file per project.
+ * /projects stay in step with one file per project.
  *
  * Footprints come from position, not from the project. Hand-assigning a span
  * per project is what left holes in the grid: dense packing fills a gap only
@@ -24,7 +24,7 @@ import PillButton from '@/components/site/PillButton.astro';
 interface Props {
   /** How many projects the grid shows. Omit for all of them. */
   count?: number;
-  /** The shared giant-title header. Off on /work, which has its own. */
+  /** The shared giant-title header. Off on /projects, which has its own. */
   showHead?: boolean;
   /** The "See all work" button under the grid. */
   showMore?: boolean;
@@ -102,7 +102,7 @@ const SIZING: Record<'hero' | 'large' | 'wide' | 'standard', { widths: number[];
   {
     showHead && (
       <SectionHead
-        title="Latest work"
+        title="Latest projects"
         blurb="A selection of websites I have designed and built, each one fast, accessible and made with love for the craft."
         id="work"
       />
@@ -119,7 +119,7 @@ const SIZING: Record<'hero' | 'large' | 'wide' | 'standard', { widths: number[];
         return (
           <a
             class="card"
-            href={'/work/' + project.id}
+            href={'/projects/' + project.id}
             data-span={span}
             data-card
             data-deliver={deliverLead && i === 0 ? '' : undefined}
@@ -186,7 +186,7 @@ const SIZING: Record<'hero' | 'large' | 'wide' | 'standard', { widths: number[];
   {
     showMore && (
       <div class="mt-[72px] flex justify-center" data-reveal>
-        <PillButton href="/work" variant="outline" class="px-9 py-4">
+        <PillButton href="/projects" variant="outline" class="px-9 py-4">
           {remaining > 0 ? 'See all ' + projects.length + ' projects' : 'See all work'}
           <Icon name="lucide:arrow-right" aria-hidden="true" />
         </PillButton>

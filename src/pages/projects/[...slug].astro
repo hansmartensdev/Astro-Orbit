@@ -1,7 +1,7 @@
 ---
 /**
  * Work case study
- * URL: /work/<slug>
+ * URL: /projects/<slug>
  *
  * Built as a run of full-bleed bands rather than a column of sections. The
  * page changes temperature as you move down it — ink, ice, ink — so the
@@ -233,7 +233,7 @@ const nextImage = next.data.feature ?? next.data.cover;
     }
 
     {/* --- next project: a full-bleed door out --------------------------- */}
-    <a class="nextup" href={'/work/' + next.id} data-card>
+    <a class="nextup" href={'/projects/' + next.id} data-card>
       {
         nextImage && (
           <Image
