@@ -29,8 +29,8 @@ export const services: Service[] = [
     num: '02',
     title: ['Develop', 'with Astro'],
     theme: 'mid',
-    tags: ['Astro', 'TypeScript', 'Tailwind CSS', 'Hand-built'],
-    desc: 'I build every site myself with Astro, from the first sketch to the last line of code: lean, purposeful, and built to last.',
+    tags: ['Astro', 'TypeScript', 'Tailwind CSS', 'Claude Code'],
+    desc: 'I build every site myself with Astro, from the first sketch to the last line of code: lean, purposeful, and built to last. I work together with Claude Code.',
   },
   {
     num: '03',
