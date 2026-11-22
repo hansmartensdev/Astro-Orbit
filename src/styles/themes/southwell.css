@@ -31,8 +31,10 @@
 
   /* Ink is the primary. The one colour on the site is the droplet that falls
      out of the hero and travels down the page (HeroScene.tsx, reel/morph.ts),
-     in Astro purple — a nod to the framework the site is built with. */
-  --hero-accent: #a855f7;
+     in acid lime, oklch(91% 0.2 122). It is nearly as light as the page, so
+     on the light theme the ball reads by its shading and shadow; on ink it
+     glows. Never use it for text on the light page (1.1:1). */
+  --hero-accent: oklch(91% 0.2 122);
 
   --primary: var(--ink-950);
   --primary-hover: var(--ink-800);
@@ -178,10 +180,10 @@
        04 shade — slate green, glow from the bottom-left
      ------------------------------------------------------------------------- */
   /* The nav's contextual label — the client name after the wordmark slash.
-     The same purple as the droplet. On ice it is a deeper step, so 22px at
-     weight 300 still holds its contrast. */
-  --nav-context: #7e22ce;
-  /* The droplet's purple itself, for use over a dark hero image or on ink. */
+     The droplet's hue as a deep olive on ice (oklch 46% 0.12 122, 6.2:1),
+     since the lime itself vanishes on the light page. */
+  --nav-context: oklch(46% 0.12 122);
+  /* The lime itself, for use over a dark hero image or on ink (15:1). */
   --nav-context-on-media: var(--hero-accent);
 
   --service-white-bg: #ffffff;
