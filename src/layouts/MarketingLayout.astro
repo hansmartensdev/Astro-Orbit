@@ -5,8 +5,8 @@
  * Uses Header shape="floating" for a distinctive visual identity
  */
 import BaseLayout from './BaseLayout.astro';
-import SiteHeader from '@/components/site/SiteHeader.astro';
-import SiteFooter from '@/components/site/SiteFooter.astro';
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
 
 interface Props {
   title?: string;
@@ -38,7 +38,7 @@ const {
   nofollow={nofollow}
   includeOrgSchema={includeOrgSchema}
 >
-  <SiteHeader
+  <Header
     slot="header"
     shape="floating"
     variant="transparent"
@@ -46,10 +46,19 @@ const {
     colorScheme="invert"
     showCta={true}
     cta={{ label: 'Get Started', href: '#get-started' }}
+    actions={[
+      {
+        icon: 'github',
+        href: 'https://github.com/southwellmedia/velocity',
+        label: 'GitHub',
+        iconOnly: true,
+        target: '_blank',
+      },
+    ]}
     showLanguageSwitcher={false}
   />
 
   <slot />
 
-  <SiteFooter slot="footer" background="secondary" showCopyright={false} />
+  <Footer slot="footer" layout="simple" background="secondary" showCopyright={false} />
 </BaseLayout>

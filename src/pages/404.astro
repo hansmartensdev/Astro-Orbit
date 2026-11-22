@@ -1,9 +1,32 @@
 ---
 /**
- * The not-found page. Its content lives in src/views/NotFoundView.astro, which
- * is yours: customize the 404 there, since upgrades replace this file.
+ * 404
  */
-import NotFoundView from '@/views/NotFoundView.astro';
+import SiteLayout from '@/layouts/SiteLayout.astro';
+import PillButton from '@/components/site/PillButton.astro';
 ---
 
-<NotFoundView />
+<SiteLayout
+  title="Page not found"
+  description="That page has either moved, been deleted, or never existed."
+  noindex
+>
+  <section
+    class="flex min-h-screen flex-col justify-end shell pt-24 pb-[140px] max-[800px]:pb-[100px]"
+  >
+    <p class="label-mono mb-8 text-foreground-muted">404</p>
+
+    <h1 class="display-hero m-0">
+      Nothing<br /><em>here.</em>
+    </h1>
+
+    <p class="mt-9 max-w-[420px] text-[17px] leading-[1.6] text-foreground-secondary">
+      That page has either moved, been deleted, or never existed in the first place.
+    </p>
+
+    <div class="mt-13 flex flex-wrap gap-[18px]">
+      <PillButton href="/">Back to home</PillButton>
+      <PillButton href="/work" variant="outline">See the work</PillButton>
+    </div>
+  </section>
+</SiteLayout>

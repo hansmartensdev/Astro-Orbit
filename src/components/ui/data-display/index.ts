@@ -8,4 +8,3 @@ export * from './Pagination';
 export * from './Progress';
 export * from './Skeleton';
 export * from './GoogleMap';
-export * from './Carousel';

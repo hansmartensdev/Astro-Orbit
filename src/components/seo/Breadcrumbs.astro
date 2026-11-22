@@ -3,7 +3,6 @@ import { cn } from '@/lib/cn';
 import JsonLd from './JsonLd.astro';
 import { createBreadcrumbSchema } from '@/lib/schema';
 import siteConfig from '@/config/site.config';
-import { getLocale, useTranslations } from '@/i18n';
 
 interface BreadcrumbItem {
   label: string;
@@ -16,12 +15,11 @@ interface Props {
 }
 
 const { items, class: className } = Astro.props;
-const t = useTranslations(getLocale(Astro));
 
-// Build schema items with full URLs. An item without href is the current page.
+// Build schema items with full URLs
 const schemaItems = items.map((item) => ({
   name: item.label,
-  url: new URL(item.href ?? Astro.url.pathname, siteConfig.url).toString(),
+  url: item.href ? new URL(item.href, siteConfig.url).toString() : siteConfig.url,
 }));
 
 const schema = createBreadcrumbSchema(schemaItems);
@@ -29,7 +27,7 @@ const schema = createBreadcrumbSchema(schemaItems);
 
 <JsonLd schema={schema} />
 
-<nav aria-label={t('a11y.breadcrumb')} class={cn('text-sm', className)}>
+<nav aria-label="Breadcrumb" class={cn('text-sm', className)}>
   <ol class="flex flex-wrap items-center gap-2">
     {
       items.map((item, index) => (

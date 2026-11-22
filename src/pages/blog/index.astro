@@ -1,6 +1,172 @@
 ---
-import BlogIndexView from '@/views/BlogIndexView.astro';
-import { defaultLocale } from '@/i18n';
+/**
+ * Lab index
+ * URL: /blog
+ *
+ * "Lab" is what the studio calls its writing; the route stays /blog so the
+ * RSS feed, sitemap entries and Pagefind index keep their addresses.
+ *
+ * The listing is an editorial list rather than Velocity's card grid — the
+ * identity is built on big type and hairline rules, not cards.
+ */
+import SiteLayout from '@/layouts/SiteLayout.astro';
+import SectionHead from '@/components/sections/SectionHead.astro';
+import Cta from '@/components/sections/Cta.astro';
+import { getCollection } from 'astro:content';
+import { formatDate } from '@/lib/utils';
+
+const posts = (
+  await getCollection('blog', ({ data }) => (import.meta.env.PROD ? data.draft !== true : true))
+)
+  .filter((post) => post.data.locale === 'en')
+  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+
+const postUrl = (id: string) => '/blog/' + id.replace('en/', '');
 ---
 
-<BlogIndexView locale={defaultLocale} />
+<SiteLayout
+  title="Lab"
+  description="Notes from the studio — what we are building, and what we learned building it."
+>
+  <header class="shell pt-[180px] max-[800px]:pt-[130px]">
+    <SectionHead
+      title="Lab"
+      blurb="Notes from the studio — what we are building, and what we learned building it."
+    />
+  </header>
+
+  <!-- Pagefind search. Hidden until the index is confirmed present, so it
+       never shows up broken in `astro dev`, where no index has been built. -->
+  <div class="mt-16 shell max-[800px]:mt-10" id="lab-search" hidden>
+    <label class="label-mono text-foreground-muted" for="lab-search-input">SEARCH</label>
+    <input
+      id="lab-search-input"
+      type="search"
+      autocomplete="off"
+      placeholder="Search the lab"
+      class="mt-3 w-full max-w-[560px] border-0 border-b border-border bg-transparent pb-4 text-[clamp(1.25rem,2.4vw,1.75rem)] tracking-[-0.03em] outline-none placeholder:text-foreground-subtle focus:border-foreground"
+    />
+  </div>
+
+  <section class="mt-14 shell max-[800px]:mt-10">
+    <ul class="m-0 list-none p-0" id="lab-results" hidden></ul>
+
+    <ul class="m-0 list-none p-0" id="lab-list">
+      {
+        posts.map((post) => (
+          <li class="border-t border-border last:border-b" data-reveal>
+            <a class="group block py-10 max-[800px]:py-7" href={postUrl(post.id)}>
+              <span class="label-mono text-foreground-muted">
+                {formatDate(post.data.publishedAt).toUpperCase()}
+              </span>
+
+              <h2 class="font-display [text-transform:var(--display-case)] mt-4 mb-0 text-[clamp(1.75rem,4.4vw,3.25rem)] leading-[1.05] font-semibold tracking-[var(--display-tracking)] transition-opacity group-hover:opacity-60">
+                {post.data.title}
+              </h2>
+
+              <p class="mt-4 mb-0 max-w-[620px] text-[17px] leading-[1.55] text-foreground-secondary">
+                {post.data.description}
+              </p>
+
+              {post.data.tags.length > 0 && (
+                <div class="mt-5 flex flex-wrap gap-2">
+                  {post.data.tags.map((tag) => (
+                    <span class="rounded-full border border-border px-3.5 py-1.5 text-[13px] font-medium">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    {
+      posts.length === 0 && (
+        <p class="py-10 text-[17px] text-foreground-secondary">Nothing published yet.</p>
+      )
+    }
+  </section>
+
+  <Cta />
+</SiteLayout>
+
+<script>
+  interface PagefindResult {
+    data: () => Promise<{ url: string; excerpt: string; meta: { title?: string } }>;
+  }
+
+  interface PagefindApi {
+    init: () => Promise<void>;
+    debouncedSearch: (query: string) => Promise<{ results: PagefindResult[] } | null>;
+  }
+
+  async function initLabSearch() {
+    const wrapper = document.getElementById('lab-search');
+    const input = document.getElementById('lab-search-input') as HTMLInputElement | null;
+    const results = document.getElementById('lab-results');
+    const list = document.getElementById('lab-list');
+
+    if (!wrapper || !input || !results || !list) return;
+
+    let pagefind: PagefindApi;
+
+    try {
+      // The path is held in a variable so Vite does not try to resolve it at
+      // build time — the index only exists in dist/ after `pagefind` runs.
+      const modulePath = '/pagefind/pagefind.js';
+      pagefind = (await import(/* @vite-ignore */ modulePath)) as PagefindApi;
+      await pagefind.init();
+    } catch {
+      // No index (dev server, or a build that skipped the pagefind step).
+      return;
+    }
+
+    wrapper.hidden = false;
+
+    input.addEventListener('input', async () => {
+      const query = input.value.trim();
+
+      if (query === '') {
+        results.hidden = true;
+        results.innerHTML = '';
+        list.hidden = false;
+        return;
+      }
+
+      const search = await pagefind.debouncedSearch(query);
+      if (!search) return;
+
+      const found = await Promise.all(search.results.slice(0, 8).map((result) => result.data()));
+
+      list.hidden = true;
+      results.hidden = false;
+      results.innerHTML = found
+        .map(
+          (item) =>
+            '<li class="border-t border-border last:border-b">' +
+            '<a class="group block py-8" href="' +
+            item.url +
+            '">' +
+            '<h2 class="font-display [text-transform:var(--display-case)] m-0 text-[clamp(1.5rem,3.2vw,2.25rem)] leading-[1.1] font-semibold tracking-[var(--display-tracking)] transition-opacity group-hover:opacity-60">' +
+            (item.meta.title ?? 'Untitled') +
+            '</h2>' +
+            '<p class="mt-3 mb-0 max-w-[620px] text-[16px] leading-[1.55] text-foreground-secondary">' +
+            item.excerpt +
+            '</p>' +
+            '</a></li>'
+        )
+        .join('');
+
+      if (found.length === 0) {
+        results.innerHTML =
+          '<li class="py-10 text-[17px] text-foreground-secondary">No matches.</li>';
+      }
+    });
+  }
+
+  initLabSearch();
+  document.addEventListener('astro:after-swap', initLabSearch);
+</script>

@@ -7,16 +7,13 @@
  * - logomark-dark.svg  → Icon for dark backgrounds
  * - logo-full.svg      → Full logo for light backgrounds
  * - logo-full-dark.svg → Full logo for dark backgrounds
- *
- * The files render inline, so they can use currentColor and CSS variables such as
- * var(--logo-accent) to follow the theme.
  */
 import siteConfig from '@/config/site.config';
 
-import logomark from '@/assets/branding/logomark.svg?raw';
-import logomarkDark from '@/assets/branding/logomark-dark.svg?raw';
-import logoFull from '@/assets/branding/logo-full.svg?raw';
-import logoFullDark from '@/assets/branding/logo-full-dark.svg?raw';
+import logomark from '@/assets/branding/logomark.svg';
+import logomarkDark from '@/assets/branding/logomark-dark.svg';
+import logoFull from '@/assets/branding/logo-full.svg';
+import logoFullDark from '@/assets/branding/logo-full-dark.svg';
 
 interface Props {
   /** Size preset */
@@ -25,8 +22,6 @@ interface Props {
   forceDark?: boolean;
   /** Use full logo instead of logomark */
   variant?: 'logomark' | 'full';
-  /** Hide from screen readers. Use when the site name is shown next to the logo. */
-  decorative?: boolean;
   /** Additional CSS classes */
   class?: string;
 }
@@ -35,7 +30,6 @@ const {
   size = 'md',
   forceDark = false,
   variant = 'logomark',
-  decorative = false,
   class: className,
 } = Astro.props;
 
@@ -51,16 +45,28 @@ const sizeClasses: Record<string, string> = {
 };
 
 const sizeClass = sizeClasses[size] || sizeClasses.md;
-const alt = decorative ? '' : siteConfig.branding.logo.alt;
 ---
 
-<span class:list={['inline-block', className]} role={decorative ? undefined : 'img'} aria-label={alt || undefined} aria-hidden={decorative ? 'true' : undefined}>
+<span class:list={['inline-block', className]}>
   {forceDark ? (
-    <span class:list={[sizeClass, 'block [&>svg]:size-full']} set:html={darkLogo} />
+    <img
+      src={darkLogo.src}
+      alt={siteConfig.branding.logo.alt}
+      class:list={[sizeClass]}
+    />
   ) : (
     <Fragment>
-      <span class:list={[sizeClass, 'block dark:hidden [&>svg]:size-full']} set:html={lightLogo} />
-      <span class:list={[sizeClass, 'hidden dark:block [&>svg]:size-full']} set:html={darkLogo} />
+      <img
+        src={lightLogo.src}
+        alt={siteConfig.branding.logo.alt}
+        class:list={[sizeClass, 'block dark:hidden']}
+      />
+      <img
+        src={darkLogo.src}
+        alt=""
+        class:list={[sizeClass, 'hidden dark:block']}
+        aria-hidden="true"
+      />
     </Fragment>
   )}
 </span>

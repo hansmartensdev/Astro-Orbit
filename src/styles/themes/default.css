@@ -18,11 +18,6 @@
        --theme-radius-xl, --theme-radius-full
 
      Dark mode: all of the above re-mapped for dark backgrounds
-
-   Optional:
-     --brand-hue recolours the brand scale. --theme-radius-button and
-     --theme-button-weight style every Button. --logo-accent colours the logo.
-     Themes load last, so a theme can also override any token, such as --text-*.
    ============================================================================= */
 
 :root {
@@ -68,8 +63,7 @@
   --ring: var(--gray-900);
 
   /* Destructive - for delete/remove actions */
-  /* Darker than --error so white text on it, and it as text on the page, pass WCAG AA (6.1:1). */
-  --destructive: oklch(52% 0.2 27);
+  --destructive: var(--error);
   --destructive-foreground: var(--gray-0);
 
   /* Gradient colors - OKLCH */
@@ -91,12 +85,12 @@
   /* -------------------------------------------------------------------------
      Typography
      ------------------------------------------------------------------------- */
-  --theme-font-sans: var(--font-manrope), ui-sans-serif, system-ui,
+  --theme-font-sans: 'Manrope Variable', 'Manrope', ui-sans-serif, system-ui,
     -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
     Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
     'Segoe UI Symbol', 'Noto Color Emoji';
-  --theme-font-display: var(--font-outfit), var(--theme-font-sans);
-  --theme-font-mono: var(--font-jetbrains-mono), ui-monospace,
+  --theme-font-display: 'Outfit Variable', 'Outfit', var(--theme-font-sans);
+  --theme-font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace,
     SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
     monospace;
   --theme-heading-weight: 700;
@@ -133,7 +127,7 @@
   --foreground: var(--gray-50);             /* 19.3:1 on gray-950 — WCAG AAA */
   --foreground-secondary: var(--gray-300); /* 13.1:1 on gray-950 — WCAG AAA */
   --foreground-muted: var(--gray-400);     /*  6.0:1 on gray-950 — WCAG AA  */
-  --foreground-subtle: oklch(60% 0 0);     /*  5.1:1 on gray-950, 4.6:1 on gray-900 — WCAG AA */
+  --foreground-subtle: oklch(58% 0 0);     /*  ~4.6:1 on gray-950 — WCAG AA  */
 
   --border: var(--gray-800);
   --border-strong: var(--gray-700);
@@ -161,9 +155,8 @@
 
   --accent-light: var(--brand-900);
 
-  /* Light red with dark text: 7:1 as a button, and over 6.7:1 as text on dark surfaces. */
-  --destructive: oklch(72% 0.17 25);
-  --destructive-foreground: oklch(18% 0.03 25);
+  --destructive: oklch(65% 0.22 25);
+  --destructive-foreground: var(--gray-0);
 
   /* Gradient colors for dark - OKLCH */
   --gradient-start: oklch(12.3% 0 0);
@@ -173,11 +166,6 @@
   --success-light: oklch(25% 0.05 145);
   --warning-light: oklch(25% 0.05 85);
   --error-light: oklch(25% 0.05 25);
-  --info-light: oklch(25% 0.05 260);
-  --success-foreground: oklch(85% 0.12 145); /* text on the status -light surfaces — WCAG AA */
-  --warning-foreground: oklch(88% 0.12 85);
-  --error-foreground: oklch(85% 0.09 25);
-  --info-foreground: oklch(85% 0.08 260);
 
   /* Inverted section in dark mode - slightly elevated for contrast */
   --surface-invert: var(--gray-900);
