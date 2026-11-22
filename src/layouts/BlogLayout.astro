@@ -16,6 +16,8 @@ interface Props {
   author?: string;
   image?: ImageMetadata;
   imageAlt?: string;
+  /** The generated cover (/covers/<slug>.png), used when there is no image. */
+  cover?: string;
   tags?: string[];
   slug?: string;
 }
@@ -28,11 +30,12 @@ const {
   author = 'Team',
   image,
   imageAlt,
+  cover,
   tags = [],
   slug = '',
 } = Astro.props;
 
-const ogImage = image?.src || `/og${Astro.url.pathname}.png`;
+const ogImage = image?.src || cover || `/og${Astro.url.pathname.replace(/\/$/, '')}.png`;
 
 const breadcrumbs = [
   { label: 'Home', href: '/' },
@@ -68,6 +71,7 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
     tags={tags}
     image={image}
     imageAlt={imageAlt}
+    cover={cover}
   />
 
   <article class={`py-12 ${image ? 'pt-24' : ''}`}>

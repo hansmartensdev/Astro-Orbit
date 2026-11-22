@@ -19,6 +19,9 @@ const blog = defineCollection({
       category: z.string().optional(),
       draft: z.boolean().default(false),
       featured: z.boolean().default(false),
+      /** The cover's icon: any Lucide name (lucide.dev/icons). Without it,
+       *  one is picked from the tags. See generateBlogCover in lib/og.ts. */
+      icon: z.string().optional(),
       locale: z.enum(['en', 'es', 'fr']).default('en'),
     }),
 });

@@ -7,7 +7,8 @@ import siteConfig from '@/config/site.config';
 // Define static pages that need OG images
 // One per page the SEO component points at (/og/<path>.png). Every page that
 // renders without its own `image` needs an entry here or below, or its link
-// preview is a 404.
+// preview is a 404. Blog posts are not here: their cover is their preview
+// (src/pages/covers/[slug].png.ts).
 const STATIC_PAGES = [
   { slug: 'index', title: 'An Astro developer for fast & beautiful websites.', description: siteConfig.description },
   { slug: 'about', title: 'About', description: `Who ${siteConfig.name} is, and what drives the work.` },
@@ -17,21 +18,6 @@ const STATIC_PAGES = [
 ];
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  // Get all blog posts
-  const blogPosts = await getCollection('blog', ({ data }) => {
-    return import.meta.env.PROD ? data.draft !== true : true;
-  });
-
-  // Generate paths for blog posts
-  const blogPaths = blogPosts.map((post) => ({
-    params: { slug: `blog/${post.id}` },
-    props: {
-      title: post.data.title,
-      description: post.data.description,
-      type: 'article' as const,
-    },
-  }));
-
   // Case studies: /og/projects/<id>.png, used while a project has no picture of
   // its own to share.
   const projects = await getCollection('work', ({ data }) =>
@@ -56,7 +42,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     },
   }));
 
-  return [...staticPaths, ...workPaths, ...blogPaths];
+  return [...staticPaths, ...workPaths];
 };
 
 export const GET: APIRoute = async ({ props }) => {

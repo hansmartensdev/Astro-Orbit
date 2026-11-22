@@ -104,3 +104,105 @@ export async function generateOGImage(options: OGImageOptions): Promise<Buffer> 
     await sharp(Buffer.from(svg)).resize(1200).png().toBuffer()
   );
 }
+
+// ---------------------------------------------------------------------------
+// Blog covers
+//
+// Every post gets a cover in one house style: ink, a violet glow, a large
+// outline Lucide icon, the title in Geist and the hm/ mark. What changes per
+// post is seeded from its slug, so a cover is unique and the same on every
+// build: where the main glow sits and where its fainter partner sits. The
+// icon is the post's `icon` frontmatter (any lucide.dev name), or one picked
+// from its tags. The same image is the post's share preview, its header
+// image and its card on the blog and the homepage.
+// ---------------------------------------------------------------------------
+
+/** Where a post's cover lives. One place, so pages and cards agree. */
+export const coverPath = (slug: string) => `/covers/${slug}.png`;
+
+/** A tag (lower-cased) to an icon, for posts without their own `icon`. */
+// The first rule a post's tags match wins, so the most specific topics come
+// first: nearly every post here is tagged Astro, so Astro is the last resort
+// before the default, and a passing "Tailwind CSS" tag does not make a post
+// about open source a design post.
+const TAG_ICONS: [RegExp, string][] = [
+  [/security|cve|vulnerab/, 'shield-check'],
+  [/open.?source|github|boilerplate|starter|theme/, 'git-branch'],
+  [/\bai\b|claude|llm|assistant/, 'sparkles'],
+  [/cloudflare|edge|hosting|deploy/, 'cloud'],
+  [/seo|search|google/, 'search'],
+  [/accessib|a11y/, 'accessibility'],
+  [/css|design|style|typograph/, 'paintbrush'],
+  [/perform|speed|vitals|lighthouse/, 'gauge'],
+  [/javascript|typescript|react|next/, 'code-xml'],
+  [/astro/, 'rocket'],
+]
+const DEFAULT_ICON = 'pen-line';
+
+let lucide: Record<string, { body: string }> | null = null;
+function lucideBody(name: string): string | undefined {
+  if (!lucide) {
+    const path = resolve(process.cwd(), 'node_modules/@iconify-json/lucide/icons.json');
+    lucide = JSON.parse(readFileSync(path, 'utf8')).icons;
+  }
+  return lucide?.[name]?.body;
+}
+
+/** The icon a post's cover uses: its own, else one from its tags. */
+export function coverIcon(icon: string | undefined, tags: string[] = []): string {
+  if (icon && lucideBody(icon)) return icon;
+  if (icon) console.warn(`[covers] unknown Lucide icon "${icon}", picking one from the tags`);
+  const joined = tags.join(' ').toLowerCase();
+  return TAG_ICONS.find(([re]) => re.test(joined))?.[1] ?? DEFAULT_ICON;
+}
+
+const seedOf = (s: string) => {
+  let h = 2166136261;
+  for (const ch of s) {
+    h ^= ch.charCodeAt(0);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+};
+
+const GLOW_AT = ['0% 0%', '100% 0%', '100% 100%', '0% 100%', '50% 0%', '50% 100%'];
+
+export async function generateBlogCover(options: {
+  title: string;
+  slug: string;
+  icon?: string;
+  tags?: string[];
+}): Promise<Buffer> {
+  const { title, slug, tags = [] } = options;
+  const seed = seedOf(slug);
+  const glow = GLOW_AT[seed % GLOW_AT.length];
+  const glow2 = GLOW_AT[(seed >>> 7) % GLOW_AT.length];
+  const body = lucideBody(coverIcon(options.icon, tags))!
+    .replace(/currentColor/g, '#c4b5fd')
+    .replace(/stroke-width="2"/g, 'stroke-width="1.25"');
+  const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220" viewBox="0 0 24 24">${body}</svg>`;
+  const iconSrc = `data:image/svg+xml;base64,${Buffer.from(iconSvg).toString('base64')}`;
+  const titleSize = title.length > 70 ? 50 : title.length > 46 ? 58 : 66;
+
+  const markup = html`
+    <div style="display: flex; flex-direction: column; justify-content: space-between; width: 100%; height: 100%; padding: 64px 72px; font-family: 'Geist'; background-color: ${INK}; background-image: radial-gradient(circle at ${glow}, rgba(124, 58, 237, 0.6) 0%, rgba(124, 58, 237, 0) 60%), radial-gradient(circle at ${glow2}, rgba(167, 139, 250, 0.22) 0%, rgba(167, 139, 250, 0) 45%);">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <span style="font-size: 26px; font-weight: 600; color: ${ICE}; letter-spacing: -0.04em;">${siteConfig.mark}</span>
+        <img src="${iconSrc}" style="width: 220px; height: 220px;" />
+      </div>
+      <div style="display: flex; font-size: ${titleSize}px; font-weight: 600; color: #ffffff; line-height: 1.05; letter-spacing: -0.035em; max-width: 920px;">${title.toLowerCase()}</div>
+    </div>
+  `;
+
+  decodeText(markup as unknown as Node);
+  // @ts-expect-error satori-html VNode is compatible with satori
+  const svg = await satori(markup, {
+    width: 1200,
+    height: 630,
+    fonts: [
+      { name: 'Geist', data: loadFont(400), weight: 400, style: 'normal' },
+      { name: 'Geist', data: loadFont(600), weight: 600, style: 'normal' },
+    ],
+  });
+  return Buffer.from(await sharp(Buffer.from(svg)).png().toBuffer());
+}

@@ -1,6 +1,7 @@
 ---
 import BlogLayout from '@/layouts/BlogLayout.astro';
 import { getCollection, render } from 'astro:content';
+import { coverPath } from '@/lib/og';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => {
@@ -25,6 +26,7 @@ const { Content } = await render(post);
   author={post.data.author}
   image={post.data.image}
   imageAlt={post.data.imageAlt}
+  cover={coverPath(post.id.replace(/^en\//, ''))}
   tags={post.data.tags}
   slug={post.id}
 >

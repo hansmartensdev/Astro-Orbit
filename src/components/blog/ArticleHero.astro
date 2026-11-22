@@ -12,6 +12,8 @@ interface Props {
   tags?: string[];
   image?: ImageMetadata;
   imageAlt?: string;
+  /** The generated cover, shown when the post has no image of its own. */
+  cover?: string;
 }
 
 const {
@@ -23,6 +25,7 @@ const {
   tags = [],
   image,
   imageAlt,
+  cover,
 } = Astro.props;
 
 // Estimate reading time
@@ -107,6 +110,15 @@ const readingTime = Math.max(1, Math.ceil(estimatedWords / wordsPerMinute));
       </div>
     </div>
   </div>
+
+  {!image && cover && (
+    <div class="relative mx-auto max-w-5xl px-6 -mb-16">
+      <div class="overflow-hidden rounded-xl border border-border shadow-2xl">
+        {/* The cover repeats the title as artwork, so it is decorative here. */}
+        <img src={cover} alt="" width="1200" height="630" class="aspect-[1200/630] w-full object-cover" loading="eager" />
+      </div>
+    </div>
+  )}
 
   {image && (
     <div class="relative mx-auto max-w-5xl px-6 -mb-16">

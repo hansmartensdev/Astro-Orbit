@@ -54,7 +54,8 @@ const locale = rawLocale.includes('_') || rawLocale.includes('-')
   : (localeMap[rawLocale] || `${rawLocale}_${rawLocale.toUpperCase()}`);
 
 // Determine OG image metadata — only emit width/height/type for the auto-generated fallback
-const isGeneratedOgImage = !image;
+// Blog covers (/covers/…) are generated at the same 1200x630 size.
+const isGeneratedOgImage = !image || image.includes('/covers/');
 const extToMime: Record<string, string> = {
   '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
   '.webp': 'image/webp', '.gif': 'image/gif', '.svg': 'image/svg+xml',
