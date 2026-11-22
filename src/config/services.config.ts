@@ -43,7 +43,7 @@ export const services: Service[] = [
     num: '04',
     title: ['Maintain &', 'Share'],
     theme: 'shade',
-    tags: ['GitHub', 'Open Source', 'Astro Themes', 'Updates'],
-    desc: 'I keep what I build up to date on GitHub, and share it openly, so the Astro community can use it too.',
+    tags: ['GitHub', 'Open Source', 'Astro Themes', 'Blog'],
+    desc: 'I keep what I build up to date on GitHub and share it openly, so the Astro community can use it too — and I write about it on my personal blog.',
   },
 ];
