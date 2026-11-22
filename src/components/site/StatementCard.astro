@@ -1,0 +1,200 @@
+---
+/**
+ * StatementCard
+ *
+ * The dark card the droplet blooms into on the homepage (Reel.astro): a label,
+ * one statement set big, and a signature row. Every word of the statement is
+ * its own span with an index, and lights up from dim to full as
+ * `--reel-read` (0..1, written on the section by the reel engine) climbs —
+ * first word to last, in step with the scroll. Without the engine the
+ * variable is unset, it falls back to 1, and the whole statement simply shows.
+ *
+ * Sized in container units, so whatever box it fills (the engine's fixed
+ * overlay, or the static frame) must be a size container.
+ */
+import siteConfig from '@/config/site.config';
+
+interface Props {
+  /** Paint the card's own ink ground and corners. Off when the WebGL frame
+   *  underneath already draws them. */
+  surface?: boolean;
+}
+
+const { surface = false } = Astro.props;
+
+// The statement, in phrases; `accent` phrases are set in the accent colour.
+const phrases: { text: string; accent?: boolean }[] = [
+  { text: 'Making something' },
+  { text: 'beautifully designed', accent: true },
+  { text: 'and' },
+  { text: 'technically solid', accent: true },
+  { text: '— that’s what I find genuinely satisfying.' },
+];
+
+const words = phrases.flatMap((phrase) =>
+  phrase.text.split(' ').map((text) => ({ text, accent: Boolean(phrase.accent) }))
+);
+---
+
+<figure class:list={['stmt', surface && 'stmt--surface']}>
+  <p class="stmt__label label-mono">What drives me</p>
+
+  <blockquote class="stmt__quote">
+    <p class="stmt__text" style={`--n: ${words.length}`}>
+      {
+        words.map((word, i) => (
+          <>
+            <span class:list={['stmt__w', word.accent && 'stmt__w--accent']} style={`--i: ${i}`}>
+              {word.text}
+            </span>{' '}
+          </>
+        ))
+      }
+    </p>
+  </blockquote>
+
+  <figcaption class="stmt__foot">
+    <span class="stmt__who">
+      {/* PLACEHOLDER: the monogram stands in for a round portrait of Hans. */}
+      <span class="stmt__avatar" aria-hidden="true">{siteConfig.mark}</span>
+      <span class="stmt__id">
+        <span class="stmt__name">{siteConfig.name}</span>
+        <span class="stmt__role">Design and code, for the love of it</span>
+      </span>
+    </span>
+    <span class="stmt__meta label-mono">Astro developer · Veghel, NL</span>
+    <a class="stmt__more" href="/about">More about me <span aria-hidden="true">→</span></a>
+  </figcaption>
+</figure>
+
+<style>
+  .stmt {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 3cqh;
+    margin: 0;
+    padding: clamp(24px, 6cqh, 64px) clamp(22px, 6cqi, 88px) clamp(20px, 5cqh, 52px);
+    color: var(--ice-100);
+  }
+
+  .stmt--surface {
+    border-radius: inherit;
+    background: var(--reel-card-bg, var(--ink-950));
+  }
+
+  .stmt__label {
+    margin: 0;
+    color: rgb(238 242 244 / 0.5);
+  }
+
+  .stmt__quote {
+    margin: 0;
+  }
+
+  /* One statement, set like a headline. Sized off both container axes, so a
+     wide 16:9 card and a tall phone card both fill out to three or four lines. */
+  .stmt__text {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: var(--display-weight);
+    font-size: clamp(22px, calc(3.7cqi + 4.4cqh), 104px);
+    line-height: 1.04;
+    letter-spacing: var(--display-tracking);
+    text-transform: var(--display-case);
+    text-wrap: balance;
+  }
+
+  /* Each word is lit by how far the reading has got: the word at index i
+     comes up as --reel-read passes i/n, from a faint 16% to full. */
+  .stmt__w {
+    opacity: clamp(0.16, calc(var(--reel-read, 1) * (var(--n) + 1) - var(--i)), 1);
+    transition: opacity 0.12s linear;
+  }
+
+  .stmt__w--accent {
+    color: var(--statement-accent, #8b5cf6);
+  }
+
+  .stmt__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px 32px;
+    font-family: var(--font-sans);
+  }
+
+  .stmt__who {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .stmt__avatar {
+    display: inline-grid;
+    place-items: center;
+    width: clamp(40px, 8cqh, 56px);
+    height: clamp(40px, 8cqh, 56px);
+    flex: none;
+    border: 2px solid var(--statement-accent, #8b5cf6);
+    border-radius: 50%;
+    background: var(--ink-800);
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+  }
+
+  .stmt__id {
+    display: grid;
+    gap: 2px;
+    line-height: 1.25;
+  }
+
+  .stmt__name {
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .stmt__role {
+    font-size: 14px;
+    color: rgb(238 242 244 / 0.62);
+  }
+
+  .stmt__meta {
+    color: rgb(238 242 244 / 0.5);
+  }
+
+  .stmt__more {
+    color: rgb(238 242 244 / 0.86);
+    font-size: 16px;
+    text-decoration: underline;
+    text-decoration-color: rgb(238 242 244 / 0.35);
+    text-underline-offset: 6px;
+    pointer-events: auto;
+    transition:
+      color 0.25s ease,
+      text-decoration-color 0.25s ease;
+  }
+
+  .stmt__more:hover {
+    color: #fff;
+    text-decoration-color: var(--statement-accent, #8b5cf6);
+  }
+
+  .stmt__more:focus-visible {
+    outline: 2px solid var(--statement-accent, #8b5cf6);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  /* A narrow card keeps the signature and the link; the meta line goes. */
+  @container (max-width: 560px) {
+    .stmt__meta {
+      display: none;
+    }
+  }
+</style>

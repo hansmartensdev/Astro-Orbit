@@ -21,10 +21,10 @@
  *   bloom     as the reel pins, the sphere spreads into the rounded frame —
  *             the circle's SDF blends into the box's — while the frame peels
  *             out of its slot per vertex, tilts, and opens to the full
- *             width. Inside, the chrome dissolves into the playable droplet
- *             scene (droplet-scene.ts), rendered to a texture the frame
- *             samples. The copy on the frame follows the scene's clarity;
- *             the disciplines and the call to action sit with it.
+ *             width. Inside, the chrome dissolves into a flat ink card
+ *             (uPanel, --reel-card-bg): the statement card. Its words sit on
+ *             the overlay and light up as the hold scrolls on, read off
+ *             --reel-read, which this engine writes on the section (0..1).
  *   close     late in the hold the frame folds back into a ball at its
  *             centre, and the ball drops out of it as the stage releases.
  *   deliver   it is flung out of the frame at the "Work" heading, punches
@@ -140,12 +140,15 @@ export interface ReelMorph {
 // --- The timeline before the pin lives in handoff.ts (EXIT_*, FALL_END, REST_END).
 // --- The pinned hold, as fractions of the hold distance -----------------------
 /** The frame is fully open at this point of the hold. */
-const OPEN_SPAN = 0.5;
-/** It folds back into a ball over this stretch … */
-const CLOSE_START = 0.7;
-const CLOSE_END = 0.88;
+const OPEN_SPAN = 0.25;
+/** The statement's words light up, first to last, over this stretch … */
+const READ_START = 0.27;
+const READ_END = 0.72;
+/** … it folds back into a ball over this one … */
+const CLOSE_START = 0.8;
+const CLOSE_END = 0.9;
 /** … and drops out from here. */
-const DROP_START = 0.9;
+const DROP_START = 0.92;
 /** Delivery ends when the lead card's centre reaches this viewport height … */
 const DELIVER_AT = 0.45;
 /** … or, if that comes first, when its top is this far below the fixed nav.
@@ -240,6 +243,7 @@ uniform vec3 uCardRest;  // grayscale, contrast, opacity of that rest look
 uniform vec3 uCardBg;    // the card's own backdrop, sRGB
 uniform vec3 uInk, uMid, uSilver, uBg, uBg2, uWarm, uCool;
 uniform vec3 uAccent;    // the ball's own colour (--hero-accent)
+uniform vec3 uPanel;     // the open frame's fill: the statement card, sRGB
 
 varying vec2 vUv;
 
@@ -310,8 +314,8 @@ void main() {
   vec2 tuv = (vUv - 0.5) * s + 0.5;
   vec3 col = chrome(dq, r) * mix(1.0, 0.93, uDim);
   if (uMix > 0.001) {
-    vec3 pic = texture2D(uMap, tuv).rgb;
-    if (uCard > 0.5) pic = cardRest(pic);
+    // The lead card shows its own picture; the open frame is the flat card.
+    vec3 pic = uCard > 0.5 ? cardRest(texture2D(uMap, tuv).rgb) : uPanel;
     col = mix(col, pic, uMix);
   }
 
@@ -433,6 +437,7 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
     uMid: { value: new Color() },
     uSilver: { value: new Color() },
     uAccent: { value: new Color() },
+    uPanel: { value: new Color() },
     uBg: { value: new Color() },
     uBg2: { value: new Color() },
     uWarm: { value: new Color() },
@@ -446,6 +451,8 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
     colors.uMid.value.copy(p.mid);
     colors.uSilver.value.copy(p.silver);
     colors.uAccent.value.copy(p.accent);
+    // sRGB, like the card textures: it is mixed in after the chrome's finish.
+    colors.uPanel.value.copy(readColor('var(--reel-card-bg, #0c1016)', '#0c1016', false));
     colors.uBg.value.copy(p.bg);
     colors.uBg2.value.copy(p.bg2);
     colors.uWarm.value.copy(p.warm);
@@ -622,8 +629,8 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
   let clearState = false;
   const pointer = { x: 0, y: 0, dirty: false, inside: false, down: false };
   let pointerLast = -Infinity;
-  let frameIndex = 0;
   let asleep = false;
+  let lastRead = -1;
   // The display's own frame interval: the shortest gap the loop has seen.
   // The scene's governor judges lateness against this, not a fixed 60 Hz,
   // so a 30 Hz screen or a throttled tab is not mistaken for a slow GPU.
@@ -718,6 +725,13 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
     const f = scrolled / holdDistance;
     const openT = clamp(f / OPEN_SPAN, 0, 1);
     const close = smoothstep(CLOSE_START, CLOSE_END, f);
+    // How much of the statement is lit. Off the raw hold, not the damped
+    // progress, so the words track the scroll exactly.
+    const read = smoothstep(READ_START, READ_END, f);
+    if (Math.abs(read - lastRead) > 0.0005) {
+      lastRead = read;
+      root.style.setProperty('--reel-read', read.toFixed(4));
+    }
     const inHold = sY >= pinScroll && sY < dropScroll;
 
     if (!active) {
@@ -815,7 +829,7 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
       travel = 1;
       opacity = 1;
       geometry = 'frame';
-      const toCentre = smoothstep(0.55, CLOSE_START, f);
+      const toCentre = smoothstep(0.74, CLOSE_START, f);
       tx = lerp(thumbCx, fullCx, toCentre);
       ty = lerp(thumbCy, fullCy, toCentre);
       tr = lerp(landR, closeR, toCentre);
@@ -1001,58 +1015,17 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
     const v = moved ? velocityOf() : 0;
     u.uVelocity.value = damp(u.uVelocity.value, v, 12, dt);
 
-    // --- The scene inside, the pointer on it, the words around it -------------
-    const sceneLive = geometry === 'frame' && mixAmt > 0.001;
-    if (sceneLive) {
-      const rx = lerp(thumbV.x, fullV.x, progress);
-      const ry = lerp(thumbV.y, fullV.y, progress);
-      const rw = lerp(thumbV.z, fullV.z, progress);
-      const rh = lerp(thumbV.w, fullV.w, progress);
-      if (pointer.dirty) {
-        pointer.dirty = false;
-        const nx = ((pointer.x - rx) / rw) * 2 - 1;
-        const ny = -(((pointer.y - ry) / rh) * 2 - 1);
-        pointer.inside = Math.abs(nx) < 1.15 && Math.abs(ny) < 1.15;
-        droplets.setPointer(nx, ny, pointer.inside && mixAmt > 0.5, now);
-      }
-      if (pointer.down) {
-        pointer.down = false;
-        if (pointer.inside && mixAmt > 0.5) droplets.burst();
-        pointerLast = now;
-      }
-      // The texture is sized to the frame as it is right now, not to the
-      // open frame: during the bloom and the close it is a fraction of the
-      // size. Quantised so a growing frame reallocates a handful of times,
-      // not every frame.
-      const dpr = Math.min(window.devicePixelRatio || 1, SCENE_DPR) * SCENE_SCALE;
-      const tw = Math.min(1600, Math.max(64, Math.round((rw * dpr) / 64) * 64));
-      droplets.setSize(tw, Math.round(tw * (rh / Math.max(1, rw))));
-
-      // At rest — no cursor for a while, page still — the scene breathes at
-      // half rate, and after a while longer it stops and holds its frame.
-      // Any pointer move or scroll wakes it, so nobody sees the pause.
-      const still = !moved && progress >= 1;
-      const quiet = now - pointerLast;
-      const idle = still && quiet > 3000;
-      asleep = still && quiet > 7000;
-      frameIndex++;
-      if (asleep) {
-        droplets.pause();
-      } else if (!idle || frameIndex % 2 === 0) {
-        if (idle) droplets.pause();
-        else droplets.govern(now, Math.max(1000 / 60, refresh));
-        droplets.update(idle ? dt * 2 : dt, now);
-        droplets.render(renderer);
-      }
-      const open = progress > 0.9 && close < 0.02;
-      setOpen(open);
-      setClear(droplets.clarity > 0.55);
+    // --- The words on the open frame -------------------------------------------
+    // The frame is a flat card now; nothing inside it animates on its own, so
+    // once it is open and the page is still there is nothing to redraw.
+    if (geometry === 'frame' && mixAmt > 0.001) {
+      asleep = !moved && progress >= 1 && close === 0;
+      setOpen(progress > 0.9 && close < 0.02);
     } else {
-      pointer.down = false;
       asleep = false;
-      droplets.pause();
       setOpen(false);
     }
+    pointer.down = false;
 
     if (import.meta.env.DEV) {
       (window as unknown as { __reelDebug?: object }).__reelDebug = {

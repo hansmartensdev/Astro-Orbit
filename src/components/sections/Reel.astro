@@ -6,8 +6,9 @@
  * blurb, and the droplet that left the hero with you. It lands in the empty
  * slot beside the copy; as the section pins, the copy scrolls away at native
  * speed while the droplet blooms into a frame, peels out of its slot, tilts,
- * and opens up to the full width of the shell — a playable droplet scene —
- * then holds there before releasing into the grid below.
+ * and opens up to the full width of the shell — the dark statement card
+ * (StatementCard.astro), whose words light up as you keep scrolling — then
+ * folds back into the ball and releases it into the grid below.
  *
  * Structure, top to bottom:
  *
@@ -17,8 +18,9 @@
  *   .reel__copy     headline, blurb and the EMPTY thumbnail slot. Translated
  *                   up by the engine while pinned so it reads as scrolling.
  *   .reel__full     the EMPTY full-width slot, centred in the stage.
- *   <video>/<img>   the fallback only: shown in the full slot when the
- *                   engine cannot run. Live, the frame draws its own scene.
+ *   static card     the fallback only: the statement card painted in the
+ *                   full slot when the engine cannot run. Live, the WebGL
+ *                   frame draws the card's ground and the overlay its words.
  *   <canvas>        fixed to the viewport; the droplet and frame are drawn
  *                   here, over the hero, the gap and the stage alike.
  *
@@ -27,18 +29,13 @@
  * in src/scripts/reel/morph.ts; the hero publishes its droplet for it, see
  * HeroScene.tsx.
  *
- * Fallbacks, in order: no JS — the video sits in the full slot, the thumbnail
- * slot collapses. Reduced motion or no WebGL — same, decided in the script.
+ * Fallbacks, in order: no JS — the card sits in the full slot, fully lit, the
+ * thumbnail slot collapses. Reduced motion or no WebGL — same, decided in the
+ * script.
  */
-import { Icon } from 'astro-icon/components';
-import PillButton from '@/components/site/PillButton.astro';
+import StatementCard from '@/components/site/StatementCard.astro';
 
 interface Props {
-  /** mp4/webm, or a still (jpg, png, webp, avif), for the fallback frame
-   *  when the WebGL scene cannot run. */
-  src: string;
-  /** Poster for a video fallback. Unused for a still. */
-  poster: string;
   title?: string;
   blurb?: string;
   /** Extra pinned scroll, as a CSS length. Bigger = slower, longer morph. */
@@ -47,15 +44,13 @@ interface Props {
 }
 
 const {
-  src,
-  poster,
   title = 'Fast sites, built to last.',
   blurb = 'Design and Astro development in one pair of hands, from the first sketch to the last deploy.',
-  hold = '160vh',
+  // Long enough to read the statement: the card opens over the first quarter,
+  // the words light up over the next half (READ_* in morph.ts).
+  hold = '300vh',
   class: className,
 } = Astro.props;
-
-const isStill = /\.(jpe?g|png|webp|avif|gif)(\?.*)?$/i.test(src);
 ---
 
 <section class:list={['reel', className]} data-reel style={`--reel-hold-set: ${hold}`}>
@@ -73,27 +68,9 @@ const isStill = /\.(jpe?g|png|webp|avif|gif)(\?.*)?$/i.test(src);
         <div class="reel__thumb" data-reel-thumb aria-hidden="true"></div>
       </div>
 
-      <div class="reel__fullwrap" aria-hidden="true">
+      <div class="reel__fullwrap">
         <div class="reel__full" data-reel-full>
-          {
-            isStill ? (
-              <img class="reel__video" data-reel-source src={src} alt="" decoding="async" />
-            ) : (
-              <video
-                class="reel__video"
-                data-reel-source
-                muted
-                loop
-                playsinline
-                autoplay
-                preload="metadata"
-                poster={poster}
-                crossorigin="anonymous"
-              >
-                <source src={src} />
-              </video>
-            )
-          }
+          <StatementCard surface />
         </div>
       </div>
     </div>
@@ -108,35 +85,12 @@ const isStill = /\.(jpe?g|png|webp|avif|gif)(\?.*)?$/i.test(src);
 
   {
     /* Above the canvas, on the open frame's rectangle (the engine sizes it):
-      the line that follows the scene's state, the one-desk argument, a hint
-      for pointers, and a link down to the work. Hidden until the frame is open,
-      so nothing here is reachable before it can be seen. */
+      the statement card's words, lit by --reel-read as the hold scrolls on.
+      The frame underneath paints the card's ink. Hidden until the frame is
+      open, so nothing here is reachable before it can be seen. */
   }
   <div class="reel__overlay" data-reel-overlay>
-    <div class="reel__caption">
-      <p class="reel__line reel__line--chaos m-0" aria-hidden="true">Ideas are the easy part.</p>
-      <p class="reel__line reel__line--clear m-0">Building them is ours.</p>
-      <p class="reel__desc m-0">
-        Brand, website, product. Bring us the idea, however rough it is. We'll ask the hard
-        questions, sharpen it, and then build it properly.
-      </p>
-      <p class="reel__hint label-mono m-0" aria-hidden="true">Bring your cursor to the center</p>
-      {
-        /* The hash names the section; the landing is the lead card, sat where
-          the reel's delivery completes (morph.ts: the card's top just under
-          the nav), and the ride is slow enough that the ball is seen to
-          drop and become it on the way. */
-      }
-      <PillButton
-        href="#work"
-        data-scroll-target="[data-work-grid] .card[data-deliver]"
-        data-scroll-duration="2.6"
-        class="reel__cta px-7 py-3.5"
-      >
-        View our work
-        <Icon name="lucide:arrow-down" aria-hidden="true" />
-      </PillButton>
-    </div>
+    <StatementCard />
   </div>
 </section>
 
@@ -219,13 +173,6 @@ const isStill = /\.(jpe?g|png|webp|avif|gif)(\?.*)?$/i.test(src);
     background: var(--work-media-bg, var(--color-background-secondary));
   }
 
-  .reel__video {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
   /* Above the page, below the nav (55/60). Pointer events pass through: the
      engine listens on the window and works out for itself what was hit. */
   .reel__canvas {
@@ -267,105 +214,35 @@ const isStill = /\.(jpe?g|png|webp|avif|gif)(\?.*)?$/i.test(src);
       visibility 0s;
   }
 
-  .reel__caption {
-    position: absolute;
-    left: 36px;
-    bottom: 32px;
-    display: grid;
-    gap: 16px;
-    max-width: 440px;
-  }
-
-  /* The one-desk argument, in the client's terms: what the pieces are and
-     why they fit here. */
-  .reel__desc {
-    grid-area: 2 / 1;
-    max-width: 440px;
-    font-size: 15px;
-    line-height: 1.55;
-    color: rgb(12 16 22 / 0.72);
-  }
-
-  /* How to play, for pointers; gone once the scene has resolved. */
-  .reel__hint {
-    grid-area: 3 / 1;
-    color: rgb(12 16 22 / 0.55);
-    transition: opacity 0.5s var(--ease-sw);
-  }
-
-  .reel[data-reel-clear] .reel__hint {
-    opacity: 0;
-  }
-
-  @media (hover: none) {
-    .reel__hint {
-      display: none;
-    }
-  }
-
-  /* Two lines in one slot; the scene's state picks which shows. */
-  .reel__line {
-    grid-area: 1 / 1;
-    font-family: var(--font-display);
-    font-size: clamp(1.5rem, 2.2vw, 2rem);
-    font-weight: var(--display-weight);
-    line-height: 1.1;
-    letter-spacing: var(--display-tracking);
-    color: var(--ink-950);
-    transition:
-      opacity 0.5s var(--ease-sw),
-      transform 0.5s var(--ease-sw);
-  }
-
-  .reel__line--clear,
-  .reel[data-reel-clear] .reel__line--chaos {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-
-  .reel[data-reel-clear] .reel__line--clear {
-    opacity: 1;
-    transform: none;
-  }
-
-  /* The pill is rendered by a child component, so its class carries no
-     scope attribute: reach it through the caption. */
-  .reel__caption :global(.reel__cta) {
-    grid-area: 4 / 1;
-    margin-top: 6px;
-    justify-self: start;
-    pointer-events: auto;
-  }
-
-  .reel__caption :global(.reel__cta svg) {
-    width: 16px;
-    height: 16px;
-    stroke-width: 2;
-  }
-
-  @media (max-width: 800px) {
-    .reel__caption {
-      left: 20px;
-      bottom: 20px;
-      gap: 12px;
-    }
+  /* The overlay and the full slot are what the card is sized against. */
+  .reel__overlay,
+  .reel__full {
+    container-type: size;
   }
 
   /* --- modes ------------------------------------------------------------- */
-  /* Live: the DOM video is only a texture source. Kept in layout so it keeps
-     decoding; invisible so it never double-draws. The full slot is only a
-     measuring box here too — its backdrop is for the fallback, and would
-     otherwise sit behind the copy as a plain grey frame the whole time. */
-  .reel[data-reel-mode='live'] .reel__video {
-    opacity: 0;
+  /* The painted card is the fallback. Live (or before the script has picked
+     a mode) the WebGL frame and the overlay show it instead, so the static
+     copy steps out of layout and out of the accessibility tree. */
+  :global(html.js) .reel:not([data-reel-mode='static']) .reel__full > :global(.stmt) {
+    display: none;
   }
 
+  /* And the other way round: with no engine there is nothing to open. */
+  :global(html:not(.js)) .reel__overlay,
+  .reel[data-reel-mode='static'] .reel__overlay {
+    display: none;
+  }
+
+  /* Live, the full slot is only a measuring box: its backdrop would otherwise
+     sit behind the copy as a plain grey frame the whole time. */
   .reel[data-reel-mode='live'] .reel__full {
     background: transparent;
   }
 
   /* Static (no JS, reduced motion, no WebGL): no canvas, no travelling slot,
-     the video simply sits in the full frame and the pinned budget goes. */
+     the card simply sits in the full frame, fully lit, and the pinned budget
+     goes. */
   :global(html:not(.js)) .reel,
   .reel[data-reel-mode='static'] {
     --reel-hold: 0px;
