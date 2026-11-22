@@ -15,24 +15,22 @@
  * blue glows, so it is plain ink and re-maps itself in dark mode along with
  * the rest of the stack.
  */
-import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
 import siteConfig from '@/config/site.config';
-import portrait from '@/assets/authors/MichaelFrosethColored-2.jpg';
-import relightPhoto from '@/assets/authors/MichaelFroseth-relight.webp';
-import relightDepth from '@/assets/authors/MichaelFroseth-relight-depth.webp';
-import FounderRelight from '@/components/site/FounderRelight.tsx';
+import Placeholder from '@/components/site/Placeholder.astro';
 
 interface Stat {
   value: string;
   label: string;
 }
 
+// PLACEHOLDER numbers: replace each "00" with a real figure, or change the
+// label to something else worth counting.
 const stats: Stat[] = [
-  { value: '14', label: 'Age at first website' },
-  { value: '20+', label: 'Years in the work' },
-  { value: '2024', label: 'Southwell Media founded' },
-  { value: '3', label: 'Roles, right now' },
+  { value: '00', label: 'Placeholder: years building websites' },
+  { value: '00', label: 'Placeholder: websites launched' },
+  { value: '00', label: 'Placeholder: first year with Astro' },
+  { value: 'NL', label: 'Based in Veghel' },
 ];
 
 interface Desk {
@@ -43,10 +41,11 @@ interface Desk {
 
 const linkedIn = siteConfig.socialLinks.find((url) => url.includes('linkedin.com'));
 
+// Where to find Hans. (Michael's version listed the roles he held; add
+// current roles or companies here the same way if you want them shown.)
 const desks: Desk[] = [
-  { org: 'Reap Capital', role: 'Brand Director', href: '/work/reap-capital' },
-  { org: 'MAD STACK', role: 'Co-Founder', href: 'https://madstack.io' },
-  { org: 'LucidOS', role: 'Engineer', href: 'https://lucidcre.com' },
+  { org: 'GitHub', role: 'hansmartensdev', href: 'https://github.com/hansmartensdev' },
+  { org: 'LinkedIn', role: 'hansmartensdev', href: 'https://www.linkedin.com/in/hansmartensdev/' },
 ];
 ---
 
@@ -67,7 +66,7 @@ const desks: Desk[] = [
     }
 
     <div class="founder__body">
-      <span class="label-mono founder__eyebrow"> THE FOUNDER · MICHAEL FROSETH </span>
+      <span class="label-mono founder__eyebrow"> ABOUT ME · HANS MARTENS </span>
 
       <h2 class="founder__headline display-service" id="founder">
         <span class="rv-mask">
@@ -80,14 +79,12 @@ const desks: Desk[] = [
 
       <div class="founder__prose">
         <p>
-          Twenty years across design, marketing, development and creative direction, with titles
-          from Junior Designer to Creative Director. Southwell Media is that experience with the
-          layers removed: the person who designs the thing also builds it, and is still around after
-          launch.
+          No agency layers between you and the work: the person who designs your site also builds
+          it, and is still around after launch.
         </p>
         <p>
-          Outside the studio, I&rsquo;m Brand Director at Reap Capital and a co-founder of MAD
-          STACK, where we&rsquo;re building LucidOS, an operating system for real estate operators.
+          [Placeholder: your background in two or three sentences. How you got into building for
+          the web, what you did before, and why Astro.]
         </p>
       </div>
 
@@ -114,15 +111,11 @@ const desks: Desk[] = [
     </div>
 
     <figure class="founder__figure m-0">
-      <Image
-        src={portrait}
-        alt="Michael Froseth, founder of Southwell Media"
-        layout="none"
-        widths={[480, 768, 1024, 1536]}
-        sizes="(max-width: 800px) 100vw, 44vw"
-        class="founder__photo"
-      />
-      <FounderRelight client:visible src={relightPhoto.src} depthSrc={relightDepth.src} />
+      {/* PLACEHOLDER: a portrait of Hans. Swap for an <Image class="founder__photo" />
+          when it exists; the card's fade and crop stay as they are. */}
+      <div class="founder__photo">
+        <Placeholder class="h-full w-full rounded-none" invert label="[ placeholder: portrait of Hans ]" />
+      </div>
     </figure>
 
     <dl class="founder__stats">

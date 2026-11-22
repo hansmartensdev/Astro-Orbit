@@ -9,6 +9,11 @@ import vercel from '@astrojs/vercel';
 export default defineConfig({
   site: process.env.SITE_URL || 'https://hansmartens.dev',
 
+  // The about page used to be the studio page; keep old links working.
+  redirects: {
+    '/studio': '/about',
+  },
+
   // Static by default; only /api/contact opts out (prerender = false) so the
   // chat sheet and the contact page have somewhere to send to. The adapter
   // turns that one route into a Vercel function and leaves the rest as files.
