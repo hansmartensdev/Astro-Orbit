@@ -125,13 +125,25 @@ import HeroScene from '@/components/site/HeroScene.tsx';
     font-size: 7.7cqi;
   }
 
-  /* On a phone, one row per line would make the page's H1 smaller than every
-     H2 under it (7.7cqi is about 26px at 390px). There the lines may wrap,
-     and the headline is set to lead the scale instead. The droplet still
-     lands at the end of the second line: its marker rides the wrap. */
+  /* Below about 1000px, one row per line at 7.7cqi would make the page's H1
+     smaller than the H2s under it (about 26px on a 390px phone). So the
+     headline never goes below the size at which "an astro developer" still
+     fits one row: that line is 8.14em wide and the headline gets
+     100vw - 56px, so dividing by 8.3 fits it with a hair to spare (32px at
+     320, 40px at 390, capped at 64px). Where that is the larger value the
+     second line wraps — balanced, so into even rows rather than leaving a
+     word alone. The droplet still lands at the end of the second line: its
+     marker rides the wrap. */
+  .hero__headline {
+    font-size: max(7.7cqi, min(calc((100vw - 56px) / 8.3), 64px));
+  }
+
+  .hero__word--2 {
+    text-wrap: balance;
+  }
+
   @media (max-width: 700px) {
     .hero__headline {
-      font-size: min(11.8vw, 56px);
       line-height: 0.92;
     }
   }
