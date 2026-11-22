@@ -36,6 +36,11 @@
   /* The same violet lifted for text and marks on ink (7:1); #7c3aed itself is
      only 3.4:1 there. */
   --hero-accent-on-ink: #a78bfa;
+  /* The statement card the droplet blooms into (StatementCard.astro): its ink
+     ground, and the violet its key phrases are set in (4.5:1 on that ink, so
+     it holds at phone sizes too). */
+  --reel-card-bg: var(--ink-950);
+  --statement-accent: #8b5cf6;
 
   --primary: var(--ink-950);
   --primary-hover: var(--ink-800);
