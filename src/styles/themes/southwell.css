@@ -80,15 +80,15 @@
 
   /* -------------------------------------------------------------------------
      Typography
-     Outfit for headlines, Archivo for body and UI, IBM Plex Mono for the
+     Geist for headlines, body and UI, IBM Plex Mono for the
      eyebrow and meta labels.
      ------------------------------------------------------------------------- */
-  --theme-font-sans: 'Archivo Variable', 'Archivo', system-ui, -apple-system,
+  --theme-font-sans: 'Geist Variable', 'Geist', system-ui, -apple-system,
     'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   /* Display face. This one line changes every headline on the site.
-     Outfit: near-monoline geometric, open and even at large sizes — the
-     opposite of the crowding Archivo showed at display scale. */
-  --theme-font-display: 'Outfit Variable', 'Outfit', var(--theme-font-sans);
+     Geist: Vercel's grotesque, precise and quiet at every size, with a true
+     italic for the emphasised line. (Was Outfit for display, Archivo for body.) */
+  --theme-font-display: 'Geist Variable', 'Geist', var(--theme-font-sans);
   --theme-font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, 'SF Mono',
     Menlo, Consolas, monospace;
 
@@ -104,7 +104,7 @@
      the typeface is.
      ------------------------------------------------------------------------- */
   --display-weight: 600;
-  --display-tracking: -0.04em;
+  --display-tracking: -0.045em;
 
   /* Headings are set lowercase. Set this to `none` to get the copy back as
      written. The mono eyebrow labels (DIGITAL EXPERIENCE, MENU, SAY HI) stay
@@ -121,7 +121,7 @@
      that is unmistakable. Those faces drop weight instead, and a face with a
      width axis can narrow as well.
      ------------------------------------------------------------------------- */
-  /* Outfit ships no italic, so emphasis is a weight drop. */
+  /* Geist has a true italic, so emphasis is the italic at a lighter weight. */
   /* -------------------------------------------------------------------------
      Hero treatment
      Which HeroVisual layer is showing. Exactly one should be 1. Setting them
@@ -139,8 +139,8 @@
      so it wants to sit tighter. Tune by eye between 0.86 and 0.92. */
   --hero-leading: 0.88;
 
-  --display-em-style: normal;
-  --display-em-weight: 300;
+  --display-em-style: italic;
+  --display-em-weight: 400;
   --display-em-stretch: 100%;
   --display-em-tracking: -0.03em;
 

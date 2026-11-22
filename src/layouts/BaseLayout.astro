@@ -10,8 +10,7 @@ import type { WebSite, Organization, WithContext } from 'schema-dts';
 import siteConfig from '@/config/site.config';
 // The two faces every page paints first. Preloaded so the display headline
 // does not swap in after first paint and reflow at 168px.
-import outfitWoff2 from '@fontsource-variable/outfit/files/outfit-latin-wght-normal.woff2?url';
-import archivoWoff2 from '@fontsource-variable/archivo/files/archivo-latin-wght-normal.woff2?url';
+import geistWoff2 from '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url';
 
 interface Props {
   title?: string;
@@ -60,8 +59,7 @@ if (includeOrgSchema) {
     <meta name="theme-color" content={siteConfig.branding.colors.themeColor} />
 
     <!-- Fonts: latin subsets of the display and body faces -->
-    <link rel="preload" href={outfitWoff2} as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href={archivoWoff2} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={geistWoff2} as="font" type="font/woff2" crossorigin />
 
     <!-- SEO -->
     <SEO
@@ -97,18 +95,12 @@ if (includeOrgSchema) {
       document.documentElement.classList.add('js');
     </script>
 
-    <!-- Theme script (runs before render to prevent flash) -->
+    <!-- Theme: light only for now, whatever the system or an earlier visit
+         chose. The dark theme (.dark in themes/southwell.css) stays in place
+         to be finished later; to bring it back, restore the system/stored
+         choice here (see git history) and the toggle in Nav.astro. -->
     <script is:inline>
-      (function () {
-        const theme = localStorage.getItem('theme');
-        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-        if (theme === 'dark' || (!theme && systemDark)) {
-          document.documentElement.classList.add('dark');
-        } else {
-          document.documentElement.classList.remove('dark');
-        }
-      })();
+      document.documentElement.classList.remove('dark');
     </script>
   </head>
 

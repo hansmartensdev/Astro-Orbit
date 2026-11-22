@@ -52,6 +52,11 @@ export interface SiteConfig {
   phoneHref: string;
   /** The two-character wordmark the whole identity leans on. */
   mark: string;
+  /**
+   * A booking page (Calendly, Cal.com…) for the "Book a meeting" button.
+   * Unset, the button keeps its place and look but links nowhere.
+   */
+  bookingUrl?: string;
 }
 
 const siteConfig: SiteConfig = {
@@ -66,6 +71,7 @@ const siteConfig: SiteConfig = {
   phoneHref: '+31651888008',
   location: 'Veghel, the Netherlands',
   mark: 'hm/',
+  // bookingUrl: 'https://…', — set this to link the "Book a meeting" button.
   // TODO: add the street address to promote Organization schema to
   // LocalBusiness. Deliberately absent rather than guessed — a wrong postal
   // address in structured data is worse than none at all.

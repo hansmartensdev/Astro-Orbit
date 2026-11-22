@@ -52,7 +52,7 @@ import siteConfig from '@/config/site.config';
           <h2 class="chat__title" id="sw-chat-title">Start a conversation</h2>
           <p class="chat__status label-mono">
             <span class="chat__dot" aria-hidden="true"></span>
-            Michael replies himself, usually the same day
+            Hans replies personally
           </p>
         </div>
       </div>
@@ -79,7 +79,7 @@ import siteConfig from '@/config/site.config';
               required
               minlength="10"
               maxlength="5000"
-              placeholder="A site, an app, a brand, a rescue…"
+              placeholder="A new website, a rebuild, a slow site to fix…"
               autocomplete="off"></textarea>
           </div>
           <button class="chat__sent" type="button" data-edit="1" title="Edit this">
@@ -814,8 +814,8 @@ import siteConfig from '@/config/site.config';
       setStep(LAST);
       say(
         outcome === 'sent'
-          ? 'Sent. Michael will reply to ' + email.value.trim() + '.'
-          : 'The message did not send. Email ' + (sheet.dataset.email ?? 'the studio') + ' instead.'
+          ? 'Sent. Hans will reply to ' + email.value.trim() + '.'
+          : 'The message did not send. Email ' + (sheet.dataset.email ?? 'Hans') + ' instead.'
       );
       doneBtn?.focus({ preventScroll: true });
     };

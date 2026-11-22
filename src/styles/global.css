@@ -10,16 +10,12 @@
 @import './tokens/spacing.css';
 
 /* Self-hosted fonts via Fontsource (CSP-safe, no external requests) */
-/* Archivo carries the whole identity — upright for everything, italic for the
-   light <em> inside display lines. IBM Plex Mono is the meta/label face. */
-/* Body, UI and - for now - display. Candidate display faces are loaded only
-   by the dev-only font switcher, never in a production build. */
-@import '@fontsource-variable/archivo/wght.css';
-@import '@fontsource-variable/archivo/wght-italic.css';
-
-/* Display face. themes/southwell.css points --theme-font-display at Outfit;
-   it has to be loaded here, on purpose, not by the dev-only font switcher. */
-@import '@fontsource-variable/outfit/wght.css';
+/* Geist carries the identity — headlines, body and UI, upright everywhere
+   and its true italic for the <em> inside display lines. IBM Plex Mono is the
+   meta/label face. Candidate faces are loaded only by the dev-only font
+   switcher, never in a production build. */
+@import '@fontsource-variable/geist/wght.css';
+@import '@fontsource-variable/geist/wght-italic.css';
 
 /* Meta and eyebrow labels. */
 @import '@fontsource/ibm-plex-mono/400.css';

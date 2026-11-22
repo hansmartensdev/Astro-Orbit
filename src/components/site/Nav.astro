@@ -83,16 +83,6 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
         <span class="sr-only">Call {siteConfig.name}</span>
       </a>
 
-      {
-        /* Light / dark. Same pill and colour as the number, so it follows the
-          bar over media and into the open overlay. The icon shows the mode a
-          press switches to; the choice is stored, and an unset choice follows
-          the system (see the theme script in BaseLayout). */
-      }
-      <button class="sw-nav__theme" type="button" data-theme-toggle aria-label="Switch to dark mode">
-        <Icon class="sw-nav__theme-moon" name="fa6-solid:moon" aria-hidden="true" />
-        <Icon class="sw-nav__theme-sun" name="fa6-solid:sun" aria-hidden="true" />
-      </button>
 
       <button
         class="burger"
@@ -367,44 +357,6 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     flex: none;
   }
 
-  .sw-nav__theme {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    margin-left: -10px;
-    padding: 0;
-    border: 0;
-    border-radius: var(--radius-full);
-    background: transparent;
-    color: inherit;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
-
-  .sw-nav__theme:hover {
-    background: color-mix(in srgb, currentColor 10%, transparent);
-  }
-
-  .sw-nav__theme:focus-visible {
-    outline: 2px solid currentColor;
-    outline-offset: 2px;
-  }
-
-  .sw-nav__theme :global(svg) {
-    width: 15px;
-    height: 15px;
-  }
-
-  .sw-nav__theme :global(.sw-nav__theme-sun),
-  :global(.dark) .sw-nav__theme :global(.sw-nav__theme-moon) {
-    display: none;
-  }
-
-  :global(.dark) .sw-nav__theme :global(.sw-nav__theme-sun) {
-    display: block;
-  }
 
   .burger {
     display: inline-flex;
@@ -912,29 +864,4 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
 
   initNav();
   document.addEventListener('astro:after-swap', initNav);
-
-  // Theme toggle. Delegated from the document, so it survives page swaps
-  // without re-binding; the label is refreshed on every load and swap.
-  function syncThemeLabel() {
-    const dark = document.documentElement.classList.contains('dark');
-    document.querySelectorAll('[data-theme-toggle]').forEach((el) => {
-      el.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
-    });
-  }
-
-  document.addEventListener('click', (event) => {
-    const target = event.target as Element | null;
-    if (!target?.closest('[data-theme-toggle]')) return;
-    const dark = !document.documentElement.classList.contains('dark');
-    document.documentElement.classList.toggle('dark', dark);
-    try {
-      localStorage.setItem('theme', dark ? 'dark' : 'light');
-    } catch {
-      /* private mode: the choice lasts for this page only */
-    }
-    syncThemeLabel();
-  });
-
-  syncThemeLabel();
-  document.addEventListener('astro:after-swap', syncThemeLabel);
 </script>
