@@ -31,8 +31,11 @@
 
   /* Ink is the primary. The one colour on the site is the droplet that falls
      out of the hero and travels down the page (HeroScene.tsx, reel/morph.ts),
-     in Astro purple — a nod to the framework the site is built with. */
-  --hero-accent: #a855f7;
+     in electric violet — a nod to Astro's purple, deeper and less sweet. */
+  --hero-accent: #7c3aed;
+  /* The same violet lifted for text and marks on ink (7:1); #7c3aed itself is
+     only 3.4:1 there. */
+  --hero-accent-on-ink: #a78bfa;
 
   --primary: var(--ink-950);
   --primary-hover: var(--ink-800);
@@ -178,11 +181,10 @@
        04 shade — slate green, glow from the bottom-left
      ------------------------------------------------------------------------- */
   /* The nav's contextual label — the client name after the wordmark slash.
-     The same purple as the droplet. On ice it is a deeper step, so 22px at
-     weight 300 still holds its contrast. */
-  --nav-context: #7e22ce;
-  /* The droplet's purple itself, for use over a dark hero image or on ink. */
-  --nav-context-on-media: var(--hero-accent);
+     The droplet's violet on ice (5.1:1); the lifted violet on ink. */
+  --nav-context: var(--hero-accent);
+  /* For use over a dark hero image or on ink. */
+  --nav-context-on-media: var(--hero-accent-on-ink);
 
   --service-white-bg: #ffffff;
   --service-white-fg: var(--ink-950);
@@ -321,7 +323,7 @@
   /* Service cards in dark: the pile inverts, and card 03 still breaks the
      pattern — it goes to ice while the others stay on ink. */
   /* Lifted so it holds up on ink at the same perceived weight. */
-  --nav-context: var(--hero-accent);
+  --nav-context: var(--hero-accent-on-ink);
 
   --service-white-bg: var(--ink-900);
   --service-white-fg: var(--ice-100);
