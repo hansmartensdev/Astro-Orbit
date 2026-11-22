@@ -23,9 +23,9 @@ While I build, I talk with Claude Code the whole time. We brainstorm first, then
 
 It starts with a fork. I fork a theme on GitHub, Velocity for example, and with Claude Code I build what I need for myself and the fork doesn't have. After a lot of work, the build has grown into a new theme of its own, and other developers use it for their websites.
 
-## Astro Rocket started as my own website
+## Astro Rocket started as a fork of Velocity
 
-In March 2026 I built my previous website, and from it I made a starter theme: [Astro Rocket](https://github.com/hansmartensdev/Astro-Rocket). It's free and public on GitHub under the MIT licence, with 125 stars and 58 forks, and it's listed in the themes directory on the official Astro website.
+Astro Rocket began as a fork of the first public release of [Velocity](https://github.com/southwellmedia/velocity), when it was still a boilerplate. That release already had good components, and the credit for those goes to the team at Southwell Media. I never pulled in their later updates. I developed the code further with Claude Code and added components of my own, built my previous website with it in March 2026, and made [Astro Rocket](https://github.com/hansmartensdev/Astro-Rocket) from that website. It's free and public on GitHub under the MIT licence, and it's listed in the themes directory on the official Astro website.
 
 ## People who use Astro Rocket help me make it better
 
@@ -35,4 +35,4 @@ People who use Astro Rocket report issues on GitHub, and I solve them with Claud
 
 The website you're reading now I built with Claude Code from a fork of Velocity. It replaces the site I built in March.
 
-Next, I'm going to fork the new Velocity theme and build a new free theme for the community from it. It will come with several colour themes and font pairs, and a design picker, so a builder can choose one of the themes and combine it with a font pair. From that theme I'll build a finished website for designers and developers, and share it on GitHub and on the official Astro website.
+In November 2026 I forked Velocity again, now at version 2.7. I'm going to build a new free theme for the community from it. It will come with several colour themes and font pairs, and a design picker, so a builder can choose one of the themes and combine it with a font pair. From that theme I'll build a finished website for designers and developers, and share it on GitHub and on the official Astro website.
