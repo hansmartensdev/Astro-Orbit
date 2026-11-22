@@ -9,7 +9,6 @@
 import { Icon } from 'astro-icon/components';
 import siteConfig from '@/config/site.config';
 import { footerColumns } from '@/config/footer.config';
-import Placeholder from './Placeholder.astro';
 
 const year = new Date().getFullYear();
 ---
@@ -46,21 +45,13 @@ const year = new Date().getFullYear();
         </nav>
       </div>
 
-      <div data-reveal data-reveal-delay="0.3">
-        <Placeholder
-          invert
-          label="[ footer 3d render — cropped, bleeds off bottom ]"
-          class="mt-16 h-[220px] max-[900px]:mt-12 max-[900px]:h-[150px]"
-        />
-      </div>
-
       <div
-        class="text-foreground-muted mt-9 flex justify-between gap-5 text-[13px] max-[900px]:flex-col max-[900px]:gap-2"
+        class="text-foreground-muted mt-24 flex max-[900px]:mt-16 justify-between gap-5 text-[13px] max-[900px]:flex-col max-[900px]:gap-2"
         data-reveal
         data-reveal-delay="0.48"
       >
         <span>&copy; {year} {siteConfig.name} — {siteConfig.location}</span>
-        <span>Working with clients across the globe</span>
+        <span>Building beautiful &amp; fast websites</span>
       </div>
     </div>
   </footer>
