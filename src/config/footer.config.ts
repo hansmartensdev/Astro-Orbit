@@ -31,23 +31,8 @@ export const footerColumns: FooterColumn[] = [
       { label: 'Contact', href: '/contact' },
     ],
   },
-  {
-    heading: 'SOCIAL',
-    links: [
-      {
-        label: 'LinkedIn',
-        href: 'https://www.linkedin.com/in/michael-froseth/',
-        external: true,
-        icon: 'fa6-brands:linkedin-in',
-      },
-      {
-        label: 'GitHub',
-        href: 'https://github.com/southwellmedia-dev',
-        external: true,
-        icon: 'fa6-brands:github',
-      },
-    ],
-  },
+  // SOCIAL column (GitHub, LinkedIn) returns once the links are in. Shape:
+  // { label: 'GitHub', href: '…', external: true, icon: 'fa6-brands:github' }
   {
     heading: 'SAY HI',
     links: [

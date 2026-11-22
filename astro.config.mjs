@@ -7,7 +7,7 @@ import tailwindcss from '@tailwindcss/vite';
 import vercel from '@astrojs/vercel';
 
 export default defineConfig({
-  site: process.env.SITE_URL || 'https://southwell.media',
+  site: process.env.SITE_URL || 'https://hansmartens.dev',
 
   // Static by default; only /api/contact opts out (prerender = false) so the
   // chat sheet and the contact page have somewhere to send to. The adapter
@@ -24,14 +24,14 @@ export default defineConfig({
         context: 'server',
         access: 'public',
         optional: true,
-        default: 'hello@southwellmedia.com',
+        default: 'hello@hansmartens.dev',
       }),
       // A sender on a domain verified in Resend.
       CONTACT_FROM: envField.string({
         context: 'server',
         access: 'public',
         optional: true,
-        default: 'Southwell Media <hello@southwellmedia.com>',
+        default: 'Hans Martens <hello@hansmartens.dev>',
       }),
       PUBLIC_GA_MEASUREMENT_ID: envField.string({
         context: 'client',

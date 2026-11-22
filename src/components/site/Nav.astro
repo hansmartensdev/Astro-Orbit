@@ -5,8 +5,8 @@
  * A wordmark and a menu control, nothing else. Transparent over the hero,
  * frosted-solid once you scroll past it.
  *
- * The wordmark unfurls on hover: "southwell media" is already hiding inside
- * "sw" — s-outh-w-ell — so the missing letters grow out from between the two
+ * The wordmark unfurls on hover: "hans martens" is already hiding inside
+ * "hm" — h-ans m-artens — so the missing letters grow out from between the two
  * visible ones rather than a second label fading in beside them.
  *
  * The menu control is two rules of unequal length that level up on hover and
@@ -20,7 +20,7 @@ import siteConfig from '@/config/site.config';
 interface Props {
   /**
    * Whose page this is — a client name, set after the wordmark's slash so the
-   * nav reads "sw/ cirries". Only the work case studies pass one.
+   * nav reads "hm/ cirries". Only the work case studies pass one.
    */
   context?: string;
   /**
@@ -63,10 +63,10 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     }
     <div class="sw-nav__brand">
       <a href="/" class="mark" aria-label={siteConfig.name + ' — home'}>
-        <span class="mark__seen">s</span>
-        <span class="mark__grow"><span class="mark__hidden">outh</span></span>
-        <span class="mark__seen">w</span>
-        <span class="mark__grow"><span class="mark__hidden">ell media</span></span>
+        <span class="mark__seen">h</span>
+        <span class="mark__grow"><span class="mark__hidden">ans&nbsp;</span></span>
+        <span class="mark__seen">m</span>
+        <span class="mark__grow"><span class="mark__hidden">artens</span></span>
         <span class="mark__seen mark__slash">/</span>
       </a>
 
@@ -164,8 +164,7 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     }
     <aside class="sw-menu__aside">
       <p class="sw-menu__blurb">
-        A Dallas creative studio building original websites, apps and brands. No templates, no
-        themes.
+        An Astro developer based in Veghel, the Netherlands, building fast, original websites.
       </p>
       <div class="sw-menu__contact">
         <a href={'mailto:' + siteConfig.email}>
@@ -699,7 +698,7 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     }
   }
 
-  /* The unfurl is decorative; without motion the mark simply stays as sw/. */
+  /* The unfurl is decorative; without motion the mark simply stays as hm/. */
   @media (prefers-reduced-motion: reduce) {
     .mark__grow,
     .mark__hidden,
