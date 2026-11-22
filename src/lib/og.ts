@@ -19,7 +19,11 @@ function loadFont(weight: 400 | 600): ArrayBuffer {
   let data = fontCache.get(weight);
   if (!data) {
     const path = resolve(process.cwd(), `public/fonts/geist-latin-${weight}-normal.ttf`);
-    data = readFileSync(path).buffer as ArrayBuffer;
+    // Copy out exactly the file's bytes. A Buffer's .buffer is the memory it
+    // lives in, which on some Node versions starts with other data — Satori
+    // then reads that as the font header ("Unsupported OpenType signature").
+    const file = readFileSync(path);
+    data = file.buffer.slice(file.byteOffset, file.byteOffset + file.byteLength) as ArrayBuffer;
     fontCache.set(weight, data);
   }
   return data;
