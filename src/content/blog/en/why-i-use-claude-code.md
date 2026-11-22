@@ -19,6 +19,10 @@ My projects are on GitHub, and Claude Code works in those repositories. It makes
 
 While I build, I talk with Claude Code the whole time. We brainstorm first, then we build. The ideas are mine. Claude tells me what's possible in the code and advises me on how to do it. We work as a team.
 
+## Example: the LetterGlitch effect in Astro Rocket
+
+In another developer's theme, [Gothsec's Astro portfolio](https://github.com/Gothsec/Astro-portfolio), I found a canvas effect of flickering letters. I showed the code to Claude Code, and from it Claude built a new component for Astro Rocket: a field of letters in the theme's brand colours behind a call-to-action card, with a glass card on top to keep the text readable. We wrote a post about it on the Astro Rocket blog: [Add a LetterGlitch Effect to Astro 7](https://astrorocket.dev/blog/letter-glitch-astro-7).
+
 ## A fork grows into a new theme
 
 It starts with a fork. I fork a theme on GitHub, Velocity for example, and with Claude Code I build what I need for myself and the fork doesn't have. After a lot of work, the build has grown into a new theme of its own, and other developers use it for their websites.
@@ -35,4 +39,4 @@ People who use Astro Rocket report issues on GitHub, and I solve them with Claud
 
 The website you're reading now I built with Claude Code from a fork of Velocity. It replaces the site I built in March.
 
-In November 2026 I forked Velocity again, now at version 2.7. I'm going to build a new free theme for the community from it. It will come with several colour themes and font pairs, and a design picker, so a builder can choose one of the themes and combine it with a font pair. From that theme I'll build a finished website for designers and developers, and share it on GitHub and on the official Astro website.
+In November 2026 I forked Velocity again, now at version 2.7, to build something new.
