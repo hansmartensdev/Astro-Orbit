@@ -13,20 +13,17 @@ export interface OGImageOptions {
 
 // Geist, the site's own face, as static instances (Satori reads TTF/OTF, not
 // WOFF2 or variable fonts). Made from @fontsource-variable/geist (SIL OFL).
-const fontCache = new Map<number, ArrayBuffer>();
-
+//
+// Read fresh for every image, as a standalone ArrayBuffer holding exactly the
+// file's bytes. On Vercel a cached, shared copy reached Satori as other data
+// ("Unsupported OpenType signature") and failed the build; a Buffer's .buffer
+// is the memory it lives in, not the file, and need not stay put. 64 KB per
+// image is nothing next to that.
 function loadFont(weight: 400 | 600): ArrayBuffer {
-  let data = fontCache.get(weight);
-  if (!data) {
-    const path = resolve(process.cwd(), `public/fonts/geist-latin-${weight}-normal.ttf`);
-    // Copy out exactly the file's bytes. A Buffer's .buffer is the memory it
-    // lives in, which on some Node versions starts with other data — Satori
-    // then reads that as the font header ("Unsupported OpenType signature").
-    const file = readFileSync(path);
-    data = file.buffer.slice(file.byteOffset, file.byteOffset + file.byteLength) as ArrayBuffer;
-    fontCache.set(weight, data);
-  }
-  return data;
+  const file = readFileSync(resolve(process.cwd(), `public/fonts/geist-latin-${weight}-normal.ttf`));
+  const copy = new Uint8Array(file.byteLength);
+  copy.set(file);
+  return copy.buffer;
 }
 
 /** Ink, ice and the violet accent, as plain values: Satori cannot read CSS variables. */

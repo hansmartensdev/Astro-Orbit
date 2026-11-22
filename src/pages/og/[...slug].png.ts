@@ -1,5 +1,6 @@
 import type { APIRoute, GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
+import sharp from 'sharp';
 import { generateOGImage } from '@/lib/og';
 import siteConfig from '@/config/site.config';
 
@@ -65,11 +66,19 @@ export const GET: APIRoute = async ({ props }) => {
     type: 'website' | 'article';
   };
 
-  const png = await generateOGImage({
-    title,
-    description,
-    type,
-  });
+  // A link preview is never worth a failed deploy: if one cannot be drawn,
+  // say so in the build log and ship a plain ink card for that page instead.
+  let png: Buffer;
+  try {
+    png = await generateOGImage({ title, description, type });
+  } catch (error) {
+    console.warn(`[og] could not draw the share image for "${title}", using a plain card:`, error);
+    png = await sharp({
+      create: { width: 1200, height: 630, channels: 3, background: '#0c1016' },
+    })
+      .png()
+      .toBuffer();
+  }
 
   // Convert Buffer to Uint8Array for Response compatibility
   return new Response(new Uint8Array(png), {
