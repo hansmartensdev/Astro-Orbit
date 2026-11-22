@@ -75,12 +75,11 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
 
     <div class="sw-nav__actions">
       {
-        /* The studio's number, one tap away on every page. The digits drop
-          on narrow screens and the handset stays. */
+        /* A call, one tap away on every page: the handset only, so the
+          number itself is not printed in the bar. */
       }
       <a class="sw-nav__phone" href={'tel:' + siteConfig.phoneHref}>
         <Icon name="fa6-solid:phone" aria-hidden="true" />
-        <span class="sw-nav__phone-number label-mono">{siteConfig.phone}</span>
         <span class="sr-only">Call {siteConfig.name}</span>
       </a>
 
@@ -181,10 +180,6 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
         <a href={'mailto:' + siteConfig.email}>
           <Icon name="fa6-solid:envelope" aria-hidden="true" />
           {siteConfig.email}
-        </a>
-        <a href={'tel:' + siteConfig.phoneHref}>
-          <Icon name="fa6-solid:phone" aria-hidden="true" />
-          {siteConfig.phone}
         </a>
       </div>
       <div class="sw-menu__meta label-mono">
@@ -353,8 +348,9 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
   .sw-nav__phone {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    padding: 8px 12px;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
     border-radius: var(--radius-full);
     color: inherit;
     text-decoration: none;
@@ -369,11 +365,6 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     width: 14px;
     height: 14px;
     flex: none;
-  }
-
-  .sw-nav__phone-number {
-    color: inherit;
-    letter-spacing: 0.04em;
   }
 
   .sw-nav__theme {
@@ -724,14 +715,6 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
   }
 
   @media (max-width: 700px) {
-    .sw-nav__phone {
-      padding: 10px;
-    }
-
-    .sw-nav__phone-number {
-      display: none;
-    }
-
     /* On a phone the sheet is as tall as what it holds, and its foot clears
        the liquid edge, which overlaps the sheet by --edge-overlap: a fixed
        share of the screen and a 36px foot left the location under it. */
