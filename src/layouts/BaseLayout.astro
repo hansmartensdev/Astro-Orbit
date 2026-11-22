@@ -97,18 +97,12 @@ if (includeOrgSchema) {
       document.documentElement.classList.add('js');
     </script>
 
-    <!-- Theme script (runs before render to prevent flash) -->
+    <!-- Theme: light only for now, whatever the system or an earlier visit
+         chose. The dark theme (.dark in themes/southwell.css) stays in place
+         to be finished later; to bring it back, restore the system/stored
+         choice here (see git history) and the toggle in Nav.astro. -->
     <script is:inline>
-      (function () {
-        const theme = localStorage.getItem('theme');
-        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-        if (theme === 'dark' || (!theme && systemDark)) {
-          document.documentElement.classList.add('dark');
-        } else {
-          document.documentElement.classList.remove('dark');
-        }
-      })();
+      document.documentElement.classList.remove('dark');
     </script>
   </head>
 
