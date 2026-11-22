@@ -28,9 +28,9 @@ import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
     class="shell relative flex flex-col items-center pt-[130px] pb-[130px] max-[800px]:pt-[100px] max-[800px]:pb-[100px]"
   >
     <h2 class="display-section m-0 text-center">
-      <span class="rv-mask"><span data-reveal="rise">Don&rsquo;t be</span></span>
+      <span class="rv-mask"><span data-reveal="rise">Let&rsquo;s talk</span></span>
       <span class="rv-mask"
-        ><span data-reveal="rise" data-reveal-delay="0.08"><em>a stranger.</em></span></span
+        ><span data-reveal="rise" data-reveal-delay="0.08"><em>Astro.</em></span></span
       >
     </h2>
 
@@ -42,15 +42,12 @@ import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
       <ArrowFillButton href="/contact" icon="fa6-solid:comment" data-chat-open=""
         >Start a conversation</ArrowFillButton
       >
-      {
-        /* Links to siteConfig.bookingUrl once there is one; until then it is a
-          plain button with no destination, keeping its place and look. */
-      }
+      {/* Messages, not meetings: WhatsApp opens a chat with Hans. */}
       <ArrowFillButton
-        href={siteConfig.bookingUrl}
-        target={siteConfig.bookingUrl ? '_blank' : undefined}
-        icon="fa6-solid:calendar"
-        variant="outline">Book a meeting</ArrowFillButton
+        href={siteConfig.whatsapp}
+        target="_blank"
+        icon="fa6-brands:whatsapp"
+        variant="outline">WhatsApp me</ArrowFillButton
       >
     </div>
   </div>

@@ -63,14 +63,14 @@ import siteConfig from '@/config/site.config';
     </header>
 
     <form class="chat__thread" id="sw-chat-form" action="/api/contact" method="POST" novalidate>
-      {/* 1 — what are you building */}
+      {/* 1 — what it is about */}
       <div class="chat__step" data-step="1">
         <p class="chat__msg chat__msg--them">
-          Hi. What are you building, and what&rsquo;s in the way?
+          Hi! An idea, a question, or just saying hello?
         </p>
         <div class="chat__msg chat__msg--you">
           <div class="chat__field">
-            <label class="sr-only" for="sw-chat-message">What are you building?</label>
+            <label class="sr-only" for="sw-chat-message">Your message</label>
             <textarea
               class="chat__textarea"
               id="sw-chat-message"
@@ -79,7 +79,7 @@ import siteConfig from '@/config/site.config';
               required
               minlength="10"
               maxlength="5000"
-              placeholder="A new website, a rebuild, a slow site to fix…"
+              placeholder="An idea for a website, a question about a theme or a post…"
               autocomplete="off"></textarea>
           </div>
           <button class="chat__sent" type="button" data-edit="1" title="Edit this">
@@ -91,7 +91,7 @@ import siteConfig from '@/config/site.config';
 
       {/* 2 — where to reply */}
       <div class="chat__step" data-step="2">
-        <p class="chat__msg chat__msg--them">Good. Who are you, and where should I reply?</p>
+        <p class="chat__msg chat__msg--them">Great. Who are you, and where should I reply?</p>
         <div class="chat__msg chat__msg--you">
           <div class="chat__field chat__field--pair">
             <label class="sr-only" for="sw-chat-name">Your name</label>
@@ -113,7 +113,7 @@ import siteConfig from '@/config/site.config';
               name="email"
               type="email"
               required
-              placeholder="you@company.com"
+              placeholder="you@example.com"
               autocomplete="email"
               inputmode="email"
             />
