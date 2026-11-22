@@ -11,7 +11,7 @@ const blog = defineCollection({
       description: z.string().max(200),
       publishedAt: z.coerce.date(),
       updatedAt: z.coerce.date().optional(),
-      author: z.string().default('Team'),
+      author: z.string().default('Hans Martens'),
       image: image().optional(),
       imageAlt: z.string().optional(),
       tags: z.array(z.string()).default([]),
