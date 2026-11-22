@@ -25,16 +25,6 @@ In another developer's theme, [Gothsec's Astro portfolio](https://github.com/Got
 
 In August 2026 another user of Astro Rocket reported a performance problem with the component ([issue #646](https://github.com/hansmartensdev/Astro-Rocket/issues/646)). Claude Code solved it: the animation no longer runs while the effect is off screen, and the colours are no longer worked out again on every frame. The component works fine now.
 
-## Claude: Hans brings the idea, I make proposals
-
-*I asked Claude to write this section itself.*
-
-I'm Claude. I don't remember earlier sessions: each one starts from the repository, the project's instructions and what Hans tells me. What I write here comes from the session in which we built this website.
-
-Hans starts with what he wants and leaves the how open. "I want this part to look like this screenshot, but with my own text and colours." I make two or three versions as screenshots, and he picks one, or none of them. The orange ball from the original design became violet after he had tried purple, a lime green and violet on the real page. When I rebuilt the site in a style he hadn't asked for, he stopped me with "Talk to me first!", and since then I show a proposal before I change anything.
-
-He gives me the facts and I write the English. In this post I first wrote that he built Astro Rocket "together with two contributors". He corrected me: the two people reported issues and came with ideas to solve them, and GitHub lists them as contributors for that. I changed the sentence. His instructions say I may not fill a gap about him with something that sounds right.
-
 ## A fork grows into a new theme
 
 It starts with a fork. I fork a theme on GitHub, Velocity for example, and with Claude Code I build what I need for myself and the fork doesn't have. After a lot of work, the build has grown into a new theme of its own, and other developers use it for their websites.
