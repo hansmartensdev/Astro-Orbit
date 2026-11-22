@@ -1,7 +1,8 @@
 /**
  * Services
  *
- * The four scroll-stacking cards on the homepage. Kept in config rather than a
+ * The four scroll-stacking cards on the homepage: Hans's craft, in his own
+ * voice — what he does and cares about, not a studio's service list. Kept in config rather than a
  * content collection: there are four of them, they have no bodies, no dates and
  * no pages of their own — the shape is structural, not editorial.
  */
@@ -19,30 +20,30 @@ export interface Service {
 export const services: Service[] = [
   {
     num: '01',
-    title: ['Astro', 'Websites'],
+    title: ['Web', 'Design'],
     theme: 'white',
-    tags: ['Astro', 'TypeScript', 'Tailwind CSS', 'Static & Hybrid'],
-    desc: 'Original websites built from scratch in Astro: static-first, accessible, and fast on every device. No page builders, no themes stretched to fit.',
+    tags: ['UI Design', 'Typography', 'Motion', 'Accessibility'],
+    desc: 'A site should look great. I design calm, considered interfaces where every detail matters, from the type to the smallest hover.',
   },
   {
     num: '02',
-    title: ['Speed &', 'SEO'],
+    title: ['Built with', 'Astro'],
     theme: 'mid',
-    tags: ['Core Web Vitals', 'Technical SEO', 'Structured Data', 'Accessibility'],
-    desc: 'A slow site costs visitors and rankings. I find what holds yours back and fix it, so pages load instantly and search engines understand them.',
+    tags: ['Astro', 'TypeScript', 'Tailwind CSS', 'Hand-built'],
+    desc: 'Astro matches how I think about the web: lean, purposeful, and built to last. I build every site myself, from the first sketch to the last line of code.',
   },
   {
     num: '03',
-    title: ['Headless', 'CMS'],
+    title: ['Fast &', 'Found'],
     theme: 'ink',
-    tags: ['Content Collections', 'Headless CMS', 'Markdown & MDX', 'Editor Training'],
-    desc: 'Content you can edit yourself, without touching code. I connect Astro to a CMS that suits your team and keep the site just as fast.',
+    tags: ['Core Web Vitals', 'Technical SEO', 'Structured Data', 'AI Search'],
+    desc: 'A site should load fast and get found, by Google and by AI assistants. Speed and findability are part of every build, not an afterthought.',
   },
   {
     num: '04',
-    title: ['Care &', 'Hosting'],
+    title: ['Writing &', 'Sharing'],
     theme: 'shade',
-    tags: ['Deployment', 'Updates', 'Monitoring', 'Support'],
-    desc: 'Launch is the start, not the end. I deploy, host and look after your site, with updates, backups and a real person to call.',
+    tags: ['Astro', 'Themes', 'Performance', 'Blog'],
+    desc: 'On the blog I write about building themes, Astro, and what makes websites fast: what I learn, shared as I go.',
   },
 ];
