@@ -8,7 +8,7 @@ import siteConfig from '@/config/site.config';
 // renders without its own `image` needs an entry here or below, or its link
 // preview is a 404.
 const STATIC_PAGES = [
-  { slug: 'index', title: 'An Astro developer for fast, original websites.', description: siteConfig.description },
+  { slug: 'index', title: 'An Astro developer for fast & beautiful websites.', description: siteConfig.description },
   { slug: 'about', title: 'About', description: `Who ${siteConfig.name} is, and what drives the work.` },
   { slug: 'work', title: 'Selected work', description: 'Websites designed and built from scratch: fast, accessible and original.' },
   { slug: 'blog', title: 'Blog', description: 'Notes on Astro, web performance and building fast websites.' },

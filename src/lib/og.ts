@@ -31,6 +31,28 @@ const ICE = '#eef2f4';
 const VIOLET = '#7c3aed';
 const VIOLET_ON_INK = '#8b5cf6';
 
+/**
+ * satori-html escapes interpolated text (& → &amp;) but hands the parsed tree
+ * to Satori without decoding it again, so an ampersand in a title would be
+ * drawn as "&amp;". Undo the escaping on every text node.
+ */
+type Node = string | { props?: { children?: Node | Node[] } } | null | undefined;
+function decodeText<T extends Node>(node: T): T {
+  if (typeof node === 'string') {
+    return node
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&amp;/g, '&') as T;
+  }
+  const children = node?.props?.children;
+  if (node?.props && children !== undefined) {
+    node.props.children = Array.isArray(children) ? children.map(decodeText) : decodeText(children);
+  }
+  return node;
+}
+
 export async function generateOGImage(options: OGImageOptions): Promise<Buffer> {
   const { title, description } = options;
 
@@ -65,6 +87,7 @@ export async function generateOGImage(options: OGImageOptions): Promise<Buffer> 
   `;
 
   // Generate SVG with satori
+  decodeText(markup as unknown as Node);
   // @ts-expect-error satori-html VNode is compatible with satori
   const svg = await satori(markup, {
     width: 1200,
