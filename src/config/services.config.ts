@@ -1,7 +1,8 @@
 /**
  * Services
  *
- * The four scroll-stacking cards on the homepage. Kept in config rather than a
+ * The four scroll-stacking cards on the homepage: Hans's craft, in his own
+ * voice — design, build, optimise, maintain — not a studio's service list. Kept in config rather than a
  * content collection: there are four of them, they have no bodies, no dates and
  * no pages of their own — the shape is structural, not editorial.
  */
@@ -19,30 +20,30 @@ export interface Service {
 export const services: Service[] = [
   {
     num: '01',
-    title: ['Astro', 'Websites'],
+    title: ['Web', 'Design'],
     theme: 'white',
-    tags: ['Astro', 'TypeScript', 'Tailwind CSS', 'Static & Hybrid'],
-    desc: 'Original websites built from scratch in Astro: static-first, accessible, and fast on every device. No page builders, no themes stretched to fit.',
+    tags: ['UI Design', 'Typography', 'Motion', 'Accessibility'],
+    desc: 'A site should look great. I design calm, considered interfaces where every detail matters, from the type to the smallest hover.',
   },
   {
     num: '02',
-    title: ['Speed &', 'SEO'],
+    title: ['Develop', 'with Astro'],
     theme: 'mid',
-    tags: ['Core Web Vitals', 'Technical SEO', 'Structured Data', 'Accessibility'],
-    desc: 'A slow site costs visitors and rankings. I find what holds yours back and fix it, so pages load instantly and search engines understand them.',
+    tags: ['Astro', 'TypeScript', 'Tailwind CSS', 'Claude Code'],
+    desc: 'I build every site myself with Astro, from the first sketch to the last line of code: lean, purposeful, and built to last. I work together with Claude Code.',
   },
   {
     num: '03',
-    title: ['Headless', 'CMS'],
+    title: ['Optimise &', 'Get Found'],
     theme: 'ink',
-    tags: ['Content Collections', 'Headless CMS', 'Markdown & MDX', 'Editor Training'],
-    desc: 'Content you can edit yourself, without touching code. I connect Astro to a CMS that suits your team and keep the site just as fast.',
+    tags: ['Lighthouse', 'Core Web Vitals', 'Technical SEO', 'Structured Data'],
+    desc: 'Fast pages and top Lighthouse scores, with the technical SEO and structured data that help Google and AI assistants find and understand every site.',
   },
   {
     num: '04',
-    title: ['Care &', 'Hosting'],
+    title: ['Maintain &', 'Share'],
     theme: 'shade',
-    tags: ['Deployment', 'Updates', 'Monitoring', 'Support'],
-    desc: 'Launch is the start, not the end. I deploy, host and look after your site, with updates, backups and a real person to call.',
+    tags: ['GitHub', 'Open Source', 'Astro Themes', 'Blog'],
+    desc: 'I keep what I build up to date on GitHub and share it openly, so the Astro community can use it too — and I write about it on my personal blog.',
   },
 ];

@@ -16,11 +16,13 @@ import siteConfig from '@/config/site.config';
 
 const channels = [
   { label: 'EMAIL', value: siteConfig.email, href: 'mailto:' + siteConfig.email, icon: 'mail' },
+  // Messages, not calls: they come in from everywhere.
   {
-    label: 'PHONE',
-    value: siteConfig.phone ?? '',
-    href: 'tel:' + siteConfig.phoneHref,
-    icon: 'phone',
+    label: 'WHATSAPP',
+    value: 'Send a message',
+    href: siteConfig.whatsapp,
+    icon: 'message-circle',
+    external: true,
   },
   { label: 'BASED IN', value: siteConfig.location, href: undefined, icon: 'map-pin' },
 ];
@@ -28,14 +30,14 @@ const channels = [
 
 <SiteLayout
   title="Contact"
-  description="Start a project with Hans Martens, or just say hello."
+  description="Let's talk Astro. An idea for a website, a question about a theme, a blog post or something on GitHub: say hello to Hans Martens."
   includeOrgSchema
 >
   <header class="shell pt-[180px] max-[800px]:pt-[130px]">
     <SectionHead
       as="h1"
-      title="Contact"
-      blurb="Tell me what you are building. I answer every message myself — no forms disappearing into a queue."
+      title="Let’s talk Astro"
+      blurb="An idea for a website, a question about one of my themes, a blog post or something I shared on GitHub? Everybody is welcome. I read and answer every message myself."
     />
   </header>
 
@@ -47,7 +49,7 @@ const channels = [
       <Textarea
         label="Message"
         name="message"
-        placeholder="What are you building, and what is in the way?"
+        placeholder="Your idea, your question, or just hello."
         rows={6}
         required
       />
@@ -78,7 +80,17 @@ const channels = [
               {channel.label}
             </span>
             <p class="mt-3 mb-0 text-[clamp(1.25rem,2vw,1.75rem)] tracking-[-0.03em]">
-              {channel.href ? <a href={channel.href}>{channel.value}</a> : channel.value}
+              {channel.href ? (
+                <a
+                  href={channel.href}
+                  target={'external' in channel && channel.external ? '_blank' : undefined}
+                  rel={'external' in channel && channel.external ? 'noopener noreferrer' : undefined}
+                >
+                  {channel.value}
+                </a>
+              ) : (
+                channel.value
+              )}
             </p>
           </div>
         ))

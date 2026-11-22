@@ -52,7 +52,7 @@ export const footerColumns: FooterColumn[] = [
     heading: 'SAY HI',
     links: [
       { label: siteConfig.email, href: `mailto:${siteConfig.email}`, icon: 'lucide:mail' },
-      { label: siteConfig.phone ?? '', href: `tel:${siteConfig.phoneHref}`, icon: 'lucide:phone' },
+      { label: 'WhatsApp', href: siteConfig.whatsapp, external: true, icon: 'fa6-brands:whatsapp' },
     ],
   },
 ];

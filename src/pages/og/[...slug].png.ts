@@ -13,7 +13,7 @@ const STATIC_PAGES = [
   { slug: 'about', title: 'About', description: `Who ${siteConfig.name} is, and what drives the work.` },
   { slug: 'work', title: 'Selected work', description: 'Websites designed and built from scratch: fast, accessible and original.' },
   { slug: 'blog', title: 'Blog', description: 'Notes on Astro, web performance and building fast websites.' },
-  { slug: 'contact', title: 'Contact', description: `Start a project with ${siteConfig.name}, or just say hello.` },
+  { slug: 'contact', title: 'Let’s talk Astro', description: 'An idea for a website, a question about a theme, a blog post or something on GitHub: say hello.' },
 ];
 
 export const getStaticPaths: GetStaticPaths = async () => {
