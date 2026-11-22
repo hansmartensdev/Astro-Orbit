@@ -26,11 +26,11 @@ It starts with a fork. I fork a theme on GitHub, Velocity for example, and with 
 
 ## Astro Rocket started as my own website
 
-In March 2026 I built my previous website, and from it I made a starter theme: [Astro Rocket](https://github.com/hansmartensdev/Astro-Rocket). It's free and public on GitHub under the MIT licence, with 125 stars and 58 forks, and it's listed in the themes directory on the official Astro website. I built it together with two contributors from the Astro community.
+In March 2026 I built my previous website, and from it I made a starter theme: [Astro Rocket](https://github.com/hansmartensdev/Astro-Rocket). It's free and public on GitHub under the MIT licence, with 125 stars and 58 forks, and it's listed in the themes directory on the official Astro website.
 
 ## People who use Astro Rocket help me make it better
 
-People who use Astro Rocket report issues on GitHub, and I solve them with Claude Code. That's one of the things I like most about this work: I build something for myself and for others, and the others help me make the code better by reporting what goes wrong.
+People who use Astro Rocket report issues on GitHub, and I solve them with Claude Code. Two people from the Astro community reported issues and came with ideas to solve them, and GitHub now lists them as contributors. That's one of the things I like most about this work: I build something for myself and for others, and the others help me make the code better by reporting what goes wrong.
 
 ## This website, and a new free theme next
 
