@@ -50,6 +50,9 @@ export interface SiteConfig {
   location: string;
   /** Phone in dialable form, for tel: links. */
   phoneHref: string;
+  /** WhatsApp chat link (wa.me). Offered instead of a phone call: messages
+   *  arrive from everywhere, and nobody is expected to ring. */
+  whatsapp: string;
   /** The two-character wordmark the whole identity leans on. */
   mark: string;
   /**
@@ -69,6 +72,7 @@ const siteConfig: SiteConfig = {
   email: 'hello@hansmartens.dev',
   phone: '+31 6 5188 8008',
   phoneHref: '+31651888008',
+  whatsapp: 'https://wa.me/31651888008',
   location: 'Veghel, the Netherlands',
   mark: 'hm/',
   // bookingUrl: 'https://…', — set this to link the "Book a meeting" button.

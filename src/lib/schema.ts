@@ -45,13 +45,13 @@ export function createOrganizationSchema(): WithContext<Organization> {
     url: siteConfig.url,
     logo: `${siteConfig.url}/logo.png`,
     sameAs: siteConfig.socialLinks,
-    contactPoint: siteConfig.phone
-      ? {
-          '@type': 'ContactPoint',
-          telephone: siteConfig.phone,
-          contactType: 'customer service',
-        }
-      : undefined,
+    // Reached by email (and WhatsApp), not by phone: no telephone here, so
+    // search results do not offer a call button.
+    contactPoint: {
+      '@type': 'ContactPoint',
+      email: siteConfig.email,
+      contactType: 'customer support',
+    },
   };
 }
 
