@@ -16,6 +16,8 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content, headings } = await render(post);
+// About 220 words a minute, from the Markdown source.
+const readingTime = Math.max(1, Math.round((post.body ?? '').split(/\s+/).filter(Boolean).length / 220));
 ---
 
 <BlogLayout
@@ -30,6 +32,7 @@ const { Content, headings } = await render(post);
   tags={post.data.tags}
   slug={post.id}
   headings={post.data.toc ? headings : []}
+  readingTime={readingTime}
 >
   <Content />
 </BlogLayout>

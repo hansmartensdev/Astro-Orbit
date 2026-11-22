@@ -24,6 +24,8 @@ interface Props {
   slug?: string;
   /** The post's headings, for the table of contents (empty hides it). */
   headings?: MarkdownHeading[];
+  /** Minutes to read, shown in the hero. */
+  readingTime?: number;
 }
 
 const {
@@ -38,6 +40,7 @@ const {
   tags = [],
   slug = '',
   headings = [],
+  readingTime,
 } = Astro.props;
 
 // The same rule as the component: H2 + H3, at least three of them.
@@ -75,14 +78,13 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
     description={description}
     publishedAt={publishedAt}
     updatedAt={updatedAt}
-    author={author}
     tags={tags}
     image={image}
     imageAlt={imageAlt}
-    cover={cover}
+    readingTime={readingTime}
   />
 
-  <article class={`py-12 ${image ? 'pt-24' : ''}`}>
+  <article class="py-12">
     <div class:list={['mx-auto px-6', hasToc ? 'max-w-4xl xl:max-w-7xl' : 'max-w-4xl']}>
       <div class:list={[hasToc && 'xl:grid xl:grid-cols-[minmax(0,1fr)_16rem] xl:gap-14']}>
       <div class="min-w-0 xl:max-w-4xl">
