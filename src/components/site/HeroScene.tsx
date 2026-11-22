@@ -489,7 +489,7 @@ function cssColor(scope: HTMLElement, expr: string, fallback: string): THREE.Col
  *   --hero-ink     darkest droplet / resolved slab   (--color-foreground)
  *   --hero-mid     mid droplet                        (--gray-500)
  *   --hero-chrome  brightest droplet                  (--gray-200)
- *   --hero-accent  the stray droplet that travels      (#a855f7)
+ *   --hero-accent  the stray droplet that travels      (#7c3aed)
  *   --hero-warm    key-light tint, floor tint         (white)
  *   --hero-cool    fill-light tint, backdrop top      (ice white)
  */
@@ -498,7 +498,7 @@ function readPalette(scope: HTMLElement): Palette {
     ink: cssColor(scope, 'var(--hero-ink, var(--color-foreground))', '#0c1016'),
     mid: cssColor(scope, 'var(--hero-mid, var(--gray-500))', '#7a7f86'),
     silver: cssColor(scope, 'var(--hero-chrome, var(--gray-200))', '#e2e5e8'),
-    accent: cssColor(scope, 'var(--hero-accent, #a855f7)', '#a855f7'),
+    accent: cssColor(scope, 'var(--hero-accent, #7c3aed)', '#7c3aed'),
     bg: cssColor(scope, 'var(--color-background-secondary)', '#e6ebef'),
     bg2: cssColor(scope, 'var(--color-background-tertiary)', '#d9dfe4'),
     warm: cssColor(scope, 'var(--hero-warm, #ffffff)', '#ffffff'),
