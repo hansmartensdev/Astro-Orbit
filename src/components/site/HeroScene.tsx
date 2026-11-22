@@ -95,6 +95,7 @@ const marchFragment = /* glsl */ `
   uniform float uBlobTint[${NBLOB}];  // 0 ink .. 1 chrome
   uniform float uK;                   // smooth-union radius of the main body
   uniform vec3  uInk, uMid, uSilver, uBg, uBg2;
+  uniform vec3  uAccent;              // the stray droplet that leaves with the reel
   uniform vec3  uWarm, uCool;         // key / fill light tints
 
   in vec2 vUv;
@@ -118,14 +119,18 @@ const marchFragment = /* glsl */ `
   }
 
   // Which droplet tone dominates at p — evaluated once, at the hit point.
-  float tintAt(vec3 p) {
-    float wsum = 0.0, tsum = 0.0;
+  // \`accent\` is how much of p belongs to the last droplet: the stray one that
+  // falls out of the panel and travels the page, drawn in the accent colour.
+  float tintAt(vec3 p, out float accent) {
+    float wsum = 0.0, tsum = 0.0, asum = 0.0;
     for (int i = 0; i < uBlobCount; i++) {
       vec4 bl = uBlobs[i];
       float di = length(p - bl.xyz) - bl.w;
       float w = exp(-9.0 * max(di, 0.0));
       wsum += w; tsum += w * uBlobTint[i];
+      if (i == ${NBLOB - 1}) asum = w;
     }
+    accent = wsum > 0.0 ? smoothstep(0.35, 0.9, asum / wsum) : 0.0;
     return wsum > 0.0 ? tsum / wsum : 0.5;
   }
 
@@ -187,7 +192,7 @@ const marchFragment = /* glsl */ `
     return t < 0.5 ? mix(uInk, uMid, t * 2.0) : mix(uMid, uSilver, (t - 0.5) * 2.0);
   }
 
-  vec3 shade(vec3 p, vec3 n, vec3 rd, float tint) {
+  vec3 shade(vec3 p, vec3 n, vec3 rd, float tint, float accent) {
     vec3 v = -rd;
     vec3 r = reflect(rd, n);
     vec3 L = normalize(KEY);
@@ -197,13 +202,15 @@ const marchFragment = /* glsl */ `
     float ndl = max(dot(n, L), 0.0);
     float fres = pow(1.0 - max(dot(n, v), 0.0), 5.0);
 
-    vec3 albedo = dropletColor(tint);
+    vec3 albedo = mix(dropletColor(tint), uAccent, accent);
     // Bounce from the bright floor lifts the underside (and the reflection).
     float bounce = smoothstep(0.2, -1.0, n.y) * smoothstep(1.5, FLOOR_Y, p.y);
     vec3 diffuse = albedo * ((0.22 + 0.62 * ndl * sh) * ao + bounce * 0.35 * uBg);
 
     float gloss = mix(0.7, 1.0, tint);
-    vec3 spec = env(r) * ao * mix(0.05, 1.0, fres) * gloss;
+    // The accent droplet is glossy lacquer rather than chrome: the room's
+    // reflection is dimmer on it, so its colour carries.
+    vec3 spec = env(r) * ao * mix(0.05, 1.0, fres) * gloss * mix(1.0, 0.45, accent);
 
     vec3 h = normalize(L + v);
     spec += pow(max(dot(n, h), 0.0), 160.0) * 0.7 * sh;
@@ -240,7 +247,9 @@ const marchFragment = /* glsl */ `
     float ts = hit ? t : tMin;
     vec3 p = ro + rd * ts;
     vec3 n = calcNormal(p, 0.002 + 0.0015 * ts);
-    vec3 col = shade(p, n, rd, tintAt(p));
+    float accent;
+    float tint = tintAt(p, accent);
+    vec3 col = shade(p, n, rd, tint, accent);
     fragColor = vec4(col, cover);
   }
 `;
@@ -428,6 +437,7 @@ type Palette = {
   ink: THREE.Color;
   mid: THREE.Color;
   silver: THREE.Color;
+  accent: THREE.Color;
   bg: THREE.Color;
   bg2: THREE.Color;
   warm: THREE.Color;
@@ -476,6 +486,7 @@ function cssColor(scope: HTMLElement, expr: string, fallback: string): THREE.Col
  *   --hero-ink     darkest droplet / resolved slab   (--color-foreground)
  *   --hero-mid     mid droplet                        (--gray-500)
  *   --hero-chrome  brightest droplet                  (--gray-200)
+ *   --hero-accent  the stray droplet that travels      (orange)
  *   --hero-warm    key-light tint, floor tint         (white)
  *   --hero-cool    fill-light tint, backdrop top      (ice white)
  */
@@ -484,6 +495,7 @@ function readPalette(scope: HTMLElement): Palette {
     ink: cssColor(scope, 'var(--hero-ink, var(--color-foreground))', '#0c1016'),
     mid: cssColor(scope, 'var(--hero-mid, var(--gray-500))', '#7a7f86'),
     silver: cssColor(scope, 'var(--hero-chrome, var(--gray-200))', '#e2e5e8'),
+    accent: cssColor(scope, 'var(--hero-accent, #ff5a1f)', '#ff5a1f'),
     bg: cssColor(scope, 'var(--color-background-secondary)', '#e6ebef'),
     bg2: cssColor(scope, 'var(--color-background-tertiary)', '#d9dfe4'),
     warm: cssColor(scope, 'var(--hero-warm, #ffffff)', '#ffffff'),
@@ -621,6 +633,7 @@ class HeroEngine {
     uInk: { value: new THREE.Color() },
     uMid: { value: new THREE.Color() },
     uSilver: { value: new THREE.Color() },
+    uAccent: { value: new THREE.Color() },
     uBg: { value: new THREE.Color() },
     uBg2: { value: new THREE.Color() },
     uWarm: { value: new THREE.Color() },
@@ -760,6 +773,7 @@ class HeroEngine {
     this.colors.uInk.value.copy(p.ink);
     this.colors.uMid.value.copy(p.mid);
     this.colors.uSilver.value.copy(p.silver);
+    this.colors.uAccent.value.copy(p.accent);
     this.colors.uBg.value.copy(p.bg);
     this.colors.uBg2.value.copy(p.bg2);
     this.colors.uWarm.value.copy(p.warm);
