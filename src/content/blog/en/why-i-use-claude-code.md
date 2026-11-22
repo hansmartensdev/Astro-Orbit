@@ -4,7 +4,7 @@ description: "How I build my websites and free Astro themes with Claude Code, fr
 publishedAt: 2026-11-22
 author: "Hans Martens"
 tags: ["Claude Code", "AI", "Astro", "Open Source", "GitHub"]
-icon: "sparkles"
+icon: "claude"
 featured: true
 locale: en
 ---
