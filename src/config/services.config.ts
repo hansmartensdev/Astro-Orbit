@@ -2,7 +2,7 @@
  * Services
  *
  * The four scroll-stacking cards on the homepage: Hans's craft, in his own
- * voice — what he does and cares about, not a studio's service list. Kept in config rather than a
+ * voice — design, build, optimise, maintain — not a studio's service list. Kept in config rather than a
  * content collection: there are four of them, they have no bodies, no dates and
  * no pages of their own — the shape is structural, not editorial.
  */
@@ -27,23 +27,23 @@ export const services: Service[] = [
   },
   {
     num: '02',
-    title: ['Built with', 'Astro'],
+    title: ['Develop', 'with Astro'],
     theme: 'mid',
     tags: ['Astro', 'TypeScript', 'Tailwind CSS', 'Hand-built'],
-    desc: 'Astro matches how I think about the web: lean, purposeful, and built to last. I build every site myself, from the first sketch to the last line of code.',
+    desc: 'I build every site myself with Astro, from the first sketch to the last line of code: lean, purposeful, and built to last.',
   },
   {
     num: '03',
-    title: ['Fast &', 'Found'],
+    title: ['Optimise &', 'Get Found'],
     theme: 'ink',
-    tags: ['Core Web Vitals', 'Technical SEO', 'Structured Data', 'AI Search'],
-    desc: 'A site should load fast and get found, by Google and by AI assistants. Speed and findability are part of every build, not an afterthought.',
+    tags: ['Lighthouse', 'Core Web Vitals', 'Technical SEO', 'Structured Data'],
+    desc: 'Fast pages and top Lighthouse scores, with the technical SEO and structured data that help Google and AI assistants find and understand every site.',
   },
   {
     num: '04',
-    title: ['Writing &', 'Sharing'],
+    title: ['Maintain &', 'Share'],
     theme: 'shade',
-    tags: ['Astro', 'Themes', 'Performance', 'Blog'],
-    desc: 'On the blog I write about building themes, Astro, and what makes websites fast: what I learn, shared as I go.',
+    tags: ['GitHub', 'Open Source', 'Astro Themes', 'Updates'],
+    desc: 'I keep what I build up to date on GitHub, and share it openly, so the Astro community can use it too.',
   },
 ];
