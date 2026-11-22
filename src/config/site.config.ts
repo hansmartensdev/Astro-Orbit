@@ -62,7 +62,7 @@ export interface SiteConfig {
 const siteConfig: SiteConfig = {
   name: 'Hans Martens',
   description:
-    'Hans Martens is an Astro developer based in Veghel, the Netherlands, building fast, original websites.',
+    'Hans Martens is an Astro developer based in Veghel, the Netherlands, building fast & beautiful websites.',
   url: SITE_URL || 'https://hansmartens.dev',
   ogImage: '/og-default.png',
   author: 'Hans Martens',
