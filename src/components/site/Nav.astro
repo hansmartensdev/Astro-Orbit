@@ -74,16 +74,6 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     </div>
 
     <div class="sw-nav__actions">
-      {
-        /* Write to Hans, one tap away on every page: the envelope only, in
-          the bar's current colour so it follows the bar over media and into
-          the open overlay. */
-      }
-      <a class="sw-nav__mail" href={'mailto:' + siteConfig.email}>
-        <Icon name="fa6-solid:envelope" aria-hidden="true" />
-        <span class="sr-only">Email {siteConfig.name}</span>
-      </a>
-
       <button
         class="burger"
         id="sw-nav-toggle"
@@ -331,33 +321,6 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     display: flex;
     align-items: center;
     gap: 18px;
-  }
-
-  .sw-nav__mail {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    border-radius: var(--radius-full);
-    color: inherit;
-    text-decoration: none;
-    transition: background 0.3s ease;
-  }
-
-  .sw-nav__mail:hover {
-    background: color-mix(in srgb, currentColor 10%, transparent);
-  }
-
-  .sw-nav__mail:focus-visible {
-    outline: 2px solid currentColor;
-    outline-offset: 2px;
-  }
-
-  .sw-nav__mail :global(svg) {
-    width: 15px;
-    height: 15px;
-    flex: none;
   }
 
   .burger {
