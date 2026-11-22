@@ -37,7 +37,7 @@ Astro Rocket began as a fork of the first public release of [Velocity](https://g
 
 People who use Astro Rocket report issues on GitHub, and I solve them with Claude Code. Two people from the Astro community reported issues and came with ideas to solve them, and GitHub now lists them as contributors. That's one of the things I like most about this work: I build something for myself and for others, and the others help me make the code better by reporting what goes wrong.
 
-## This website, and a new free theme next
+## This website, and a new fork of Velocity
 
 The website you're reading now I built with Claude Code from a fork of Velocity. It replaces the site I built in March.
 
