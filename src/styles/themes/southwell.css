@@ -31,9 +31,8 @@
 
   /* Ink is the primary. The one colour on the site is the droplet that falls
      out of the hero and travels down the page (HeroScene.tsx, reel/morph.ts),
-     in Velocity's International Orange — the value of Velocity's own
-     --brand-500, written out because the brand ramp below is remapped to ink. */
-  --hero-accent: #f94c10;
+     in Astro purple — a nod to the framework the site is built with. */
+  --hero-accent: #a855f7;
 
   --primary: var(--ink-950);
   --primary-hover: var(--ink-800);
@@ -179,11 +178,10 @@
        04 shade — slate green, glow from the bottom-left
      ------------------------------------------------------------------------- */
   /* The nav's contextual label — the client name after the wordmark slash.
-     The same orange as the droplet: Velocity's International Orange. On ice
-     it is the darker step (Velocity's --brand-600) so 22px at weight 300
-     still holds. */
-  --nav-context: oklch(53.2% 0.19 38);
-  /* The orange itself, for use over a dark hero image or on ink. */
+     The same purple as the droplet. On ice it is a deeper step, so 22px at
+     weight 300 still holds its contrast. */
+  --nav-context: #7e22ce;
+  /* The droplet's purple itself, for use over a dark hero image or on ink. */
   --nav-context-on-media: var(--hero-accent);
 
   --service-white-bg: #ffffff;

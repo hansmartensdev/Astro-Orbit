@@ -374,7 +374,7 @@ function makeColorReader(scope: HTMLElement) {
 
 function readPalette(read: ReturnType<typeof makeColorReader>): ScenePalette & { accent: Color } {
   return {
-    accent: read('var(--hero-accent, #f94c10)', '#f94c10'),
+    accent: read('var(--hero-accent, #a855f7)', '#a855f7'),
     ink: read('var(--hero-ink, var(--color-foreground))', '#0c1016'),
     mid: read('var(--hero-mid, var(--gray-500))', '#7a7f86'),
     silver: read('var(--hero-chrome, var(--gray-200))', '#e2e5e8'),
