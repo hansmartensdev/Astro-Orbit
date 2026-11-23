@@ -206,7 +206,7 @@ const SIZING: Record<'hero' | 'large' | 'wide' | 'standard', { widths: number[];
 
   {
     showMore && (
-      <div class="mt-[72px] flex justify-center" data-reveal>
+      <div class="relative z-[42] mt-[72px] flex justify-center" data-reveal>
         <PillButton href="/projects" variant="outline" class="px-9 py-4">
           {remaining > 0 ? 'See all ' + projects.length + ' projects' : 'See all work'}
           <Icon name="lucide:arrow-right" aria-hidden="true" />
@@ -256,6 +256,13 @@ const SIZING: Record<'hero' | 'large' | 'wide' | 'standard', { widths: number[];
      src/scripts/motion/work.ts. */
   :global(html.js) .card:not(.is-in) {
     opacity: 0;
+  }
+
+  /* The cards sit one layer above the reel's canvas (z-index 40), so the
+     ball, going on after it has become the lead card, passes behind them
+     and shows only in the gaps. */
+  .card {
+    z-index: 42;
   }
 
   /* The delivered card appears the moment the reel's droplet has become it;
