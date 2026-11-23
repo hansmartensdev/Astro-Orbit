@@ -129,7 +129,7 @@
 
   /* Plain text links dim on hover. Cards and buttons opt out — they carry
      their own hover treatment. */
-  a:not([data-card]):not([data-button]):not(.nav-link):hover {
+  a:not([data-card]):not([data-button]):not(.nav-link):not(.prose a):not(.pf a):hover {
     opacity: 0.7;
   }
 
