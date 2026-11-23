@@ -56,11 +56,7 @@ if (includeOrgSchema) {
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href={siteConfig.branding.favicon.svg} />
     <link rel="manifest" href="/manifest.webmanifest" />
-    {/* The browser bar's colour follows the page: ink by default (dark
-        first), ice once light is chosen. The inline theme script below and
-        ThemeToggle keep it in step. Not branding.colors.themeColor, which
-        the share images use and stays the light ground. */}
-    <meta name="theme-color" content="#0e0d15" id="theme-color" />
+    <meta name="theme-color" content={siteConfig.branding.colors.themeColor} />
 
     <!-- Fonts: latin subsets of the display and body faces -->
     <link rel="preload" href={geistWoff2} as="font" type="font/woff2" crossorigin />
@@ -99,30 +95,14 @@ if (includeOrgSchema) {
       document.documentElement.classList.add('js');
     </script>
 
-    <!-- Theme, before first paint so it never flashes: the visitor's choice
-         from the header's ThemeToggle (localStorage.theme), else dark. Dark
-         comes first for everyone on arrival (Hans's choice: the 3D scene is
-         at its best on ink); a visitor who picks Light or System keeps it on
-         every visit. Sets <html data-theme-mode> for the toggle's icon, .dark
-         for the theme itself, and the browser bar's colour. -->
+    <!-- Theme: light only, for everyone, whatever the system or an earlier
+         visit chose (Hans's choice until dark mode is fine-tuned). The dark
+         theme (.dark in themes/southwell.css) and the toggle
+         (site/ThemeToggle.astro) stay in place for then; to bring them back,
+         see commit 921f585 for the dark-first script and 7e64bb4 for the
+         toggle in the bar. -->
     <script is:inline>
-      (function () {
-        let mode = 'dark';
-        try {
-          const saved = localStorage.getItem('theme');
-          if (saved === 'light' || saved === 'dark' || saved === 'system') mode = saved;
-        } catch {
-          // Storage blocked (private mode, site data off): follow the system.
-        }
-        const dark =
-          mode === 'dark' ||
-          (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-        const root = document.documentElement;
-        root.setAttribute('data-theme-mode', mode);
-        root.classList.toggle('dark', dark);
-        const bar = document.getElementById('theme-color');
-        if (bar) bar.setAttribute('content', dark ? '#0e0d15' : '#eef2f4');
-      })();
+      document.documentElement.classList.remove('dark');
     </script>
   </head>
 
