@@ -338,46 +338,46 @@
      reel's 3D frame and the plain card read this. */
   --reel-card-bg: var(--ink-900);
 
-  /* Craft cards in dark: the light pile's violet run, mirrored onto ink.
-     White becomes a card one step up from the page with a soft violet
-     glow, lavender becomes a violet-tinted ink, and the ink and deep-violet
-     cards stay as they are in light, since they were already dark. Grain
-     is kept low: on ink it reads as grey static. */
-  --service-white-bg: #1a1726; /* ink with a touch of violet: the cool ink-900 read teal beside the violet glow */
+  /* Craft cards in dark: a violet ramp (Hans's choice, set B). The pile
+     steps up from near-black at 01 to the brand violet at 04, so it grows
+     richer card by card as it stacks, and each card stands apart from the
+     one it covers. One soft glow per card, from the top; little grain, which
+     on ink reads as grey static. */
+  --service-white-bg: #17151f;
   --service-white-fg: var(--ice-100);
   --service-white-chip: rgb(238 242 244 / 0.25);
-  --service-white-glow-a: rgb(124 58 237 / 0.22);
-  --service-white-glow-b: rgb(167 139 250 / 0.1);
-  --service-white-light: 12% 6%;
-  --service-white-light-b: 88% 96%;
-  --service-white-grain: 0.2;
+  --service-white-glow-a: rgb(124 58 237 / 0.14);
+  --service-white-glow-b: rgb(167 139 250 / 0.06);
+  --service-white-light: 50% 0%;
+  --service-white-light-b: 50% 120%;
+  --service-white-grain: 0.15;
 
-  --service-mid-bg: #1b1430;
+  --service-mid-bg: #1d1433;
   --service-mid-fg: var(--ice-100);
   --service-mid-chip: rgb(238 242 244 / 0.25);
-  --service-mid-glow-a: rgb(124 58 237 / 0.3);
-  --service-mid-glow-b: rgb(167 139 250 / 0.14);
-  --service-mid-light: 86% 94%;
-  --service-mid-light-b: 8% 14%;
-  --service-mid-grain: 0.2;
+  --service-mid-glow-a: rgb(124 58 237 / 0.26);
+  --service-mid-glow-b: rgb(167 139 250 / 0.1);
+  --service-mid-light: 50% 0%;
+  --service-mid-light-b: 50% 120%;
+  --service-mid-grain: 0.15;
 
-  --service-ink-bg: #0f0d18; /* the same, one step deeper */
+  --service-ink-bg: #2a1758;
   --service-ink-fg: var(--ice-100);
   --service-ink-chip: rgb(238 242 244 / 0.3);
-  --service-ink-glow-a: rgb(124 58 237 / 0.5);
+  --service-ink-glow-a: rgb(139 92 246 / 0.38);
   --service-ink-glow-b: rgb(91 33 182 / 0.3);
-  --service-ink-light: 80% 10%;
-  --service-ink-light-b: 18% 92%;
-  --service-ink-grain: 0.25;
+  --service-ink-light: 50% 0%;
+  --service-ink-light-b: 50% 120%;
+  --service-ink-grain: 0.15;
 
-  --service-shade-bg: #2a1458;
+  --service-shade-bg: #4c1d95;
   --service-shade-fg: #f5f3ff;
   --service-shade-chip: rgb(245 243 255 / 0.32);
-  --service-shade-glow-a: rgb(167 139 250 / 0.38);
-  --service-shade-glow-b: rgb(124 58 237 / 0.4);
-  --service-shade-light: 14% 92%;
-  --service-shade-light-b: 90% 20%;
-  --service-shade-grain: 0.25;
+  --service-shade-glow-a: rgb(196 181 253 / 0.32);
+  --service-shade-glow-b: rgb(124 58 237 / 0.5);
+  --service-shade-light: 50% 0%;
+  --service-shade-light-b: 50% 120%;
+  --service-shade-grain: 0.15;
 
   --work-media-bg: var(--ink-800);
 
