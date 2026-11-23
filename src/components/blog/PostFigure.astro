@@ -114,4 +114,14 @@ const hasCaption = Astro.slots.has('default');
     text-decoration-color: var(--hero-accent, #7c3aed);
     text-decoration-thickness: 2.5px;
   }
+
+  /* On ink: the violet made for ink, as in the post's text. */
+  :global(.dark) .pf figcaption :global(a) {
+    color: var(--hero-accent-on-ink, #a78bfa);
+    text-decoration-color: rgb(167 139 250 / 0.45);
+  }
+
+  :global(.dark) .pf figcaption :global(a:hover) {
+    text-decoration-color: var(--hero-accent-on-ink, #a78bfa);
+  }
 </style>
