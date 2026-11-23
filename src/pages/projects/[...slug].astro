@@ -83,7 +83,7 @@ const hero = feature ?? cover;
 // The phone version of the hero picture, if the project has one: composed
 // for a narrow screen, shown whole at the top of the hero on phones.
 const heroMobile = featureMobile
-  ? await getImage({ src: featureMobile, widths: [600, 900, 1200, 1600], format: 'webp' })
+  ? await getImage({ src: featureMobile, widths: [600, 900, 1200, 1600], format: 'webp', quality: 90 })
   : null;
 // The hero is ink with or without a picture, so the nav always reads light
 // over it (navOverMedia below).
@@ -131,6 +131,7 @@ const nextImage = next.data.feature ?? next.data.cover;
               alt={coverAlt ?? title}
               layout="none"
               widths={[768, 1280, 1920, 2560]}
+              quality={90}
               sizes="100vw"
               class:list={['case__hero-img', heroMobile && 'case__hero-img--has-mobile']}
               loading="eager"
@@ -190,6 +191,7 @@ const nextImage = next.data.feature ?? next.data.cover;
                   alt={shot.alt ?? title}
                   layout="none"
                   widths={[768, 1280, 1920]}
+                  quality={90}
                   sizes="(max-width: 1000px) 100vw, 62vw"
                   class:list={['band__shot', 'frame' in shot && shot.frame && 'band__shot--framed']}
                   data-reveal
@@ -269,6 +271,7 @@ const nextImage = next.data.feature ?? next.data.cover;
                 alt=""
                 layout="none"
                 widths={[640, 960, 1280, 1600]}
+                quality={90}
                 sizes="(max-width: 900px) 100vw, 50vw"
                 class="nextup__img"
               />
