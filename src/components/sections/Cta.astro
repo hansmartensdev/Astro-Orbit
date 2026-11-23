@@ -58,6 +58,29 @@ import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
     isolation: isolate;
   }
 
+  /* The two buttons in brand violet and white only, so the sign-off leads
+     into the violet glow of the footer. Solid: a violet pill whose white
+     disc fills it white on hover. Outline: a violet ring and label whose
+     violet disc fills it violet. White on this violet is 5.7:1. */
+  .cta :global(.afb) {
+    --afb-bg: var(--hero-accent, #7c3aed);
+    --afb-text: #fff;
+    --afb-fill-bg: #fff;
+    --afb-fill-text: var(--hero-accent, #7c3aed);
+  }
+
+  .cta :global(.afb--outline) {
+    --afb-bg: transparent;
+    --afb-text: var(--hero-accent, #7c3aed);
+    --afb-fill-bg: var(--hero-accent, #7c3aed);
+    --afb-fill-text: #fff;
+    --afb-border: var(--hero-accent, #7c3aed);
+  }
+
+  .cta :global(.afb:focus-visible) {
+    outline-color: var(--hero-accent, #7c3aed);
+  }
+
   /* Same construction as a service card ground: flat colour, two blooms,
      grain. Reads from the white colourway tokens so it re-maps in dark mode. */
   .cta__field {
