@@ -22,6 +22,14 @@ export default defineConfig({
   // turns that one route into a Vercel function and leaves the rest as files.
   adapter: vercel(),
 
+  // Every page's CSS goes into the page itself (about 33 KiB, compressed far
+  // smaller). Five separate stylesheets were blocking the first paint for
+  // 450-600ms each on a phone; inline, the page can paint as soon as the
+  // HTML arrives.
+  build: {
+    inlineStylesheets: 'always',
+  },
+
   env: {
     schema: {
       SITE_URL: envField.string({ context: 'server', access: 'public', optional: true }),
