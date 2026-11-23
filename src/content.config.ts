@@ -95,6 +95,11 @@ const work = defineCollection({
        * Without a feature, the cover simply sits there and nothing swaps.
        */
       feature: image().optional(),
+      /** Optional: the card picture for phones, composed for the phone
+       *  card's nearly square shape (about 1.28:1), with room for the label
+       *  top right and the title at the bottom. Without it, phones crop the
+       *  middle out of the wide picture. */
+      featureMobile: image().optional(),
       /** The device mockup. Revealed on hover when a `feature` is set. */
       cover: image().optional(),
       coverAlt: z.string().optional(),
