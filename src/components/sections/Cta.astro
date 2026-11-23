@@ -26,7 +26,7 @@ import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
     data-reveal
     class="shell relative flex flex-col items-center pt-[130px] pb-[130px] max-[800px]:pt-[100px] max-[800px]:pb-[100px]"
   >
-    <h2 class="display-section m-0 text-center">
+    <h2 class="cta__title display-section m-0 text-center">
       <span class="block">Let&rsquo;s talk</span>
       <span class="block"><em>Astro.</em></span>
     </h2>
@@ -144,6 +144,16 @@ import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
     );
     background-clip: text;
     -webkit-background-clip: text;
+  }
+
+  /* On a phone the sign-off takes the page-title size (as on /contact,
+     where the same words are the title), not the smaller section-head
+     size: alone and centred between the big watermark and the
+     full-width buttons, the section size read as small. */
+  @media (max-width: 800px) {
+    .cta__title {
+      font-size: clamp(38px, 11.2vw, 52px);
+    }
   }
 
   @media (max-width: 800px) {
