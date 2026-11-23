@@ -157,7 +157,12 @@ const nextImage = next.data.feature ?? next.data.cover;
         <p class="case__lede" data-reveal>{description}</p>
       </div>
 
-      <span class="case__scroll label-mono" aria-hidden="true">scroll</span>
+      {/* The homepage's indicator: the word over a line that pulses
+          (sw-scrollpulse), here in the light colours of the dark hero. */}
+      <span class="case__scroll" aria-hidden="true">
+        Scroll
+        <span class="case__scroll-line"></span>
+      </span>
     </header>
 
     {/* --- facts: a thin ledger closing off the hero -------------------- */}
@@ -369,10 +374,20 @@ const nextImage = next.data.feature ?? next.data.cover;
     position: absolute;
     right: var(--gutter);
     bottom: 88px;
-    color: rgb(238 242 244 / 0.6);
-    writing-mode: vertical-rl;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: rgb(238 242 244 / 0.72);
+  }
+
+  .case__scroll-line {
+    display: block;
+    width: 1.5px;
+    height: 48px;
+    background: rgb(238 242 244 / 0.9);
+    animation: sw-scrollpulse 1.8s ease-in-out infinite;
   }
 
   /* --- ledger ---------------------------------------------------------- */
