@@ -139,7 +139,7 @@ const channels = [
         const data = await response.json();
 
         if (data.success) {
-          message.textContent = 'Message sent. We will get back to you shortly.';
+          message.textContent = "Message sent. I'll get back to you by email.";
           message.className = 'text-sm text-success';
           form.reset();
         } else {
