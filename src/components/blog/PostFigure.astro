@@ -1,0 +1,77 @@
+---
+/**
+ * PostFigure
+ *
+ * An image in a blog post, with an optional phone version: a wide picture
+ * comes out small in a phone's narrow column, so `mobile` (composed for a
+ * narrow screen) takes over up to 700px. The caption is the slot.
+ */
+import type { ImageMetadata } from 'astro';
+import { getImage } from 'astro:assets';
+
+interface Props {
+  src: ImageMetadata;
+  mobile?: ImageMetadata;
+  alt: string;
+}
+
+const { src, mobile, alt } = Astro.props;
+
+const wide = await getImage({ src, widths: [768, 1200, 1600, 2400], format: 'webp' });
+const narrow = mobile ? await getImage({ src: mobile, widths: [600, 900, 1200], format: 'webp' }) : null;
+const hasCaption = Astro.slots.has('default');
+---
+
+<figure class="pf not-prose">
+  <picture>
+    {
+      narrow && (
+        <source media="(max-width: 700px)" srcset={narrow.srcSet.attribute} sizes="calc(100vw - 48px)" type="image/webp" />
+      )
+    }
+    <img
+      src={wide.src}
+      srcset={wide.srcSet.attribute}
+      sizes="(max-width: 900px) calc(100vw - 48px), 860px"
+      alt={alt}
+      width={src.width}
+      height={src.height}
+      loading="lazy"
+      decoding="async"
+    />
+  </picture>
+  {
+    hasCaption && (
+      <figcaption>
+        <slot />
+      </figcaption>
+    )
+  }
+</figure>
+
+<style>
+  .pf {
+    margin: 2.2em 0;
+  }
+
+  .pf img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 14px;
+  }
+
+  .pf figcaption {
+    margin-top: 14px;
+    font-size: 15px;
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--color-foreground-muted);
+  }
+
+  .pf figcaption :global(a) {
+    color: var(--color-foreground);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+</style>
