@@ -46,7 +46,7 @@ import HeroScene from '@/components/site/HeroScene.tsx';
     >
     <span class="hero__line"
       ><span class="hero__word hero__word--2"
-        ><em>for fast &amp; beautiful websites.</em>{
+        ><em>for <span class="hero__accent">fast &amp; beautiful</span> websites.</em>{
           /* A zero-size inline-block sat on the baseline: the reel's droplet
             lands on this line, and reads where the baseline is from here. */
         }<span class="hero__baseline" aria-hidden="true"></span></span
@@ -142,6 +142,12 @@ import HeroScene from '@/components/site/HeroScene.tsx';
      marker rides the wrap. */
   .hero__headline {
     font-size: max(7.7cqi, min(calc((100vw - 56px) / 9), 64px));
+  }
+
+  /* The promise in the brand violet: the two words that say what Hans
+     builds. Large text, so this violet passes contrast comfortably. */
+  .hero__accent {
+    color: var(--hero-accent, #7c3aed);
   }
 
   .hero__word--2 {
