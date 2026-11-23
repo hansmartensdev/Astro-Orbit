@@ -343,7 +343,7 @@
      glow, lavender becomes a violet-tinted ink, and the ink and deep-violet
      cards stay as they are in light, since they were already dark. Grain
      is kept low: on ink it reads as grey static. */
-  --service-white-bg: var(--ink-900);
+  --service-white-bg: #1a1726; /* ink with a touch of violet: the cool ink-900 read teal beside the violet glow */
   --service-white-fg: var(--ice-100);
   --service-white-chip: rgb(238 242 244 / 0.25);
   --service-white-glow-a: rgb(124 58 237 / 0.22);
@@ -361,7 +361,7 @@
   --service-mid-light-b: 8% 14%;
   --service-mid-grain: 0.2;
 
-  --service-ink-bg: var(--ink-950);
+  --service-ink-bg: #0f0d18; /* the same, one step deeper */
   --service-ink-fg: var(--ice-100);
   --service-ink-chip: rgb(238 242 244 / 0.3);
   --service-ink-glow-a: rgb(124 58 237 / 0.5);
