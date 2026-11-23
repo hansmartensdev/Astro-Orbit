@@ -333,6 +333,11 @@
   /* Lifted so it holds up on ink at the same perceived weight. */
   --nav-context: var(--hero-accent-on-ink);
 
+  /* The quote card ("What drives me") lifts off the ink page one step, the
+     same step as the blog cards, or only its words would show. Both the
+     reel's 3D frame and the plain card read this. */
+  --reel-card-bg: var(--ink-900);
+
   --service-white-bg: var(--ink-900);
   --service-white-fg: var(--ice-100);
   --service-white-chip: rgb(238 242 244 / 0.25);
