@@ -168,7 +168,7 @@ const nextImage = next.data.feature ?? next.data.cover;
             </div>
 
             <div class="band__shots">
-              {band.shots.map((shot) => (
+              {band.shots.map((shot, j) => (
                 <Image
                   src={shot.src}
                   alt={shot.alt ?? title}
@@ -177,6 +177,7 @@ const nextImage = next.data.feature ?? next.data.cover;
                   sizes="(max-width: 1000px) 100vw, 62vw"
                   class="band__shot"
                   data-reveal
+                  data-reveal-delay={j * 0.1}
                 />
               ))}
             </div>
