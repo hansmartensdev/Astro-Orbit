@@ -249,23 +249,36 @@ const nextImage = next.data.feature ?? next.data.cover;
       )
     }
 
-    {/* --- next project: a full-bleed door out --------------------------- */}
+    {/* --- next project: the text and a preview of it, on the page ground */}
     <a class="nextup" href={'/projects/' + next.id} data-card>
-      {
-        nextImage && (
-          <Image
-            src={nextImage}
-            alt=""
-            layout="none"
-            widths={[768, 1280, 1920]}
-            sizes="100vw"
-            class="nextup__img"
-          />
-        )
-      }
-      <div class="nextup__body shell">
-        <span class="label-mono">NEXT PROJECT</span>
-        <span class="nextup__title">{next.data.title}</span>
+      <div class="nextup__inner shell">
+        <div class="nextup__text">
+          <span class="label-mono nextup__label">NEXT PROJECT</span>
+          <span class="nextup__title" style={`--len: ${next.data.title.length}`}>{next.data.title}</span>
+          <span class="nextup__line">{next.data.description}</span>
+          <span class="nextup__go">
+            View project
+            <Icon name="lucide:arrow-right" aria-hidden="true" />
+          </span>
+        </div>
+        <div class="nextup__preview">
+          {
+            nextImage ? (
+              <Image
+                src={nextImage}
+                alt=""
+                layout="none"
+                widths={[640, 960, 1280, 1600]}
+                sizes="(max-width: 900px) 100vw, 50vw"
+                class="nextup__img"
+              />
+            ) : (
+              <span class="nextup__blank label-mono" aria-hidden="true">
+                {next.data.title}
+              </span>
+            )
+          }
+        </div>
       </div>
     </a>
   </article>
@@ -522,47 +535,28 @@ const nextImage = next.data.feature ?? next.data.cover;
     padding-block: 40px 96px;
   }
 
-  /* --- next project ----------------------------------------------------- */
-
+  /* --- next project -----------------------------------------------------
+     Light, on the page ground, so it stands apart from the ink footer
+     below: the next project's label, title, line and a violet button on
+     the left, a preview card of it on the right (its picture, or the
+     violet glow when it has none yet). */
   .nextup {
-    position: relative;
-    display: flex;
-    align-items: flex-end;
-    min-height: 52svh;
-    overflow: hidden;
-    background: var(--ink-950);
-    isolation: isolate;
+    display: block;
+    padding-block: clamp(64px, 8vw, 112px);
+    border-top: 1px solid var(--color-border);
+    color: var(--color-foreground);
+    text-decoration: none;
   }
 
-  .nextup__img {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0.5;
-    filter: grayscale(1);
-    transition:
-      transform 0.9s var(--ease-sw),
-      opacity 0.5s ease,
-      filter 0.5s ease;
+  .nextup__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: clamp(32px, 5vw, 72px);
+    align-items: center;
   }
 
-  .nextup:hover .nextup__img,
-  .nextup:focus-visible .nextup__img {
-    transform: scale(1.04);
-    opacity: 0.75;
-    filter: grayscale(0);
-  }
-
-  .nextup__body {
-    padding-block: 56px;
-    color: var(--ice-100);
-  }
-
-  .nextup__body .label-mono {
-    opacity: 0.7;
+  .nextup__label {
+    color: var(--color-foreground-muted);
   }
 
   .nextup__title {
@@ -571,9 +565,99 @@ const nextImage = next.data.feature ?? next.data.cover;
     font-family: var(--font-display);
     font-weight: var(--display-weight);
     text-transform: var(--display-case);
-    font-size: min(8vw, 104px);
+    font-size: min(6vw, 88px, calc((50vw - 96px) / (var(--len, 10) * 0.52)));
     line-height: 1;
     letter-spacing: var(--display-tracking);
+  }
+
+  .nextup__line {
+    display: block;
+    max-width: 44ch;
+    margin-top: 18px;
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--color-foreground-secondary);
+  }
+
+  .nextup__go {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 32px;
+    padding: 16px 28px;
+    border-radius: var(--radius-full);
+    background: var(--hero-accent, #7c3aed);
+    color: #fff;
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  .nextup__go :global(svg) {
+    width: 18px;
+    height: 18px;
+    transition: transform 0.35s var(--ease-sw);
+  }
+
+  .nextup:hover .nextup__go :global(svg) {
+    transform: translateX(4px);
+  }
+
+  .nextup:focus-visible {
+    outline: 2px solid var(--hero-accent, #7c3aed);
+    outline-offset: -4px;
+  }
+
+  .nextup__preview {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-radius: 18px;
+    background-color: #0c1016;
+    background-image: radial-gradient(circle at 0% 100%, rgb(124 58 237 / 0.55), rgb(124 58 237 / 0) 55%);
+    box-shadow: 0 30px 60px -36px rgb(12 16 22 / 0.45);
+  }
+
+  .nextup__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.9s var(--ease-sw);
+  }
+
+  .nextup:hover .nextup__img {
+    transform: scale(1.04);
+  }
+
+  .nextup__blank {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: var(--hero-accent-on-ink, #a78bfa);
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 900px) {
+    .nextup__inner {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .nextup__preview {
+      order: -1;
+    }
+
+    .nextup__title {
+      font-size: min(13vw, calc((100vw - 48px) / (var(--len, 10) * 0.52)));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nextup__img,
+    .nextup__go :global(svg) {
+      transition: none;
+    }
   }
 
   @media (max-width: 1000px) {
@@ -645,8 +729,5 @@ const nextImage = next.data.feature ?? next.data.cover;
       gap: 40px;
     }
 
-    .nextup__title {
-      font-size: 13vw;
-    }
   }
 </style>

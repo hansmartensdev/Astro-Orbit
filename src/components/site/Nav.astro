@@ -601,7 +601,8 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     z-index: 54;
     padding: 0;
     border: 0;
-    background: rgb(12 16 22 / 0.34);
+    /* A deep brand violet veil over the page under the menu. */
+    background: rgb(42 20 88 / 0.4);
     opacity: 0;
     visibility: hidden;
     cursor: pointer;
@@ -612,7 +613,7 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
 
   /* A light sheet needs a darker page under it to stand off from. */
   .sw-menu__scrim[data-tone='light'] {
-    background: rgb(12 16 22 / 0.5);
+    background: rgb(42 20 88 / 0.55);
   }
 
   .sw-menu__scrim[data-state='open'] {
