@@ -22,7 +22,7 @@ gallery:
   - src: "../../assets/work/hansmartens-dev/sign-off.webp"
     alt: "The sign-off, Let's talk Astro, with violet buttons above the footer's violet glow"
   - src: "../../assets/work/hansmartens-dev/craft-card.webp"
-    alt: "The Develop with Astro card from the homepage"
+    alt: "The Web Development card from the homepage, with its code icon, tags and text"
 challenge: "PLACEHOLDER: why a new website."
 solution: "PLACEHOLDER: what Hans built and what matters to him about it."
 technologies: ["Astro", "TypeScript", "Tailwind CSS", "three.js", "Claude Code", "Vercel"]
