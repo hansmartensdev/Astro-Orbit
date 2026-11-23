@@ -104,6 +104,12 @@ const bands = [
 ].filter((band) => band.prose || band.shots.length > 0);
 
 const hasBuild = technologies.length > 0 || features.length > 0;
+// The stack, what shipped and the site link sit under the last band's text,
+// in line with it, rather than in sections of their own with their own
+// padding. Only a project without any band gets them as sections below.
+const extrasInBand = bands.length > 0;
+// The written case study under the bands, only when the project has one.
+const hasBody = Boolean(project.body?.trim());
 const nextImage = next.data.feature ?? next.data.cover;
 ---
 
@@ -187,7 +193,7 @@ const nextImage = next.data.feature ?? next.data.cover;
       bands.map((band, i) => (
         <section class="band" data-tone={i % 2 === 0 ? 'ink' : 'ice'}>
           <div class="band__inner shell">
-            <div class="band__aside">
+            <div class:list={['band__aside', extrasInBand && i === bands.length - 1 && 'band__aside--long']}>
               <span class="band__label label-mono" data-reveal>{band.label}</span>
               {/* A blank line in the text starts a new paragraph. */}
               {band.prose &&
@@ -196,6 +202,36 @@ const nextImage = next.data.feature ?? next.data.cover;
                     {para.trim()}
                   </p>
                 ))}
+              {extrasInBand && i === bands.length - 1 && (
+                <div class="band__extras" data-reveal>
+                  {technologies.length > 0 && (
+                    <div>
+                      <span class="band__label label-mono">STACK</span>
+                      <ul class="case__chips">
+                        {technologies.map((item) => (
+                          <li>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {features.length > 0 && (
+                    <div>
+                      <span class="band__label label-mono">SHIPPED</span>
+                      <ul class="case__shipped">
+                        {features.map((item) => (
+                          <li>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {url && (
+                    <PillButton href={url} target="_blank" variant="solid">
+                      Visit the site
+                      <Icon name="lucide:arrow-up-right" aria-hidden="true" />
+                    </PillButton>
+                  )}
+                </div>
+              )}
             </div>
 
             <div class="band__shots">
@@ -220,7 +256,7 @@ const nextImage = next.data.feature ?? next.data.cover;
 
     {/* --- stack + shipped ---------------------------------------------- */}
     {
-      hasBuild && (
+      !extrasInBand && hasBuild && (
         <section class="case__build">
           <div class="case__build-inner shell">
             {technologies.length > 0 && (
@@ -248,14 +284,18 @@ const nextImage = next.data.feature ?? next.data.cover;
       )
     }
 
-    <div class="case__prose shell">
-      <div class="prose" data-reveal-content>
-        <Content />
-      </div>
-    </div>
+    {
+      hasBody && (
+        <div class="case__prose shell">
+          <div class="prose" data-reveal-content>
+            <Content />
+          </div>
+        </div>
+      )
+    }
 
     {
-      url && (
+      !extrasInBand && url && (
         <div class="case__visit shell" data-reveal>
           <PillButton href={url} target="_blank" variant="solid">
             Visit the site
@@ -503,6 +543,33 @@ const nextImage = next.data.feature ?? next.data.cover;
 
   .band__inner:has(.band__shots:empty) .band__aside {
     position: static;
+  }
+
+  /* With the stack and the link under it, the last band's column is taller
+     than a laptop screen, so it would pin with its foot out of sight: it
+     scrolls with the page instead. */
+  .band__aside--long {
+    position: static;
+  }
+
+  /* The stack, what shipped and the site link, under the last band's text:
+     the same column and left edge, a rule above to close off the text. */
+  .band__extras {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    margin-top: 40px;
+    padding-top: 32px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .band[data-tone='ink'] .band__extras {
+    border-top-color: rgb(238 242 244 / 0.14);
+  }
+
+  .band[data-tone='ink'] .case__chips li {
+    border-color: rgb(238 242 244 / 0.3);
   }
 
   /* --- build ----------------------------------------------------------- */
