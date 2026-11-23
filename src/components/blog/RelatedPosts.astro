@@ -1,5 +1,5 @@
 ---
-import BlogCard from './BlogCard.astro';
+import PostCard from './PostCard.astro';
 import { getCollection } from 'astro:content';
 
 interface Props {
@@ -36,31 +36,61 @@ const relatedPosts = allPosts
   })
   .slice(0, maxPosts);
 
-// Generate URLs for each post (remove locale prefix from id)
-const getPostUrl = (postId: string) => {
-  const slug = postId.replace(`${locale}/`, '');
-  return `/blog/${slug}`;
-};
 ---
 
-{relatedPosts.length > 0 && (
-  <section class="border-t border-border pt-[var(--space-section-header)] mt-[var(--space-section-header)]">
-    <h2 class="font-display text-2xl font-bold text-foreground mb-[var(--space-stack-lg)]">
-      Related Posts
-    </h2>
+{
+  relatedPosts.length > 0 && (
+    <section class="related">
+      <h2 class="related__title">Related posts</h2>
+      <ul class:list={['related__list', `related__list--${relatedPosts.length}`]}>
+        {relatedPosts.map((post, i) => (
+          <li data-reveal data-reveal-delay={i * 0.1}>
+            <PostCard post={post} compact={relatedPosts.length > 1} />
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
 
-    <div class="grid gap-[var(--space-stack-lg)] md:grid-cols-2 lg:grid-cols-3">
-      {relatedPosts.map((post) => (
-        <BlogCard
-          title={post.data.title}
-          description={post.data.description}
-          href={getPostUrl(post.id)}
-          publishedAt={post.data.publishedAt}
-          tags={post.data.tags}
-          author={post.data.author}
-          image={post.data.image}
-        />
-      ))}
-    </div>
-  </section>
-)}
+<style>
+  .related {
+    padding-top: clamp(56px, 7vw, 96px);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .related__title {
+    margin: 0 0 32px;
+    font-family: var(--font-display);
+    font-weight: var(--display-weight);
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    letter-spacing: var(--display-tracking);
+    text-transform: var(--display-case);
+  }
+
+  .related__list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* One related post: a wide card, like the homepage's single post. Two: a
+     pair. */
+  .related__list--1 {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 860px;
+  }
+
+  .related__list--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 900px) {
+    .related__list {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>
