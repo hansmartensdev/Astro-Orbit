@@ -435,7 +435,7 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
 
   /* In dark mode, the same order as in light: the sheet lighter than the
      veil under it (Hans's choice). The sheet lifts two steps off the ink
-     page and the veil goes deep violet-black, where it used to wash the
+     page and the veil goes deep violet, where it used to wash the
      dark page lighter than the sheet. The wave reads the fill's colour
      each time the menu opens (scripts/menu-edge.ts). */
   :global(.dark) .sw-menu:not(.invert-section) {
@@ -632,7 +632,7 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
   }
 
   :global(.dark) .sw-menu__scrim {
-    background: rgb(8 5 20 / 0.72);
+    background: rgb(30 12 70 / 0.72);
   }
 
   .sw-menu__scrim[data-state='open'] {
