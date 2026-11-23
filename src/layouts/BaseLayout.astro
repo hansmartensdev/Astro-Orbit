@@ -95,24 +95,13 @@ if (includeOrgSchema) {
       document.documentElement.classList.add('js');
     </script>
 
-    <!-- Theme, before first paint so it never flashes: the visitor's choice
-         from the header's ThemeToggle (localStorage.theme), else the system
-         setting. Sets <html data-theme-mode> for the toggle's icon and
-         .dark for the theme itself. -->
+    <!-- Theme: light only until dark mode is designed, whatever the system
+         or an earlier visit chose. The dark theme (.dark in
+         themes/southwell.css) stays in place for later. Hans's own toggle
+         (from hansmartens.dev) was ported in commit 9da14f2 and can come
+         back from there with the system/stored choice. -->
     <script is:inline>
-      (function () {
-        var mode = 'system';
-        try {
-          var saved = localStorage.getItem('theme');
-          if (saved === 'light' || saved === 'dark' || saved === 'system') mode = saved;
-        } catch (e) {}
-        var dark =
-          mode === 'dark' ||
-          (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-        var root = document.documentElement;
-        root.setAttribute('data-theme-mode', mode);
-        root.classList.toggle('dark', dark);
-      })();
+      document.documentElement.classList.remove('dark');
     </script>
   </head>
 
