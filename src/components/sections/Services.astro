@@ -18,6 +18,7 @@
  *             depth from translateZ and nothing else.
  */
 import SectionHead from './SectionHead.astro';
+import { lucideBody } from '@/lib/og';
 import { services } from '@/config/services.config';
 
 const last = services.length - 1;
@@ -57,23 +58,41 @@ const timelineScope = services
         >
           <div class="service__lead">
             <span class="service__num label-mono">{service.num}</span>
-            <h3 class="service__title display-service m-0">
-              <span class="block">{service.title[0]}</span>
-              <span class="block">{service.title[1]}</span>
-            </h3>
+            <div class="service__head">
+              {/* Inline from Lucide's data, with the thin line of the blog
+                  header's icon. */}
+              <svg
+                class="service__icon"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                set:html={lucideBody(service.icon)?.replace(/stroke-width="2"/g, 'stroke-width="1.25"')}
+              />
+              <h3 class="service__title display-service m-0">
+                {service.title.map((line) => (
+                  <span class="block">{line}</span>
+                ))}
+              </h3>
+              {/* Desktop: the tags under the title. */}
+              <div class="service__tags service__tags--lead">
+                {service.tags.map((tag) => (
+                  <span class="service__tag">{tag}</span>
+                ))}
+              </div>
+            </div>
           </div>
 
           <div class="service__detail">
-            <div class="service__tags">
+            {/* Phone: the tags above the text. */}
+            <div class="service__tags service__tags--detail">
               {service.tags.map((tag) => (
-                <span class="service__tag">
-                  {tag}
-                </span>
+                <span class="service__tag">{tag}</span>
               ))}
             </div>
-            <p class="service__desc">
-              {service.desc}
-            </p>
+            <div class="service__body">
+              {[service.desc].flat().map((para) => (
+                <p class="service__desc">{para}</p>
+              ))}
+            </div>
           </div>
         </article>
       </div>
@@ -236,6 +255,34 @@ const timelineScope = services
     gap: 28px;
   }
 
+  /* Title and its tags (and, on desktop, the icon above them) sit together
+     at the foot of the left column, level with the end of the text. */
+  .service__head {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .service__icon {
+    width: clamp(56px, 5vw, 76px);
+    height: clamp(56px, 5vw, 76px);
+    margin-bottom: 28px;
+    opacity: 0.85;
+  }
+
+  .service__tags--lead {
+    margin-top: 24px;
+  }
+
+  .service__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85em;
+  }
+
+  .service__tags.service__tags--detail {
+    display: none;
+  }
+
   .service__tags {
     display: flex;
     flex-wrap: wrap;
@@ -289,6 +336,16 @@ const timelineScope = services
 
     .service__lead {
       gap: 24px;
+    }
+
+    /* One column: no icon, and the tags above the text. */
+    .service__icon,
+    .service__tags.service__tags--lead {
+      display: none;
+    }
+
+    .service__tags.service__tags--detail {
+      display: flex;
     }
 
     .service__desc {
