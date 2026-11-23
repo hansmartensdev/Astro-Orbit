@@ -58,6 +58,7 @@ const {
   url,
   feature,
   featureMobile,
+  pageHero,
   cover,
   coverAlt,
   gallery,
@@ -79,7 +80,9 @@ const facts = [
 
 // The feature photograph leads the page the way it leads the card. The mockup
 // is not dropped — it becomes the first capture in the bands below.
-const hero = feature ?? cover;
+// A project can give its page its own hero picture (pageHero), shaped for
+// the screen rather than the card.
+const hero = pageHero ?? feature ?? cover;
 // The phone version of the hero picture, if the project has one: composed
 // for a narrow screen, shown whole at the top of the hero on phones.
 const heroMobile = featureMobile
@@ -130,7 +133,7 @@ const nextImage = next.data.feature ?? next.data.cover;
               src={hero}
               alt={coverAlt ?? title}
               layout="none"
-              widths={[768, 1280, 1920, 2560]}
+              widths={[768, 1280, 1920, 2560, 3200, 3840]}
               quality={90}
               sizes="100vw"
               class:list={['case__hero-img', heroMobile && 'case__hero-img--has-mobile']}
