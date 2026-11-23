@@ -92,6 +92,12 @@ const timelineScope = services
               {[service.desc].flat().map((para) => (
                 <p class="service__desc">{para}</p>
               ))}
+              {service.link && (
+                <a class="service__link" href={service.link.href}>
+                  {service.link.label}
+                  <span aria-hidden="true">→</span>
+                </a>
+              )}
             </div>
           </div>
         </article>
@@ -281,6 +287,29 @@ const timelineScope = services
 
   .service__tags.service__tags--detail {
     display: none;
+  }
+
+  /* A link under the text, in the card's own colour, underlined. */
+  .service__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    align-self: flex-start;
+    margin-top: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 4px;
+  }
+
+  .service__link span {
+    transition: transform 0.3s var(--ease-sw, ease);
+  }
+
+  .service__link:hover span {
+    transform: translateX(4px);
   }
 
   .service__tags {

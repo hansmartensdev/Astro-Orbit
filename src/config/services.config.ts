@@ -18,6 +18,8 @@ export interface Service {
   tags: string[];
   /** One or more paragraphs. */
   desc: string | string[];
+  /** Optional: a link under the text, e.g. to a blog post on the subject. */
+  link?: { href: string; label: string };
   /** Card colourway. */
   theme: 'white' | 'mid' | 'ink' | 'shade';
 }
@@ -43,6 +45,7 @@ export const services: Service[] = [
     num: '03',
     title: ['Optimisation'],
     icon: 'gauge',
+    link: { href: '/blog/lighthouse-score-explained', label: 'The Lighthouse score explained' },
     theme: 'ink',
     tags: ['Lighthouse', 'Core Web Vitals', 'Technical SEO', 'Structured Data'],
     desc: 'Fast pages and top Lighthouse scores, with the technical SEO and structured data that help Google and AI assistants find and understand every site.',
