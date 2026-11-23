@@ -98,7 +98,8 @@ const label = ['Blog', tags[0]].filter(Boolean).join(' · ').toUpperCase();
     overflow: hidden;
     padding: clamp(32px, 6vw, 88px);
     border-radius: 22px;
-    background-color: var(--ink-950, #0c1016);
+    /* The same deep violet ground as the blog covers and the dark footer. */
+    background-color: #1a1030;
     background-image:
       radial-gradient(circle at 0% 100%, rgb(124 58 237 / 0.55), rgb(124 58 237 / 0) 55%),
       radial-gradient(circle at 100% 0%, rgb(167 139 250 / 0.18), rgb(167 139 250 / 0) 45%);

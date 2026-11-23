@@ -338,43 +338,43 @@
      reel's 3D frame and the plain card read this. */
   --reel-card-bg: var(--ink-900);
 
-  /* Craft cards in dark: a violet ramp (Hans's choice, set B). The pile
-     steps up from near-black at 01 to the brand violet at 04, so it grows
-     richer card by card as it stacks, and each card stands apart from the
-     one it covers. One soft glow per card, from the top; little grain, which
-     on ink reads as grey static. */
-  --service-white-bg: #17151f;
-  --service-white-fg: var(--ice-100);
-  --service-white-chip: rgb(238 242 244 / 0.25);
-  --service-white-glow-a: rgb(124 58 237 / 0.14);
-  --service-white-glow-b: rgb(167 139 250 / 0.06);
+  /* Craft cards in dark: all four the same deep violet (Hans's choice).
+     None sits on near-black any more, so none can read as the teal cast
+     the plain inks gave; the pile still reads as cards by their edges and
+     the shadow each casts on the one below. One soft glow from the top,
+     little grain. */
+  --service-white-bg: #2a1758;
+  --service-white-fg: #f5f3ff;
+  --service-white-chip: rgb(245 243 255 / 0.32);
+  --service-white-glow-a: rgb(139 92 246 / 0.38);
+  --service-white-glow-b: rgb(91 33 182 / 0.3);
   --service-white-light: 50% 0%;
   --service-white-light-b: 50% 120%;
   --service-white-grain: 0.15;
 
-  --service-mid-bg: #1d1433;
-  --service-mid-fg: var(--ice-100);
-  --service-mid-chip: rgb(238 242 244 / 0.25);
-  --service-mid-glow-a: rgb(124 58 237 / 0.26);
-  --service-mid-glow-b: rgb(167 139 250 / 0.1);
+  --service-mid-bg: #2a1758;
+  --service-mid-fg: #f5f3ff;
+  --service-mid-chip: rgb(245 243 255 / 0.32);
+  --service-mid-glow-a: rgb(139 92 246 / 0.38);
+  --service-mid-glow-b: rgb(91 33 182 / 0.3);
   --service-mid-light: 50% 0%;
   --service-mid-light-b: 50% 120%;
   --service-mid-grain: 0.15;
 
   --service-ink-bg: #2a1758;
-  --service-ink-fg: var(--ice-100);
-  --service-ink-chip: rgb(238 242 244 / 0.3);
+  --service-ink-fg: #f5f3ff;
+  --service-ink-chip: rgb(245 243 255 / 0.32);
   --service-ink-glow-a: rgb(139 92 246 / 0.38);
   --service-ink-glow-b: rgb(91 33 182 / 0.3);
   --service-ink-light: 50% 0%;
   --service-ink-light-b: 50% 120%;
   --service-ink-grain: 0.15;
 
-  --service-shade-bg: #4c1d95;
+  --service-shade-bg: #2a1758;
   --service-shade-fg: #f5f3ff;
   --service-shade-chip: rgb(245 243 255 / 0.32);
-  --service-shade-glow-a: rgb(196 181 253 / 0.32);
-  --service-shade-glow-b: rgb(124 58 237 / 0.5);
+  --service-shade-glow-a: rgb(139 92 246 / 0.38);
+  --service-shade-glow-b: rgb(91 33 182 / 0.3);
   --service-shade-light: 50% 0%;
   --service-shade-light-b: 50% 120%;
   --service-shade-grain: 0.15;

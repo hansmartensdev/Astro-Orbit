@@ -27,7 +27,7 @@ function loadFont(weight: 400 | 600): ArrayBuffer {
 }
 
 /** Ink, ice and the violet accent, as plain values: Satori cannot read CSS variables. */
-const INK = '#0e0d15'; // ink-950, the violet-leaning ink (tokens/primitives.css)
+const INK = '#1a1030'; // a deep violet ground for covers and share cards, as the dark footer
 const ICE = '#eef2f4';
 const VIOLET = '#7c3aed';
 const VIOLET_ON_INK = '#8b5cf6';
