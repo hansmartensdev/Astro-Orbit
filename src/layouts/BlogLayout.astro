@@ -93,10 +93,10 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
       <div class:list={[hasToc && 'xl:grid xl:grid-cols-[minmax(0,1fr)_16rem] xl:gap-14']}>
       <div class="min-w-0 xl:max-w-4xl">
       <!-- Breadcrumbs -->
-      <Breadcrumbs items={breadcrumbs} class="mb-8" />
+      <div class="mb-8" data-reveal><Breadcrumbs items={breadcrumbs} /></div>
 
       {hasToc && (
-        <div class="mb-10 xl:hidden">
+        <div class="mb-10 xl:hidden" data-reveal>
           <TableOfContents headings={headings} collapsible />
         </div>
       )}
@@ -104,13 +104,14 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
       <!-- Article Content -->
       <div
         data-pagefind-body
+        data-reveal-content
         class="prose prose-lg prose-headings:font-display prose-headings:font-bold prose-code:text-brand-600 prose-code:bg-brand-50 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-background-secondary prose-pre:border prose-pre:border-border dark:prose-invert dark:prose-code:text-brand-400 dark:prose-code:bg-brand-900/30 max-w-none"
       >
         <slot />
       </div>
 
       <!-- Article Footer -->
-      <footer class="border-border mt-12 border-t pt-8">
+      <footer class="border-border mt-12 border-t pt-8" data-reveal>
         <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
           <!-- Back link -->
           <a
@@ -138,7 +139,7 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
       </div>
 
       {hasToc && (
-        <aside class="hidden xl:block">
+        <aside class="hidden xl:block" data-reveal>
           <TableOfContents headings={headings} sticky />
         </aside>
       )}
@@ -159,8 +160,9 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
 </BaseLayout>
 
 <script>
-  /* The site's reveal system (src/scripts/motion): without it, anything
-     marked data-reveal on a post page (the related posts) would stay
-     hidden, since BaseLayout hides reveals for the script to show. */
+  /* The site's reveal system (src/scripts/motion): the whole post arrives
+     as it is read, the header card's lines, then each block of the text,
+     the footer and the related posts. Without the script nothing would
+     show, since BaseLayout hides reveals for it to show. */
   import '@/scripts/motion';
 </script>
