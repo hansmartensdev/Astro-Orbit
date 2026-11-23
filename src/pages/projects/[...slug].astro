@@ -189,7 +189,13 @@ const nextImage = next.data.feature ?? next.data.cover;
           <div class="band__inner shell">
             <div class="band__aside">
               <span class="band__label label-mono" data-reveal>{band.label}</span>
-              {band.prose && <p class="band__prose" data-reveal>{band.prose}</p>}
+              {/* A blank line in the text starts a new paragraph. */}
+              {band.prose &&
+                band.prose.split(/\n\s*\n/).map((para) => (
+                  <p class="band__prose" data-reveal>
+                    {para.trim()}
+                  </p>
+                ))}
             </div>
 
             <div class="band__shots">
