@@ -66,8 +66,8 @@ const posters = await Promise.all(
             sizes="calc(100vw - 48px)"
             type="image/webp"
           />
-          {/* Light is the first paint, so it loads at once; the dark still
-              only loads once dark mode shows it. */}
+          {/* Dark is the first paint (dark first on arrival), so it loads at
+              once; the light still only loads once light mode shows it. */}
           <img
             src={desktop.src}
             srcset={desktop.srcSet.attribute}
@@ -75,8 +75,8 @@ const posters = await Promise.all(
             alt=""
             width={desktop.attributes.width}
             height={desktop.attributes.height}
-            loading={tone === 'light' ? 'eager' : 'lazy'}
-            fetchpriority={tone === 'light' ? 'high' : 'auto'}
+            loading={tone === 'dark' ? 'eager' : 'lazy'}
+            fetchpriority={tone === 'dark' ? 'high' : 'auto'}
             decoding="async"
             class="hero__poster"
           />

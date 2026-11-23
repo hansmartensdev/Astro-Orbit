@@ -237,7 +237,8 @@ const modes = [
     } catch {
       /* storage blocked */
     }
-    return 'system';
+    // Nothing chosen yet: dark first, as BaseLayout's inline script.
+    return 'dark';
   };
 
   const osDark = () => window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -245,7 +246,9 @@ const modes = [
   const apply = (mode: Mode) => {
     const root = document.documentElement;
     root.setAttribute('data-theme-mode', mode);
-    root.classList.toggle('dark', mode === 'dark' || (mode === 'system' && osDark()));
+    const dark = mode === 'dark' || (mode === 'system' && osDark());
+    root.classList.toggle('dark', dark);
+    document.getElementById('theme-color')?.setAttribute('content', dark ? '#0c1016' : '#eef2f4');
   };
 
   const sync = () => {
