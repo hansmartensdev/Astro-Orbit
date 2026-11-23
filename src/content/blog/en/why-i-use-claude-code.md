@@ -39,7 +39,7 @@ People who use Astro Rocket report issues on GitHub, and I solve them with Claud
 
 ## Building a client portal and a members area taught me a lot
 
-With Claude Code I built two solutions for Astro Rocket: a client portal, where each client signs in and sees their own projects and invoices, and a members area, with content that only signed-in members can read. I don't use them myself. I built them for the love of the craft. While building them I learned a lot from Claude, and making both work on my own website made me more experienced.
+With Claude Code I built two solutions for Astro Rocket: a client portal, where each client signs in and sees their own projects and invoices, and a members area, with content that only signed-in members can read. I don't use them myself. I built them for the love of the craft. While building them I learned a lot from Claude, and making both work on my own website made me more experienced. Claude Code is a good teacher too.
 
 ## This website, and a new fork of Velocity
 
