@@ -1,0 +1,93 @@
+---
+title: "The Lighthouse Score Explained: What 100 Means for Your Website"
+description: "What Google's Lighthouse report measures, how to test any website in thirty seconds, and how I optimise my sites with Lighthouse tests and Claude Code."
+publishedAt: 2026-05-15
+updatedAt: 2026-11-23
+author: "Hans Martens"
+tags: ["Lighthouse", "Performance", "Accessibility", "SEO", "Astro"]
+icon: "gauge"
+draft: true
+locale: en
+---
+
+Lighthouse is a tool from Google that grades a web page on four things, each from 0 to 100. In this post I explain what those four scores measure, how you can test any website yourself in thirty seconds, and how I use Lighthouse together with Claude Code to make my own sites fast.
+
+## What is a Lighthouse score?
+
+Lighthouse loads a page in a controlled environment, simulates a visitor, and grades the page on four separate categories:
+
+- **Performance:** how fast the page loads and becomes usable
+- **Accessibility:** how well the page works for visitors who use assistive technology, such as a screen reader
+- **Best Practices:** how cleanly and securely the page is built
+- **SEO:** how easily search engines can read and index the page
+
+The tool is built into Chrome, but you don't need to install anything. Google has a free public version at [pagespeed.web.dev](https://pagespeed.web.dev/): paste any address and you get a full report in about thirty seconds, with a **mobile** and a **desktop** score.
+
+## Why four scores instead of one
+
+A site can be fast and still be unusable with a screen reader. It can be accessible and still load parts over an insecure connection. It can pass every best-practice check and still be hard for Google to read because the page has no description. Lighthouse measures each of these separately, so you can see which part holds the rest back.
+
+### Performance
+
+Performance is the hardest category to keep at 100. It's calculated from measured timings: how long until the visitor sees something on screen, how long until they can use it, and whether the layout stays still while it loads, so a button doesn't move just as you tap it. These are the same [Core Web Vitals](https://web.dev/articles/vitals) that Google uses as a ranking signal in search.
+
+A page that sends a megabyte of JavaScript won't score 100. A page that loads images at the right size, sends only the JavaScript it needs, and doesn't make the browser wait for other scripts before it shows anything has a chance.
+
+### Accessibility
+
+Accessibility is scored against a list of automated checks from the WCAG guidelines: text contrast, alt text on images, visible keyboard focus, labels on buttons that only show an icon, and the right page structure, such as `<main>` and `<nav>`. The audit can't catch every accessibility problem, because some checks need a person. But a site that fails the automated checks almost certainly fails the manual ones too.
+
+### Best Practices
+
+Best Practices catches things a site shouldn't do: serving pages over HTTP instead of HTTPS, using browser features that are being removed, showing errors in the browser console, and embedding content from other sites without the right safety settings. It's the easiest of the four to keep at 100 when you start clean.
+
+### SEO
+
+SEO in Lighthouse is the technical side of search optimisation. It can't tell you whether a post will rank, but it can tell you whether Google can read it at all. The audit checks for a title, a page description, a canonical address, robots settings that allow indexing, and tap targets on mobile that aren't too close together.
+
+## How to test a website yourself
+
+Three ways, from easiest to most technical:
+
+1. **[pagespeed.web.dev](https://pagespeed.web.dev/):** paste an address and click Analyze. It runs on Google's servers and gives you mobile and desktop in one go.
+2. **Chrome DevTools:** open a page, press F12, open the **Lighthouse** tab, choose Mobile or Desktop, and click Analyze. It runs in your own browser.
+3. **The Lighthouse command line:** `npx lighthouse https://example.com --view`, if you want to run it automatically, for example on every deploy.
+
+All three use the same audit, so the scores should be within a point or two of each other.
+
+## How I optimise with Lighthouse and Claude Code
+
+I test my sites with Lighthouse while I build them, and I fix what the report shows with Claude Code. Claude reads the report with me, finds the cause in the code and proposes a fix. I decide, and then we test again.
+
+This website is an example. At the beginning of the build, my own Lighthouse test gave the homepage a mobile score of 59. Together with Claude Code I looked for the cause. The 3D animation in the homepage header was drawn again on every frame. On a phone with a graphics chip that's no problem, but Lighthouse tests on a computer without one, with a slowed-down processor, and there the processor never had a moment to rest.
+
+We changed three things:
+
+- The site now asks the browser whether the device has a graphics chip. Without one, the header shows a still image of the animation instead.
+- The code for the 3D animation only loads on devices that can run it.
+- The styling is built into each page, so the browser doesn't have to wait for separate style files before it shows anything.
+
+After that, the mobile score went to 98. The animation still runs on phones and computers with a graphics chip, as before.
+
+## What my sites score
+
+**This website** scores 100 on all four categories on desktop. On mobile, Accessibility, Best Practices and SEO are 100, and Performance lands between 97 and 99, depending on the page.
+
+**[Astro Rocket](https://github.com/hansmartensdev/Astro-Rocket)**, my free Astro theme, and its demo website [astrorocket.dev](https://astrorocket.dev) sometimes score 100 on all four categories, on mobile and on desktop.
+
+A higher score means something concrete for a visitor:
+
+- The first part of the page is on screen quickly, also on a phone.
+- A screen reader can move through the page without running into a button without a label or a link without text.
+- Search engines find a title, a description and structured data on every page.
+
+## Why your score can be a little different
+
+If you test a page yourself and see 97 where I see 99, that's how the tool works. Lighthouse simulates a mid-range phone with a slowed-down processor and network, and the Performance score can move by one to three points between runs. Accessibility, Best Practices and SEO are fixed checks and hardly ever change.
+
+Two tips if your numbers look off:
+
+- **Use [pagespeed.web.dev](https://pagespeed.web.dev/) rather than your own Chrome.** Browser extensions such as ad blockers and password managers add scripts to every page, which can cost ten points or more on Performance.
+- **Run it twice.** The first run loads everything fresh; the second usually shows the steady score.
+
+Curious where your own website stands? Paste its address into [pagespeed.web.dev](https://pagespeed.web.dev/) and give it thirty seconds.
