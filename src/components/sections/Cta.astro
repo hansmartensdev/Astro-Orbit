@@ -125,21 +125,22 @@ import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
      only a breath of grain. The watermark uses the violet made for ink. */
   :global(.dark) .cta__field {
     opacity: 1;
-    background-image:
-      radial-gradient(70% 90% at 12% 88%, rgb(124 58 237 / 0.26), transparent 62%),
-      radial-gradient(60% 80% at 88% 12%, rgb(167 139 250 / 0.1), transparent 68%);
+    background-image: radial-gradient(70% 90% at 12% 88%, rgb(124 58 237 / 0.24), transparent 62%);
   }
 
+  /* No grain on ink: even faint, it showed as grey-green speckle. */
   :global(.dark) .cta__field::after {
-    opacity: 0.08;
+    display: none;
   }
 
+  /* Quieter than in light: at 20% the slash on the right read as a strong
+     violet shape. */
   :global(.dark) .cta__watermark {
     background: linear-gradient(
       180deg,
-      rgb(167 139 250 / 0.2) 0%,
-      rgb(167 139 250 / 0.07) 55%,
-      rgb(167 139 250 / 0) 92%
+      rgb(124 58 237 / 0.16) 0%,
+      rgb(124 58 237 / 0.06) 55%,
+      rgb(124 58 237 / 0) 92%
     );
     background-clip: text;
     -webkit-background-clip: text;
