@@ -5,7 +5,7 @@ discipline: "PERSONAL SITE"
 description: "Portfolio, blog, developer's website."
 year: 2026
 url: "https://hansmartens.dev"
-feature: "../../assets/work/hansmartens-dev/feature.webp"
+feature: "../../assets/work/hansmartens-dev/mockup-hero.webp"
 cover: "../../assets/work/hansmartens-dev/mockup.webp"
 coverAlt: "hansmartens.dev on a laptop and two phones: the homepage and a blog post"
 gallery:
