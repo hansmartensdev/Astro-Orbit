@@ -96,7 +96,7 @@ const shots = feature && cover ? [{ src: cover, alt: coverAlt ?? title }, ...gal
    writing is missing. */
 const half = Math.ceil(shots.length / 2);
 const bands = [
-  { key: 'problem', label: 'THE PROBLEM', prose: challenge, shots: shots.slice(0, half) },
+  { key: 'problem', label: 'WHY I BUILT IT', prose: challenge, shots: shots.slice(0, half) },
   { key: 'solution', label: 'WHAT I BUILT', prose: solution, shots: shots.slice(half) },
 ].filter((band) => band.prose || band.shots.length > 0);
 
