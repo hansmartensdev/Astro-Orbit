@@ -149,8 +149,10 @@ const CLOSE_START = 0.68;
 const CLOSE_END = 0.82;
 /** … and drops out from here. */
 const DROP_START = 0.85;
-/** Delivery ends when the lead card's centre reaches this viewport height … */
-const DELIVER_AT = 0.45;
+/** Delivery ends when the lead card's centre reaches this viewport height …
+ *  (0.62: the hand-over happens while the card is still coming up the
+ *  screen, so nobody has to scroll on, past it, to see it finish.) */
+const DELIVER_AT = 0.62;
 /** … or, if that comes first, when its top is this far below the fixed nav.
  *  A tall card centred at DELIVER_AT would already have its top under the
  *  bar, so the card would never be seen open in full. */
@@ -897,9 +899,14 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
         tr = cardR;
         tx = landX;
         ty = leadCyDoc - sY;
-        shape = smoothstep(0, 1, c);
-        mixAmt = cardTexture ? smoothstep(0.3, 0.9, c) : 0;
-        opacity = 1 - smoothstep(0.96, 1, d);
+        // The ball opens into the card's shape over the first half, and its
+        // surface turns into the card's own picture early, so the canvas
+        // never lingers as a tinted copy over the card. Then the real card
+        // (sharp, the page's own image) takes over: it fades in from 0.88
+        // while the canvas fades out by 0.93.
+        shape = smoothstep(0, 0.35, c);
+        mixAmt = cardTexture ? smoothstep(0, 0.25, c) : 0;
+        opacity = 1 - smoothstep(0.88, 0.93, d);
         float = 1 - shape;
       }
       // The heading parts for the ball while it is passing, and dips as it
@@ -908,7 +915,7 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
         smoothstep(PUNCH_AT - 0.04, PUNCH_AT + 0.04, d) *
         (1 - smoothstep(PUNCH_END, PUNCH_END + 0.16, d));
       workImpact = contact;
-      setDelivered(d >= 0.96);
+      setDelivered(d >= 0.88);
       visible = opacity > 0 && ty - tr * 2 < vh + 40 && ty + tr * 2 > -40;
     } else {
       // No card to become: the closed ball just leaves with the stage.
