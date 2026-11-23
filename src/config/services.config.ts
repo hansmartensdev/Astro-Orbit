@@ -31,7 +31,10 @@ export const services: Service[] = [
     icon: 'pen-tool',
     theme: 'white',
     tags: ['UI Design', 'Typography', 'Motion', 'Accessibility'],
-    desc: 'A site should look great. I design calm, considered interfaces where every detail matters, from the type to the smallest hover.',
+    desc: [
+      'Web design is how a website looks and feels: the layout, the colours, the images, and the way visitors find their way around.',
+      'I design my own websites and my free Astro themes. I pay attention to the details: the typography, the brand colour, the space between elements, and what happens when you hover over a button. Every design works on every screen, from a desktop monitor to a phone, and stays usable for everyone, including visitors who use a screen reader.',
+    ],
   },
   {
     num: '02',
@@ -39,7 +42,10 @@ export const services: Service[] = [
     icon: 'code-xml',
     theme: 'mid',
     tags: ['Astro', 'TypeScript', 'Tailwind CSS', 'Claude Code'],
-    desc: 'I build every site myself with Astro, from the first sketch to the last line of code: lean, purposeful, and built to last. I work together with Claude Code.',
+    desc: [
+      "Web development is building the website: turning the design into the code that runs in the visitor's browser.",
+      'I build my websites and themes with Astro, from the first sketch to the last line of code, together with Claude Code. Astro sends finished pages to the browser, with only the JavaScript a page needs, so my sites load fast. Most pages are plain files with no server or database behind them, which leaves little that can break or be attacked, and keeps them easy to maintain for years.',
+    ],
   },
   {
     num: '03',
