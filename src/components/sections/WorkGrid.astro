@@ -15,7 +15,7 @@
  * grid cannot develop a hole, whatever the project count.
  */
 import { getCollection } from 'astro:content';
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
 import SectionHead from './SectionHead.astro';
 import Placeholder from '@/components/site/Placeholder.astro';
@@ -49,6 +49,16 @@ const projects = (await getCollection('work', ({ data }) => !data.draft && !data
 );
 
 const shown = typeof count === 'number' ? projects.slice(0, count) : projects;
+
+// Phone versions of card pictures (featureMobile), for the <picture> source
+// that takes over on a one-column grid.
+const mobileSources = await Promise.all(
+  shown.map((project) =>
+    project.data.featureMobile
+      ? getImage({ src: project.data.featureMobile, widths: [600, 900, 1200, 1600], format: 'webp' })
+      : null
+  )
+);
 const remaining = projects.length - shown.length;
 
 // A card's span decides how wide it actually renders, so it has to decide the
@@ -134,16 +144,26 @@ const SIZING: Record<'hero' | 'large' | 'wide' | 'standard', { widths: number[];
                 comes from animating a filter (that made the first hover
                 snap; see the stylesheet). */}
               {rest && (
-                <Image
-                  src={rest}
-                  alt={project.data.coverAlt ?? project.data.title}
-                  layout="none"
-                  widths={sizing.widths}
-                  sizes={sizing.sizes}
-                  class:list={['card__img', single ? 'card__img--single' : 'card__img--rest']}
-                  loading={i === 0 ? 'eager' : 'lazy'}
-                  fetchpriority={i === 0 ? 'high' : undefined}
-                />
+                <picture class="card__picture">
+                  {mobileSources[i] && (
+                    <source
+                      media="(max-width: 700px)"
+                      srcset={mobileSources[i].srcSet.attribute}
+                      sizes="calc(100vw - 48px)"
+                      type="image/webp"
+                    />
+                  )}
+                  <Image
+                    src={rest}
+                    alt={project.data.coverAlt ?? project.data.title}
+                    layout="none"
+                    widths={sizing.widths}
+                    sizes={sizing.sizes}
+                    class:list={['card__img', single ? 'card__img--single' : 'card__img--rest']}
+                    loading={i === 0 ? 'eager' : 'lazy'}
+                    fetchpriority={i === 0 ? 'high' : undefined}
+                  />
+                </picture>
               )}
 
               {reveal && !single && (
@@ -278,6 +298,12 @@ const SIZING: Record<'hero' | 'large' | 'wide' | 'standard', { widths: number[];
     position: absolute;
     inset: 0;
     will-change: transform;
+  }
+
+  /* The <picture> only chooses the file; the img inside is positioned
+     against the media box as before. */
+  .card__picture {
+    display: contents;
   }
 
   .card__img {

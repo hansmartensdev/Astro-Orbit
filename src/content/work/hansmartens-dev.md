@@ -6,6 +6,7 @@ description: "Portfolio, blog, developer's website."
 year: 2026
 url: "https://hansmartens.dev"
 feature: "../../assets/work/hansmartens-dev/mockup-hero.webp"
+featureMobile: "../../assets/work/hansmartens-dev/mockup-mobile.webp"
 coverAlt: "hansmartens.dev on a MacBook and two iPhones: the homepage and a blog post"
 gallery:
   - src: "../../assets/work/hansmartens-dev/mockup.webp"
