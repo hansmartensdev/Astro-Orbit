@@ -87,8 +87,8 @@
 
   /* -------------------------------------------------------------------------
      Typography
-     Geist for headlines, body and UI, IBM Plex Mono for the
-     eyebrow and meta labels.
+     Geist for everything: headlines, body, UI and the small labels. Code
+     uses the device's own monospace.
      ------------------------------------------------------------------------- */
   --theme-font-sans: 'Geist Variable', 'Geist', system-ui, -apple-system,
     'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -96,7 +96,7 @@
      Geist: Vercel's grotesque, precise and quiet at every size, with a true
      italic for the emphasised line. (Was Outfit for display, Archivo for body.) */
   --theme-font-display: 'Geist Variable', 'Geist', var(--theme-font-sans);
-  --theme-font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, 'SF Mono',
+  --theme-font-mono: ui-monospace, SFMono-Regular, 'SF Mono',
     Menlo, Consolas, monospace;
 
   --theme-heading-weight: 600;

@@ -11,15 +11,13 @@
 
 /* Self-hosted fonts via Fontsource (CSP-safe, no external requests) */
 /* Geist carries the identity — headlines, body and UI, upright everywhere
-   and its true italic for the <em> inside display lines. IBM Plex Mono is the
-   meta/label face. Candidate faces are loaded only by the dev-only font
-   switcher, never in a production build. */
+   and its true italic for the <em> inside display lines. It is the only
+   face loaded: the small labels are Geist too, and code falls back to the
+   device's own monospace. Candidate faces are loaded only by the dev-only
+   font switcher, never in a production build. */
 @import '@fontsource-variable/geist/wght.css';
 @import '@fontsource-variable/geist/wght-italic.css';
 
-/* Meta and eyebrow labels. */
-@import '@fontsource/ibm-plex-mono/400.css';
-@import '@fontsource/ibm-plex-mono/500.css';
 
 /* Southwell site layer — display type, reveals, placeholders.
    Re-add this import after `create-velocity-astro upgrade`. */
