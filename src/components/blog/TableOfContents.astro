@@ -92,7 +92,8 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
   .toc {
     border: 1px solid rgb(124 58 237 / 0.35);
     border-radius: 14px;
-    background: var(--color-background-elevated, #fff);
+    /* The page ground shows through: only the violet line frames it. */
+    background: transparent;
   }
 
   .toc__title,
