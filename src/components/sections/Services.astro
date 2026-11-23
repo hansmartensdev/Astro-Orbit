@@ -114,16 +114,6 @@ const timelineScope = services
 </section>
 
 <style>
-  /* While the reel runs live, the first card waits hidden until the ball
-     has become it (scripts/reel/morph.ts sets both). */
-  :global(.service[data-await-ball]:not(.is-delivered)) {
-    opacity: 0;
-  }
-
-  :global(.service[data-await-ball]) {
-    transition: opacity 0.25s ease;
-  }
-
   /* Where the cards stack (wider than 800px), a card fading in over the one
      below would show that card's text through it. There each card glides up
      fully opaque, like a card dealt onto the pile; on phones, where nothing

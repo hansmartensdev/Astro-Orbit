@@ -33,12 +33,6 @@
  *             card from where it landed, the card's own rest picture as
  *             its surface, at which point the real card takes over and the
  *             canvas lets go. The ball is used up where the work begins.
- *   onward    (test) once the lead card has taken over, the ball goes on
- *             behind the other project cards (they sit above the canvas,
- *             so it shows only in the gaps), comes out from under the last
- *             one, parts the "My craft" heading as it parted "Work", and
- *             blooms into the first craft card the way it became the lead:
- *             the card waits hidden until the ball has become it.
  *
  * Everything is measured in viewport pixels each frame, so a fixed canvas can
  * draw over the hero, the gaps and the sticky stage alike. Page-anchored
@@ -127,11 +121,6 @@ export interface ReelMorphOptions {
    *  and the card it becomes. */
   workHead?: HTMLElement | null;
   leadCard?: HTMLElement | null;
-  /** Onward: the project cards it passes behind, the "My craft" heading it
-   *  parts, and the first craft card it becomes. */
-  workCards?: HTMLElement[];
-  craftHead?: HTMLElement | null;
-  craftCard?: HTMLElement | null;
   /** Corner radius in CSS px. */
   radius?: number;
   /** Normalised scroll velocity, -1…1. Defaults to a scroll delta. */
@@ -179,15 +168,6 @@ const CARD_RADIUS = 0.2;
  *  through it. */
 const PUNCH_AT = 0.5;
 const PUNCH_END = 0.62;
-/** Onward: the ball is out from under the last project card when that
- *  card's bottom is this far down the viewport; it meets the "My craft"
- *  heading when the heading's x-height is here, is through it this much
- *  later (viewports of scroll), and has become the craft card when that
- *  card's centre is at CRAFT_AT (or its top just under the nav). */
-const ON_OUT_AT = 0.62;
-const ON_HIT_AT = 0.4;
-const ON_PUNCH = 0.1;
-const CRAFT_AT = 0.55;
 /** Scene render target size relative to the full frame, and its DPR cap. */
 const SCENE_SCALE = 0.8;
 const SCENE_DPR = 1.5;
@@ -429,9 +409,6 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
     overlay,
     workHead,
     leadCard,
-    workCards = [],
-    craftHead = null,
-    craftCard = null,
     radius = 16,
   } = options;
 
@@ -468,10 +445,6 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
     uWarm: { value: new Color() },
     uCool: { value: new Color() },
   };
-  // The statement card's ink, kept so the craft card's colour can stand in
-  // for it while the ball becomes that card (Act 6).
-  const panelDefault = new Color();
-  const craftBg = new Color();
   const readColor = makeColorReader(paletteScope ?? document.body);
   const applyPalette = () => {
     const p = readPalette(readColor);
@@ -482,7 +455,6 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
     colors.uAccent.value.copy(p.accent);
     // sRGB, like the card textures: it is mixed in after the chrome's finish.
     colors.uPanel.value.copy(readColor('var(--reel-card-bg, #0c1016)', '#0c1016', false));
-    panelDefault.copy(colors.uPanel.value);
     colors.uBg.value.copy(p.bg);
     colors.uBg2.value.copy(p.bg2);
     colors.uWarm.value.copy(p.warm);
@@ -586,8 +558,6 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
   const workField: TypeField | null = workHead
     ? createTypeField(workHead, { mask: workHead.querySelector<HTMLElement>('.sh__mask') })
     : null;
-  const craftField: TypeField | null = craftHead ? createTypeField(craftHead) : null;
-  const craftBall: FieldBall = { x: 0, y: 0, r: 0, impact: 0, sag: 0, push: 0 };
   const heroBall: FieldBall = { x: 0, y: 0, r: 0, impact: 0, sag: 0, push: 0 };
   const reelBall: FieldBall = { x: 0, y: 0, r: 0, impact: 0, sag: 0, push: 0 };
   const workBall: FieldBall = { x: 0, y: 0, r: 0, impact: 0, sag: 0, push: 0 };
@@ -598,7 +568,6 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
   let holdDistance = 1; // px the stage stays pinned for
   let navHeight = 0; // the fixed bar the delivered card must sit clear of
   let workXHeight = 0; // px from the "Work" heading's box top to its x-height
-  let craftXHeight = 0; // the same for "My craft"
   let copyExit = 0; // px the copy travels before it is fully off the stage
   const thumbOff = new Vector4();
   const fullOff = new Vector4();
@@ -624,7 +593,6 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
     navHeight =
       parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sw-nav-h')) || 0;
     workXHeight = workHead ? 0.37 * (parseFloat(getComputedStyle(workHead).fontSize) || 0) : 0;
-    craftXHeight = craftHead ? 0.37 * (parseFloat(getComputedStyle(craftHead).fontSize) || 0) : 0;
 
     const dpr = Math.min(window.devicePixelRatio || 1, SCENE_DPR) * SCENE_SCALE;
     const sw = Math.min(1600, Math.round(fullOff.z * dpr));
@@ -678,15 +646,6 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
     return clamp(v / 42, -1, 1);
   };
   const velocityOf = options.velocity ?? scrollVelocity;
-
-  // The craft card waits hidden until the ball has become it.
-  let craftIn = false;
-  const setCraftIn = (next: boolean) => {
-    if (next === craftIn || !craftCard) return;
-    craftIn = next;
-    craftCard.classList.toggle('is-delivered', next);
-  };
-  const craftV = new Vector4();
 
   const setDelivered = (next: boolean) => {
     if (next === delivered || !leadCard) return;
@@ -783,10 +742,6 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
       uniforms.uVelocity.value = 0;
       lastTop = Number.NaN;
       setDelivered(Boolean(leadCard) && sY >= dropScroll);
-      if (craftCard) {
-        const cc = craftCard.getBoundingClientRect();
-        setCraftIn(cc.top < vh);
-      }
       setOpen(false);
       return;
     }
@@ -808,9 +763,6 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
     let heroHold = 0;
     let workPush = 0;
     let workImpact = 0;
-    let craftPush = 0;
-    let craftImpact = 0;
-    craftV.set(0, 0, 0, 0);
     let reelPush = 0;
     let direct = false; // follow exactly, no damping
     let shape = 0;
@@ -964,109 +916,6 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
         (1 - smoothstep(PUNCH_END, PUNCH_END + 0.16, d));
       workImpact = contact;
       setDelivered(d >= 0.88);
-
-      // --- Act 6 (test): onward to the craft card ---------------------------
-      // The ball goes on behind the other project cards (they are layered
-      // above this canvas), comes out from under the last one, parts the
-      // "My craft" heading and becomes the first craft card. All of it on
-      // the scroll, so it plays backwards too.
-      const ch = craftHead?.getBoundingClientRect() ?? null;
-      const cc = craftCard?.getBoundingClientRect() ?? null;
-      const last = workCards.length ? workCards[workCards.length - 1].getBoundingClientRect() : lead;
-      let craftPhase = false;
-      if (ch && cc && d >= 1) {
-        const leadBottomDoc = lead.bottom + sY;
-        const lastBottomDoc = last.bottom + sY;
-        const startScroll = deliverScroll + 40;
-        const outScroll = lastBottomDoc - ON_OUT_AT * vh;
-        const chHitDoc = ch.top + sY + craftXHeight;
-        const hitScroll = chHitDoc - ON_HIT_AT * vh;
-        const throughScroll = hitScroll + ON_PUNCH * vh;
-        const ccCyDoc = cc.top + sY + cc.height / 2;
-        const craftScroll = Math.max(
-          throughScroll + 0.2 * vh,
-          Math.min(ccCyDoc - CRAFT_AT * vh, cc.top + sY - navHeight - DELIVER_CLEAR)
-        );
-        if (sY > startScroll && outScroll > startScroll + 80 && hitScroll > outScroll) {
-          craftPhase = true;
-          const ballR = clamp(lead.width * 0.035, 18, 44);
-          const midX = lead.left + lead.width / 2;
-          // Between the button under the grid and the heading's text: aim
-          // at the gap left of the heading's centre, never the button.
-          const hitX = ch.left + Math.min(ch.width * 0.25, 160);
-          const craftCx = cc.left + cc.width / 2;
-          const craftCyDoc = ccCyDoc;
-          const craftR = cc.height * CARD_RADIUS;
-          geometry = 'ball';
-          card = false;
-          shape = 0;
-          mixAmt = 0;
-          float = 1;
-          onPage = 1;
-          opacity = 1;
-          squashT = 1;
-          if (sY < outScroll) {
-            // Behind the cards, straight down the middle of the grid.
-            const t = smoothstep(0, 1, (sY - startScroll) / (outScroll - startScroll));
-            tr = ballR;
-            tx = midX;
-            ty = lerp(leadBottomDoc - ballR * 1.5, lastBottomDoc + ballR * 1.2, t) - sY;
-            float = 0;
-          } else if (sY < hitScroll) {
-            // Out from under the last card and straight over to the
-            // heading's side first, clear of the button, then down onto it.
-            const t = (sY - outScroll) / (hitScroll - outScroll);
-            tr = ballR;
-            tx = lerp(midX, hitX, smoothstep(0, 0.35, t));
-            ty = lerp(lastBottomDoc + ballR * 1.2, chHitDoc - ballR, t * t) - sY;
-            squashT = 1 + 0.12 * Math.sin(Math.PI * t);
-            craftImpact = Math.exp(-(((t - 1) / 0.06) ** 2));
-          } else if (sY < throughScroll) {
-            // Through "My craft", its letters shoved aside.
-            const b = smoothstep(0, 1, (sY - hitScroll) / (throughScroll - hitScroll));
-            tr = ballR;
-            tx = hitX;
-            ty = lerp(chHitDoc - ballR, ch.bottom + sY + ballR, b) - sY;
-            craftPush = 1;
-            craftImpact = Math.exp(-((b / 0.15) ** 2));
-          } else if (sY < craftScroll) {
-            // Down to the craft card and open into it, its own colour as
-            // the surface; then the real card takes over.
-            const c = (sY - throughScroll) / (craftScroll - throughScroll);
-            craftPush = 1 - smoothstep(0, 0.25, c);
-            const go = smoothstep(0, 0.55, c);
-            tr = lerp(ballR, craftR, go);
-            tx = lerp(hitX, craftCx, go);
-            ty = lerp(ch.bottom + sY + ballR, craftCyDoc, go) - sY;
-            if (c > 0.55) {
-              const o = (c - 0.55) / 0.45;
-              geometry = 'card';
-              craftV.set(cc.left, cc.top, cc.width, cc.height);
-              tr = craftR;
-              tx = craftCx;
-              ty = craftCyDoc - sY;
-              shape = smoothstep(0, 0.45, o);
-              mixAmt = smoothstep(0, 0.35, o);
-              opacity = 1 - smoothstep(0.75, 0.95, o);
-              float = 1 - shape;
-            }
-            setCraftIn(c > 0.88);
-          } else {
-            opacity = 0;
-            setCraftIn(true);
-          }
-          if (sY < throughScroll) setCraftIn(false);
-        }
-      }
-      if (!craftPhase && craftCard && d < 1) setCraftIn(false);
-      // The flat colour the ball opens into: the statement card's ink,
-      // or the craft card's own ground while it becomes that card.
-      if (craftPhase && geometry === 'card') {
-        craftBg.copy(readColor(getComputedStyle(craftCard!).backgroundColor, '#ffffff', false));
-        uniforms.uPanel.value.copy(craftBg);
-      } else {
-        uniforms.uPanel.value.copy(panelDefault);
-      }
       visible = opacity > 0 && ty - tr * 2 < vh + 40 && ty + tr * 2 > -40;
     } else {
       // No card to become: the closed ball just leaves with the stage.
@@ -1121,17 +970,6 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
       if (on || workField.moving) workField.update(dt, on ? workBall : null);
     }
 
-    if (craftField) {
-      craftBall.x = pos.x;
-      craftBall.y = pos.y + sY;
-      craftBall.r = rad;
-      craftBall.impact = craftImpact;
-      craftBall.sag = 0;
-      craftBall.push = craftPush;
-      const on = craftPush > 0.001 || craftImpact > 0.001;
-      if (on || craftField.moving) craftField.update(dt, on ? craftBall : null);
-    }
-
     // --- Draw ----------------------------------------------------------------------
     if (!visible) {
       if (!cleared) {
@@ -1151,9 +989,8 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
       u.uProgress.value = progress;
       u.uBend.value = 26;
     } else if (geometry === 'card') {
-      const rect = craftV.z > 0 && !card ? craftV : leadV;
-      u.uStart.value.copy(rect);
-      u.uEnd.value.copy(rect);
+      u.uStart.value.copy(leadV);
+      u.uEnd.value.copy(leadV);
       u.uProgress.value = 0;
       u.uBend.value = 0;
     } else {
@@ -1311,9 +1148,6 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
       window.__heroDropletArc = arc;
       io.observe(runway);
       if (leadCard) io.observe(leadCard);
-      if (craftHead) io.observe(craftHead);
-      if (craftCard) io.observe(craftCard);
-      craftCard?.setAttribute('data-await-ball', '');
       ro.observe(stage);
       window.addEventListener('resize', onResize);
       window.addEventListener('pointermove', onPointerMove, { passive: true });
@@ -1341,8 +1175,6 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
       if (window.__heroDropletArc === arc) delete window.__heroDropletArc;
       setOpen(false);
       setClear(false);
-      craftCard?.removeAttribute('data-await-ball');
-      craftCard?.classList.remove('is-delivered');
     },
     destroy() {
       this.stop();
@@ -1353,7 +1185,6 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
       heroField?.destroy();
       reelField?.destroy();
       workField?.destroy();
-      craftField?.destroy();
       cardTexture?.dispose();
       renderer.dispose();
     },
