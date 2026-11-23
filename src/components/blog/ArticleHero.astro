@@ -39,13 +39,13 @@ const label = ['Blog', tags[0]].filter(Boolean).join(' · ').toUpperCase();
 
 <header class="ah">
   <div class="shell">
-    <div class:list={['ah__card', iconBody && 'ah__card--icon']}>
-      {iconBody && <svg class="ah__icon" viewBox="0 0 24 24" aria-hidden="true" data-reveal set:html={iconBody} />}
-      <span class="label-mono ah__label" data-reveal>{label}</span>
-      <h1 class="ah__title" data-reveal="lift">{title}</h1>
-      <p class="ah__desc" data-reveal>{description}</p>
+    <div class:list={['ah__card', iconBody && 'ah__card--icon']} data-reveal>
+      {iconBody && <svg class="ah__icon" viewBox="0 0 24 24" aria-hidden="true" set:html={iconBody} />}
+      <span class="label-mono ah__label">{label}</span>
+      <h1 class="ah__title">{title}</h1>
+      <p class="ah__desc">{description}</p>
 
-      <div class="ah__meta" data-reveal>
+      <div class="ah__meta">
         <span class="ah__avatar" aria-hidden="true">{siteConfig.mark}</span>
         <span class="ah__name">{siteConfig.name}</span>
         <span class="ah__facts">
