@@ -459,6 +459,11 @@ const nextImage = next.data.feature ?? next.data.cover;
     border: 1px solid var(--color-border-strong);
   }
 
+  /* On the dark band the border is a light line, or it would disappear. */
+  .band[data-tone='ink'] .band__shot--framed {
+    border-color: rgb(238 242 244 / 0.28);
+  }
+
   /* A band with prose but no pictures shouldn't leave a hole where they'd be. */
   .band__shots:empty {
     display: none;
