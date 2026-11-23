@@ -48,11 +48,12 @@ const year = new Date().getFullYear();
       <div
         class="footer__quiet mt-24 flex max-[900px]:mt-16 justify-between gap-5 text-[13px] max-[900px]:flex-col max-[900px]:gap-2"
       >
-        <span>&copy; {year} {siteConfig.name} — {siteConfig.location}</span>
-        <span class="flex gap-5 max-[900px]:flex-col max-[900px]:gap-2">
-          <a class="footer__legal" href="/privacy">Privacy</a>
-          <span>Building beautiful &amp; fast websites</span>
-        </span>
+        {/* The small print together: the copyright and the privacy link. */}
+        <span
+          >&copy; {year} {siteConfig.name} — {siteConfig.location} ·{' '}
+          <a class="footer__legal" href="/privacy">Privacy</a></span
+        >
+        <span>Building beautiful &amp; fast websites</span>
       </div>
     </div>
   </footer>
