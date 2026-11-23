@@ -29,7 +29,7 @@ export const services: Service[] = [
   {
     num: '01',
     title: ['Web', 'Design'],
-    icon: 'pen-tool',
+    icon: 'layout-template',
     theme: 'white',
     tags: ['UI Design', 'Typography', 'Motion', 'Accessibility'],
     desc: [

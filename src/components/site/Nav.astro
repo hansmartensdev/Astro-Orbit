@@ -62,12 +62,16 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
         home, and a client name that quietly did the same would be a trap. */
     }
     <div class="sw-nav__brand">
-      <a href="/" class="mark" aria-label={siteConfig.name + ' — home'}>
-        <span class="mark__seen">h</span>
-        <span class="mark__grow"><span class="mark__hidden">ans&nbsp;</span></span>
-        <span class="mark__seen">m</span>
-        <span class="mark__grow"><span class="mark__hidden">artens</span></span>
-        <span class="mark__seen mark__slash">/</span>
+      {/* The name starts with what is on screen, "hm/", so voice control
+          ("click hm") finds the link (WCAG 2.5.3, axe:
+          label-content-name-mismatch). The pieces sit flush, with no
+          whitespace between them: spaces made the visible text "h m". */}
+      <a href="/" class="mark" aria-label={siteConfig.mark + ' ' + siteConfig.name + ', home'}
+        ><span class="mark__seen">h</span><span class="mark__grow"
+          ><span class="mark__hidden">ans&nbsp;</span></span
+        ><span class="mark__seen">m</span><span class="mark__grow"
+          ><span class="mark__hidden">artens</span></span
+        ><span class="mark__seen mark__slash">/</span>
       </a>
 
       {context && <span class="mark__context">{context}</span>}
