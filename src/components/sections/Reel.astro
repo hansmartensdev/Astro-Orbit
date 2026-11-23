@@ -380,6 +380,9 @@ const {
           // card the grid marked for delivery.
           workHead: document.querySelector<HTMLElement>('#work'),
           leadCard: document.querySelector<HTMLElement>('[data-work-grid] .card[data-deliver]'),
+          workCards: Array.from(document.querySelectorAll<HTMLElement>('[data-work-grid] .card')),
+          craftHead: document.querySelector<HTMLElement>('#services'),
+          craftCard: document.querySelector<HTMLElement>('.service'),
           radius: parseFloat(getComputedStyle(full).borderRadius) || 16,
           // Lenis's velocity is the value the page is drawn at, so the bend
           // can never disagree with the scroll. Falls back to a scroll delta.
