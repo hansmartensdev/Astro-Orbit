@@ -12,11 +12,17 @@ interface Props {
    *  Blog, Contact), h2 when it heads a section on a page that has one. */
   as?: 'h1' | 'h2';
   blurb: string;
+  /** A word or phrase in the title to set in the brand violet. */
+  accent?: string;
   id?: string;
   class?: string;
 }
 
-const { title, blurb, id, as: Heading = 'h2', class: className } = Astro.props;
+const { title, blurb, accent, id, as: Heading = 'h2', class: className } = Astro.props;
+
+// The title split around the accent, if it has one.
+const at = accent ? title.lastIndexOf(accent) : -1;
+const parts = at >= 0 ? [title.slice(0, at), title.slice(at, at + accent!.length), title.slice(at + accent!.length)] : null;
 ---
 
 <header
@@ -28,7 +34,17 @@ const { title, blurb, id, as: Heading = 'h2', class: className } = Astro.props;
   data-reveal
 >
   <Heading class:list={['display-section m-0', Heading === 'h1' && 'sh__title--page']} id={id}>
-    {title}
+    {
+      parts ? (
+        <>
+          {parts[0]}
+          <span class="sh__accent">{parts[1]}</span>
+          {parts[2]}
+        </>
+      ) : (
+        title
+      )
+    }
   </Heading>
   <p
     class="text-foreground-secondary m-0 max-w-[380px] text-[18px] leading-[1.55] max-[800px]:text-base"
@@ -38,6 +54,10 @@ const { title, blurb, id, as: Heading = 'h2', class: className } = Astro.props;
 </header>
 
 <style>
+  .sh__accent {
+    color: var(--hero-accent, #7c3aed);
+  }
+
   /* A page title leads the phone scale, a step above the section heads on
      the same page. Desktop keeps the shared size. */
   @media (max-width: 700px) {

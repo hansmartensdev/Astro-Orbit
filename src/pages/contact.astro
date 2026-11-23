@@ -11,7 +11,7 @@ import SiteLayout from '@/layouts/SiteLayout.astro';
 import SectionHead from '@/components/sections/SectionHead.astro';
 import Input from '@/components/ui/form/Input/Input.astro';
 import Textarea from '@/components/ui/form/Textarea/Textarea.astro';
-import Button from '@/components/ui/form/Button/Button.astro';
+import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
 import siteConfig from '@/config/site.config';
 
 const channels = [
@@ -37,6 +37,7 @@ const channels = [
     <SectionHead
       as="h1"
       title="Let’s talk Astro"
+      accent="Astro"
       blurb="An idea for a website, a question about one of my themes, a blog post or something I shared on GitHub? Everybody is welcome. I read and answer every message myself."
     />
   </header>
@@ -61,14 +62,9 @@ const channels = [
 
       <div id="form-message" class="hidden text-sm" role="status" aria-live="polite"></div>
 
-      <Button
-        type="submit"
-        id="submit-button"
-        size="lg"
-        class="h-auto self-start rounded-full px-10 py-[18px] text-[17px] font-semibold"
-      >
+      <ArrowFillButton type="submit" id="submit-button" icon="lucide:send" class="self-start">
         Send message
-      </Button>
+      </ArrowFillButton>
     </form>
 
     <aside class="flex flex-col gap-10">
@@ -126,8 +122,11 @@ const channels = [
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
+      // The button carries its label twice (the pill and the disc's copy).
+      const setLabel = (text: string) =>
+        button.querySelectorAll('.afb__label').forEach((el) => (el.textContent = text));
       button.disabled = true;
-      button.textContent = 'Sending...';
+      setLabel('Sending…');
       message.classList.add('hidden');
 
       try {
@@ -155,7 +154,7 @@ const channels = [
         message.className = 'text-sm text-destructive';
       } finally {
         button.disabled = false;
-        button.textContent = 'Send message';
+        setLabel('Send message');
         message.classList.remove('hidden');
       }
     });

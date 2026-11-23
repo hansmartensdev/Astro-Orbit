@@ -35,12 +35,15 @@ interface Props {
    */
   icon?: string;
   target?: string;
+  /** For a form button (no href): submit, button or reset. */
+  type?: 'submit' | 'button' | 'reset';
+  id?: string;
   class?: string;
   /** Anything else (data-* hooks) goes straight through to the anchor. */
   [key: `data-${string}`]: string | undefined;
 }
 
-const { href, variant = 'solid', icon, target, class: className, ...rest } = Astro.props;
+const { href, variant = 'solid', icon, target, type, id, class: className, ...rest } = Astro.props;
 
 // The label is rendered twice (once in the pill, once in the disc's copy), so
 // it is pulled out of the slot once here rather than slotted twice.
@@ -53,6 +56,8 @@ const arrow =
 <Button
   href={href}
   target={target}
+  type={type}
+  id={id}
   variant={variant === 'solid' ? 'primary' : 'outline'}
   size="lg"
   data-button
@@ -90,11 +95,13 @@ const arrow =
     --afb-ease: cubic-bezier(0.785, 0.135, 0.15, 0.86);
     --afb-duration: 0.45s;
 
-    /* Colourway. Solid: ink pill, paper disc. */
-    --afb-bg: var(--color-foreground);
-    --afb-text: var(--color-background);
-    --afb-fill-bg: var(--color-background);
-    --afb-fill-text: var(--color-foreground);
+    /* Colourway, brand violet and white only. Solid: a violet pill with a
+       white disc that fills it white, violet label. White on this violet
+       is 5.7:1. */
+    --afb-bg: var(--hero-accent, #7c3aed);
+    --afb-text: #fff;
+    --afb-fill-bg: #fff;
+    --afb-fill-text: var(--hero-accent, #7c3aed);
     --afb-border: transparent;
     /* The outline ring is an inset shadow, not a border: it paints inside the
        padding box beneath the fill, so both variants share one geometry and
@@ -127,12 +134,13 @@ const arrow =
   }
 
   /* Outline: ink ring on paper; the disc is ink and fills the pill with ink. */
+  /* Outline: a violet ring and label; the violet disc fills it violet. */
   .afb--outline {
     --afb-bg: transparent;
-    --afb-text: var(--color-foreground);
-    --afb-fill-bg: var(--color-foreground);
-    --afb-fill-text: var(--color-background);
-    --afb-border: var(--color-foreground);
+    --afb-text: var(--hero-accent, #7c3aed);
+    --afb-fill-bg: var(--hero-accent, #7c3aed);
+    --afb-fill-text: #fff;
+    --afb-border: var(--hero-accent, #7c3aed);
   }
 
   /* Base Button paints a hover tint, a border on the outline variant and a
@@ -146,7 +154,7 @@ const arrow =
   }
 
   .afb:focus-visible {
-    outline: 2px solid var(--color-ring);
+    outline: 2px solid var(--hero-accent, #7c3aed);
     outline-offset: 4px;
     box-shadow: var(--afb-ring);
   }
