@@ -11,8 +11,17 @@
  *                          Put it on the card, not on the things inside it.
  *   data-reveal="rise"     masked rise: slides up from 112% inside a parent
  *                          that clips (.rv-mask)
+ *   data-reveal="lift"     rises 64px without fading, for a page's main
+ *                          heading: it paints at once, so it still counts
+ *                          as the first thing on screen
  *   data-reveal-delay      seconds to hold after entering view, for a row
  *                          of cards that should arrive one after another
+ *   data-reveal-content    on a block of running text (a post, a case
+ *                          study): each paragraph, heading, list and picture
+ *                          in it arrives on its own as it is reached. A list
+ *                          taller than half the screen hands over to its
+ *                          items, or the last of them would have arrived
+ *                          long before the reader got there.
  *
  * On load, what is already on screen arrives as one wave in document order,
  * 80ms apart. Everything else arrives once it is 15% in view (tall elements
@@ -25,6 +34,22 @@ const WAVE_STEP = 80;
 
 export function initReveal(reduced: boolean): VoidFunction {
   const elements = [...document.querySelectorAll<HTMLElement>('[data-reveal]:not(.is-in)')];
+  for (const container of document.querySelectorAll<HTMLElement>('[data-reveal-content]')) {
+    for (const child of container.children as HTMLCollectionOf<HTMLElement>) {
+      if (child.classList.contains('is-in')) continue;
+      if (
+        (child.tagName === 'UL' || child.tagName === 'OL') &&
+        child.children.length > 2 &&
+        child.getBoundingClientRect().height > window.innerHeight * 0.5
+      ) {
+        child.setAttribute('data-reveal-items', '');
+        child.classList.add('is-in');
+        elements.push(...(child.children as HTMLCollectionOf<HTMLElement>));
+      } else {
+        elements.push(child);
+      }
+    }
+  }
 
   if (reduced) {
     for (const el of elements) el.classList.add('is-in');
@@ -102,10 +127,37 @@ export function initReveal(reduced: boolean): VoidFunction {
   };
   window.addEventListener('scroll', atEnd, { passive: true });
 
+  // A jump to a heading (the table of contents, a #link) is measured while
+  // the text above it still waits 56px low, and would land short. Everything
+  // up to the target arrives in place first, without moving, so the scroll
+  // is measured against the finished page. Window capture runs ahead of the
+  // smooth-scroll handler and the table of contents' own.
+  const jumpTo = (id: string) => {
+    const target = id ? document.getElementById(id) : null;
+    if (!target) return;
+    for (const [t, els] of byTarget) {
+      if (t !== target && !t.contains(target) && !(t.compareDocumentPosition(target) & Node.DOCUMENT_POSITION_FOLLOWING)) continue;
+      firstPass.unobserve(t);
+      short.unobserve(t);
+      tall.unobserve(t);
+      for (const el of els) {
+        el.style.transition = 'none';
+        el.classList.add('is-in');
+      }
+    }
+  };
+  const onJump = (event: MouseEvent) => {
+    const link = (event.target as Element | null)?.closest<HTMLAnchorElement>('a[href^="#"]');
+    if (link) jumpTo(decodeURIComponent(link.hash.slice(1)));
+  };
+  window.addEventListener('click', onJump, true);
+  if (location.hash) jumpTo(decodeURIComponent(location.hash.slice(1)));
+
   return () => {
     firstPass.disconnect();
     short.disconnect();
     tall.disconnect();
     window.removeEventListener('scroll', atEnd);
+    window.removeEventListener('click', onJump, true);
   };
 }

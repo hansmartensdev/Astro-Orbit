@@ -133,7 +133,6 @@ const arrow =
     transition: none;
   }
 
-  /* Outline: ink ring on paper; the disc is ink and fills the pill with ink. */
   /* Outline: a violet ring and label; the violet disc fills it violet. */
   .afb--outline {
     --afb-bg: transparent;
@@ -141,6 +140,14 @@ const arrow =
     --afb-fill-bg: var(--hero-accent, #7c3aed);
     --afb-fill-text: #fff;
     --afb-border: var(--hero-accent, #7c3aed);
+  }
+
+  /* On ink, brand violet is too dark to read as a ring and label: the ring
+     and label go white (Hans's choice). The disc and its fill stay brand
+     violet, with white on it. */
+  :global(.dark) .afb--outline {
+    --afb-text: #fff;
+    --afb-border: #fff;
   }
 
   /* Base Button paints a hover tint, a border on the outline variant and a

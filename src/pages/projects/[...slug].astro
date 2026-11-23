@@ -147,13 +147,13 @@ const nextImage = next.data.feature ?? next.data.cover;
       <div class="case__hero-scrim"></div>
 
       <div class="case__hero-body shell">
-        <div class="case__eyebrow">
+        <div class="case__eyebrow" data-reveal>
           <span class="label-mono">{discipline}</span>
           {badge && <span class="case__badge label-mono">{badge}</span>}
         </div>
 
-        <h1 class="case__title" style={`--len: ${title.length}`}>{title}</h1>
-        <p class="case__lede">{description}</p>
+        <h1 class="case__title" style={`--len: ${title.length}`} data-reveal="lift">{title}</h1>
+        <p class="case__lede" data-reveal>{description}</p>
       </div>
 
       <span class="case__scroll label-mono" aria-hidden="true">scroll</span>
@@ -163,8 +163,8 @@ const nextImage = next.data.feature ?? next.data.cover;
     <section class="case__ledger" aria-label="Project details">
       <dl class="case__ledger-inner shell">
         {
-          facts.map((fact) => (
-            <div class="case__fact">
+          facts.map((fact, i) => (
+            <div class="case__fact" data-reveal data-reveal-delay={i * 0.08}>
               <dt class="label-mono">{fact.label.toUpperCase()}</dt>
               <dd>{fact.value}</dd>
             </div>
@@ -179,8 +179,8 @@ const nextImage = next.data.feature ?? next.data.cover;
         <section class="band" data-tone={i % 2 === 0 ? 'ink' : 'ice'}>
           <div class="band__inner shell">
             <div class="band__aside">
-              <span class="band__label label-mono">{band.label}</span>
-              {band.prose && <p class="band__prose">{band.prose}</p>}
+              <span class="band__label label-mono" data-reveal>{band.label}</span>
+              {band.prose && <p class="band__prose" data-reveal>{band.prose}</p>}
             </div>
 
             <div class="band__shots">
@@ -208,7 +208,7 @@ const nextImage = next.data.feature ?? next.data.cover;
         <section class="case__build">
           <div class="case__build-inner shell">
             {technologies.length > 0 && (
-              <div>
+              <div data-reveal>
                 <span class="label-mono text-foreground-muted">STACK</span>
                 <ul class="case__chips">
                   {technologies.map((item) => (
@@ -218,7 +218,7 @@ const nextImage = next.data.feature ?? next.data.cover;
               </div>
             )}
             {features.length > 0 && (
-              <div>
+              <div data-reveal data-reveal-delay="0.1">
                 <span class="label-mono text-foreground-muted">SHIPPED</span>
                 <ul class="case__shipped">
                   {features.map((item) => (
@@ -233,14 +233,14 @@ const nextImage = next.data.feature ?? next.data.cover;
     }
 
     <div class="case__prose shell">
-      <div class="prose">
+      <div class="prose" data-reveal-content>
         <Content />
       </div>
     </div>
 
     {
       url && (
-        <div class="case__visit shell">
+        <div class="case__visit shell" data-reveal>
           <PillButton href={url} target="_blank" variant="solid">
             Visit the site
             <Icon name="lucide:arrow-up-right" aria-hidden="true" />
@@ -252,7 +252,7 @@ const nextImage = next.data.feature ?? next.data.cover;
     {/* --- next project: the text and a preview of it, on the page ground */}
     <a class="nextup" href={'/projects/' + next.id} data-card>
       <div class="nextup__inner shell">
-        <div class="nextup__text">
+        <div class="nextup__text" data-reveal>
           <span class="label-mono nextup__label">NEXT PROJECT</span>
           <span class="nextup__title" style={`--len: ${next.data.title.length}`}>{next.data.title}</span>
           <span class="nextup__line">{next.data.description}</span>
@@ -261,7 +261,7 @@ const nextImage = next.data.feature ?? next.data.cover;
             <Icon name="lucide:arrow-right" aria-hidden="true" />
           </span>
         </div>
-        <div class="nextup__preview">
+        <div class="nextup__preview" data-reveal data-reveal-delay="0.1">
           {
             nextImage ? (
               <Image

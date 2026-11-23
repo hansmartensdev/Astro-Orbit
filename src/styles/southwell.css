@@ -266,7 +266,14 @@
      hidden state applies only once `html.js` says the script is coming, so
      without JS nothing is ever hidden.
      ----------------------------------------------------------------------- */
-  [data-reveal] {
+  /* The transition belongs to the arrival only (.is-in), never to the way
+     out. After a ClientRouter swap the new page is drawn once before
+     html.js is put back; with the transition on [data-reveal] itself, each
+     element then glided towards hidden for 0.8s and its arrival started
+     from wherever that had got to, so a header card barely moved. Without
+     it the hidden state applies at once. :where() keeps the specificity of
+     the plain attribute. */
+  [data-reveal]:where(.is-in) {
     --reveal-ease: cubic-bezier(0.16, 1, 0.3, 1);
     transition:
       opacity 0.8s var(--reveal-ease),
@@ -276,6 +283,34 @@
   html.js [data-reveal]:not(.is-in) {
     opacity: 0;
     transform: translateY(64px);
+  }
+
+  /* A lift rises without fading: a page's main heading paints at once. */
+  html.js [data-reveal='lift']:not(.is-in) {
+    opacity: 1;
+    transform: translateY(64px);
+  }
+
+  /* Running text, block by block (reveal.ts, data-reveal-content): the same
+     curve, a little quicker and a shorter way, so a page of paragraphs reads
+     as settling rather than as a row of separate arrivals. A long list's
+     items travel half as far again. */
+  [data-reveal-content] > :where(.is-in),
+  [data-reveal-items] > li:where(.is-in) {
+    --reveal-ease: cubic-bezier(0.16, 1, 0.3, 1);
+    transition:
+      opacity 0.7s var(--reveal-ease),
+      transform 0.9s var(--reveal-ease);
+  }
+
+  html.js [data-reveal-content] > :not(.is-in) {
+    opacity: 0;
+    transform: translateY(56px);
+  }
+
+  html.js [data-reveal-content] > [data-reveal-items] > li:not(.is-in) {
+    opacity: 0;
+    transform: translateY(28px);
   }
 
   /* A masked rise starts below its clipping parent, fully opaque. */

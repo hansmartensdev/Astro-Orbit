@@ -33,7 +33,11 @@ const pill = [
 const look =
   variant === 'solid'
     ? 'bg-[var(--hero-accent)] text-white hover:bg-[var(--hero-accent)] hover:text-white hover:scale-105 active:scale-100'
-    : 'border-[1.5px] border-[var(--hero-accent)] bg-transparent text-[var(--hero-accent)] hover:bg-[var(--hero-accent)] hover:border-[var(--hero-accent)] hover:text-white active:scale-100';
+    : 'border-[1.5px] border-[var(--hero-accent)] bg-transparent text-[var(--hero-accent)] hover:bg-[var(--hero-accent)] hover:border-[var(--hero-accent)] hover:text-white active:scale-100 ' +
+      // On ink, brand violet is too dark to read as a ring and label: white
+      // takes over, as on the sign-off's WhatsApp button, until the hover
+      // fills it violet.
+      'dark:border-white dark:text-white dark:hover:border-[var(--hero-accent)] dark:hover:text-white';
 ---
 
 <Button
