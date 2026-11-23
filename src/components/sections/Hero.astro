@@ -19,8 +19,28 @@
  */
 import HeroVisual from '@/components/site/HeroVisual.astro';
 import HeroScene from '@/components/site/HeroScene.astro';
-import { Image } from 'astro:assets';
+import { getImage } from 'astro:assets';
 import heroPoster from '@/assets/hero-poster.png';
+import heroPosterDark from '@/assets/hero-poster-dark.png';
+import heroPosterPhone from '@/assets/hero-poster-phone.png';
+import heroPosterPhoneDark from '@/assets/hero-poster-phone-dark.png';
+
+// Stills of the scene, captured from the live 3D at full quality: wide for
+// the desktop panel, near-square for a phone's, each in light and in dark
+// (the dark scene is a light slab in a dark studio). The page shows the one
+// that matches; a device without a graphics chip keeps it as the hero.
+const wide = { widths: [640, 960, 1336, 2000, 2672], format: 'webp' as const, quality: 82 };
+const tall = { widths: [400, 800, 1146], format: 'webp' as const, quality: 82 };
+const posters = await Promise.all(
+  [
+    { tone: 'light', desktop: heroPoster, phone: heroPosterPhone },
+    { tone: 'dark', desktop: heroPosterDark, phone: heroPosterPhoneDark },
+  ].map(async ({ tone, desktop, phone }) => ({
+    tone,
+    desktop: await getImage({ src: desktop, ...wide }),
+    phone: await getImage({ src: phone, ...tall }),
+  }))
+);
 ---
 
 <section class="hero shell flex min-h-screen flex-col justify-end pt-24 pb-9 max-[700px]:pt-[84px]">
@@ -37,16 +57,32 @@ import heroPoster from '@/assets/hero-poster.png';
         fades in over it once it runs, and devices without a graphics chip
         keep it (see scripts/gpu.ts). Decorative, like the panel itself. */
     }
-    <Image
-      src={heroPoster}
-      alt=""
-      widths={[640, 960, 1336, 2000, 2672]}
-      sizes="(max-width: 700px) calc(100vw - 48px), calc(100vw - 96px)"
-      quality={82}
-      loading="eager"
-      fetchpriority="high"
-      class="hero__poster"
-    />
+    {
+      posters.map(({ tone, desktop, phone }) => (
+        <picture class:list={['hero__poster-pic', `hero__poster-pic--${tone}`]}>
+          <source
+            media="(max-width: 700px)"
+            srcset={phone.srcSet.attribute}
+            sizes="calc(100vw - 48px)"
+            type="image/webp"
+          />
+          {/* Light is the first paint, so it loads at once; the dark still
+              only loads once dark mode shows it. */}
+          <img
+            src={desktop.src}
+            srcset={desktop.srcSet.attribute}
+            sizes="calc(100vw - 96px)"
+            alt=""
+            width={desktop.attributes.width}
+            height={desktop.attributes.height}
+            loading={tone === 'light' ? 'eager' : 'lazy'}
+            fetchpriority={tone === 'light' ? 'high' : 'auto'}
+            decoding="async"
+            class="hero__poster"
+          />
+        </picture>
+      ))
+    }
     <HeroScene />
     {
       /* The panel dissolves into the page along its lower edge rather than
@@ -91,6 +127,20 @@ import heroPoster from '@/assets/hero-poster.png';
 </section>
 
 <style>
+  /* One still at a time: light, or dark under .dark. */
+  .hero__poster-pic {
+    display: contents;
+  }
+
+  .hero__poster-pic--dark,
+  :global(.dark) .hero__poster-pic--light {
+    display: none;
+  }
+
+  :global(.dark) .hero__poster-pic--dark {
+    display: contents;
+  }
+
   .hero__poster {
     position: absolute;
     inset: 0;

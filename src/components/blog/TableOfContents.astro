@@ -191,6 +191,34 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
     overflow-y: auto;
   }
 
+  /* When the card scrolls, a soft fade at its foot shows the list goes on,
+     where the last line would otherwise be cut off hard. It sticks to the
+     bottom of the scrolling card, fades into the page ground (the card
+     itself is see-through) and goes once the end is in view: the script
+     sets data-more. It stands in for the card's bottom padding (64 - 44 =
+     the p-5's 20px), so a card that fits is exactly as tall as before and
+     never scrolls because of it. */
+  .toc-sticky {
+    padding-bottom: 0;
+  }
+
+  .toc-sticky::after {
+    content: '';
+    position: sticky;
+    bottom: 0;
+    display: block;
+    height: 64px;
+    margin: -44px -20px 0;
+    background: linear-gradient(to bottom, transparent, var(--background) 80%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .toc-sticky[data-more]::after {
+    opacity: 1;
+  }
+
   details[data-toc][open] :global(.toc-chevron) {
     transform: rotate(180deg);
   }
@@ -216,6 +244,15 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
     for (const toc of tocs) {
       if (toc.dataset.tocReady) continue;
       toc.dataset.tocReady = 'true';
+
+      // The foot fade on a sidebar card that scrolls: on while there is
+      // more below, off at the end.
+      if (toc.classList.contains('toc-sticky')) {
+        const more = () => toc.toggleAttribute('data-more', toc.scrollHeight - toc.scrollTop - toc.clientHeight > 2);
+        toc.addEventListener('scroll', more, { passive: true });
+        new ResizeObserver(more).observe(toc);
+        more();
+      }
 
       const links = Array.from(toc.querySelectorAll<HTMLAnchorElement>('[data-toc-link]'));
       const headings = links
