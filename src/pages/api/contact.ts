@@ -1,9 +1,8 @@
 /**
  * POST /api/contact
  *
- * Takes a message from the chat sheet (site/ChatSheet.astro) or the contact
- * page and mails it to the studio through Resend's REST API — a single fetch,
- * no SDK. Validation and the honeypot are Velocity's; the email is ours.
+ * Takes a message from the contact page and mails it to the studio through
+ * Resend's REST API — a single fetch, no SDK. Validation and the honeypot are Velocity's; the email is ours.
  *
  * Server-rendered (the one route on the site that is), which is what the
  * Vercel adapter in astro.config.mjs is for. Without RESEND_API_KEY the
@@ -22,7 +21,7 @@ const contactSchema = z.object({
   email: z.email('Please enter a valid email address'),
   subject: z.string().max(200).optional(),
   message: z.string().min(10, 'Message must be at least 10 characters').max(5000),
-  /** Where it came from: the chat sheet or the contact page. */
+  /** Where it came from. Only the contact page sends messages now. */
   source: z.enum(['chat', 'contact']).optional(),
   honeypot: z.string().max(0), // Anti-spam: must be empty
 });
