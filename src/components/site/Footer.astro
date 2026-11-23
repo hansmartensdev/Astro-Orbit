@@ -62,6 +62,12 @@ const year = new Date().getFullYear();
   /* The violet glow of the post header and the blog covers: from the
      bottom-left corner, with a soft light top right. Only the image is set,
      so the slab keeps its own .invert-section colour. */
+  /* In dark mode the slab sits on a deep violet rather than near-black
+     ink, so its glow never reads as a teal cast (Hans's choice). */
+  :global(.dark) .footer-stage > footer {
+    background-color: #1a1030;
+  }
+
   .footer-stage > footer {
     background-image:
       radial-gradient(circle at 0% 100%, rgb(124 58 237 / 0.55), rgb(124 58 237 / 0) 55%),

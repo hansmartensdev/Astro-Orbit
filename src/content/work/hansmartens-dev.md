@@ -23,7 +23,7 @@ gallery:
     alt: "The open menu: the four pages on a light sheet with a wavy edge, over a violet veil on the homepage"
     frame: true
   - src: "../../assets/work/hansmartens-dev/from-the-blog.webp"
-    alt: "The From the blog card on the homepage, with the post's generated cover"
+    alt: "The From the blog section on the homepage: two posts, each with its generated cover"
     frame: true
   - src: "../../assets/work/hansmartens-dev/sign-off.webp"
     alt: "The sign-off, Let's talk Astro, with violet buttons above the footer's violet glow"
