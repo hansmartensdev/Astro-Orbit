@@ -317,17 +317,10 @@ const {
      One engine per document: built on astro:page-load, torn down before the
      swap so its observers and GL context never outlive their DOM. */
   import type { ReelMorph } from '@/scripts/reel/morph';
+  import { canRunScenes } from '@/scripts/gpu';
 
   let engine: ReelMorph | null = null;
   let observer: IntersectionObserver | null = null;
-
-  const hasWebGL = (canvas: HTMLCanvasElement) => {
-    try {
-      return Boolean(canvas.getContext('webgl2') || canvas.getContext('webgl'));
-    } catch {
-      return false;
-    }
-  };
 
   function setup() {
     const root = document.querySelector<HTMLElement>('[data-reel]');
@@ -346,7 +339,8 @@ const {
     // it simply shows; the engine keeps that in step once it runs.
     const lead = document.querySelector<HTMLElement>('[data-work-grid] .card[data-deliver]');
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced || !hasWebGL(document.createElement('canvas'))) {
+    // No graphics chip (software WebGL) counts as no WebGL: see scripts/gpu.ts.
+    if (reduced || !canRunScenes()) {
       root.dataset.reelMode = 'static';
       lead?.classList.add('is-in');
       return;

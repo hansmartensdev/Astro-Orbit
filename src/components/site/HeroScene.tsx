@@ -47,6 +47,7 @@
  * so the renderer, resize observer and frame loop are owned here.
  */
 import { useEffect, useRef } from 'react';
+import { canRunScenes } from '@/scripts/gpu';
 import * as THREE from 'three';
 import { EXIT_Z, arcAt, copyOpacity, releaseAt, type ArcPoint } from '@/scripts/reel/handoff';
 
@@ -1201,11 +1202,15 @@ export default function HeroScene() {
     const scope = (document.querySelector('.hero') as HTMLElement | null) ?? document.body;
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
 
+    // Without a real graphics chip the scene would keep the main thread
+    // busy on every frame; the poster under it stays instead (scripts/gpu.ts).
+    if (!canRunScenes()) return;
+
     let engine: HeroEngine;
     try {
       engine = new HeroEngine(canvas);
     } catch {
-      return; // No WebGL: the CSS panel underneath stays as the hero.
+      return; // No WebGL: the poster underneath stays as the hero.
     }
     engine.reducedMotion = mq.matches;
     engine.setPalette(readPalette(scope));
