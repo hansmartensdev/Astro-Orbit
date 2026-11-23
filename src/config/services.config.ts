@@ -2,7 +2,7 @@
  * Services
  *
  * The four scroll-stacking cards on the homepage: Hans's craft, in his own
- * voice: design, development, optimisation, maintenance. Not a studio's
+ * voice: web design, development, optimisation and maintenance. Not a studio's
  * service list. Kept in config rather than a
  * content collection: there are four of them, they have no bodies, no dates and
  * no pages of their own — the shape is structural, not editorial.
@@ -49,16 +49,19 @@ export const services: Service[] = [
   },
   {
     num: '03',
-    title: ['Optimisation'],
+    title: ['Web', 'Optimisation'],
     icon: 'gauge',
     link: { href: '/blog/lighthouse-score-explained', label: 'The Lighthouse score explained' },
     theme: 'ink',
     tags: ['Lighthouse', 'Core Web Vitals', 'Technical SEO', 'Structured Data'],
-    desc: 'Fast pages and top Lighthouse scores, with the technical SEO and structured data that help Google and AI assistants find and understand every site.',
+    desc: [
+      'Optimisation is making a website fast, easy to find, and usable for everyone.',
+      'I test my websites with Lighthouse while I build them, and fix what the report shows together with Claude Code. This website went from a mobile score of 59 at the start of the build to 98. After a change, I often test again to see that the score stays high. Technical SEO and structured data help Google and AI assistants find and understand every page.',
+    ],
   },
   {
     num: '04',
-    title: ['Maintenance'],
+    title: ['Web', 'Maintenance'],
     icon: 'wrench',
     theme: 'shade',
     tags: ['Astro Updates', 'Security', 'GitHub Issues', 'Feature Requests'],
