@@ -157,3 +157,10 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
 
   <Footer slot="footer" />
 </BaseLayout>
+
+<script>
+  /* The site's reveal system (src/scripts/motion): without it, anything
+     marked data-reveal on a post page (the related posts) would stay
+     hidden, since BaseLayout hides reveals for the script to show. */
+  import '@/scripts/motion';
+</script>

@@ -1,0 +1,148 @@
+---
+/**
+ * PostCard
+ *
+ * A blog post as a card: the post's cover across the top (its own image, or
+ * the generated cover), then the date, the title, the description and a
+ * "Read the post" cue that turns violet on hover. Used by the homepage's
+ * From the blog section and by Related posts under each post, so the two
+ * always look the same.
+ */
+import { Icon } from 'astro-icon/components';
+import type { CollectionEntry } from 'astro:content';
+import PostCover from '@/components/blog/PostCover.astro';
+import { coverPath } from '@/lib/og';
+import { formatDate } from '@/lib/utils';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  /** The title's heading level: h3 under a section heading (default). */
+  as?: 'h2' | 'h3';
+  /** Smaller type, for a row of three. */
+  compact?: boolean;
+}
+
+const { post, as: Heading = 'h3', compact = false } = Astro.props;
+const slug = post.id.replace(/^[a-z]{2}\//, '');
+---
+
+<a class:list={['post', compact && 'post--compact']} href={`/blog/${slug}`} data-card>
+  <PostCover class="post__cover" src={post.data.image?.src ?? coverPath(slug)} />
+  <span class="label-mono text-foreground-muted">
+    {formatDate(post.data.publishedAt).toUpperCase()}
+  </span>
+  <Heading class="post__title">{post.data.title}</Heading>
+  <p class="post__line">{post.data.description}</p>
+  <span class="post__more">
+    Read the post
+    <Icon name="lucide:arrow-right" aria-hidden="true" />
+  </span>
+</a>
+
+<style>
+  .post {
+    --post-pad: clamp(28px, 3.4vw, 48px);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: var(--post-pad);
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    background: var(--color-background-elevated, #fff);
+    color: inherit;
+    text-decoration: none;
+    transition:
+      transform 0.45s var(--ease-sw),
+      border-color 0.3s ease,
+      box-shadow 0.45s var(--ease-sw);
+  }
+
+  .post--compact {
+    --post-pad: clamp(22px, 2.2vw, 30px);
+  }
+
+  .post:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-border-strong);
+    box-shadow: 0 18px 40px -24px rgb(12 16 22 / 0.28);
+  }
+
+  .post:focus-visible {
+    outline: 2px solid var(--hero-accent, #7c3aed);
+    outline-offset: 4px;
+  }
+
+  /* Full-bleed across the top of the card, cancelling its padding. */
+  .post :global(.post__cover) {
+    display: block;
+    width: calc(100% + 2 * var(--post-pad));
+    max-width: none;
+    margin: calc(-1 * var(--post-pad)) calc(-1 * var(--post-pad)) 24px;
+    border-radius: 13px 13px 0 0;
+  }
+
+  .post__title {
+    margin: 16px 0 0;
+    font-family: var(--font-display);
+    font-weight: var(--display-weight);
+    font-size: clamp(1.6rem, 2.6vw, 2.4rem);
+    line-height: 1.06;
+    letter-spacing: var(--display-tracking);
+    text-transform: var(--display-case);
+    text-wrap: balance;
+  }
+
+  .post--compact .post__title {
+    font-size: clamp(1.35rem, 1.7vw, 1.6rem);
+    line-height: 1.12;
+  }
+
+  .post__line {
+    margin: 14px 0 0;
+    max-width: 52ch;
+    color: var(--color-foreground-secondary);
+    font-size: 17px;
+    line-height: 1.55;
+  }
+
+  .post--compact .post__line {
+    font-size: 15px;
+  }
+
+  /* Pinned to the foot, so cards of different lengths line up. */
+  .post__more {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 24px;
+    font-weight: 500;
+    font-size: 15px;
+    transition: color 0.25s ease;
+  }
+
+  .post__more :global(svg) {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.35s var(--ease-sw);
+  }
+
+  .post:hover .post__more {
+    color: var(--hero-accent, #7c3aed);
+  }
+
+  .post:hover .post__more :global(svg) {
+    transform: translateX(4px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .post,
+    .post__more :global(svg) {
+      transition: none;
+    }
+
+    .post:hover {
+      transform: none;
+    }
+  }
+</style>
