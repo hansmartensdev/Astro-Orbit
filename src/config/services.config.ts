@@ -16,7 +16,8 @@ export interface Service {
    *  desktop. */
   icon: string;
   tags: string[];
-  /** One or more paragraphs. */
+  /** One or more paragraphs. A paragraph may hold a link written as
+   *  [text](url), Markdown style; everything else is plain text. */
   desc: string | string[];
   /** Optional: a link under the text, e.g. to a blog post on the subject. */
   link?: { href: string; label: string };
@@ -44,7 +45,7 @@ export const services: Service[] = [
     tags: ['Astro', 'TypeScript', 'Tailwind CSS', 'Claude Code'],
     desc: [
       "Web development is building the website: turning the design into the code that runs in the visitor's browser.",
-      'I build my websites and themes with Astro, from the first sketch to the last line of code, together with Claude Code. Astro sends finished pages to the browser, with only the JavaScript a page needs, so my sites load fast. Most pages are plain files with no server or database behind them, which leaves little that can break or be attacked, and keeps them easy to maintain for years.',
+      'I build my websites and themes with Astro, from the first sketch to the last line of code, together with [Claude Code](https://www.anthropic.com/claude-code). Astro sends finished pages to the browser, with only the JavaScript a page needs, so my sites load fast. Most pages are plain files with no server or database behind them, which leaves little that can break or be attacked, and keeps them easy to maintain for years.',
     ],
   },
   {

@@ -22,6 +22,13 @@ import { lucideBody } from '@/lib/og';
 import { services } from '@/config/services.config';
 
 const last = services.length - 1;
+
+// Card text is plain text from the config, escaped, with [text](url) turned
+// into a link.
+const escape = (t: string) =>
+  t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const withLinks = (t: string) =>
+  escape(t).replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a class="service__inline-link" href="$2">$1</a>');
 // One named timeline per covering card (every card but the first).
 const timelineScope = services
   .slice(1)
@@ -90,7 +97,7 @@ const timelineScope = services
             </div>
             <div class="service__body">
               {[service.desc].flat().map((para) => (
-                <p class="service__desc">{para}</p>
+                <p class="service__desc" set:html={withLinks(para)} />
               ))}
               {service.link && (
                 <a class="service__link" href={service.link.href}>
@@ -287,6 +294,20 @@ const timelineScope = services
 
   .service__tags.service__tags--detail {
     display: none;
+  }
+
+  /* A link inside the text: the card's own colour, underlined, so it reads
+     as a link on every card colour. */
+  .service__desc :global(.service__inline-link) {
+    color: inherit;
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 3px;
+  }
+
+  .service__desc :global(.service__inline-link:hover) {
+    text-decoration-thickness: 2.5px;
   }
 
   /* A link under the text, in the card's own colour, underlined. */
