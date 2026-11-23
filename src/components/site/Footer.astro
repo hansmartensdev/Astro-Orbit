@@ -49,7 +49,10 @@ const year = new Date().getFullYear();
         class="footer__quiet mt-24 flex max-[900px]:mt-16 justify-between gap-5 text-[13px] max-[900px]:flex-col max-[900px]:gap-2"
       >
         <span>&copy; {year} {siteConfig.name} — {siteConfig.location}</span>
-        <span>Building beautiful &amp; fast websites</span>
+        <span class="flex gap-5 max-[900px]:flex-col max-[900px]:gap-2">
+          <a class="footer__legal" href="/privacy">Privacy</a>
+          <span>Building beautiful &amp; fast websites</span>
+        </span>
       </div>
     </div>
   </footer>
@@ -70,6 +73,20 @@ const year = new Date().getFullYear();
      measured 2.4-4.0:1 there; this is at least 4.5:1 on both). */
   .footer__quiet {
     color: rgb(238 242 244 / 0.78);
+  }
+
+  /* The privacy link: the quiet line's colour, underlined so it reads as a
+     link, brightening on hover. */
+  .footer__legal {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    transition: color 0.2s ease;
+  }
+
+  .footer__legal:hover {
+    color: #fff;
   }
 
   /* --- the sheet ---------------------------------------------------------

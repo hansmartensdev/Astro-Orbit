@@ -1,0 +1,157 @@
+---
+/**
+ * Privacy
+ * URL: /privacy
+ *
+ * What the site does with personal data, under the GDPR (in the
+ * Netherlands, the AVG). Adapted from the privacy page on the previous
+ * hansmartens.dev and checked against this site's code on 2026-11-23:
+ *
+ *   contact form   name, email, optional subject, message; sent by email
+ *                  through Resend (src/pages/api/contact.ts), not stored
+ *   analytics      none: Analytics.astro loads Google Analytics or Tag
+ *                  Manager only when PUBLIC_GA_MEASUREMENT_ID or
+ *                  PUBLIC_GTM_ID is set. If either is ever set, this page
+ *                  must say so, and the cookie section below changes too.
+ *   cookies        none; the colour mode is kept in localStorage.theme
+ *   fonts          self-hosted (@fontsource in global.css), no font CDN
+ *   hosting        Vercel
+ *
+ * Keep it in step with the site: a policy that describes something the
+ * site doesn't do is as wrong as one that leaves out something it does.
+ */
+import SiteLayout from '@/layouts/SiteLayout.astro';
+import SectionHead from '@/components/sections/SectionHead.astro';
+import siteConfig from '@/config/site.config';
+
+const updated = new Date('2026-11-23');
+const updatedLabel = updated.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+const mail = `mailto:${siteConfig.email}`;
+---
+
+<SiteLayout
+  title="Privacy"
+  description="What hansmartens.dev does with your personal data: the contact form, hosting, and your rights under the GDPR."
+>
+  <header class="shell pt-[180px] max-[800px]:pt-[130px]">
+    <SectionHead
+      as="h1"
+      title="Privacy"
+      blurb="What this website does with your personal data, and the rights you have under the GDPR."
+    />
+  </header>
+
+  <section class="shell mt-16 max-[800px]:mt-10">
+    <div class="prose prose-lg max-w-[68ch] dark:prose-invert" data-reveal-content>
+      <p class="label-mono text-foreground-muted">Last updated {updatedLabel}</p>
+
+      <p>
+        This page explains what personal data this website collects, why, and what happens to it. I
+        only process the data I need to answer you and to run the website, and I never sell it.
+      </p>
+
+      <h2>Who I am</h2>
+      <p>
+        This website is run by {siteConfig.name}, an Astro developer in {siteConfig.location}. I'm
+        responsible for the personal data described on this page (the "data controller" in the
+        GDPR).
+      </p>
+      <p>Email: <a href={mail}>{siteConfig.email}</a></p>
+
+      <h2>The contact form</h2>
+      <p>
+        When you send a message with the contact form, I receive your name, your email address, the
+        subject if you fill it in, and your message. The form sends it to my mailbox as an email,
+        through the email service Resend. It isn't stored in a database on this website. I use it
+        only to read your message and answer you.
+      </p>
+      <p>Legal basis: my legitimate interest in answering the messages people send me.</p>
+
+      <h2>Email and WhatsApp</h2>
+      <p>
+        If you email me or send me a WhatsApp message, I receive what you send, together with your
+        email address or phone number, and use it only to answer you. The WhatsApp button opens
+        WhatsApp, a service of Meta, and only when you click it. Nothing from WhatsApp is loaded on
+        this website before that.
+      </p>
+
+      <h2>Visits</h2>
+      <p>
+        This website doesn't use analytics. It doesn't count or follow visitors, and there are no
+        advertising or social media trackers on it.
+      </p>
+
+      <h2>Hosting</h2>
+      <p>
+        This website is hosted by Vercel. Like every host, Vercel processes technical data, such as
+        IP addresses and browser information, in its server logs, to deliver the website securely
+        and reliably.
+      </p>
+      <p>Legal basis: my legitimate interest in running a secure website.</p>
+
+      <h2>Cookies and storage</h2>
+      <p>
+        This website sets no cookies. If you choose light or dark mode with the button in the
+        header, your browser remembers that choice in its local storage, so the next page opens in
+        the same mode. The choice stays on your device and isn't sent to me or anyone else. You can
+        delete it by clearing this website's data in your browser.
+      </p>
+      <p>
+        The fonts are served from this website itself, so loading a page doesn't contact a font
+        service.
+      </p>
+
+      <h2>Who receives your data</h2>
+      <p>I share personal data only with the services needed to run this website:</p>
+      <ul>
+        <li><strong>Vercel</strong>: hosting the website</li>
+        <li><strong>Resend</strong>: delivering contact form messages</li>
+      </ul>
+      <p>
+        Both are based in the United States. Where data is transferred outside the European Economic
+        Area, this happens under appropriate safeguards, such as the EU–US Data Privacy Framework or
+        the European Commission's Standard Contractual Clauses. I never sell personal data or share
+        it for advertising.
+      </p>
+
+      <h2>How long I keep it</h2>
+      <p>I keep messages, from the contact form, email or WhatsApp, as long as I need them to answer you.</p>
+
+      <h2>Your rights</h2>
+      <p>Under the GDPR you have the right to:</p>
+      <ul>
+        <li>see the personal data I hold about you;</li>
+        <li>have it corrected;</li>
+        <li>have it deleted;</li>
+        <li>limit or object to how I use it;</li>
+        <li>receive it in a format you can take elsewhere.</li>
+      </ul>
+      <p>
+        To use any of these rights, email me at <a href={mail}>{siteConfig.email}</a>. You can also
+        file a complaint with the Dutch Data Protection Authority, the <a
+          href="https://www.autoriteitpersoonsgegevens.nl"
+          target="_blank"
+          rel="noopener noreferrer">Autoriteit Persoonsgegevens</a
+        >.
+      </p>
+
+      <h2>Security</h2>
+      <p>All traffic to this website is encrypted (HTTPS).</p>
+
+      <h2>Changes</h2>
+      <p>
+        When the website or the services it uses change, I update this page. The date at the top
+        shows when it was last changed.
+      </p>
+
+      <h2>Questions</h2>
+      <p>
+        If something on this page is unclear, or you have a question about your data, email me at <a
+          href={mail}>{siteConfig.email}</a
+        >.
+      </p>
+    </div>
+  </section>
+
+  <div class="pb-[120px] max-[800px]:pb-[80px]"></div>
+</SiteLayout>
