@@ -191,7 +191,7 @@ const nextImage = next.data.feature ?? next.data.cover;
                   layout="none"
                   widths={[768, 1280, 1920]}
                   sizes="(max-width: 1000px) 100vw, 62vw"
-                  class="band__shot"
+                  class:list={['band__shot', 'frame' in shot && shot.frame && 'band__shot--framed']}
                   data-reveal
                   data-reveal-delay={j * 0.1}
                 />
@@ -451,6 +451,12 @@ const nextImage = next.data.feature ?? next.data.cover;
   .band__shot {
     width: 100%;
     border-radius: var(--radius-lg);
+  }
+
+  /* A capture whose edge is the page colour gets a border, so it reads as one
+     picture instead of running into the page. */
+  .band__shot--framed {
+    border: 1px solid var(--color-border-strong);
   }
 
   /* A band with prose but no pictures shouldn't leave a hole where they'd be. */

@@ -104,7 +104,16 @@ const work = defineCollection({
       cover: image().optional(),
       coverAlt: z.string().optional(),
       /** Further captures, shown down the case-study page. */
-      gallery: z.array(z.object({ src: image(), alt: z.string().optional() })).default([]),
+      gallery: z
+        .array(
+          z.object({
+            src: image(),
+            alt: z.string().optional(),
+            /** A thin border, for a capture whose edge is the page colour. */
+            frame: z.boolean().optional(),
+          }),
+        )
+        .default([]),
       /** Caption for the striped placeholder standing in for the capture. */
       placeholder: z.string().optional(),
       /** The two halves of a case study, when they have been written. */

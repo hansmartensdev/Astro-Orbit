@@ -19,6 +19,7 @@ gallery:
     alt: "Three phones showing the homepage, a blog post and the open menu"
   - src: "../../assets/work/hansmartens-dev/menu-open.webp"
     alt: "The open menu: the four pages on a light sheet with a wavy edge, over a violet veil on the homepage"
+    frame: true
   - src: "../../assets/work/hansmartens-dev/from-the-blog.webp"
     alt: "The From the blog card on the homepage, with the post's generated cover"
   - src: "../../assets/work/hansmartens-dev/sign-off.webp"
