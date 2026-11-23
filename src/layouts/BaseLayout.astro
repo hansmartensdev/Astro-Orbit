@@ -95,12 +95,24 @@ if (includeOrgSchema) {
       document.documentElement.classList.add('js');
     </script>
 
-    <!-- Theme: light only for now, whatever the system or an earlier visit
-         chose. The dark theme (.dark in themes/southwell.css) stays in place
-         to be finished later; to bring it back, restore the system/stored
-         choice here (see git history) and the toggle in Nav.astro. -->
+    <!-- Theme, before first paint so it never flashes: the visitor's choice
+         from the header's ThemeToggle (localStorage.theme), else the system
+         setting. Sets <html data-theme-mode> for the toggle's icon and
+         .dark for the theme itself. -->
     <script is:inline>
-      document.documentElement.classList.remove('dark');
+      (function () {
+        var mode = 'system';
+        try {
+          var saved = localStorage.getItem('theme');
+          if (saved === 'light' || saved === 'dark' || saved === 'system') mode = saved;
+        } catch (e) {}
+        var dark =
+          mode === 'dark' ||
+          (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        var root = document.documentElement;
+        root.setAttribute('data-theme-mode', mode);
+        root.classList.toggle('dark', dark);
+      })();
     </script>
   </head>
 
