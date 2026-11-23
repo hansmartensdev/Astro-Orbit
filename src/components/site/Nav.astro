@@ -10,12 +10,12 @@
  * visible ones rather than a second label fading in beside them.
  *
  * The menu control is the word "Menu" in brand violet ("Close" while the
- * menu is open), beside Hans's own theme toggle (ThemeToggle.astro).
+ * menu is open). Hans's theme toggle (ThemeToggle.astro) is off the bar
+ * while the site is light only; it comes back here with dark mode.
  */
 import { Icon } from 'astro-icon/components';
 import { getNavItems } from '@/config/nav.config';
 import siteConfig from '@/config/site.config';
-import ThemeToggle from '@/components/site/ThemeToggle.astro';
 
 interface Props {
   /**
@@ -78,7 +78,6 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     </div>
 
     <div class="sw-nav__actions">
-      <ThemeToggle />
       <button
         class="burger"
         id="sw-nav-toggle"
