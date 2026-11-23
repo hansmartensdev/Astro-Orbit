@@ -119,6 +119,25 @@ import heroPoster from '@/assets/hero-poster.png';
     transform-origin: 50% 80%;
   }
 
+  /* Desktop and tablet: the hero is exactly one screen tall, so the intro
+     and the scroll cue are always in view on arrival. The panel takes
+     whatever height the headline and the foot leave (never under 240px);
+     on a 1440x900 screen that is about what the old 58vh gave, on a short
+     laptop a little less. Phones keep their own sizing (the panel already
+     grows into the slack there). */
+  @media (min-width: 701px) {
+    .hero {
+      height: 100svh;
+      min-height: 600px;
+    }
+
+    .hero__render {
+      flex: 1 1 auto;
+      height: auto;
+      min-height: 240px;
+    }
+  }
+
   /* Pre-animation state. Motion writes its first keyframe inline, and inline
      beats these, so there is never a frame of the finished layout before the
      entrance. Without JS the class is absent and everything simply shows. */
