@@ -9,6 +9,8 @@ feature: "../../assets/work/hansmartens-dev/mockup-hero.webp"
 cover: "../../assets/work/hansmartens-dev/mockup.webp"
 coverAlt: "hansmartens.dev on a laptop and two phones: the homepage and a blog post"
 gallery:
+  - src: "../../assets/work/hansmartens-dev/statement-card.webp"
+    alt: "The What drives me card from the homepage, with Hans's quote in white and violet"
   - src: "../../assets/work/hansmartens-dev/blog-post.webp"
     alt: "A blog post on hansmartens.dev, opening with its dark violet header card"
   - src: "../../assets/work/hansmartens-dev/phones.webp"
