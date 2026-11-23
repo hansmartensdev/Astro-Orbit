@@ -25,20 +25,15 @@ import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
   </div>
 
   <div
+    data-reveal
     class="shell relative flex flex-col items-center pt-[130px] pb-[130px] max-[800px]:pt-[100px] max-[800px]:pb-[100px]"
   >
     <h2 class="display-section m-0 text-center">
-      <span class="rv-mask"><span data-reveal="rise">Let&rsquo;s talk</span></span>
-      <span class="rv-mask"
-        ><span data-reveal="rise" data-reveal-delay="0.08"><em>Astro.</em></span></span
-      >
+      <span class="block">Let&rsquo;s talk</span>
+      <span class="block"><em>Astro.</em></span>
     </h2>
 
-    <div
-      class="mt-10 flex flex-wrap justify-center gap-[18px] max-[800px]:mt-8"
-      data-reveal
-      data-reveal-delay="0.32"
-    >
+    <div class="mt-10 flex flex-wrap justify-center gap-[18px] max-[800px]:mt-8">
       <ArrowFillButton href="/contact" icon="fa6-solid:comment" data-chat-open=""
         >Start a conversation</ArrowFillButton
       >
