@@ -28,10 +28,12 @@ const pill = [
   'transition-[transform,background-color,color] duration-300 ease-out',
 ].join(' ');
 
+// Brand violet and white only, like the sign-off's buttons: a violet pill
+// that grows a little on hover, or a violet ring and label that fill violet.
 const look =
   variant === 'solid'
-    ? 'bg-foreground text-background hover:bg-foreground hover:scale-105 active:scale-100'
-    : 'border-[1.5px] border-foreground bg-transparent text-foreground hover:bg-foreground hover:text-background active:scale-100';
+    ? 'bg-[var(--hero-accent)] text-white hover:bg-[var(--hero-accent)] hover:text-white hover:scale-105 active:scale-100'
+    : 'border-[1.5px] border-[var(--hero-accent)] bg-transparent text-[var(--hero-accent)] hover:bg-[var(--hero-accent)] hover:border-[var(--hero-accent)] hover:text-white active:scale-100';
 ---
 
 <Button
