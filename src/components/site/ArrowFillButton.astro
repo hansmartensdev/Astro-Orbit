@@ -142,6 +142,18 @@ const arrow =
     --afb-border: var(--hero-accent, #7c3aed);
   }
 
+  /* Solid on ink, Hans's choice: the light colourway mirrored. A white
+     pill with a violet label and a violet disc (white glyph); the disc
+     fills it violet on hover, so it ends as the violet pill it is in
+     light. Beside the white-ringed outline button the two read as a pair
+     and still differ. */
+  :global(.dark) .afb:not(.afb--outline) {
+    --afb-bg: #fff;
+    --afb-text: var(--hero-accent, #7c3aed);
+    --afb-fill-bg: var(--hero-accent, #7c3aed);
+    --afb-fill-text: #fff;
+  }
+
   /* On ink, brand violet is too dark to read as a ring and label: the ring
      and label go white (Hans's choice). The disc and its fill stay brand
      violet, with white on it. */

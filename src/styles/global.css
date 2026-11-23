@@ -840,6 +840,16 @@
     text-decoration-thickness: 2.5px;
   }
 
+  /* On ink, brand violet is 3.3:1; the violet made for ink is 7:1. */
+  .dark .prose a {
+    color: var(--hero-accent-on-ink, #a78bfa);
+    text-decoration-color: rgb(167 139 250 / 0.45);
+  }
+
+  .dark .prose a:hover {
+    text-decoration-color: var(--hero-accent-on-ink, #a78bfa);
+  }
+
   .prose strong {
     color: var(--color-foreground);
     font-weight: 600;
