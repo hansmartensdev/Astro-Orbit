@@ -101,15 +101,17 @@ if (includeOrgSchema) {
          .dark for the theme itself. -->
     <script is:inline>
       (function () {
-        var mode = 'system';
+        let mode = 'system';
         try {
-          var saved = localStorage.getItem('theme');
+          const saved = localStorage.getItem('theme');
           if (saved === 'light' || saved === 'dark' || saved === 'system') mode = saved;
-        } catch (e) {}
-        var dark =
+        } catch {
+          // Storage blocked (private mode, site data off): follow the system.
+        }
+        const dark =
           mode === 'dark' ||
           (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-        var root = document.documentElement;
+        const root = document.documentElement;
         root.setAttribute('data-theme-mode', mode);
         root.classList.toggle('dark', dark);
       })();
