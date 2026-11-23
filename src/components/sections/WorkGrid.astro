@@ -55,7 +55,7 @@ const shown = typeof count === 'number' ? projects.slice(0, count) : projects;
 const mobileSources = await Promise.all(
   shown.map((project) =>
     project.data.featureMobile
-      ? getImage({ src: project.data.featureMobile, widths: [600, 900, 1200, 1600], format: 'webp' })
+      ? getImage({ src: project.data.featureMobile, widths: [600, 900, 1200, 1600], format: 'webp', quality: 90 })
       : null
   )
 );
@@ -158,6 +158,7 @@ const SIZING: Record<'hero' | 'large' | 'wide' | 'standard', { widths: number[];
                     alt={project.data.coverAlt ?? project.data.title}
                     layout="none"
                     widths={sizing.widths}
+                    quality={90}
                     sizes={sizing.sizes}
                     class:list={['card__img', single ? 'card__img--single' : 'card__img--rest']}
                     loading={i === 0 ? 'eager' : 'lazy'}
@@ -172,6 +173,7 @@ const SIZING: Record<'hero' | 'large' | 'wide' | 'standard', { widths: number[];
                   alt=""
                   layout="none"
                   widths={sizing.widths}
+                  quality={90}
                   sizes={sizing.sizes}
                   class="card__img card__img--reveal"
                   loading={i === 0 ? 'eager' : 'lazy'}

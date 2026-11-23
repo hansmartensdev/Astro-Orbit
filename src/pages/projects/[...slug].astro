@@ -83,7 +83,7 @@ const hero = feature ?? cover;
 // The phone version of the hero picture, if the project has one: composed
 // for a narrow screen, shown whole at the top of the hero on phones.
 const heroMobile = featureMobile
-  ? await getImage({ src: featureMobile, widths: [600, 900, 1200, 1600], format: 'webp' })
+  ? await getImage({ src: featureMobile, widths: [600, 900, 1200, 1600], format: 'webp', quality: 90 })
   : null;
 // The hero is ink with or without a picture, so the nav always reads light
 // over it (navOverMedia below).
@@ -131,6 +131,7 @@ const nextImage = next.data.feature ?? next.data.cover;
               alt={coverAlt ?? title}
               layout="none"
               widths={[768, 1280, 1920, 2560]}
+              quality={90}
               sizes="100vw"
               class:list={['case__hero-img', heroMobile && 'case__hero-img--has-mobile']}
               loading="eager"
@@ -156,7 +157,12 @@ const nextImage = next.data.feature ?? next.data.cover;
         <p class="case__lede" data-reveal>{description}</p>
       </div>
 
-      <span class="case__scroll label-mono" aria-hidden="true">scroll</span>
+      {/* The homepage's indicator: the word over a line that pulses
+          (sw-scrollpulse), here in the light colours of the dark hero. */}
+      <span class="case__scroll" aria-hidden="true">
+        Scroll
+        <span class="case__scroll-line"></span>
+      </span>
     </header>
 
     {/* --- facts: a thin ledger closing off the hero -------------------- */}
@@ -190,6 +196,7 @@ const nextImage = next.data.feature ?? next.data.cover;
                   alt={shot.alt ?? title}
                   layout="none"
                   widths={[768, 1280, 1920]}
+                  quality={90}
                   sizes="(max-width: 1000px) 100vw, 62vw"
                   class:list={['band__shot', 'frame' in shot && shot.frame && 'band__shot--framed']}
                   data-reveal
@@ -269,6 +276,7 @@ const nextImage = next.data.feature ?? next.data.cover;
                 alt=""
                 layout="none"
                 widths={[640, 960, 1280, 1600]}
+                quality={90}
                 sizes="(max-width: 900px) 100vw, 50vw"
                 class="nextup__img"
               />
@@ -366,10 +374,20 @@ const nextImage = next.data.feature ?? next.data.cover;
     position: absolute;
     right: var(--gutter);
     bottom: 88px;
-    color: rgb(238 242 244 / 0.6);
-    writing-mode: vertical-rl;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: rgb(238 242 244 / 0.72);
+  }
+
+  .case__scroll-line {
+    display: block;
+    width: 1.5px;
+    height: 48px;
+    background: rgb(238 242 244 / 0.9);
+    animation: sw-scrollpulse 1.8s ease-in-out infinite;
   }
 
   /* --- ledger ---------------------------------------------------------- */
