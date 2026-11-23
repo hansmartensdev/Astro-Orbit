@@ -820,16 +820,24 @@
     color: var(--color-foreground-secondary);
   }
 
+  /* Links in running text: the brand violet (5.1:1 on the page ground),
+     with a violet underline that thickens on hover, so they read as links
+     at a glance and invite the click. */
   .prose a {
-    color: var(--color-foreground);
+    color: var(--hero-accent, #7c3aed);
+    font-weight: 500;
     text-decoration: underline;
-    text-underline-offset: 2px;
-    text-decoration-color: var(--color-border-strong);
-    transition: text-decoration-color var(--transition-fast);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 3px;
+    text-decoration-color: rgb(124 58 237 / 0.45);
+    transition:
+      text-decoration-color var(--transition-fast),
+      text-decoration-thickness var(--transition-fast);
   }
 
   .prose a:hover {
-    text-decoration-color: var(--color-foreground);
+    text-decoration-color: var(--hero-accent, #7c3aed);
+    text-decoration-thickness: 2.5px;
   }
 
   .prose strong {

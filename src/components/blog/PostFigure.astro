@@ -13,9 +13,12 @@ interface Props {
   src: ImageMetadata;
   mobile?: ImageMetadata;
   alt: string;
+  /** Where a click on the picture leads, e.g. the project it shows. */
+  href?: string;
 }
 
-const { src, mobile, alt } = Astro.props;
+const { src, mobile, alt, href } = Astro.props;
+const Wrap = href ? 'a' : 'div';
 
 const wide = await getImage({ src, widths: [768, 1200, 1600, 2400], format: 'webp' });
 const narrow = mobile ? await getImage({ src: mobile, widths: [600, 900, 1200], format: 'webp' }) : null;
@@ -23,6 +26,7 @@ const hasCaption = Astro.slots.has('default');
 ---
 
 <figure class="pf not-prose">
+  <Wrap class="pf__media" href={href}>
   <picture>
     {
       narrow && (
@@ -40,6 +44,7 @@ const hasCaption = Astro.slots.has('default');
       decoding="async"
     />
   </picture>
+  </Wrap>
   {
     hasCaption && (
       <figcaption>
@@ -69,9 +74,44 @@ const hasCaption = Astro.slots.has('default');
     color: var(--color-foreground-muted);
   }
 
+  .pf__media {
+    display: block;
+    overflow: hidden;
+    border-radius: 14px;
+  }
+
+  .pf__media img {
+    transition: transform 0.6s var(--ease-sw, ease);
+  }
+
+  a.pf__media:hover img {
+    transform: scale(1.02);
+  }
+
+  a.pf__media:focus-visible {
+    outline: 2px solid var(--hero-accent, #7c3aed);
+    outline-offset: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pf__media img {
+      transition: none;
+    }
+  }
+
+  /* Same as links in the post's text: violet, with a violet underline. */
   .pf figcaption :global(a) {
-    color: var(--color-foreground);
+    color: var(--hero-accent, #7c3aed);
+    font-weight: 500;
+    font-style: normal;
     text-decoration: underline;
+    text-decoration-thickness: 1.5px;
     text-underline-offset: 3px;
+    text-decoration-color: rgb(124 58 237 / 0.45);
+  }
+
+  .pf figcaption :global(a:hover) {
+    text-decoration-color: var(--hero-accent, #7c3aed);
+    text-decoration-thickness: 2.5px;
   }
 </style>
