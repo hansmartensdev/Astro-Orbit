@@ -31,7 +31,7 @@ gallery:
     frame: true
   - src: "../../assets/work/hansmartens-dev/craft-card.webp"
     alt: "The Web Development card from the homepage, with its code icon, tags and text"
-challenge: "PLACEHOLDER: why a new website."
+challenge: "My previous website was good, but as a web designer and developer I wanted something more special and attractive: a portfolio, blog and homepage with a wow factor for me and, I think, for visitors too. That comes from the animated 3D hero. A ball comes out of it and follows a track down the homepage until it becomes the first project."
 solution: "PLACEHOLDER: what Hans built and what matters to him about it."
 technologies: ["Astro", "TypeScript", "Tailwind CSS", "three.js", "Claude Code", "Vercel"]
 order: 1
