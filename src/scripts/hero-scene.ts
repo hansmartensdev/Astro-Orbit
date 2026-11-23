@@ -42,12 +42,12 @@
  *   - nothing on the pointer path touches layout — the canvas rect is read at
  *     most once per rendered frame, inside the frame.
  *
- * Plain three.js driven from one React effect: an Astro island hydrates a
- * React tree in a way React Three Fiber's canvas measurement never survives,
- * so the renderer, resize observer and frame loop are owned here.
+ * Plain three.js, mounted by HeroScene.astro, which imports this module only
+ * on a device that can run it (scripts/gpu.ts): without a graphics chip
+ * neither three.js nor this file is ever downloaded. The renderer, resize
+ * observer and frame loop are owned here; mountHeroScene() returns the
+ * teardown.
  */
-import { useEffect, useRef } from 'react';
-import { canRunScenes } from '@/scripts/gpu';
 import * as THREE from 'three';
 import { EXIT_Z, arcAt, copyOpacity, releaseAt, type ArcPoint } from '@/scripts/reel/handoff';
 
@@ -1189,130 +1189,107 @@ class HeroEngine {
 // Public component
 // ---------------------------------------------------------------------------
 
-export default function HeroScene() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const wrapRef = useRef<HTMLDivElement>(null);
+/** Start the scene in `wrap` (the .hero-scene box) on `canvas`. */
+export function mountHeroScene(wrap: HTMLElement, canvas: HTMLCanvasElement): () => void {
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const wrap = wrapRef.current;
-    if (!canvas || !wrap) return;
+  // The --hero-* hooks are set on the hero section; read them from there.
+  const scope = (document.querySelector('.hero') as HTMLElement | null) ?? document.body;
+  const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-    // The --hero-* hooks are set on the hero section; read them from there.
-    const scope = (document.querySelector('.hero') as HTMLElement | null) ?? document.body;
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let engine: HeroEngine;
+  try {
+    engine = new HeroEngine(canvas);
+  } catch {
+    return () => {}; // No WebGL after all: the poster stays as the hero.
+  }
+  engine.reducedMotion = mq.matches;
+  engine.setPalette(readPalette(scope));
 
-    // Without a real graphics chip the scene would keep the main thread
-    // busy on every frame; the poster under it stays instead (scripts/gpu.ts).
-    if (!canRunScenes()) return;
-
-    let engine: HeroEngine;
+  // Dev-only frame meter: localStorage.swPerf = '1' to show it.
+  let meter: HTMLDivElement | null = null;
+  if (import.meta.env.DEV) {
+    let on = false;
     try {
-      engine = new HeroEngine(canvas);
+      on = localStorage.getItem('swPerf') === '1';
     } catch {
-      return; // No WebGL: the poster underneath stays as the hero.
+      /* storage blocked */
     }
-    engine.reducedMotion = mq.matches;
-    engine.setPalette(readPalette(scope));
-
-    // Dev-only frame meter: localStorage.swPerf = '1' to show it.
-    let meter: HTMLDivElement | null = null;
-    if (import.meta.env.DEV) {
-      let on = false;
-      try {
-        on = localStorage.getItem('swPerf') === '1';
-      } catch {
-        /* storage blocked */
-      }
-      if (on) {
-        meter = document.createElement('div');
-        meter.className = 'hero-scene__meter';
-        wrap.appendChild(meter);
-        engine.onStats = (s) => {
-          if (!meter) return;
-          meter.textContent = s.running
-            ? `${s.ms.toFixed(1)} ms · ${s.fps.toFixed(0)} fps · tier ${s.tier}${s.low ? ' · low' : ''}${s.throttled ? ' · idle' : ''}`
-            : `paused · tier ${s.tier}`;
-        };
-      }
+    if (on) {
+      meter = document.createElement('div');
+      meter.className = 'hero-scene__meter';
+      wrap.appendChild(meter);
+      engine.onStats = (s) => {
+        if (!meter) return;
+        meter.textContent = s.running
+          ? `${s.ms.toFixed(1)} ms · ${s.fps.toFixed(0)} fps · tier ${s.tier}${s.low ? ' · low' : ''}${s.throttled ? ' · idle' : ''}`
+          : `paused · tier ${s.tier}`;
+      };
     }
+  }
 
-    const ro = new ResizeObserver(([entry]) => {
-      const { width, height } = entry.contentRect;
-      engine.resize(width, height);
-    });
-    ro.observe(wrap);
-    engine.resize(wrap.clientWidth, wrap.clientHeight);
+  const ro = new ResizeObserver(([entry]) => {
+    const { width, height } = entry.contentRect;
+    engine.resize(width, height);
+  });
+  ro.observe(wrap);
+  engine.resize(wrap.clientWidth, wrap.clientHeight);
 
-    // Render only while the panel can be seen: on screen, in a visible tab.
-    // Below about half visible it also drops to the lowest tier — the panel is
-    // sliding out under the headline and nobody is reading detail off it.
-    // … and not while the menu is open over it: the nav flags that on <html>
-    // and announces it, so the sculpture rests under the sheet.
-    let onScreen = true;
-    const sync = () =>
-      engine.setActive(
-        onScreen &&
-          document.visibilityState === 'visible' &&
-          document.documentElement.dataset.menuOpen !== 'true'
-      );
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        onScreen = entry.isIntersecting && entry.intersectionRatio > 0.02;
-        engine.setVisibility(entry.intersectionRatio);
-        sync();
-      },
-      { threshold: [0, 0.03, 0.45, 0.55, 1] }
+  // Render only while the panel can be seen: on screen, in a visible tab.
+  // Below about half visible it also drops to the lowest tier — the panel is
+  // sliding out under the headline and nobody is reading detail off it.
+  // … and not while the menu is open over it: the nav flags that on <html>
+  // and announces it, so the sculpture rests under the sheet.
+  let onScreen = true;
+  const sync = () =>
+    engine.setActive(
+      onScreen &&
+        document.visibilityState === 'visible' &&
+        document.documentElement.dataset.menuOpen !== 'true'
     );
-    io.observe(wrap);
-    document.addEventListener('visibilitychange', sync);
-    document.addEventListener('sw:menu', sync);
-    sync();
-
-    // Follow the theme toggle: only the class on <html> matters, and only when
-    // it actually flips light/dark. Anything else written to <html> (the nav
-    // publishing its height, scroll locks) must not cost a palette read.
-    let dark = document.documentElement.classList.contains('dark');
-    const observer = new MutationObserver(() => {
-      const next = document.documentElement.classList.contains('dark');
-      if (next === dark) return;
-      dark = next;
-      engine.setPalette(readPalette(scope));
-    });
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-
-    const onMotion = () => {
-      engine.reducedMotion = mq.matches;
-      engine.setActive(false);
+  const io = new IntersectionObserver(
+    ([entry]) => {
+      onScreen = entry.isIntersecting && entry.intersectionRatio > 0.02;
+      engine.setVisibility(entry.intersectionRatio);
       sync();
-    };
-    mq.addEventListener('change', onMotion);
-
-    // Fade in over the CSS panel once the first frames are up.
-    const id = window.setTimeout(() => wrap.classList.add('is-ready'), 250);
-
-    return () => {
-      window.clearTimeout(id);
-      mq.removeEventListener('change', onMotion);
-      document.removeEventListener('visibilitychange', sync);
-      document.removeEventListener('sw:menu', sync);
-      observer.disconnect();
-      io.disconnect();
-      ro.disconnect();
-      meter?.remove();
-      engine.dispose();
-    };
-  }, []);
-
-  return (
-    <div ref={wrapRef} className="hero-scene">
-      <canvas ref={canvasRef} />
-      <style>{`
-        .hero-scene { position: absolute; inset: 0; opacity: 0; transition: opacity 1.4s cubic-bezier(0.2, 0.6, 0.2, 1); }
-        .hero-scene.is-ready { opacity: 1; }
-        .hero-scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-        .hero-scene__meter { position: absolute; top: 12px; left: 12px; z-index: 2; padding: 4px 8px; border-radius: 6px; font: 500 11px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: #fff; background: rgb(12 16 22 / 0.7); pointer-events: none; white-space: nowrap; }
-      `}</style>
-    </div>
+    },
+    { threshold: [0, 0.03, 0.45, 0.55, 1] }
   );
+  io.observe(wrap);
+  document.addEventListener('visibilitychange', sync);
+  document.addEventListener('sw:menu', sync);
+  sync();
+
+  // Follow the theme toggle: only the class on <html> matters, and only when
+  // it actually flips light/dark. Anything else written to <html> (the nav
+  // publishing its height, scroll locks) must not cost a palette read.
+  let dark = document.documentElement.classList.contains('dark');
+  const observer = new MutationObserver(() => {
+    const next = document.documentElement.classList.contains('dark');
+    if (next === dark) return;
+    dark = next;
+    engine.setPalette(readPalette(scope));
+  });
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
+  const onMotion = () => {
+    engine.reducedMotion = mq.matches;
+    engine.setActive(false);
+    sync();
+  };
+  mq.addEventListener('change', onMotion);
+
+  // Fade in over the CSS panel once the first frames are up.
+  const id = window.setTimeout(() => wrap.classList.add('is-ready'), 250);
+
+  return () => {
+    window.clearTimeout(id);
+    mq.removeEventListener('change', onMotion);
+    document.removeEventListener('visibilitychange', sync);
+    document.removeEventListener('sw:menu', sync);
+    observer.disconnect();
+    io.disconnect();
+    ro.disconnect();
+    meter?.remove();
+    engine.dispose();
+  };
 }

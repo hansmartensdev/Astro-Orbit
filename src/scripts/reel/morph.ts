@@ -11,7 +11,7 @@
  *             The path is one curve (handoff.ts) that this engine owns and
  *             publishes as window.__heroDropletArc; the hero evaluates the
  *             same curve in its own frame and draws its droplet exactly
- *             there (HeroScene.tsx), so the copy drawn here beneath the
+ *             there (scripts/hero-scene.ts), so the copy drawn here beneath the
  *             panel's fade is never a frame behind it. The hero publishes
  *             where its droplet is before the release as window.__heroDroplet.
  *   travel    freed, it floats down the page with you, damped behind the
