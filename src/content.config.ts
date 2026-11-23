@@ -100,6 +100,11 @@ const work = defineCollection({
        *  top right and the title at the bottom. Without it, phones crop the
        *  middle out of the wide picture. */
       featureMobile: image().optional(),
+      /** Optional: the project page's own hero picture, composed for a
+       *  desktop screen's shape (16:10) and large enough for a sharp
+       *  screen. Without it the hero uses `feature`, which is shaped for
+       *  the card and gets cropped and enlarged there. */
+      pageHero: image().optional(),
       /** The device mockup. Revealed on hover when a `feature` is set. */
       cover: image().optional(),
       coverAlt: z.string().optional(),
