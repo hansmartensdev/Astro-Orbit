@@ -955,10 +955,10 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
         const throughScroll = hitScroll + DRIP_PUNCH * vh;
         const goneScroll = throughScroll + DRIP_MERGE * vh;
         if (sY > startScroll && hitScroll > startScroll + 120) {
-          const dripR = clamp(lead.width * 0.011, 8, 15);
-          // The margin beside the grid when there is room for the drop,
-          // else just inside the cards' left edge.
-          const laneX = lead.left >= dripR * 2 + 12 ? lead.left - dripR - 8 : lead.left + dripR + 14;
+          const dripR = clamp(lead.width * 0.018, 12, 24);
+          // Down the margin beside the grid, just touching the cards' left
+          // edge where the margin is narrower than the drop.
+          const laneX = Math.max(dripR + 4, lead.left - dripR - 8);
           const formX = lead.left + Math.min(56, lead.width * 0.06);
           const hitX = ch.left + Math.min(ch.width * 0.12, 90);
           const icon = craftIcon?.getBoundingClientRect() ?? null;
