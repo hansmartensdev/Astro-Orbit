@@ -8,9 +8,9 @@
  *
  * Two motions on top of the stacking:
  *
- *   entrance  as a card arrives its number fades in, the two title lines
- *             rise out of their masks, then the tags and the paragraph
- *             follow — play-once, via Motion's [data-reveal] system.
+ *   entrance  each card rises and fades in as one unit, via the site's
+ *             [data-reveal] system (on the slot, so it never fights the
+ *             recede, which transforms the card itself).
  *   recede    as the next card slides up to cover it, the card underneath
  *             eases back — scroll-linked, via a view timeline on
  *             the *next* card. `timeline-scope` on the section lets card N
@@ -41,6 +41,7 @@ const timelineScope = services
     services.map((service, i) => (
       <div
         class="services__slot shell"
+        data-reveal
         style={
           '--sticky-top:' +
           (90 + i * 20) +
@@ -55,32 +56,22 @@ const timelineScope = services
           style={i < last ? `animation-timeline: --svc-${i + 1}` : undefined}
         >
           <div class="service__lead">
-            <span class="service__num label-mono" data-reveal>
-              {service.num}
-            </span>
+            <span class="service__num label-mono">{service.num}</span>
             <h3 class="service__title display-service m-0">
-              <span class="rv-mask">
-                <span data-reveal="rise" data-reveal-delay="0.08">
-                  {service.title[0]}
-                </span>
-              </span>
-              <span class="rv-mask">
-                <span data-reveal="rise" data-reveal-delay="0.16">
-                  {service.title[1]}
-                </span>
-              </span>
+              <span class="block">{service.title[0]}</span>
+              <span class="block">{service.title[1]}</span>
             </h3>
           </div>
 
           <div class="service__detail">
             <div class="service__tags">
-              {service.tags.map((tag, j) => (
-                <span class="service__tag" data-reveal data-reveal-delay={0.38 + j * 0.06}>
+              {service.tags.map((tag) => (
+                <span class="service__tag">
                   {tag}
                 </span>
               ))}
             </div>
-            <p class="service__desc" data-reveal data-reveal-delay="0.54">
+            <p class="service__desc">
               {service.desc}
             </p>
           </div>
@@ -91,6 +82,16 @@ const timelineScope = services
 </section>
 
 <style>
+  /* Where the cards stack (wider than 800px), a card fading in over the one
+     below would show that card's text through it. There each card glides up
+     fully opaque, like a card dealt onto the pile; on phones, where nothing
+     stacks, it rises and fades like every other arrival. */
+  @media (min-width: 801px) {
+    :global(html.js .services__slot[data-reveal]:not(.is-in)) {
+      opacity: 1;
+    }
+  }
+
   .services__slot {
     position: sticky;
     top: var(--sticky-top);

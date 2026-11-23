@@ -1,0 +1,79 @@
+---
+/**
+ * HeroScene
+ *
+ * The box the hero's live 3D sculpture renders into (scripts/hero-scene.ts).
+ * The scene loads only where it can run: on a device without a graphics
+ * chip (scripts/gpu.ts) nothing is downloaded and the poster under this box
+ * stays as the hero. Elsewhere the scene module, and three.js with it, is
+ * fetched once the browser is idle, and fades in over the poster.
+ */
+---
+
+<div class="hero-scene" data-hero-scene>
+  <canvas></canvas>
+</div>
+
+<style>
+  .hero-scene {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1.4s cubic-bezier(0.2, 0.6, 0.2, 1);
+  }
+
+  .hero-scene:global(.is-ready) {
+    opacity: 1;
+  }
+
+  .hero-scene canvas {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero-scene :global(.hero-scene__meter) {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 2;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font: 500 11px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    color: #fff;
+    background: rgb(12 16 22 / 0.7);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+</style>
+
+<script>
+  import { canRunScenes } from '@/scripts/gpu';
+
+  let teardown: (() => void) | null = null;
+
+  function setup() {
+    const wrap = document.querySelector<HTMLElement>('[data-hero-scene]');
+    const canvas = wrap?.querySelector('canvas');
+    if (!wrap || !canvas || !canRunScenes()) return;
+
+    const start = async () => {
+      const { mountHeroScene } = await import('@/scripts/hero-scene');
+      // The page may have moved on while the module was loading.
+      if (!wrap.isConnected) return;
+      teardown = mountHeroScene(wrap, canvas);
+    };
+    if (typeof requestIdleCallback === 'function') requestIdleCallback(() => void start(), { timeout: 2000 });
+    else setTimeout(() => void start(), 200);
+  }
+
+  function cleanup() {
+    teardown?.();
+    teardown = null;
+  }
+
+  document.addEventListener('astro:page-load', setup);
+  document.addEventListener('astro:before-swap', cleanup);
+</script>

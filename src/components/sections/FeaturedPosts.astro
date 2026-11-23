@@ -46,8 +46,8 @@ const postUrl = (id: string) => '/blog/' + id.replace('en/', '');
         />
 
         <ul class:list={['posts m-0 mt-14 list-none p-0 max-[800px]:mt-10', shown.length === 1 && 'posts--single']}>
-          {shown.map((post) => (
-            <li data-reveal>
+          {shown.map((post, i) => (
+            <li data-reveal data-reveal-delay={i * 0.1}>
               <a class="post" href={postUrl(post.id)} data-card>
                 <PostCover
                   class="post__cover"

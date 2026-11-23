@@ -1,9 +1,11 @@
 /**
  * Work grid — arrival and hover.
  *
- * Arrival: as a card comes into view it lifts in while the picture inside
- * pulls back from a close crop and the caption rises to meet its resting
- * place. Cards in the same row arrive a beat apart, by column.
+ * Arrival: as a card comes into view it rises and fades in as one unit,
+ * picture, title and label together, on the site's one reveal curve,
+ * cubic-bezier(0.16, 1, 0.3, 1): opacity in 0.8s, movement in 1.1s, no
+ * spring (see src/scripts/motion/reveal.ts). Cards in the same row arrive
+ * a beat apart, by column.
  *
  * On the homepage the lead card is delivered by the reel's droplet (see
  * src/scripts/reel/morph.ts), and the rest of the grid waits for it: a card
@@ -12,12 +14,9 @@
  * moment it is delivered. Nothing below the fold builds before the first
  * thing does.
  *
- * Arrivals are tied to the scroll, not to the first visit: a card that
- * leaves the viewport goes back to its pre-arrival state and arrives again
- * on the next pass. The lead already behaves that way — the engine takes
- * it back when the page scrolls above the delivery — so the rest of the
- * grid follows the same rule rather than sitting there built while the
- * lead re-delivers next to them.
+ * Arrivals are one-way, like every reveal on the site: once a card has
+ * arrived it stays, and scrolling back up does not replay it. (The lead is
+ * the reel's to deliver and take back; the cards around it stay built.)
  *
  * Hover: the picture and the caption drift against each other under the
  * pointer, on springs, and the picture eases up to a slight zoom on the same
@@ -43,9 +42,10 @@ import {
   styleEffect,
   springValue,
   transformValue,
-  type AnimationPlaybackControls,
-  type AnimationSequence,
 } from 'motion';
+
+/** The site's one reveal curve: a clean ease-out, no spring. */
+const REVEAL_EASE = [0.16, 1, 0.3, 1] as const;
 
 const MEDIA_DRIFT = 6; // px, capped against the hover zoom's 3% overhang
 const CAPTION_DRIFT = 4; // px, the other way
@@ -87,7 +87,6 @@ export function initWork(reduced: boolean): VoidFunction {
   for (const card of grid.querySelectorAll<HTMLElement>('.card')) {
     const media = card.querySelector<HTMLElement>('.card__media');
     const caption = card.querySelector<HTMLElement>('.card__caption');
-    const meta = card.querySelector<HTMLElement>('.card__meta');
     if (!media) continue;
 
     // Owned values. Position springs chase the pointer; scale is animated
@@ -133,61 +132,20 @@ export function initWork(reduced: boolean): VoidFunction {
       card.classList.add('is-in');
       warm();
     } else {
-      // Whatever is mid-flight when the card leaves view, so the reset can
-      // stop it rather than fight it.
-      let running: AnimationPlaybackControls[] = [];
       const arrive = (extra: number) => {
         card.classList.add('is-in');
         warm();
-        const at = columnOf(card, grid) * 0.09 + extra;
-        // The card itself: its values, not the element, so the write goes
-        // through the styleEffect above rather than a second transform owner.
-        const lift = { type: 'spring', visualDuration: 1.0, bounce: 0.08, delay: at } as const;
-        running = [animate(cardY, 0, lift), animate(cardOpacity, 1, lift)];
-        const sequence: AnimationSequence = [];
-        if (caption) {
-          sequence.push([
-            caption,
-            { opacity: [0, 1], y: [28, 0] },
-            { type: 'spring', visualDuration: 0.9, bounce: 0.1, at: at + 0.18 },
-          ]);
-        }
-        if (meta) {
-          sequence.push([meta, { opacity: [0, 1], y: [-8, 0] }, { duration: 0.5, at: at + 0.35 }]);
-        }
-        if (sequence.length) running.push(animate(sequence));
-        running.push(
-          animate(scale, [1.18, 1], {
-            type: 'spring',
-            visualDuration: 1.5,
-            bounce: 0,
-            delay: at,
-          })
-        );
+        io.unobserve(card);
+        const at = columnOf(card, grid) * 0.1 + extra;
+        // The card itself, as one unit: its values, not the element, so the
+        // write goes through the styleEffect above rather than a second
+        // transform owner.
+        animate(cardY, 0, { duration: 1.1, ease: REVEAL_EASE, delay: at });
+        animate(cardOpacity, 1, { duration: 0.8, ease: REVEAL_EASE, delay: at });
       };
-      // Back to the pre-arrival state, in one frame, while the card is out of
-      // view. The card's own values go through the styleEffect; the caption
-      // and chip take their first keyframes back inline.
-      const reset = () => {
-        for (const a of running.splice(0)) a.stop();
-        card.classList.remove('is-in');
-        cardY.set(64);
-        cardOpacity.set(0);
-        scale.set(1.18);
-        if (caption) {
-          caption.style.opacity = '0';
-          caption.style.transform = 'translateY(28px)';
-        }
-        if (meta) {
-          meta.style.opacity = '0';
-          meta.style.transform = 'translateY(-8px)';
-        }
-      };
-      // Two thresholds rather than Motion's inView: a card arrives once a
-      // fifth of it is showing, but it only resets once it has left
-      // entirely. Chrome reports "not intersecting" the moment the ratio
-      // drops under the enter threshold, which would blank the last sliver
-      // of a card while it is still on screen.
+      // A card arrives once a fifth of it is showing. One that was waiting
+      // for the lead and leaves view before the lead lands no longer owes an
+      // arrival; it gets one the next time it comes into view.
       let shown = false;
       const io = new IntersectionObserver(
         (entries) => {
@@ -201,10 +159,8 @@ export function initWork(reduced: boolean): VoidFunction {
               else waiting.push(arrive);
             } else if (shown && !entry.isIntersecting) {
               shown = false;
-              // Gone before the lead landed: it no longer owes an arrival.
               const held = waiting.indexOf(arrive);
               if (held !== -1) waiting.splice(held, 1);
-              reset();
             }
           }
         },

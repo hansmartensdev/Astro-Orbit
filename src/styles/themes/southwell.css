@@ -30,7 +30,7 @@
   --border-subtle: rgb(12 16 22 / 0.05);
 
   /* Ink is the primary. The one colour on the site is the droplet that falls
-     out of the hero and travels down the page (HeroScene.tsx, reel/morph.ts),
+     out of the hero and travels down the page (scripts/hero-scene.ts, reel/morph.ts),
      in electric violet — a nod to Astro's purple, deeper and less sweet. */
   --hero-accent: #7c3aed;
   /* The same violet lifted for text and marks on ink (7:1); #7c3aed itself is

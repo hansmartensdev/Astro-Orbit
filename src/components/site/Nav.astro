@@ -2,16 +2,15 @@
 /**
  * Nav
  *
- * A wordmark and a menu control, nothing else. Transparent over the hero,
+ * A wordmark and a menu control. Transparent over the hero,
  * frosted-solid once you scroll past it.
  *
  * The wordmark unfurls on hover: "hans martens" is already hiding inside
  * "hm" — h-ans m-artens — so the missing letters grow out from between the two
  * visible ones rather than a second label fading in beside them.
  *
- * The menu control is two rules of unequal length that level up on hover and
- * cross into an X when the overlay opens. A labelled "Menu ———" was doing the
- * same job with more furniture.
+ * The menu control is the word "Menu" in brand violet ("Close" while the
+ * menu is open).
  */
 import { Icon } from 'astro-icon/components';
 import { getNavItems } from '@/config/nav.config';
@@ -81,9 +80,12 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
         aria-expanded="false"
         aria-controls="sw-menu"
       >
-        <span class="burger__lines" aria-hidden="true">
-          <span class="burger__line"></span>
-          <span class="burger__line"></span>
+        {/* The word, in brand violet, in place of the two rules: "Menu",
+            and "Close" while the menu is open. Screen readers get the
+            label below instead. */}
+        <span class="burger__word" aria-hidden="true">
+          <span class="burger__word-open">Menu</span>
+          <span class="burger__word-close">Close</span>
         </span>
         <span class="sr-only" id="sw-nav-toggle-label">Open menu</span>
       </button>
@@ -323,73 +325,63 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     gap: 18px;
   }
 
+  /* The word in brand violet; a lighter violet wherever the bar sits on
+     ink (over a dark hero, a dark page, the ink sheet, dark mode), where
+     the brand violet would be too dim to read. */
   .burger {
+    --menu-word: var(--hero-accent, #7c3aed);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 44px;
     height: 44px;
-    margin-right: -10px;
-    padding: 0;
+    margin-right: -12px;
+    padding: 0 12px;
     border: 0;
     border-radius: var(--radius-full);
     background: transparent;
-    color: inherit;
+    color: var(--menu-word);
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
     cursor: pointer;
     transition: background 0.3s ease;
   }
 
+  .sw-nav[data-over-media]:not(.is-scrolled) .burger,
+  .sw-nav[data-tone='dark'] .burger,
+  .sw-nav[data-menu-open='true']:not([data-menu-tone='light']) .burger,
+  :global(html.dark) .burger {
+    --menu-word: var(--hero-accent-on-ink, #a78bfa);
+  }
+
   .burger:hover {
-    background: color-mix(in srgb, currentColor 10%, transparent);
+    background: color-mix(in srgb, var(--menu-word) 12%, transparent);
   }
 
-  .burger__lines {
-    position: relative;
-    display: block;
-    width: 24px;
-    height: 12px;
+  .burger:focus-visible {
+    outline: 2px solid var(--menu-word);
+    outline-offset: 2px;
   }
 
-  .burger__line {
-    position: absolute;
-    right: 0;
-    display: block;
-    height: 1.5px;
-    background: currentColor;
-    border-radius: 2px;
-    transition:
-      width 0.35s var(--ease-sw),
-      transform 0.35s var(--ease-sw),
-      top 0.25s var(--ease-sw);
+  /* Both words share one cell, so the button keeps the width of the wider
+     one and nothing beside it shifts when it switches. */
+  .burger__word {
+    display: grid;
   }
 
-  /* Unequal at rest; they level up on hover. */
-  .burger__line:first-child {
-    top: 2px;
-    width: 24px;
+  .burger__word > span {
+    grid-area: 1 / 1;
+    text-align: right;
+    transition: opacity 0.2s ease;
   }
 
-  .burger__line:last-child {
-    top: 9px;
-    width: 15px;
+  .burger__word-close,
+  .sw-nav[data-menu-open='true'] .burger__word-open {
+    opacity: 0;
   }
 
-  .burger:hover .burger__line:last-child {
-    width: 24px;
-  }
-
-  /* Open: both centre, then cross. */
-  .sw-nav[data-menu-open='true'] .burger__line {
-    top: 5px;
-    width: 24px;
-  }
-
-  .sw-nav[data-menu-open='true'] .burger__line:first-child {
-    transform: rotate(45deg);
-  }
-
-  .sw-nav[data-menu-open='true'] .burger__line:last-child {
-    transform: rotate(-45deg);
+  .sw-nav[data-menu-open='true'] .burger__word-close {
+    opacity: 1;
   }
 
   /* --- the menu ------------------------------------------------------- */
@@ -655,7 +647,7 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     .mark__grow,
     .mark__hidden,
     .mark__slash,
-    .burger__line {
+    .burger__word > span {
       transition: none;
     }
   }

@@ -18,7 +18,9 @@
  * treatments underneath are the no-JS / pre-hydration state.
  */
 import HeroVisual from '@/components/site/HeroVisual.astro';
-import HeroScene from '@/components/site/HeroScene.tsx';
+import HeroScene from '@/components/site/HeroScene.astro';
+import { Image } from 'astro:assets';
+import heroPoster from '@/assets/hero-poster.png';
 ---
 
 <section class="hero shell flex min-h-screen flex-col justify-end pt-24 pb-9 max-[700px]:pt-[84px]">
@@ -30,7 +32,22 @@ import HeroScene from '@/components/site/HeroScene.tsx';
   <HeroVisual
     class="hero__render h-[58vh] max-[700px]:h-auto max-[700px]:min-h-[42vh] max-[700px]:flex-1"
   >
-    <HeroScene client:idle />
+    {
+      /* A still of the scene, there from the first paint: the live scene
+        fades in over it once it runs, and devices without a graphics chip
+        keep it (see scripts/gpu.ts). Decorative, like the panel itself. */
+    }
+    <Image
+      src={heroPoster}
+      alt=""
+      widths={[640, 960, 1336, 2000, 2672]}
+      sizes="(max-width: 700px) calc(100vw - 48px), calc(100vw - 96px)"
+      quality={82}
+      loading="eager"
+      fetchpriority="high"
+      class="hero__poster"
+    />
+    <HeroScene />
     {
       /* The panel dissolves into the page along its lower edge rather than
         ending in a hard line behind the headline. A painted gradient in the
@@ -74,6 +91,14 @@ import HeroScene from '@/components/site/HeroScene.tsx';
 </section>
 
 <style>
+  .hero__poster {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
   .hero {
     position: relative;
     /* The headline is sized in container units off this box, so it is one
@@ -81,7 +106,7 @@ import HeroScene from '@/components/site/HeroScene.tsx';
        still grows to its content vertically. */
     container-type: inline-size;
     /* Art direction for the WebGL scene lives here as --hero-* custom
-       properties (see HeroScene.tsx for every hook). Unset, the scene is
+       properties (see scripts/hero-scene.ts for every hook). Unset, the scene is
        monochrome from the theme greys with a neutral studio light. */
     --hero-warm: #ffffff;
     --hero-cool: #f4f7fa;

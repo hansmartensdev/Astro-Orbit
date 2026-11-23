@@ -95,10 +95,11 @@ if (includeOrgSchema) {
       document.documentElement.classList.add('js');
     </script>
 
-    <!-- Theme: light only for now, whatever the system or an earlier visit
-         chose. The dark theme (.dark in themes/southwell.css) stays in place
-         to be finished later; to bring it back, restore the system/stored
-         choice here (see git history) and the toggle in Nav.astro. -->
+    <!-- Theme: light only until dark mode is designed, whatever the system
+         or an earlier visit chose. The dark theme (.dark in
+         themes/southwell.css) stays in place for later. Hans's own toggle
+         (from hansmartens.dev) was ported in commit 9da14f2 and can come
+         back from there with the system/stored choice. -->
     <script is:inline>
       document.documentElement.classList.remove('dark');
     </script>

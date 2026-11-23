@@ -259,12 +259,23 @@
 
   /* -----------------------------------------------------------------------
      Reveals
-     Arrivals are Motion's job (src/scripts/motion/reveal.ts). The stylesheet
-     only holds the pre-arrival state, and only once `html.js` says the
-     script is coming — without JS nothing is ever hidden.
+     One motion for every arrival on the site, as in Astro Rocket: a clean
+     ease-out with no spring or bounce. The opacity settles in 0.8s while the
+     movement glides on for 1.1s, so an element arrives rather than appears.
+     src/scripts/motion/reveal.ts only adds `.is-in` when it's time. The
+     hidden state applies only once `html.js` says the script is coming, so
+     without JS nothing is ever hidden.
      ----------------------------------------------------------------------- */
+  [data-reveal] {
+    --reveal-ease: cubic-bezier(0.16, 1, 0.3, 1);
+    transition:
+      opacity 0.8s var(--reveal-ease),
+      transform 1.1s var(--reveal-ease);
+  }
+
   html.js [data-reveal]:not(.is-in) {
     opacity: 0;
+    transform: translateY(64px);
   }
 
   /* A masked rise starts below its clipping parent, fully opaque. */
