@@ -80,7 +80,7 @@ const spanFor = (index: number) => (index === 0 ? 'hero' : PATTERN[(index - 1) %
 const SIZING: Record<'hero' | 'large' | 'wide' | 'standard', { widths: number[]; sizes: string }> =
   {
     hero: {
-      widths: [640, 1024, 1536, 2048],
+      widths: [640, 1024, 1536, 2048, 2688],
       sizes: '(max-width: 1100px) 100vw, 1344px',
     },
     large: {
@@ -116,6 +116,8 @@ const SIZING: Record<'hero' | 'large' | 'wide' | 'standard', { widths: number[];
         const sizing = SIZING[span];
         const rest = project.data.feature ?? project.data.cover;
         const reveal = project.data.cover ?? project.data.feature;
+        // One image only: shown as it is, no grey rest state and no swap.
+        const single = !(project.data.feature && project.data.cover);
         return (
           <a
             class="card"
@@ -125,13 +127,12 @@ const SIZING: Record<'hero' | 'large' | 'wide' | 'standard', { widths: number[];
             data-deliver={deliverLead && i === 0 ? '' : undefined}
           >
             <div class="card__media">
-              {/* Two layers: the rest picture, desaturated in the stylesheet,
-                and the colour picture that dissolves over it on hover. With a
-                feature and a cover the hover also swaps photograph for mockup;
-                with only one, both layers hold the same file (one download,
-                one decode) and the hover is purely the colour coming up.
-                Colour never comes from animating a filter — that is what
-                made the first hover snap; see the stylesheet. */}
+              {/* With a feature and a cover: two layers, the rest picture
+                (desaturated in the stylesheet) and the cover dissolving over
+                it on hover. With only one image: that image alone, in full
+                colour, and the hover is just the slight zoom. Colour never
+                comes from animating a filter (that made the first hover
+                snap; see the stylesheet). */}
               {rest && (
                 <Image
                   src={rest}
@@ -139,13 +140,13 @@ const SIZING: Record<'hero' | 'large' | 'wide' | 'standard', { widths: number[];
                   layout="none"
                   widths={sizing.widths}
                   sizes={sizing.sizes}
-                  class="card__img card__img--rest"
+                  class:list={['card__img', single ? 'card__img--single' : 'card__img--rest']}
                   loading={i === 0 ? 'eager' : 'lazy'}
                   fetchpriority={i === 0 ? 'high' : undefined}
                 />
               )}
 
-              {reveal && (
+              {reveal && !single && (
                 <Image
                   src={reveal}
                   alt=""

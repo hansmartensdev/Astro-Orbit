@@ -6,9 +6,10 @@ description: "Portfolio, blog, developer's website."
 year: 2026
 url: "https://hansmartens.dev"
 feature: "../../assets/work/hansmartens-dev/mockup-hero.webp"
-cover: "../../assets/work/hansmartens-dev/mockup.webp"
-coverAlt: "hansmartens.dev on a laptop and two phones: the homepage and a blog post"
+coverAlt: "hansmartens.dev on a MacBook and two iPhones: the homepage and a blog post"
 gallery:
+  - src: "../../assets/work/hansmartens-dev/mockup.webp"
+    alt: "hansmartens.dev on a MacBook and two iPhones, close up"
   - src: "../../assets/work/hansmartens-dev/statement-card.webp"
     alt: "The What drives me card from the homepage, with Hans's quote in white and violet"
   - src: "../../assets/work/hansmartens-dev/blog-post.webp"
