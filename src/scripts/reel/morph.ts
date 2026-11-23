@@ -33,6 +33,10 @@
  *             card from where it landed, the card's own rest picture as
  *             its surface, at which point the real card takes over and the
  *             canvas lets go. The ball is used up where the work begins.
+ *   drip      (test) once the card has taken over, a small drop forms on
+ *             its lower edge, falls down the margin past the other
+ *             projects, parts the "My craft" heading as the ball parted
+ *             "Work", and goes into the first craft card's icon.
  *
  * Everything is measured in viewport pixels each frame, so a fixed canvas can
  * draw over the hero, the gaps and the sticky stage alike. Page-anchored
@@ -121,6 +125,11 @@ export interface ReelMorphOptions {
    *  and the card it becomes. */
   workHead?: HTMLElement | null;
   leadCard?: HTMLElement | null;
+  /** The drip: the "My craft" heading it parts, and the first craft card
+   *  (and its icon, on desktop) it goes into. */
+  craftHead?: HTMLElement | null;
+  craftCard?: HTMLElement | null;
+  craftIcon?: HTMLElement | null;
   /** Corner radius in CSS px. */
   radius?: number;
   /** Normalised scroll velocity, -1…1. Defaults to a scroll delta. */
@@ -168,6 +177,13 @@ const CARD_RADIUS = 0.2;
  *  through it. */
 const PUNCH_AT = 0.5;
 const PUNCH_END = 0.62;
+/** The drip: it meets the "My craft" heading when the heading's x-height is
+ *  this far down the viewport, is through it this much later (in
+ *  viewports of scroll), and has gone into the craft card this much after
+ *  that. */
+const DRIP_HIT_AT = 0.42;
+const DRIP_PUNCH = 0.1;
+const DRIP_MERGE = 0.32;
 /** Scene render target size relative to the full frame, and its DPR cap. */
 const SCENE_SCALE = 0.8;
 const SCENE_DPR = 1.5;
@@ -409,6 +425,9 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
     overlay,
     workHead,
     leadCard,
+    craftHead = null,
+    craftCard = null,
+    craftIcon = null,
     radius = 16,
   } = options;
 
@@ -558,6 +577,8 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
   const workField: TypeField | null = workHead
     ? createTypeField(workHead, { mask: workHead.querySelector<HTMLElement>('.sh__mask') })
     : null;
+  const craftField: TypeField | null = craftHead ? createTypeField(craftHead) : null;
+  const craftBall: FieldBall = { x: 0, y: 0, r: 0, impact: 0, sag: 0, push: 0 };
   const heroBall: FieldBall = { x: 0, y: 0, r: 0, impact: 0, sag: 0, push: 0 };
   const reelBall: FieldBall = { x: 0, y: 0, r: 0, impact: 0, sag: 0, push: 0 };
   const workBall: FieldBall = { x: 0, y: 0, r: 0, impact: 0, sag: 0, push: 0 };
@@ -568,6 +589,7 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
   let holdDistance = 1; // px the stage stays pinned for
   let navHeight = 0; // the fixed bar the delivered card must sit clear of
   let workXHeight = 0; // px from the "Work" heading's box top to its x-height
+  let craftXHeight = 0; // the same for "My craft"
   let copyExit = 0; // px the copy travels before it is fully off the stage
   const thumbOff = new Vector4();
   const fullOff = new Vector4();
@@ -593,6 +615,7 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
     navHeight =
       parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sw-nav-h')) || 0;
     workXHeight = workHead ? 0.37 * (parseFloat(getComputedStyle(workHead).fontSize) || 0) : 0;
+    craftXHeight = craftHead ? 0.37 * (parseFloat(getComputedStyle(craftHead).fontSize) || 0) : 0;
 
     const dpr = Math.min(window.devicePixelRatio || 1, SCENE_DPR) * SCENE_SCALE;
     const sw = Math.min(1600, Math.round(fullOff.z * dpr));
@@ -763,6 +786,8 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
     let heroHold = 0;
     let workPush = 0;
     let workImpact = 0;
+    let craftPush = 0;
+    let craftImpact = 0;
     let reelPush = 0;
     let direct = false; // follow exactly, no damping
     let shape = 0;
@@ -916,6 +941,74 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
         (1 - smoothstep(PUNCH_END, PUNCH_END + 0.16, d));
       workImpact = contact;
       setDelivered(d >= 0.88);
+
+      // --- Act 6 (test): the drip -------------------------------------------
+      // Once the card has taken over, a small drop forms on its lower edge,
+      // falls down the margin past the other projects, parts the "My craft"
+      // heading and goes into the first craft card. All of it on the
+      // scroll, so it plays backwards too.
+      const ch = craftHead?.getBoundingClientRect() ?? null;
+      const cc = craftCard?.getBoundingClientRect() ?? null;
+      if (ch && cc && d >= 1) {
+        const startScroll = deliverScroll + 40;
+        const hitScroll = ch.top + sY + craftXHeight - DRIP_HIT_AT * vh;
+        const throughScroll = hitScroll + DRIP_PUNCH * vh;
+        const goneScroll = throughScroll + DRIP_MERGE * vh;
+        if (sY > startScroll && hitScroll > startScroll + 120) {
+          const dripR = clamp(lead.width * 0.011, 8, 15);
+          // The margin beside the grid when there is room for the drop,
+          // else just inside the cards' left edge.
+          const laneX = lead.left >= dripR * 2 + 12 ? lead.left - dripR - 8 : lead.left + dripR + 14;
+          const formX = lead.left + Math.min(56, lead.width * 0.06);
+          const hitX = ch.left + Math.min(ch.width * 0.12, 90);
+          const icon = craftIcon?.getBoundingClientRect() ?? null;
+          const hasIcon = Boolean(icon && icon.width > 0);
+          const mergeX = hasIcon ? icon!.left + icon!.width / 2 : cc.left + 48;
+          const mergeY = hasIcon ? icon!.top + icon!.height / 2 : cc.top + 64;
+          const chHit = ch.top + craftXHeight;
+
+          geometry = 'ball';
+          card = false;
+          shape = 0;
+          mixAmt = 0;
+          float = 1;
+          onPage = 1;
+          opacity = 1;
+          squashT = 1;
+          if (sY < hitScroll) {
+            const t = (sY - startScroll) / (hitScroll - startScroll);
+            // Forms on the card's lower edge, swells, lets go …
+            const grow = smoothstep(0, 0.14, t);
+            const fall = smoothstep(0.1, 1, t);
+            tr = dripR * grow;
+            tx = lerp(formX, laneX, smoothstep(0.12, 0.38, t));
+            tx = lerp(tx, hitX, smoothstep(0.72, 1, t));
+            // … and falls, stretched a little while it is quick.
+            ty = lerp(lead.bottom - dripR * 0.4, chHit - tr, fall);
+            squashT = 1 + 0.18 * Math.sin(Math.PI * fall);
+            const contact = Math.exp(-(((t - 1) / 0.05) ** 2));
+            craftImpact = contact;
+          } else if (sY < throughScroll) {
+            // Through the heading, its letters shoved aside.
+            const b = smoothstep(0, 1, (sY - hitScroll) / (throughScroll - hitScroll));
+            tr = dripR;
+            tx = hitX;
+            ty = lerp(chHit - dripR, ch.bottom + dripR, b);
+            craftPush = 1;
+            craftImpact = Math.exp(-((b / 0.15) ** 2));
+          } else if (sY < goneScroll) {
+            // Into the card: over to its icon, shrinking to nothing.
+            const m = smoothstep(0, 1, (sY - throughScroll) / (goneScroll - throughScroll));
+            tr = dripR * (1 - smoothstep(0.55, 1, m));
+            tx = lerp(hitX, mergeX, m);
+            ty = lerp(ch.bottom + dripR, mergeY, m);
+            craftPush = 1 - smoothstep(0, 0.4, m);
+            opacity = 1 - smoothstep(0.85, 1, m);
+          } else {
+            opacity = 0;
+          }
+        }
+      }
       visible = opacity > 0 && ty - tr * 2 < vh + 40 && ty + tr * 2 > -40;
     } else {
       // No card to become: the closed ball just leaves with the stage.
@@ -968,6 +1061,17 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
       workBall.push = workPush;
       const on = workPush > 0.001 || workImpact > 0.001;
       if (on || workField.moving) workField.update(dt, on ? workBall : null);
+    }
+
+    if (craftField) {
+      craftBall.x = pos.x;
+      craftBall.y = pos.y + sY;
+      craftBall.r = rad;
+      craftBall.impact = craftImpact;
+      craftBall.sag = 0;
+      craftBall.push = craftPush;
+      const on = craftPush > 0.001 || craftImpact > 0.001;
+      if (on || craftField.moving) craftField.update(dt, on ? craftBall : null);
     }
 
     // --- Draw ----------------------------------------------------------------------
@@ -1148,6 +1252,7 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
       window.__heroDropletArc = arc;
       io.observe(runway);
       if (leadCard) io.observe(leadCard);
+      if (craftHead) io.observe(craftHead);
       ro.observe(stage);
       window.addEventListener('resize', onResize);
       window.addEventListener('pointermove', onPointerMove, { passive: true });
@@ -1185,6 +1290,7 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
       heroField?.destroy();
       reelField?.destroy();
       workField?.destroy();
+      craftField?.destroy();
       cardTexture?.dispose();
       renderer.dispose();
     },
