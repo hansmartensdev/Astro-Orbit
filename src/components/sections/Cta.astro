@@ -117,6 +117,34 @@ import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
     user-select: none;
   }
 
+  /* Dark mode. The service-card tokens the field borrows go blue-grey on
+     ink, and their heavy grain turns into grey static there, so the field
+     read as a grey, noisy patch between the violet cards and the violet
+     footer. On ink it takes the footer's own glow instead: brand violet
+     from the lower left, the lighter violet from the upper right, with
+     only a breath of grain. The watermark uses the violet made for ink. */
+  :global(.dark) .cta__field {
+    opacity: 1;
+    background-image:
+      radial-gradient(70% 90% at 12% 88%, rgb(124 58 237 / 0.26), transparent 62%),
+      radial-gradient(60% 80% at 88% 12%, rgb(167 139 250 / 0.1), transparent 68%);
+  }
+
+  :global(.dark) .cta__field::after {
+    opacity: 0.08;
+  }
+
+  :global(.dark) .cta__watermark {
+    background: linear-gradient(
+      180deg,
+      rgb(167 139 250 / 0.2) 0%,
+      rgb(167 139 250 / 0.07) 55%,
+      rgb(167 139 250 / 0) 92%
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+  }
+
   @media (max-width: 800px) {
     .cta__watermark {
       font-size: 64vw;
