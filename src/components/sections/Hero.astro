@@ -43,7 +43,7 @@ const posters = await Promise.all(
 );
 ---
 
-<section class="hero shell flex min-h-screen flex-col justify-end pt-24 pb-9 max-[700px]:pt-[84px]">
+<section class="hero shell flex min-h-screen flex-col justify-end pt-24 pb-9 max-[700px]:pt-[84px] min-[701px]:pb-6">
   {
     /* On a phone the content is shorter than the screen, and with the column
       bottom-aligned the slack would sit as a gap under the nav; the panel
@@ -107,7 +107,7 @@ const posters = await Promise.all(
     >
   </h1>
 
-  <div class="hero__foot mt-9 flex items-end justify-between gap-10">
+  <div class="hero__foot mt-9 flex items-end justify-between gap-10 min-[701px]:mt-6">
     <p class="text-foreground-secondary m-0 max-w-[440px] text-[17px] leading-[1.6]">
       I'm <span class="whitespace-nowrap">Hans Martens</span>, an Astro developer in Veghel, the
       Netherlands. I build fast, secure, accessible websites that get found on Google and by
@@ -162,6 +162,27 @@ const posters = await Promise.all(
        leaves a type-only hero. */
     display: var(--hero-panel-display, block);
     transform-origin: 50% 80%;
+  }
+
+  /* Desktop and tablet: the hero is one screen tall, so the headline, the
+     whole intro and the scroll cue are in view on arrival, 24px above the
+     bottom edge. The 3D panel takes all the height they leave, starting
+     just under the header on every screen (up to 75% of it, for very tall
+     windows): on a 1440x900 screen about 60%, on a short laptop a little
+     less (Hans's choice). Phones keep their own sizing. */
+  @media (min-width: 701px) {
+    .hero {
+      height: 100svh;
+      min-height: 600px;
+    }
+
+    /* The panel is HeroVisual's own element, outside this file's scope. */
+    .hero :global(.hero__render) {
+      flex: 1 1 auto;
+      height: auto;
+      max-height: 75vh;
+      min-height: 240px;
+    }
   }
 
   /* Pre-animation state. Motion writes its first keyframe inline, and inline
