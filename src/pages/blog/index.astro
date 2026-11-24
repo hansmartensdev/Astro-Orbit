@@ -13,6 +13,7 @@ import { getCollection } from 'astro:content';
 import { formatDate } from '@/lib/utils';
 import { coverPath } from '@/lib/og';
 import PostCover from '@/components/blog/PostCover.astro';
+import { Icon } from 'astro-icon/components';
 
 const posts = (
   await getCollection('blog', ({ data }) => (import.meta.env.PROD ? data.draft !== true : true))
@@ -33,6 +34,11 @@ const postUrl = (id: string) => '/blog/' + id.replace('en/', '');
       title="Blog"
       blurb="Notes on Astro, web performance and building fast websites: what I'm working on, and what I learn along the way."
     />
+    {/* Follow along without a newsletter: the RSS feed, for feed readers. */}
+    <a class="blog-rss" href="/rss.xml" data-reveal>
+      <Icon name="lucide:rss" aria-hidden="true" />
+      Follow via RSS
+    </a>
   </header>
 
   <!-- Pagefind search. Hidden until the index is confirmed present, so it
@@ -182,3 +188,27 @@ const postUrl = (id: string) => '/blog/' + id.replace('en/', '');
   initLabSearch();
   document.addEventListener('astro:after-swap', initLabSearch);
 </script>
+
+<style>
+  .blog-rss {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 28px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--hero-accent, #7c3aed);
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 4px;
+  }
+
+  .blog-rss:hover {
+    text-decoration-thickness: 2.5px;
+  }
+
+  .blog-rss :global(svg) {
+    width: 16px;
+    height: 16px;
+  }
+</style>
