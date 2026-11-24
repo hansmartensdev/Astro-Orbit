@@ -283,6 +283,10 @@ const posters = await Promise.all(
     gap: 8px;
     font-size: 13px;
     color: var(--color-foreground-muted);
+    /* Lifted on its own, without moving the intro beside it, so the whole
+       cue is in view on arrival on a 1280x720 laptop as well (Hans's
+       choice). A transform, so nothing else in the row shifts. */
+    transform: translateY(-60px);
   }
 
   .hero__scroll-line {
