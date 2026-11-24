@@ -105,6 +105,13 @@ const work = defineCollection({
        *  screen. Without it the hero uses `feature`, which is shaped for
        *  the card and gets cropped and enlarged there. */
       pageHero: image().optional(),
+      /** Optional: a short screen recording, shown first beside "Why I
+       *  built it". It plays muted and on a loop, loads only when the reader
+       *  is near it, and stays on its still (`poster`) under reduced motion.
+       *  Paths are under /public. */
+      video: z
+        .object({ src: z.string(), poster: z.string(), alt: z.string(), width: z.number(), height: z.number() })
+        .optional(),
       /** The device mockup. Revealed on hover when a `feature` is set. */
       cover: image().optional(),
       coverAlt: z.string().optional(),

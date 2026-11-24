@@ -7,6 +7,12 @@ url: "https://hansmartens.dev"
 feature: "../../assets/work/hansmartens-dev/mockup-hero.webp"
 featureMobile: "../../assets/work/hansmartens-dev/mockup-mobile.webp"
 pageHero: "../../assets/work/hansmartens-dev/page-hero.webp"
+video:
+  src: "/videos/hansmartens-dev-ball.mp4"
+  poster: "/videos/hansmartens-dev-ball-poster.webp"
+  alt: "Scrolling down the homepage: the violet ball leaves the 3D hero, drops through the headline, opens into the What drives me card, and lands as the project 1 card"
+  width: 1440
+  height: 900
 coverAlt: "hansmartens.dev on a MacBook and two iPhones: the homepage and a blog post"
 gallery:
   - src: "../../assets/work/hansmartens-dev/mockup.webp"
