@@ -99,9 +99,17 @@ const shots = feature && cover ? [{ src: cover, alt: coverAlt ?? title }, ...gal
    Captures are dealt between the bands so the page still has rhythm when the
    writing is missing. */
 const half = Math.ceil(shots.length / 2);
+// A picture can name its part (band: 1 or 2); then the others go to part 1.
+const placed = shots.some((shot) => 'band' in shot && shot.band);
+const inBand = (n: 1 | 2) =>
+  placed
+    ? shots.filter((shot) => (('band' in shot && shot.band) || 1) === n)
+    : n === 1
+      ? shots.slice(0, half)
+      : shots.slice(half);
 const bands = [
-  { key: 'problem', label: 'WHY I BUILT IT', prose: challenge, shots: shots.slice(0, half) },
-  { key: 'solution', label: 'WHAT I BUILT', prose: solution, shots: shots.slice(half) },
+  { key: 'problem', label: 'WHY I BUILT IT', prose: challenge, shots: inBand(1) },
+  { key: 'solution', label: 'WHAT I BUILT', prose: solution, shots: inBand(2) },
 ].filter((band) => band.prose || band.shots.length > 0);
 
 const hasBuild = technologies.length > 0 || features.length > 0;
@@ -798,6 +806,27 @@ const nextImage = next.data.feature ?? next.data.cover;
     /* One column means the heading has nothing to pin beside. */
     .band__aside {
       position: static;
+    }
+
+    /* In one column the order is the text, its pictures, and only then the
+       stack and the site link, which close the project. The aside opens up
+       (display: contents) so its parts can take their place around the
+       pictures; the spacing they had from the grid gap moves onto them. */
+    .band__aside:has(.band__extras) {
+      display: contents;
+    }
+
+    .band__inner:has(.band__extras) {
+      gap: 0;
+    }
+
+    .band__inner:has(.band__extras) .band__shots {
+      order: 1;
+      margin-top: 32px;
+    }
+
+    .band__extras {
+      order: 2;
     }
 
     .case__ledger-inner {
