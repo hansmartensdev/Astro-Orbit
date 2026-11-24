@@ -1,0 +1,42 @@
+---
+title: "Why I Build with Astro"
+description: "Why I moved from WordPress to Astro, and the five things about it I don't want to give up."
+publishedAt: 2026-11-24
+author: "Hans Martens"
+category: "Astro"
+tags: ["Astro", "WordPress", "Performance"]
+icon: "astro"
+cardWord: "astro"
+featured: true
+locale: en
+---
+
+I built my first website with [WordPress](https://wordpress.org/) in 2010 and kept using it for more than ten years. In 2022 I used [Astro](https://astro.build/) for a real project, and I haven't built a website with anything else since. In this post I explain why.
+
+## What Astro does
+
+Astro turns your pages into HTML when the site is built, and by default it sends no JavaScript to the browser. When a part of a page has to be interactive, such as a search box, you make that part an island. Astro then loads the JavaScript for that part only, and the rest of the page stays HTML.
+
+Many other frameworks work the other way round. They send a JavaScript runtime to the browser and load the whole page as an app when it arrives. As that code grows, the page takes longer to appear and to respond, and making it fast again means working against what the framework does by default.
+
+An Astro page has little to load, so it appears quickly, also on a phone with a weak connection.
+
+## Coming from WordPress
+
+WordPress served me well for more than ten years. Its community is large, and there's a plugin for almost anything. For a blog with a paywall, several authors and a Mailchimp integration, WordPress is still a reasonable choice.
+
+What I missed in WordPress was control over what the visitor's browser receives. To make a WordPress site fast, I installed caching plugins, dealt with scripts that held up the page, worked around the theme I'd started from and switched off features I didn't need. A plugin update could undo some of that work.
+
+An Astro site is fast from the start, and only what I add can make it slower. So I spend my time on the layout, the typography, the text and the details of a site, not on its speed.
+
+## Five things I don't want to give up
+
+1. **No JavaScript by default.** A page starts without JavaScript, and every script on it is one I added for a reason. There's no loading spinner and no moment when a button can't be clicked yet: the page is ready when it appears.
+2. **Any component framework.** The interactive parts of a page can be written in [React](https://react.dev/), [Vue](https://vuejs.org/), [Svelte](https://svelte.dev/), [Solid](https://solidjs.com/) or plain JavaScript, and you can mix them on one page. I mostly use React for the parts that need it and `.astro` files for everything else.
+3. **Files and folders as the structure.** Each file in the pages folder becomes a page, without a router to configure. Blog posts are MDX files in a content collection, and their frontmatter is checked against a [Zod](https://zod.dev/) schema, which also gives you the types.
+4. **Components in blog posts.** With MDX I can put an Astro component in the middle of a post. In WordPress the same takes plugins or a custom shortcode.
+5. **No platform attached.** Astro doesn't come with a hosted dashboard, doesn't tie you to a vendor and doesn't add an analytics product. It builds the site into a folder of static files, which you can put on [Vercel](https://vercel.com/), [Netlify](https://netlify.com/), [Cloudflare](https://www.cloudflare.com/developer-platform/products/pages/) or a Raspberry Pi at home.
+
+## Try it yourself
+
+If you're thinking of moving away from the tools you use now, read the [Astro docs](https://docs.astro.build/) and build a small site with Astro over a weekend.
