@@ -40,13 +40,29 @@ export async function getStaticPaths() {
       const parent = project.data.parent
         ? ordered.find((candidate) => candidate.id === project.data.parent)
         : undefined;
-      const next = parent ?? ring[(ring.indexOf(project) + 1) % ring.length];
+      // The next project with a picture of its own: a placeholder makes a
+      // poor last thing to show. With no other real project, no band.
+      const hasPicture = (candidate: (typeof ring)[number]) =>
+        Boolean(candidate.data.pageHero ?? candidate.data.feature ?? candidate.data.cover);
+      const from = ring.indexOf(project);
+      const after = [...ring.slice(from + 1), ...ring.slice(0, Math.max(from, 0))];
+      const next =
+        parent ?? after.find((candidate) => candidate !== project && hasPicture(candidate));
       return { params: { slug: project.id }, props: { project, next } };
     })
     .filter(({ props }) => !props.project.data.story);
 }
 
 const { project, next } = Astro.props;
+
+// Band text is plain text, escaped, with [text](url) turned into a link.
+const escapeHtml = (t: string) =>
+  t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const withLinks = (t: string) =>
+  escapeHtml(t).replace(
+    /\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g,
+    '<a class="band__link" href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
+  );
 const { Content } = await render(project);
 
 const {
@@ -125,7 +141,7 @@ const hasBuild = technologies.length > 0 || features.length > 0;
 const extrasInBand = bands.length > 0;
 // The written case study under the bands, only when the project has one.
 const hasBody = Boolean(project.body?.trim());
-const nextImage = next.data.feature ?? next.data.cover;
+const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
 ---
 
 <SiteLayout
@@ -222,11 +238,11 @@ const nextImage = next.data.feature ?? next.data.cover;
               </span>
               {/* A blank line in the text starts a new paragraph. */}
               {band.prose &&
-                band.prose.split(/\n\s*\n/).map((para) => (
-                  <p class="band__prose" data-reveal>
-                    {para.trim()}
-                  </p>
-                ))}
+                band.prose
+                  .split(/\n\s*\n/)
+                  .map((para) => (
+                    <p class="band__prose" data-reveal set:html={withLinks(para.trim())} />
+                  ))}
               {extrasInBand && i === bands.length - 1 && (
                 <div class="band__extras" data-reveal>
                   {technologies.length > 0 && (
@@ -358,40 +374,42 @@ const nextImage = next.data.feature ?? next.data.cover;
     }
 
     {/* --- next project: the text and a preview of it, on the page ground */}
-    <a class="nextup" href={'/projects/' + next.id} data-card>
-      <div class="nextup__inner shell">
-        <div class="nextup__text" data-reveal>
-          <span class="label-mono nextup__label">NEXT PROJECT</span>
-          <span class="nextup__title" style={`--len: ${next.data.title.length}`}
-            >{next.data.title}</span
-          >
-          <span class="nextup__line">{next.data.description}</span>
-          <span class="nextup__go">
-            View project
-            <Icon name="lucide:arrow-right" aria-hidden="true" />
-          </span>
-        </div>
-        <div class="nextup__preview" data-reveal data-reveal-delay="0.1">
-          {
-            nextImage ? (
-              <Image
-                src={nextImage}
-                alt=""
-                layout="none"
-                widths={[640, 960, 1280, 1600]}
-                quality={90}
-                sizes="(max-width: 900px) 100vw, 50vw"
-                class="nextup__img"
-              />
-            ) : (
-              <span class="nextup__blank label-mono" aria-hidden="true">
+    {
+      next && (
+        <a class="nextup" href={'/projects/' + next.id} data-card>
+          <div class="nextup__inner shell">
+            <div class="nextup__text" data-reveal>
+              <span class="label-mono nextup__label">NEXT PROJECT</span>
+              <span class="nextup__title" style={`--len: ${next.data.title.length}`}>
                 {next.data.title}
               </span>
-            )
-          }
-        </div>
-      </div>
-    </a>
+              <span class="nextup__line">{next.data.description}</span>
+              <span class="nextup__go">
+                View project
+                <Icon name="lucide:arrow-right" aria-hidden="true" />
+              </span>
+            </div>
+            <div class="nextup__preview" data-reveal data-reveal-delay="0.1">
+              {nextImage ? (
+                <Image
+                  src={nextImage}
+                  alt=""
+                  layout="none"
+                  widths={[640, 960, 1280, 1600]}
+                  quality={90}
+                  sizes="(max-width: 900px) 100vw, 50vw"
+                  class="nextup__img"
+                />
+              ) : (
+                <span class="nextup__blank label-mono" aria-hidden="true">
+                  {next.data.title}
+                </span>
+              )}
+            </div>
+          </div>
+        </a>
+      )
+    }
   </article>
 
   <Cta />
@@ -604,6 +622,18 @@ const nextImage = next.data.feature ?? next.data.cover;
     .band__shot--phone {
       display: block;
     }
+  }
+
+  /* A link in the band text: the text's own colour, underlined. */
+  .band__prose :global(.band__link) {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 4px;
+  }
+
+  .band__prose :global(.band__link:hover) {
+    text-decoration-thickness: 2.5px;
   }
 
   .band__video {
