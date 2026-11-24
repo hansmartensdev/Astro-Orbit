@@ -444,8 +444,7 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
      dark page lighter than the sheet. The wave reads the fill's colour
      each time the menu opens (scripts/menu-edge.ts). */
   :global(.dark) .sw-menu:not(.invert-section) {
-    /* A neutral grey at ink-800's lightness: no violet lean (Hans's choice). */
-    --menu-sheet: #242424;
+    --menu-sheet: var(--ink-800);
   }
 
   /* The words come up once, together, just behind the sheet. */
@@ -637,10 +636,10 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     background: rgb(12 16 22 / 0.5);
   }
 
-  /* Dark mode: the same grey, deeper, so the sheet still reads lighter
-     than the page under it. */
+  /* Dark mode: a deeper veil, so the sheet still reads lighter than the
+     page under it, in the neutral ink so it adds no blue to the page. */
   :global(.dark) .sw-menu__scrim {
-    background: rgb(12 16 22 / 0.72);
+    background: rgb(14 14 14 / 0.72);
   }
 
   .sw-menu__scrim[data-state='open'] {

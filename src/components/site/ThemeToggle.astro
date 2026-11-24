@@ -248,7 +248,7 @@ const modes = [
     root.setAttribute('data-theme-mode', mode);
     const dark = mode === 'dark' || (mode === 'system' && osDark());
     root.classList.toggle('dark', dark);
-    document.getElementById('theme-color')?.setAttribute('content', dark ? '#0e0d15' : '#eef2f4');
+    document.getElementById('theme-color')?.setAttribute('content', dark ? '#0e0e0e' : '#eef2f4');
   };
 
   const sync = () => {
