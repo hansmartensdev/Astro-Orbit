@@ -5,6 +5,15 @@ import react from '@astrojs/react';
 import icon from 'astro-icon';
 import tailwindcss from '@tailwindcss/vite';
 import vercel from '@astrojs/vercel';
+import { readdirSync, readFileSync } from 'node:fs';
+
+// Projects still on a placeholder (no picture of their own yet) stay out of
+// the sitemap, and their pages carry noindex ([...slug].astro), so search
+// engines and AI assistants index only real projects.
+const placeholderProjects = readdirSync('./src/content/work')
+  .filter((file) => file.endsWith('.md') || file.endsWith('.mdx'))
+  .filter((file) => !/^(pageHero|feature|cover):/m.test(readFileSync(`./src/content/work/${file}`, 'utf8')))
+  .map((file) => `/projects/${file.replace(/\.mdx?$/, '')}/`);
 
 export default defineConfig({
   site: process.env.SITE_URL || 'https://hansmartens.dev',
@@ -107,7 +116,7 @@ export default defineConfig({
   integrations: [
     react(),
     mdx(),
-    sitemap(),
+    sitemap({ filter: (page) => !placeholderProjects.some((path) => page.endsWith(path)) }),
     // Iconify sets, inlined as SVG at build time - only the icons actually
     // referenced end up in the output, and none of it ships JavaScript.
     // Lucide for UI glyphs; Font Awesome brands for real logos (LinkedIn,

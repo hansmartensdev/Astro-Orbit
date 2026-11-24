@@ -5,8 +5,8 @@ import JsonLd from '@/components/seo/JsonLd.astro';
 import Analytics from '@/components/layout/Analytics.astro';
 import ConsentBanner from '@/components/ui/overlay/ConsentBanner';
 import { ClientRouter } from 'astro:transitions';
-import { createWebsiteSchema, createOrganizationSchema } from '@/lib/schema';
-import type { WebSite, Organization, WithContext } from 'schema-dts';
+import { createWebsiteSchema, createPersonSchema } from '@/lib/schema';
+import type { WebSite, Person, WithContext } from 'schema-dts';
 import siteConfig from '@/config/site.config';
 // The two faces every page paints first. Preloaded so the display headline
 // does not swap in after first paint and reflow at 168px.
@@ -40,10 +40,11 @@ const {
 } = Astro.props;
 
 // Build JSON-LD schemas
-const schemas: Array<WithContext<WebSite> | WithContext<Organization>> = [createWebsiteSchema()];
-if (includeOrgSchema) {
-  schemas.push(createOrganizationSchema());
-}
+// The site and the person it is by, on every page: the WebSite names the
+// Person as its author by @id, so the Person has to be there to resolve.
+// (includeOrgSchema is kept so existing pages still compile.)
+const schemas: Array<WithContext<WebSite> | WithContext<Person>> = [createWebsiteSchema(), createPersonSchema()];
+void includeOrgSchema;
 ---
 
 <!doctype html>

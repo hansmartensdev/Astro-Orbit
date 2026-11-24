@@ -125,6 +125,7 @@ const nextImage = next.data.feature ?? next.data.cover;
 <SiteLayout
   title={title}
   description={description}
+  noindex={!hero}
   image={hero?.src}
   imageAlt={coverAlt ?? title}
   navContext={client ?? title}
