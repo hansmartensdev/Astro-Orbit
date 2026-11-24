@@ -191,11 +191,9 @@
   /* For use over a dark hero image or on ink. */
   --nav-context-on-media: var(--hero-accent-on-ink);
 
-  /* The service cards: flat brand violet, no glow or grain (Hans's
-     choice), lightest first and one step darker per card as the stack
-     builds. The first is the brand violet itself; white text reads at
-     5.7:1 or more on all four. */
-  --service-white-bg: #7c3aed;
+  /* The service cards: one flat deep violet for all four, no glow or
+     grain (Hans's choice). White text reads at 11:1. */
+  --service-white-bg: #4c1d95;
   --service-white-fg: #ffffff;
   --service-white-chip: rgb(255 255 255 / 0.35);
   --service-white-glow-a: transparent;
@@ -204,7 +202,7 @@
   --service-white-light-b: 50% 100%;
   --service-white-grain: 0;
 
-  --service-mid-bg: #6d28d9;
+  --service-mid-bg: #4c1d95;
   --service-mid-fg: #ffffff;
   --service-mid-chip: rgb(255 255 255 / 0.35);
   --service-mid-glow-a: transparent;
@@ -213,7 +211,7 @@
   --service-mid-light-b: 50% 100%;
   --service-mid-grain: 0;
 
-  --service-ink-bg: #5b21b6;
+  --service-ink-bg: #4c1d95;
   --service-ink-fg: #ffffff;
   --service-ink-chip: rgb(255 255 255 / 0.35);
   --service-ink-glow-a: transparent;
@@ -339,10 +337,9 @@
      reel's 3D frame and the plain card read this. */
   --reel-card-bg: var(--ink-900);
 
-  /* The service cards in dark: the same flat ramp one step deeper, so
-     the first card doesn't glare on the near-black page and the last
-     still stands off it. White text reads at 7:1 or more. */
-  --service-white-bg: #6d28d9;
+  /* The service cards in dark: all four one step deeper than in light,
+     the same flat violet. White text reads at 13:1. */
+  --service-white-bg: #3b0f86;
   --service-white-fg: #ffffff;
   --service-white-chip: rgb(255 255 255 / 0.35);
   --service-white-glow-a: transparent;
@@ -351,7 +348,7 @@
   --service-white-light-b: 50% 100%;
   --service-white-grain: 0;
 
-  --service-mid-bg: #5b21b6;
+  --service-mid-bg: #3b0f86;
   --service-mid-fg: #ffffff;
   --service-mid-chip: rgb(255 255 255 / 0.35);
   --service-mid-glow-a: transparent;
@@ -360,7 +357,7 @@
   --service-mid-light-b: 50% 100%;
   --service-mid-grain: 0;
 
-  --service-ink-bg: #4c1d95;
+  --service-ink-bg: #3b0f86;
   --service-ink-fg: #ffffff;
   --service-ink-chip: rgb(255 255 255 / 0.35);
   --service-ink-glow-a: transparent;
