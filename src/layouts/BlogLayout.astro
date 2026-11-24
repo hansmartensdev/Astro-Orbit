@@ -93,10 +93,13 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
       <div class:list={[hasToc && 'xl:grid xl:grid-cols-[minmax(0,1fr)_16rem] xl:gap-14']}>
       <div class="min-w-0 xl:max-w-4xl">
       <!-- Breadcrumbs -->
-      <div class="mb-8" data-reveal><Breadcrumbs items={breadcrumbs} /></div>
+      {/* The breadcrumbs and the contents arrive with the post on load, not
+          on scroll: on a tall phone they fall below the first wave's line,
+          and the space under the header card stood empty until a scroll. */}
+      <div class="mb-8" data-reveal data-reveal-load><Breadcrumbs items={breadcrumbs} /></div>
 
       {hasToc && (
-        <div class="mb-10 xl:hidden" data-reveal>
+        <div class="mb-10 xl:hidden" data-reveal data-reveal-load>
           <TableOfContents headings={headings} collapsible />
         </div>
       )}
