@@ -85,9 +85,29 @@ const desks: Desk[] = [
         </span>
       </h2>
 
-      {/* Hans's own text goes here, in a <div class="founder__prose"> with a
-          <p> per paragraph; until then the card shows the heading, the links
-          and the figures. */}
+      {/* Who Hans is, from the facts in his introduction post, in other
+          words than the post. */}
+      <div class="founder__prose">
+        <p>
+          In 1992 I bought a new computer, and both the operating system and the hardware have
+          interested me ever since. In 1998 I built my first computer from parts, and in 2000 I
+          became a computer service engineer, repairing the laptops that students of the
+          Eindhoven University of Technology bought through the university.
+        </p>
+        <p>
+          My first website, in 2010, was one I built for myself with WordPress. I've built websites
+          ever since, and in 2022 I moved to Astro. Today I work with Astro every day, on websites
+          and on free, MIT-licensed Astro themes for the community, and I build with Claude Code,
+          running on Opus 5.5.
+        </p>
+        <p>
+          Away from work you'll find me at the gym, enjoying good food and a proper espresso, or
+          outside with my two dogs.
+        </p>
+        <p>
+          There's more about me in my <a href="/blog/introducing-myself/">introduction post</a>.
+        </p>
+      </div>
 
       <ul class="founder__desks">
         {
@@ -231,6 +251,17 @@ const desks: Desk[] = [
 
   .founder__prose p + p {
     margin-top: 1.4em;
+  }
+
+  .founder__prose a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  .founder__prose a:hover {
+    text-decoration-thickness: 2px;
   }
 
   /* ---- linkedin ------------------------------------------------------- */
