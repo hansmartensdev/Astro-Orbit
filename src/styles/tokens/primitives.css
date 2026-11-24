@@ -69,13 +69,13 @@
 
 :root {
   /* Ink — the near-black the whole identity hangs off */
-  /* The darkest inks carry a touch of violet. The first set leaned blue-green
-     (ink-950 was #0c1016: 12, 16, 22), which beside the violet glows, cards
-     and ball read as a teal cast, most on an iPhone; in light mode as black
-     text the difference doesn't show. */
-  --ink-950: #0e0d15;
-  --ink-900: #17151f;
-  --ink-800: #23202d;
+  /* The darkest inks are neutral greys (Hans's choice). They first leaned
+     blue-green (ink-950 was #0c1016), which read as a teal cast beside the
+     violet; then violet (#0e0d15). Each grey keeps the brightness of the
+     violet ink it replaced. */
+  --ink-950: #0e0e0e;
+  --ink-900: #161616;
+  --ink-800: #222222;
   --ink-700: #3c434d; /* body copy on ice */
   --ink-600: #5b6470; /* muted copy on ice */
   --ink-500: #6a737f; /* muted copy on ink (footer) */

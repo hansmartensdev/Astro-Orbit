@@ -9,8 +9,8 @@
  * "hm" — h-ans m-artens — so the missing letters grow out from between the two
  * visible ones rather than a second label fading in beside them.
  *
- * The menu control is the word "Menu" in brand violet ("Close" while the
- * menu is open), beside Hans's own theme toggle (ThemeToggle.astro).
+ * The menu control is the word "Menu" in the bar's text colour ("Close"
+ * while the menu is open), beside Hans's own theme toggle (ThemeToggle.astro).
  */
 import { Icon } from 'astro-icon/components';
 import { getNavItems } from '@/config/nav.config';
@@ -86,7 +86,7 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
         aria-expanded="false"
         aria-controls="sw-menu"
       >
-        {/* The word, in brand violet, in place of the two rules: "Menu",
+        {/* The word, in the bar's text colour, in place of the two rules: "Menu",
             and "Close" while the menu is open. Screen readers get the
             label below instead. */}
         <span class="burger__word" aria-hidden="true">
@@ -331,11 +331,11 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     gap: 18px;
   }
 
-  /* The word in brand violet; a lighter violet wherever the bar sits on
-     ink (over a dark hero, a dark page, the ink sheet, dark mode), where
-     the brand violet would be too dim to read. */
+  /* The word in the bar's own text colour, as the template's control was:
+     black in light mode, white in dark and wherever the bar sits on ink
+     (it inherits the ice palette there). */
   .burger {
-    --menu-word: var(--hero-accent, #7c3aed);
+    --menu-word: currentColor;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -345,19 +345,12 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     border: 0;
     border-radius: var(--radius-full);
     background: transparent;
-    color: var(--menu-word);
+    color: inherit;
     font-size: 17px;
     font-weight: 600;
     letter-spacing: -0.01em;
     cursor: pointer;
     transition: background 0.3s ease;
-  }
-
-  .sw-nav[data-over-media]:not(.is-scrolled) .burger,
-  .sw-nav[data-tone='dark'] .burger,
-  .sw-nav[data-menu-open='true']:not([data-menu-tone='light']) .burger,
-  :global(html.dark) .burger {
-    --menu-word: var(--hero-accent-on-ink, #a78bfa);
   }
 
   .burger:hover {
@@ -435,7 +428,7 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
 
   /* In dark mode, the same order as in light: the sheet lighter than the
      veil under it (Hans's choice). The sheet lifts two steps off the ink
-     page and the veil goes deep violet, where it used to wash the
+     page and the veil goes deep grey, where it used to wash the
      dark page lighter than the sheet. The wave reads the fill's colour
      each time the menu opens (scripts/menu-edge.ts). */
   :global(.dark) .sw-menu:not(.invert-section) {
@@ -616,8 +609,8 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     z-index: 54;
     padding: 0;
     border: 0;
-    /* A deep brand violet veil over the page under the menu. */
-    background: rgb(42 20 88 / 0.4);
+    /* The template's own grey veil over the page under the menu. */
+    background: rgb(12 16 22 / 0.34);
     opacity: 0;
     visibility: hidden;
     cursor: pointer;
@@ -628,11 +621,13 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
 
   /* A light sheet needs a darker page under it to stand off from. */
   .sw-menu__scrim[data-tone='light'] {
-    background: rgb(42 20 88 / 0.55);
+    background: rgb(12 16 22 / 0.5);
   }
 
+  /* Dark mode: a deeper veil, so the sheet still reads lighter than the
+     page under it, in the neutral ink so it adds no blue to the page. */
   :global(.dark) .sw-menu__scrim {
-    background: rgb(30 12 70 / 0.72);
+    background: rgb(14 14 14 / 0.72);
   }
 
   .sw-menu__scrim[data-state='open'] {

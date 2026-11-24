@@ -31,16 +31,21 @@ export const GET: APIRoute = async () => {
     '',
     '## Pages',
     '',
-    `- [Home](${base}/): the homepage, with the 3D hero, projects, craft and blog`,
+    `- [Home](${base}/): the homepage, with the 3D hero, projects, services and blog`,
     `- [About](${base}/about/): about ${siteConfig.name}`,
     `- [Projects](${base}/projects/): the projects`,
     `- [Blog](${base}/blog/): posts about Astro, building themes and what makes websites fast`,
     `- [Contact](${base}/contact/): contact form, email and WhatsApp`,
     '',
-    '## Projects',
-    '',
-    ...projects.map(({ id, data }) => `- [${data.title}](${base}/projects/${id}/): ${data.description}`),
-    '',
+    // Left out while every project is still a placeholder.
+    ...(projects.length
+      ? [
+          '## Projects',
+          '',
+          ...projects.map(({ id, data }) => `- [${data.title}](${base}/projects/${id}/): ${data.description}`),
+          '',
+        ]
+      : []),
     '## Blog',
     '',
     ...posts.map(({ id, data }) => `- [${data.title}](${base}/blog/${id.replace(/^en\//, '')}/): ${data.description}`),

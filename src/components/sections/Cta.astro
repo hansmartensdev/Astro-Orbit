@@ -58,9 +58,15 @@ import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
     isolation: isolate;
   }
 
-  /* Same construction as a service card ground: flat colour, two blooms,
-     grain. Reads from the white colourway tokens so it re-maps in dark mode. */
+  /* Two soft violet blooms and grain over the page. These were the first
+     service card's values; the cards are flat now, so the sign-off keeps
+     its own copy. Dark mode leaves the field out (below). */
   .cta__field {
+    --service-white-glow-a: rgb(124 58 237 / 0.16);
+    --service-white-glow-b: rgb(167 139 250 / 0.14);
+    --service-white-light: 12% 6%;
+    --service-white-light-b: 88% 96%;
+    --service-white-grain: 0.5;
     position: absolute;
     inset: 0;
     z-index: -1;
@@ -107,17 +113,10 @@ import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
     top: 46%;
     font-size: clamp(240px, 36vw, 560px);
     line-height: 1;
-    /* Brand violet, fading out towards the footer, so the mark reads as the
-       footer's violet glow shining up through the page. */
-    color: transparent;
-    background: linear-gradient(
-      180deg,
-      rgb(124 58 237 / 0.3) 0%,
-      rgb(124 58 237 / 0.1) 55%,
-      rgb(124 58 237 / 0) 92%
-    );
-    background-clip: text;
-    -webkit-background-clip: text;
+    /* The template's own watermark: the text colour at 6%, so it is
+       neutral in both modes (Hans's choice; it was a violet gradient). */
+    color: var(--color-foreground);
+    opacity: 0.06;
     transform: translate(-50%, -50%);
     white-space: nowrap;
     pointer-events: none;
@@ -125,32 +124,16 @@ import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
   }
 
   /* Dark mode. The service-card tokens the field borrows go blue-grey on
-     ink, and their heavy grain turns into grey static there, so the field
-     read as a grey, noisy patch between the violet cards and the violet
-     footer. On ink it takes the footer's own glow instead: brand violet
-     from the lower left, the lighter violet from the upper right, with
-     only a breath of grain. The watermark uses the violet made for ink. */
+     ink, and their heavy grain turns into grey static there. On ink the
+     field is left out: the sign-off sits on the plain neutral page (Hans's
+     choice; it had a violet glow at the lower left). */
   :global(.dark) .cta__field {
-    opacity: 1;
-    background-image: radial-gradient(70% 90% at 12% 88%, rgb(124 58 237 / 0.24), transparent 62%);
+    background-image: none;
   }
 
   /* No grain on ink: even faint, it showed as grey-green speckle. */
   :global(.dark) .cta__field::after {
     display: none;
-  }
-
-  /* Quieter than in light: at 20% the slash on the right read as a strong
-     violet shape. */
-  :global(.dark) .cta__watermark {
-    background: linear-gradient(
-      180deg,
-      rgb(124 58 237 / 0.16) 0%,
-      rgb(124 58 237 / 0.06) 55%,
-      rgb(124 58 237 / 0) 92%
-    );
-    background-clip: text;
-    -webkit-background-clip: text;
   }
 
   /* On a phone the sign-off takes the page-title size (as on /contact,
@@ -166,6 +149,7 @@ import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
   @media (max-width: 800px) {
     .cta__watermark {
       font-size: 64vw;
+      opacity: 0.07;
     }
   }
 </style>

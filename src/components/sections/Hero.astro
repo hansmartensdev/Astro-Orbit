@@ -109,11 +109,6 @@ const posters = await Promise.all(
 
   <div class="hero__foot mt-9 flex items-end justify-between gap-10">
     <p class="text-foreground-secondary m-0 max-w-[440px] text-[17px] leading-[1.6]">
-      {
-        /* The hook on a line of its own, so the next line always opens with
-          the name — and the name itself never breaks between its words. */
-      }
-      <strong class="text-foreground mb-1 block font-medium">Built to load before you can blink.</strong>
       I'm <span class="whitespace-nowrap">Hans Martens</span>, an Astro developer in Veghel, the
       Netherlands. I build fast, secure, accessible websites that get found on Google and by
       AI assistants.
@@ -167,25 +162,6 @@ const posters = await Promise.all(
        leaves a type-only hero. */
     display: var(--hero-panel-display, block);
     transform-origin: 50% 80%;
-  }
-
-  /* Desktop and tablet: the hero is exactly one screen tall, so the intro
-     and the scroll cue are always in view on arrival. The panel takes
-     whatever height the headline and the foot leave (never under 240px);
-     on a 1440x900 screen that is about what the old 58vh gave, on a short
-     laptop a little less. Phones keep their own sizing (the panel already
-     grows into the slack there). */
-  @media (min-width: 701px) {
-    .hero {
-      height: 100svh;
-      min-height: 600px;
-    }
-
-    .hero__render {
-      flex: 1 1 auto;
-      height: auto;
-      min-height: 240px;
-    }
   }
 
   /* Pre-animation state. Motion writes its first keyframe inline, and inline

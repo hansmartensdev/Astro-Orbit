@@ -95,13 +95,11 @@ const arrow =
     --afb-ease: cubic-bezier(0.785, 0.135, 0.15, 0.86);
     --afb-duration: 0.45s;
 
-    /* Colourway, brand violet and white only. Solid: a violet pill with a
-       white disc that fills it white, violet label. White on this violet
-       is 5.7:1. */
-    --afb-bg: var(--hero-accent, #7c3aed);
-    --afb-text: #fff;
-    --afb-fill-bg: #fff;
-    --afb-fill-text: var(--hero-accent, #7c3aed);
+    /* Colourway. Solid: ink pill, paper disc. */
+    --afb-bg: var(--color-foreground);
+    --afb-text: var(--color-background);
+    --afb-fill-bg: var(--color-background);
+    --afb-fill-text: var(--color-foreground);
     --afb-border: transparent;
     /* The outline ring is an inset shadow, not a border: it paints inside the
        padding box beneath the fill, so both variants share one geometry and
@@ -133,33 +131,13 @@ const arrow =
     transition: none;
   }
 
-  /* Outline: a violet ring and label; the violet disc fills it violet. */
+  /* Outline: ink ring on paper; the disc is ink and fills the pill with ink. */
   .afb--outline {
     --afb-bg: transparent;
-    --afb-text: var(--hero-accent, #7c3aed);
-    --afb-fill-bg: var(--hero-accent, #7c3aed);
-    --afb-fill-text: #fff;
-    --afb-border: var(--hero-accent, #7c3aed);
-  }
-
-  /* Solid on ink, Hans's choice: the light colourway mirrored. A white
-     pill with a violet label and a violet disc (white glyph); the disc
-     fills it violet on hover, so it ends as the violet pill it is in
-     light. Beside the white-ringed outline button the two read as a pair
-     and still differ. */
-  :global(.dark) .afb:not(.afb--outline) {
-    --afb-bg: #fff;
-    --afb-text: var(--hero-accent, #7c3aed);
-    --afb-fill-bg: var(--hero-accent, #7c3aed);
-    --afb-fill-text: #fff;
-  }
-
-  /* On ink, brand violet is too dark to read as a ring and label: the ring
-     and label go white (Hans's choice). The disc and its fill stay brand
-     violet, with white on it. */
-  :global(.dark) .afb--outline {
-    --afb-text: #fff;
-    --afb-border: #fff;
+    --afb-text: var(--color-foreground);
+    --afb-fill-bg: var(--color-foreground);
+    --afb-fill-text: var(--color-background);
+    --afb-border: var(--color-foreground);
   }
 
   /* Base Button paints a hover tint, a border on the outline variant and a
@@ -173,7 +151,7 @@ const arrow =
   }
 
   .afb:focus-visible {
-    outline: 2px solid var(--hero-accent, #7c3aed);
+    outline: 2px solid var(--color-ring);
     outline-offset: 4px;
     box-shadow: var(--afb-ring);
   }
