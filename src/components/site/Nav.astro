@@ -214,6 +214,18 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     color: var(--ice-100);
   }
 
+  /* The theme toggle's button goes white with the rest of the bar there.
+     Only the button: its panel keeps the page's own colours. */
+  .sw-nav[data-over-media]:not(.is-scrolled) :global(.ttg__trigger) {
+    border-color: rgb(238 242 244 / 0.4);
+    color: var(--ice-100);
+  }
+
+  .sw-nav[data-over-media]:not(.is-scrolled) :global(.ttg__trigger:hover),
+  .sw-nav[data-over-media]:not(.is-scrolled) :global(.ttg__trigger[aria-expanded='true']) {
+    background: rgb(238 242 244 / 0.14);
+  }
+
   .sw-nav[data-over-media]:not(.is-scrolled) .mark__context {
     color: var(--nav-context-on-media);
   }
@@ -428,7 +440,7 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
 
   /* In dark mode, the same order as in light: the sheet lighter than the
      veil under it (Hans's choice). The sheet lifts two steps off the ink
-     page and the veil goes deep violet, where it used to wash the
+     page and the veil goes deep grey, where it used to wash the
      dark page lighter than the sheet. The wave reads the fill's colour
      each time the menu opens (scripts/menu-edge.ts). */
   :global(.dark) .sw-menu:not(.invert-section) {
@@ -609,8 +621,8 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     z-index: 54;
     padding: 0;
     border: 0;
-    /* A deep brand violet veil over the page under the menu. */
-    background: rgb(42 20 88 / 0.4);
+    /* The template's own grey veil over the page under the menu. */
+    background: rgb(12 16 22 / 0.34);
     opacity: 0;
     visibility: hidden;
     cursor: pointer;
@@ -621,11 +633,13 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
 
   /* A light sheet needs a darker page under it to stand off from. */
   .sw-menu__scrim[data-tone='light'] {
-    background: rgb(42 20 88 / 0.55);
+    background: rgb(12 16 22 / 0.5);
   }
 
+  /* Dark mode: the same grey, deeper, so the sheet still reads lighter
+     than the page under it. */
   :global(.dark) .sw-menu__scrim {
-    background: rgb(30 12 70 / 0.72);
+    background: rgb(12 16 22 / 0.72);
   }
 
   .sw-menu__scrim[data-state='open'] {
