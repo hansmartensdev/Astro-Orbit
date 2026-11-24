@@ -227,46 +227,54 @@
    Dark Mode — ink ground, ice type.
    ------------------------------------------------------------------------- */
 .dark {
+  /* Text in dark mode: neutral greys, like the dark backgrounds (Hans's
+     choice). The first three keep the brightness of the cool ice greys they
+     replace; the faintest is lifted to 4.5:1 on the footer as well. */
+  --text-dark-1: #f1f1f1;
+  --text-dark-2: #d1d1d1;
+  --text-dark-3: #bababa;
+  --text-dark-4: #7f7f7f;
+
   --background: var(--ink-950);
   --background-secondary: var(--ink-900);
   --background-tertiary: var(--ink-800);
   --background-elevated: var(--ink-900);
 
-  --foreground: var(--ice-100); /* 16.9:1 on ink — WCAG AAA */
-  --foreground-secondary: var(--ice-400); /* 11.1:1 on ink — WCAG AAA */
-  --foreground-muted: var(--ice-500); /*  8.3:1 on ink — WCAG AAA */
-  --foreground-subtle: var(--ink-500); /*  4.9:1 on ink — WCAG AA  */
+  --foreground: var(--text-dark-1); /* 17.1:1 on ink — WCAG AAA */
+  --foreground-secondary: var(--text-dark-2); /* 12.6:1 on ink — WCAG AAA */
+  --foreground-muted: var(--text-dark-3); /*  9.9:1 on ink — WCAG AAA */
+  --foreground-subtle: var(--text-dark-4); /*  4.8:1 on ink, 4.5:1 on the footer — WCAG AA */
 
   --border: rgb(238 242 244 / 0.14);
   --border-strong: rgb(238 242 244 / 0.3);
   --border-subtle: rgb(238 242 244 / 0.08);
 
-  --primary: var(--ice-100);
+  --primary: var(--text-dark-1);
   --primary-hover: #ffffff;
   --primary-foreground: var(--ink-950);
 
   --secondary: var(--ink-800);
   --secondary-hover: var(--ink-700);
-  --secondary-foreground: var(--ice-100);
+  --secondary-foreground: var(--text-dark-1);
 
-  --accent: var(--ice-100);
+  --accent: var(--text-dark-1);
   --accent-hover: #ffffff;
   --accent-light: var(--ink-800);
 
   --muted: var(--ink-800);
-  --muted-foreground: var(--ice-500);
+  --muted-foreground: var(--text-dark-3);
 
   --card: var(--ink-900);
   --card-border: rgb(238 242 244 / 0.12);
 
   --input-bg: var(--ink-900);
   --input-border: rgb(238 242 244 / 0.24);
-  --input-focus: var(--ice-100);
+  --input-focus: var(--text-dark-1);
 
-  --ring: var(--ice-100);
+  --ring: var(--text-dark-1);
 
   --destructive: oklch(65% 0.22 25);
-  --destructive-foreground: var(--ice-100);
+  --destructive-foreground: var(--text-dark-1);
 
   --gradient-start: var(--ink-900);
   --gradient-end: var(--ink-950);
@@ -279,9 +287,9 @@
   --surface-invert: var(--ink-900);
   --surface-invert-secondary: var(--ink-800);
   --surface-invert-tertiary: var(--ink-700);
-  --on-invert: var(--ice-100);
-  --on-invert-secondary: var(--ice-400);
-  --on-invert-muted: var(--ink-500);
+  --on-invert: var(--text-dark-1);
+  --on-invert-secondary: var(--text-dark-2);
+  --on-invert-muted: var(--text-dark-4);
   --border-invert: rgb(238 242 244 / 0.14);
   --border-invert-strong: rgb(238 242 244 / 0.3);
 

@@ -1,7 +1,8 @@
-# hansmartens.dev
+# Astro Droplet
 
-The personal website of Hans Martens, an Astro developer in Veghel, the
-Netherlands: about, projects, blog and contact.
+An Astro theme by Hans Martens, with a 3D droplet in the hero that falls
+down the page as you scroll, in dark and light mode: about, projects, blog
+and contact.
 
 ## Credits
 
