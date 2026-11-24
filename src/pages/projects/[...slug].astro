@@ -18,7 +18,6 @@ import SiteLayout from '@/layouts/SiteLayout.astro';
 import Placeholder from '@/components/site/Placeholder.astro';
 import PillButton from '@/components/site/PillButton.astro';
 import Cta from '@/components/sections/Cta.astro';
-import Services from '@/components/sections/Services.astro';
 
 export async function getStaticPaths() {
   const projects = await getCollection('work', ({ data }) =>
@@ -294,11 +293,6 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
               )}
               {band.shots.map((shot, j) => (
                 <>
-                  {'live' in shot && shot.live === 'craft' && (
-                    <div class="band__live">
-                      <Services bare />
-                    </div>
-                  )}
                   <Image
                     src={shot.src}
                     alt={shot.alt ?? title}
@@ -309,7 +303,6 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
                     class:list={[
                       'band__shot',
                       'frame' in shot && shot.frame && 'band__shot--framed',
-                      'live' in shot && shot.live && 'band__shot--phone',
                     ]}
                     data-reveal
                     data-reveal-delay={j * 0.1}
@@ -601,27 +594,6 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
   /* On the dark band the border is a light line, or it would disappear. */
   .band[data-tone='ink'] .band__shot--framed {
     border-color: rgb(238 242 244 / 0.28);
-  }
-
-  /* The live craft pile stands in for its picture from tablet up; on a
-     phone (where the homepage doesn't stack the cards either) the picture
-     stays. */
-  .band__live {
-    display: block;
-  }
-
-  .band__shot--phone {
-    display: none;
-  }
-
-  @media (max-width: 800px) {
-    .band__live {
-      display: none;
-    }
-
-    .band__shot--phone {
-      display: block;
-    }
   }
 
   /* A link in the band text: the text's own colour, underlined. */
