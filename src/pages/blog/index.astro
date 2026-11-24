@@ -42,15 +42,11 @@ const slug = (category: string) => category.toLowerCase();
       blurb="Notes on Astro, web performance and building fast websites: what I'm working on, and what I learn along the way."
     />
     {
-      /* The blog's two tools on one line: following it (RSS), and searching
-        it. The search field is Pagefind's, hidden until the index is
-        confirmed present, so it never shows up broken in `astro dev`. */
+      /* Searching the blog, on the right under the blurb. The search field
+        is Pagefind's, hidden until the index is confirmed present, so it
+        never shows up broken in `astro dev`. */
     }
     <div class="blog-tools" data-reveal>
-      <a class="blog-rss" href="/rss.xml">
-        <Icon name="lucide:rss" aria-hidden="true" />
-        Follow via RSS
-      </a>
       <form class="blog-search" id="lab-search" role="search" action="/blog/" hidden>
         <label class="sr-only" for="lab-search-input">Search the blog</label>
         <Icon name="lucide:search" class="blog-search__icon" aria-hidden="true" />
@@ -358,7 +354,7 @@ const slug = (category: string) => category.toLowerCase();
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     gap: 20px 32px;
     margin-top: 28px;
   }
@@ -436,32 +432,5 @@ const slug = (category: string) => category.toLowerCase();
   .blog-search__input:focus {
     border-color: var(--hero-accent, #7c3aed);
     box-shadow: 0 0 0 3px rgb(124 58 237 / 0.15);
-  }
-
-  .blog-rss {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--hero-accent, #7c3aed);
-    text-decoration: underline;
-    text-decoration-thickness: 1.5px;
-    text-underline-offset: 4px;
-  }
-
-  /* Brand violet is too dark to read on ink: the lighter violet, as for
-     links in posts. */
-  :global(.dark) .blog-rss {
-    color: var(--hero-accent-on-ink, #a78bfa);
-  }
-
-  .blog-rss:hover {
-    text-decoration-thickness: 2.5px;
-  }
-
-  .blog-rss :global(svg) {
-    width: 16px;
-    height: 16px;
   }
 </style>
