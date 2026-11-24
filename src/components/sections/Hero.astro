@@ -66,8 +66,8 @@ const posters = await Promise.all(
             sizes="calc(100vw - 48px)"
             type="image/webp"
           />
-          {/* Light is the first paint (the site is light only for now), so it
-              loads at once; the dark still waits for dark mode. */}
+          {/* Dark is the first paint (dark first on arrival), so it loads at
+              once; the light still only loads once light mode shows it. */}
           <img
             src={desktop.src}
             srcset={desktop.srcSet.attribute}
@@ -75,8 +75,8 @@ const posters = await Promise.all(
             alt=""
             width={desktop.attributes.width}
             height={desktop.attributes.height}
-            loading={tone === 'light' ? 'eager' : 'lazy'}
-            fetchpriority={tone === 'light' ? 'high' : 'auto'}
+            loading={tone === 'dark' ? 'eager' : 'lazy'}
+            fetchpriority={tone === 'dark' ? 'high' : 'auto'}
             decoding="async"
             class="hero__poster"
           />
@@ -217,7 +217,7 @@ const posters = await Promise.all(
        themes/southwell.css. */
     line-height: var(--hero-leading, 0.88);
     /* Sized to the shell, not the viewport: the second line is about 12.4em
-       of the display face at this tracking, and 7.7cqi puts it at roughly 95% of
+       of light Outfit at this tracking, and 7.7cqi puts it at roughly 95% of
        the container's width at every size — one row per line on a phone as
        well as on a 1440px shell. The shell caps at 1440px, so this caps
        itself. */

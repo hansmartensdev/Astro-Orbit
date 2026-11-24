@@ -445,6 +445,12 @@ const slug = (category: string) => category.toLowerCase();
     text-underline-offset: 4px;
   }
 
+  /* Brand violet is too dark to read on ink: the lighter violet, as for
+     links in posts. */
+  :global(.dark) .blog-rss {
+    color: var(--hero-accent-on-ink, #a78bfa);
+  }
+
   .blog-rss:hover {
     text-decoration-thickness: 2.5px;
   }
