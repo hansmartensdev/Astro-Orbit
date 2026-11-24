@@ -18,6 +18,7 @@ import SiteLayout from '@/layouts/SiteLayout.astro';
 import Placeholder from '@/components/site/Placeholder.astro';
 import PillButton from '@/components/site/PillButton.astro';
 import Cta from '@/components/sections/Cta.astro';
+import Services from '@/components/sections/Services.astro';
 
 export async function getStaticPaths() {
   const projects = await getCollection('work', ({ data }) =>
@@ -87,7 +88,12 @@ const hero = pageHero ?? feature ?? cover;
 // The phone version of the hero picture, if the project has one: composed
 // for a narrow screen, shown whole at the top of the hero on phones.
 const heroMobile = featureMobile
-  ? await getImage({ src: featureMobile, widths: [600, 900, 1200, 1600], format: 'webp', quality: 90 })
+  ? await getImage({
+      src: featureMobile,
+      widths: [600, 900, 1200, 1600],
+      format: 'webp',
+      quality: 90,
+    })
   : null;
 // The hero is ink with or without a picture, so the nav always reads light
 // over it (navOverMedia below).
@@ -176,8 +182,10 @@ const nextImage = next.data.feature ?? next.data.cover;
         <p class="case__lede" data-reveal>{description}</p>
       </div>
 
-      {/* The homepage's indicator: the word over a line that pulses
-          (sw-scrollpulse), here in the light colours of the dark hero. */}
+      {
+        /* The homepage's indicator: the word over a line that pulses
+          (sw-scrollpulse), here in the light colours of the dark hero. */
+      }
       <span class="case__scroll" aria-hidden="true">
         Scroll
         <span class="case__scroll-line"></span>
@@ -203,8 +211,15 @@ const nextImage = next.data.feature ?? next.data.cover;
       bands.map((band, i) => (
         <section class="band" data-tone={i % 2 === 0 ? 'ink' : 'ice'}>
           <div class="band__inner shell">
-            <div class:list={['band__aside', extrasInBand && i === bands.length - 1 && 'band__aside--long']}>
-              <span class="band__label label-mono" data-reveal>{band.label}</span>
+            <div
+              class:list={[
+                'band__aside',
+                extrasInBand && i === bands.length - 1 && 'band__aside--long',
+              ]}
+            >
+              <span class="band__label label-mono" data-reveal>
+                {band.label}
+              </span>
               {/* A blank line in the text starts a new paragraph. */}
               {band.prose &&
                 band.prose.split(/\n\s*\n/).map((para) => (
@@ -262,17 +277,28 @@ const nextImage = next.data.feature ?? next.data.cover;
                 />
               )}
               {band.shots.map((shot, j) => (
-                <Image
-                  src={shot.src}
-                  alt={shot.alt ?? title}
-                  layout="none"
-                  widths={[768, 1280, 1920]}
-                  quality={90}
-                  sizes="(max-width: 1000px) 100vw, 62vw"
-                  class:list={['band__shot', 'frame' in shot && shot.frame && 'band__shot--framed']}
-                  data-reveal
-                  data-reveal-delay={j * 0.1}
-                />
+                <>
+                  {'live' in shot && shot.live === 'craft' && (
+                    <div class="band__live">
+                      <Services bare />
+                    </div>
+                  )}
+                  <Image
+                    src={shot.src}
+                    alt={shot.alt ?? title}
+                    layout="none"
+                    widths={[768, 1280, 1920]}
+                    quality={90}
+                    sizes="(max-width: 1000px) 100vw, 62vw"
+                    class:list={[
+                      'band__shot',
+                      'frame' in shot && shot.frame && 'band__shot--framed',
+                      'live' in shot && shot.live && 'band__shot--phone',
+                    ]}
+                    data-reveal
+                    data-reveal-delay={j * 0.1}
+                  />
+                </>
               ))}
             </div>
           </div>
@@ -336,7 +362,9 @@ const nextImage = next.data.feature ?? next.data.cover;
       <div class="nextup__inner shell">
         <div class="nextup__text" data-reveal>
           <span class="label-mono nextup__label">NEXT PROJECT</span>
-          <span class="nextup__title" style={`--len: ${next.data.title.length}`}>{next.data.title}</span>
+          <span class="nextup__title" style={`--len: ${next.data.title.length}`}
+            >{next.data.title}</span
+          >
           <span class="nextup__line">{next.data.description}</span>
           <span class="nextup__go">
             View project
@@ -557,6 +585,27 @@ const nextImage = next.data.feature ?? next.data.cover;
     border-color: rgb(238 242 244 / 0.28);
   }
 
+  /* The live craft pile stands in for its picture from tablet up; on a
+     phone (where the homepage doesn't stack the cards either) the picture
+     stays. */
+  .band__live {
+    display: block;
+  }
+
+  .band__shot--phone {
+    display: none;
+  }
+
+  @media (max-width: 800px) {
+    .band__live {
+      display: none;
+    }
+
+    .band__shot--phone {
+      display: block;
+    }
+  }
+
   .band__video {
     display: block;
     height: auto;
@@ -751,7 +800,11 @@ const nextImage = next.data.feature ?? next.data.cover;
     overflow: hidden;
     border-radius: 18px;
     background-color: #0c1016;
-    background-image: radial-gradient(circle at 0% 100%, rgb(124 58 237 / 0.55), rgb(124 58 237 / 0) 55%);
+    background-image: radial-gradient(
+      circle at 0% 100%,
+      rgb(124 58 237 / 0.55),
+      rgb(124 58 237 / 0) 55%
+    );
     box-shadow: 0 30px 60px -36px rgb(12 16 22 / 0.45);
   }
 
@@ -887,7 +940,6 @@ const nextImage = next.data.feature ?? next.data.cover;
       grid-template-columns: minmax(0, 1fr);
       gap: 40px;
     }
-
   }
 </style>
 
@@ -922,4 +974,3 @@ const nextImage = next.data.feature ?? next.data.cover;
   initVideos();
   document.addEventListener('astro:page-load', initVideos);
 </script>
-
