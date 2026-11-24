@@ -102,12 +102,12 @@ void includeOrgSchema;
       document.documentElement.classList.add('js');
     </script>
 
-    <!-- Theme, before first paint so it never flashes: the visitor's choice
-         from the header's ThemeToggle (localStorage.theme), else dark. Dark
-         comes first for everyone on arrival (Hans's choice: the 3D scene is
-         at its best on ink); a visitor who picks Light or System keeps it on
-         every visit. Sets <html data-theme-mode> for the toggle's icon, .dark
-         for the theme itself, and the browser bar's colour. -->
+    <!-- Theme, before first paint so it never flashes: dark, unless the
+         visitor switched to light with the header's ThemeToggle
+         (localStorage.theme = 'light'). Dark comes first for everyone on
+         arrival (Hans's choice: the 3D scene is at its best on ink). An older
+         'system' from the earlier three-way menu still follows the system.
+         Sets .dark for the theme and the browser bar's colour. -->
     <script is:inline>
       (function () {
         let mode = 'dark';
