@@ -191,44 +191,45 @@
   /* For use over a dark hero image or on ink. */
   --nav-context-on-media: var(--hero-accent-on-ink);
 
-  /* The craft cards in Hans's violet: from white with a soft violet glow,
-     through lavender and ink, to a deep violet card — light to dark as the
-     stack builds. */
-  --service-white-bg: #ffffff;
-  --service-white-fg: var(--ink-950);
-  --service-white-chip: rgb(12 16 22 / 0.25);
-  --service-white-glow-a: rgb(124 58 237 / 0.16);
-  --service-white-glow-b: rgb(167 139 250 / 0.14);
-  --service-white-light: 12% 6%;
-  --service-white-light-b: 88% 96%;
-  --service-white-grain: 0.5;
+  /* The service cards: flat brand violet, no glow or grain (Hans's
+     choice), lightest first and one step darker per card as the stack
+     builds. The first is the brand violet itself; white text reads at
+     5.7:1 or more on all four. */
+  --service-white-bg: #7c3aed;
+  --service-white-fg: #ffffff;
+  --service-white-chip: rgb(255 255 255 / 0.35);
+  --service-white-glow-a: transparent;
+  --service-white-glow-b: transparent;
+  --service-white-light: 50% 0%;
+  --service-white-light-b: 50% 100%;
+  --service-white-grain: 0;
 
-  --service-mid-bg: #efeaf9;
-  --service-mid-fg: var(--ink-950);
-  --service-mid-chip: rgb(12 16 22 / 0.25);
-  --service-mid-glow-a: rgb(124 58 237 / 0.22);
-  --service-mid-glow-b: rgb(196 181 253 / 0.3);
-  --service-mid-light: 86% 94%;
-  --service-mid-light-b: 8% 14%;
-  --service-mid-grain: 0.5;
+  --service-mid-bg: #6d28d9;
+  --service-mid-fg: #ffffff;
+  --service-mid-chip: rgb(255 255 255 / 0.35);
+  --service-mid-glow-a: transparent;
+  --service-mid-glow-b: transparent;
+  --service-mid-light: 50% 0%;
+  --service-mid-light-b: 50% 100%;
+  --service-mid-grain: 0;
 
-  --service-ink-bg: var(--ink-950);
-  --service-ink-fg: var(--ice-100);
-  --service-ink-chip: rgb(238 242 244 / 0.3);
-  --service-ink-glow-a: rgb(124 58 237 / 0.5);
-  --service-ink-glow-b: rgb(91 33 182 / 0.3);
-  --service-ink-light: 80% 10%;
-  --service-ink-light-b: 18% 92%;
-  --service-ink-grain: 0.75;
+  --service-ink-bg: #5b21b6;
+  --service-ink-fg: #ffffff;
+  --service-ink-chip: rgb(255 255 255 / 0.35);
+  --service-ink-glow-a: transparent;
+  --service-ink-glow-b: transparent;
+  --service-ink-light: 50% 0%;
+  --service-ink-light-b: 50% 100%;
+  --service-ink-grain: 0;
 
-  --service-shade-bg: #2a1458;
-  --service-shade-fg: #f5f3ff;
-  --service-shade-chip: rgb(245 243 255 / 0.32);
-  --service-shade-glow-a: rgb(167 139 250 / 0.38);
-  --service-shade-glow-b: rgb(124 58 237 / 0.4);
-  --service-shade-light: 14% 92%;
-  --service-shade-light-b: 90% 20%;
-  --service-shade-grain: 0.55;
+  --service-shade-bg: #4c1d95;
+  --service-shade-fg: #ffffff;
+  --service-shade-chip: rgb(255 255 255 / 0.35);
+  --service-shade-glow-a: transparent;
+  --service-shade-glow-b: transparent;
+  --service-shade-light: 50% 0%;
+  --service-shade-light-b: 50% 100%;
+  --service-shade-grain: 0;
 
   /* Component tier - work card media well. Deeper than the page so an empty
      card still reads as an image slot rather than a gap. */
@@ -338,46 +339,44 @@
      reel's 3D frame and the plain card read this. */
   --reel-card-bg: var(--ink-900);
 
-  /* Craft cards in dark: all four the same deep violet (Hans's choice).
-     None sits on near-black any more, so none can read as the teal cast
-     the plain inks gave; the pile still reads as cards by their edges and
-     the shadow each casts on the one below. One soft glow from the top,
-     little grain. */
-  --service-white-bg: #2a1758;
-  --service-white-fg: #f5f3ff;
-  --service-white-chip: rgb(245 243 255 / 0.32);
-  --service-white-glow-a: rgb(139 92 246 / 0.38);
-  --service-white-glow-b: rgb(91 33 182 / 0.3);
+  /* The service cards in dark: the same flat ramp one step deeper, so
+     the first card doesn't glare on the near-black page and the last
+     still stands off it. White text reads at 7:1 or more. */
+  --service-white-bg: #6d28d9;
+  --service-white-fg: #ffffff;
+  --service-white-chip: rgb(255 255 255 / 0.35);
+  --service-white-glow-a: transparent;
+  --service-white-glow-b: transparent;
   --service-white-light: 50% 0%;
-  --service-white-light-b: 50% 120%;
-  --service-white-grain: 0.15;
+  --service-white-light-b: 50% 100%;
+  --service-white-grain: 0;
 
-  --service-mid-bg: #2a1758;
-  --service-mid-fg: #f5f3ff;
-  --service-mid-chip: rgb(245 243 255 / 0.32);
-  --service-mid-glow-a: rgb(139 92 246 / 0.38);
-  --service-mid-glow-b: rgb(91 33 182 / 0.3);
+  --service-mid-bg: #5b21b6;
+  --service-mid-fg: #ffffff;
+  --service-mid-chip: rgb(255 255 255 / 0.35);
+  --service-mid-glow-a: transparent;
+  --service-mid-glow-b: transparent;
   --service-mid-light: 50% 0%;
-  --service-mid-light-b: 50% 120%;
-  --service-mid-grain: 0.15;
+  --service-mid-light-b: 50% 100%;
+  --service-mid-grain: 0;
 
-  --service-ink-bg: #2a1758;
-  --service-ink-fg: #f5f3ff;
-  --service-ink-chip: rgb(245 243 255 / 0.32);
-  --service-ink-glow-a: rgb(139 92 246 / 0.38);
-  --service-ink-glow-b: rgb(91 33 182 / 0.3);
+  --service-ink-bg: #4c1d95;
+  --service-ink-fg: #ffffff;
+  --service-ink-chip: rgb(255 255 255 / 0.35);
+  --service-ink-glow-a: transparent;
+  --service-ink-glow-b: transparent;
   --service-ink-light: 50% 0%;
-  --service-ink-light-b: 50% 120%;
-  --service-ink-grain: 0.15;
+  --service-ink-light-b: 50% 100%;
+  --service-ink-grain: 0;
 
-  --service-shade-bg: #2a1758;
-  --service-shade-fg: #f5f3ff;
-  --service-shade-chip: rgb(245 243 255 / 0.32);
-  --service-shade-glow-a: rgb(139 92 246 / 0.38);
-  --service-shade-glow-b: rgb(91 33 182 / 0.3);
+  --service-shade-bg: #3b0f86;
+  --service-shade-fg: #ffffff;
+  --service-shade-chip: rgb(255 255 255 / 0.35);
+  --service-shade-glow-a: transparent;
+  --service-shade-glow-b: transparent;
   --service-shade-light: 50% 0%;
-  --service-shade-light-b: 50% 120%;
-  --service-shade-grain: 0.15;
+  --service-shade-light-b: 50% 100%;
+  --service-shade-grain: 0;
 
   --work-media-bg: var(--ink-800);
 

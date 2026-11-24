@@ -31,7 +31,7 @@ export const GET: APIRoute = async () => {
     '',
     '## Pages',
     '',
-    `- [Home](${base}/): the homepage, with the 3D hero, projects, craft and blog`,
+    `- [Home](${base}/): the homepage, with the 3D hero, projects, services and blog`,
     `- [About](${base}/about/): about ${siteConfig.name}`,
     `- [Projects](${base}/projects/): the projects`,
     `- [Blog](${base}/blog/): posts about Astro, building themes and what makes websites fast`,

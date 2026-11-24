@@ -58,9 +58,15 @@ import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
     isolation: isolate;
   }
 
-  /* Same construction as a service card ground: flat colour, two blooms,
-     grain. Reads from the white colourway tokens so it re-maps in dark mode. */
+  /* Two soft violet blooms and grain over the page. These were the first
+     service card's values; the cards are flat now, so the sign-off keeps
+     its own copy. Dark mode leaves the field out (below). */
   .cta__field {
+    --service-white-glow-a: rgb(124 58 237 / 0.16);
+    --service-white-glow-b: rgb(167 139 250 / 0.14);
+    --service-white-light: 12% 6%;
+    --service-white-light-b: 88% 96%;
+    --service-white-grain: 0.5;
     position: absolute;
     inset: 0;
     z-index: -1;
