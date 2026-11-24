@@ -241,6 +241,11 @@ const posters = await Promise.all(
     color: var(--hero-accent, #7c3aed);
   }
 
+  /* A step lighter on the dark page (Hans's choice): violet-500. */
+  :global(.dark) .hero__accent {
+    color: #8b5cf6;
+  }
+
   .hero__word--2 {
     text-wrap: balance;
   }
