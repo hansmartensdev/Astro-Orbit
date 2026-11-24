@@ -808,6 +808,27 @@ const nextImage = next.data.feature ?? next.data.cover;
       position: static;
     }
 
+    /* In one column the order is the text, its pictures, and only then the
+       stack and the site link, which close the project. The aside opens up
+       (display: contents) so its parts can take their place around the
+       pictures; the spacing they had from the grid gap moves onto them. */
+    .band__aside:has(.band__extras) {
+      display: contents;
+    }
+
+    .band__inner:has(.band__extras) {
+      gap: 0;
+    }
+
+    .band__inner:has(.band__extras) .band__shots {
+      order: 1;
+      margin-top: 32px;
+    }
+
+    .band__extras {
+      order: 2;
+    }
+
     .case__ledger-inner {
       grid-template-columns: repeat(2, 1fr);
       gap: 28px;
