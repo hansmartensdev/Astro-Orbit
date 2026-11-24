@@ -14,9 +14,11 @@ const blog = defineCollection({
       author: z.string().default('Hans Martens'),
       image: image().optional(),
       imageAlt: z.string().optional(),
+      /** One of three categories, for filtering the blog once there are enough
+       *  posts to filter: Astro (building with Astro), Themes (the free themes,
+       *  and how they're made) or Performance (speed, Lighthouse, SEO). */
+      category: z.enum(['Astro', 'Themes', 'Performance']).optional(),
       tags: z.array(z.string()).default([]),
-      /** Editorial grouping carried over from the previous site. */
-      category: z.string().optional(),
       draft: z.boolean().default(false),
       featured: z.boolean().default(false),
       /** Set false to hide the table of contents on this post. */

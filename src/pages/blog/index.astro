@@ -34,25 +34,27 @@ const postUrl = (id: string) => '/blog/' + id.replace('en/', '');
       title="Blog"
       blurb="Notes on Astro, web performance and building fast websites: what I'm working on, and what I learn along the way."
     />
-    {/* Follow along without a newsletter: the RSS feed, for feed readers. */}
-    <a class="blog-rss" href="/rss.xml" data-reveal>
-      <Icon name="lucide:rss" aria-hidden="true" />
-      Follow via RSS
-    </a>
+    {/* The blog's two tools on one line: following it (RSS), and searching
+        it. The search field is Pagefind's, hidden until the index is
+        confirmed present, so it never shows up broken in `astro dev`. */}
+    <div class="blog-tools" data-reveal>
+      <a class="blog-rss" href="/rss.xml">
+        <Icon name="lucide:rss" aria-hidden="true" />
+        Follow via RSS
+      </a>
+      <div class="blog-search" id="lab-search" hidden>
+        <label class="sr-only" for="lab-search-input">Search the blog</label>
+        <Icon name="lucide:search" class="blog-search__icon" aria-hidden="true" />
+        <input
+          id="lab-search-input"
+          class="blog-search__input"
+          type="search"
+          autocomplete="off"
+          placeholder="Search the blog"
+        />
+      </div>
+    </div>
   </header>
-
-  <!-- Pagefind search. Hidden until the index is confirmed present, so it
-       never shows up broken in `astro dev`, where no index has been built. -->
-  <div class="shell mt-16 max-[800px]:mt-10" id="lab-search" hidden>
-    <label class="label-mono text-foreground-muted" for="lab-search-input">SEARCH</label>
-    <input
-      id="lab-search-input"
-      type="search"
-      autocomplete="off"
-      placeholder="Search the blog"
-      class="border-border placeholder:text-foreground-subtle focus:border-foreground mt-3 w-full max-w-[560px] border-0 border-b bg-transparent pb-4 text-[clamp(1.25rem,2.4vw,1.75rem)] tracking-[-0.03em] outline-none"
-    />
-  </div>
 
   <section class="shell mt-14 max-[800px]:mt-10">
     <ul class="m-0 list-none p-0" id="lab-results" hidden></ul>
@@ -190,11 +192,71 @@ const postUrl = (id: string) => '/blog/' + id.replace('en/', '');
 </script>
 
 <style>
+  /* Search hits, marked in the brand violet rather than the browser's
+     yellow. */
+  :global(#lab-results mark) {
+    background: rgb(124 58 237 / 0.14);
+    color: inherit;
+    border-radius: 3px;
+    padding: 0 2px;
+  }
+
+  .blog-tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px 32px;
+    margin-top: 28px;
+  }
+
+  .blog-search {
+    position: relative;
+    width: min(100%, 340px);
+  }
+
+  .blog-search[hidden] {
+    display: none;
+  }
+
+  .blog-search :global(.blog-search__icon) {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    width: 18px;
+    height: 18px;
+    transform: translateY(-50%);
+    color: var(--color-foreground-muted);
+    pointer-events: none;
+  }
+
+  .blog-search__input {
+    width: 100%;
+    padding: 12px 18px 12px 46px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 9999px;
+    background: var(--background-elevated, #fff);
+    color: var(--color-foreground);
+    font-size: 15px;
+    outline: none;
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .blog-search__input::placeholder {
+    color: var(--color-foreground-muted);
+  }
+
+  .blog-search__input:focus {
+    border-color: var(--hero-accent, #7c3aed);
+    box-shadow: 0 0 0 3px rgb(124 58 237 / 0.15);
+  }
+
   .blog-rss {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    margin-top: 28px;
     font-size: 15px;
     font-weight: 600;
     color: var(--hero-accent, #7c3aed);
