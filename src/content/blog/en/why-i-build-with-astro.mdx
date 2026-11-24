@@ -1,0 +1,71 @@
+---
+title: "Why I Build with Astro"
+description: "Why I moved from WordPress to Astro, and the five things about it I never want to give up again."
+publishedAt: 2026-11-24
+author: "Hans Martens"
+category: "Astro"
+tags: ["Astro", "WordPress", "Performance"]
+icon: "astro"
+cardWord: "astro"
+locale: en
+---
+
+If you'd asked me five years ago whether I'd swear by a single framework for building websites, I would have laughed. I'd been building on [WordPress](https://wordpress.org/) since 2010. It worked. It paid for itself in ease and ecosystem. I had no plans to leave.
+
+Then I tried [Astro](https://astro.build/) on a real project, not just a weekend tinker — and I haven't built a website on anything else since.
+
+This post is the longer version of why.
+
+## What Astro is
+
+Strip away the marketing copy and Astro is, at heart, a deliberately quiet framework. It renders your pages to plain HTML at build time, ships zero JavaScript by default, and only loads interactive code when a specific component on the page needs it. That's the whole idea.
+
+Most modern frameworks start from the opposite end. They send a JavaScript runtime to the browser, hydrate the entire page on arrival, and treat HTML as a kind of placeholder until the real app boots. That works — until it doesn't. Until the bundle gets big, the first paint slips a second, and you're back to optimising your way out of decisions the framework made for you.
+
+Astro inverts that. The default is send nothing. If you want a [React](https://react.dev/) component for a search box, fine — drop it on the page, mark it as an island, and Astro hydrates that one component. The rest of the page stays static HTML, which means it loads instantly, ranks well, and keeps working even on a phone with two bars of signal in a train carriage.
+
+That single choice — static by default, interactive by exception — is the thing that hooked me.
+
+## Coming from WordPress
+
+I want to be honest about this part, because every Astro post on the internet seems to skip it. WordPress was good to me. For more than a decade it let me ship, learn, break things, and put them back together. The community is enormous. The plugin ecosystem can do almost anything. If a friend walked in tomorrow and said "I need a blog with a paywall and four authors and a Mailchimp integration by Friday," WordPress would still be a reasonable answer.
+
+What WordPress couldn't do, in the way I wanted it to, was give me direct control over what shipped to the visitor.
+
+In WordPress, fast is a project. You install caching plugins, you fight with render-blocking scripts, you negotiate with whatever theme you started from, you turn off features you don't need and hope the next plugin update doesn't turn them back on. Performance is a tax you pay forever.
+
+In Astro, fast is the default. Slow is the thing you'd have to work to introduce.
+
+That difference is psychological as much as technical. When the framework starts from the right place, you stop spending energy fixing the framework and start spending it on the actual work — the layout, the typography, the copy, the small details that make a site feel like someone cared.
+
+## The five things I never want to give up again
+
+I tried to write this post without a single list, but I kept circling back to the same five things, so here they are. Not as bullet points — as the five reasons I reach for Astro every single time, in the order they matter to me.
+
+One — zero JavaScript by default. Every page starts at "nothing shipped" and earns its bytes from there. That single rule shapes every decision downstream and is the reason the sites I build feel calm to use. There's no spinner, no hydration flash, no "wait, the button isn't clickable yet." The page loads, and it's done.
+
+Two — bring your own component framework. Astro doesn't care if you write your interactive bits in [React](https://react.dev/), [Vue](https://vuejs.org/), [Svelte](https://svelte.dev/), [Solid](https://solidjs.com/), or vanilla JavaScript. You can mix them on the same page. I mostly use React for the islands that need it and `.astro` files for everything else, but the option is there if I ever want it. No framework I tried before respected my time like that.
+
+Three — the file-based router and content collections. Pages are folders. Posts are MDX files. Types are inferred from a [Zod](https://zod.dev/) schema. There's no router config to learn, no API to memorise, no layer of abstraction sitting between you and the file you just opened. It's just folders and files, the way the web used to feel before everything turned into a dashboard.
+
+Four — MDX for blog posts. I can drop a real Astro component into the middle of a paragraph of prose and it just works. The Lighthouse post on this site has a live `<LighthouseScoresGrid />` embedded mid-article. Try doing that in WordPress without three plugins, a custom shortcode, and a small prayer.
+
+Five — it gets out of the way. This one sounds like nothing and matters more than any of the others. Astro doesn't try to be a platform. It doesn't push a hosted dashboard, it doesn't lock you into a vendor, it doesn't bolt an analytics product onto the side door. It builds your site, hands you a folder of static files, and lets you deploy it wherever you like — [Vercel](https://vercel.com/), [Netlify](https://netlify.com/), [Cloudflare](https://www.cloudflare.com/developer-platform/products/pages/), a Raspberry Pi in your living room, all the same to Astro. That respect for the developer is rare. Once you've felt it, going back is hard.
+
+## Why I built Astro Rocket on top of it
+
+If you've browsed the [projects page](https://www.hansmartens.dev/projects), you'll know I built my own Astro theme — [Astro Rocket](https://astro.build/themes/details/astro-rocket/) — and put it up on the official Astro themes directory. People sometimes ask why I went to that trouble instead of grabbing one of the dozens of templates already out there.
+
+The honest answer is that I wanted a starting point that was already at 100 across the board, with the patterns I use built in. Most templates are built to look good in a screenshot. Astro Rocket is built to ship — to hand a developer a project that scores 100 / 100 / 100 / 100 the day they deploy it, and stays there as they extend it.
+
+Astro made building that theme feel reasonable. On a different framework, "production-quality starter that scores 100 out of the box" would have been a six-month project. With Astro, the framework was already most of the way there. I just had to not get in its way.
+
+## The bottom line
+
+I build with Astro because it agrees with me about what a website should be. Fast. Calm. Mostly HTML. Interactive only where it earns the cost. Built from real files in real folders, with no platform sitting between me and the visitor.
+
+When the framework agrees with you, you stop arguing with it and start building. That's what I want from a tool, and that's what Astro gives me on every project I touch.
+
+If you're somewhere along the same journey — bored of fighting your stack, curious whether there's something quieter on the other side — go read the [Astro docs](https://docs.astro.build/). Take a weekend. Build the smallest site you can think of. See how it feels.
+
+That's how this started for me. A few years later, I'm still here, and I'm not looking around.
