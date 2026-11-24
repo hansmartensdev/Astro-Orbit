@@ -123,6 +123,10 @@ const work = defineCollection({
             alt: z.string().optional(),
             /** A thin border, for a capture whose edge is the page colour. */
             frame: z.boolean().optional(),
+            /** Which part of the case study it sits in: 1 (Why I built it)
+             *  or 2 (What I built). Without it, the pictures are shared out
+             *  half and half. */
+            band: z.union([z.literal(1), z.literal(2)]).optional(),
           }),
         )
         .default([]),
