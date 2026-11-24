@@ -60,23 +60,16 @@ const year = new Date().getFullYear();
 </div>
 
 <style>
-  /* The violet glow of the post header and the blog covers: from the
-     bottom-left corner, with a soft light top right. Only the image is set,
-     so the slab keeps its own .invert-section colour. */
-  /* In dark mode the slab sits on a deep violet rather than near-black
-     ink, so its glow never reads as a teal cast (Hans's choice). */
-  :global(.dark) .footer-stage > footer {
-    background-color: #1a1030;
-  }
-
+  /* One flat deep violet, in light and dark mode alike: no glow, no
+     variation in colour (Hans's choice). Only the colour is set, so the
+     slab keeps its .invert-section text colours. */
   .footer-stage > footer {
-    background-image:
-      radial-gradient(circle at 0% 100%, rgb(124 58 237 / 0.55), rgb(124 58 237 / 0) 55%),
-      radial-gradient(circle at 100% 0%, rgb(167 139 250 / 0.18), rgb(167 139 250 / 0) 45%);
+    background-color: #1a1030;
+    background-image: none;
   }
 
   /* The labels and the bottom line: quieter than the links, but light
-     enough to read on the ink and on the violet glow alike (the muted grey
+     enough to read on the violet (the muted grey
      measured 2.4-4.0:1 there; this is at least 4.5:1 on both). */
   .footer__quiet {
     color: rgb(238 242 244 / 0.78);
