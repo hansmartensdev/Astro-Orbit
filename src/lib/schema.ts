@@ -1,16 +1,17 @@
 import type {
   WebSite,
-  Organization,
+  Person,
   BlogPosting,
   BreadcrumbList,
   FAQPage,
   WithContext,
-  SearchAction,
 } from 'schema-dts';
 import siteConfig from '@/config/site.config';
 
 /**
- * Create WebSite schema for homepage
+ * Create WebSite schema for homepage. No SearchAction: the site has no
+ * search page, and a SearchAction pointing at one that doesn't exist is
+ * a broken promise to search engines.
  */
 export function createWebsiteSchema(): WithContext<WebSite> {
   return {
@@ -19,39 +20,34 @@ export function createWebsiteSchema(): WithContext<WebSite> {
     name: siteConfig.name,
     url: siteConfig.url,
     description: siteConfig.description,
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: {
-        '@type': 'EntryPoint',
-        urlTemplate: `${siteConfig.url}/search?q={search_term_string}`,
-      },
-      'query-input': {
-        '@type': 'PropertyValueSpecification',
-        valueRequired: true,
-        valueName: 'search_term_string',
-      },
-    } as SearchAction,
+    author: { '@id': `${siteConfig.url}/#person` },
   };
 }
 
 /**
- * Create Organization schema
+ * Create Person schema: who the site is by, for search engines and AI
+ * assistants. Facts only, all from the site config and the site itself:
+ * the name, that he is an Astro developer, the town and country (no street
+ * address, which the config doesn't hold), the email and the profiles.
  */
-export function createOrganizationSchema(): WithContext<Organization> {
+export function createPersonSchema(): WithContext<Person> {
+  const [locality, country] = siteConfig.location.split(',').map((part) => part.trim());
   return {
     '@context': 'https://schema.org',
-    '@type': 'Organization',
+    '@type': 'Person',
+    '@id': `${siteConfig.url}/#person`,
     name: siteConfig.name,
     url: siteConfig.url,
-    logo: `${siteConfig.url}/logo.png`,
-    sameAs: siteConfig.socialLinks,
-    // Reached by email (and WhatsApp), not by phone: no telephone here, so
-    // search results do not offer a call button.
-    contactPoint: {
-      '@type': 'ContactPoint',
-      email: siteConfig.email,
-      contactType: 'customer support',
+    jobTitle: 'Astro developer',
+    description: siteConfig.description,
+    email: `mailto:${siteConfig.email}`,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: locality,
+      ...(country ? { addressCountry: country.replace(/^the /i, '') } : {}),
     },
+    knowsAbout: ['Astro', 'Web design', 'Web development', 'Web performance'],
+    sameAs: siteConfig.socialLinks,
   };
 }
 
@@ -76,19 +72,15 @@ export function createBlogPostSchema(post: {
     image: post.image,
     datePublished: post.datePublished.toISOString(),
     dateModified: post.dateModified?.toISOString() || post.datePublished.toISOString(),
+    // A personal site: the author is also the publisher, the same Person as
+    // the site's own (no organisation, and no logo file to point at).
     author: {
       '@type': 'Person',
+      '@id': `${siteConfig.url}/#person`,
       name: post.author.name,
-      url: post.author.url,
+      url: post.author.url ?? siteConfig.url,
     },
-    publisher: {
-      '@type': 'Organization',
-      name: siteConfig.name,
-      logo: {
-        '@type': 'ImageObject',
-        url: `${siteConfig.url}/logo.png`,
-      },
-    },
+    publisher: { '@id': `${siteConfig.url}/#person` },
     mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': post.url,
