@@ -52,5 +52,48 @@ import siteConfig from '@/config/site.config';
   </section>
 
   <Founder />
+
+  {/* Why Hans does this work, in his own words. */}
+  <section class="shell mt-28 max-[800px]:mt-16" data-reveal>
+    <div class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-16 border-t border-border pt-12 max-[800px]:grid-cols-1 max-[800px]:gap-6 max-[800px]:pt-10">
+      <h2 class="display-service about-craft__title m-0">Design and code, <em>for the love of it</em></h2>
+      <div class="about-craft max-w-[560px]">
+        <p>Web design and development are my craft.</p>
+        <p>
+          What draws me to this work is where design and technology meet. Getting that intersection
+          right — making something that is both beautifully designed and technically solid — is what I
+          find satisfying. That's why I keep doing it.
+        </p>
+      </div>
+    </div>
+  </section>
+
   <Cta />
 </SiteLayout>
+
+<style>
+  .about-craft p {
+    margin: 0;
+    font-size: 19px;
+    line-height: 1.6;
+    color: var(--color-foreground-secondary);
+  }
+
+  .about-craft p:first-child {
+    color: var(--color-foreground);
+    font-weight: 500;
+  }
+
+  .about-craft p + p {
+    margin-top: 1.2em;
+  }
+
+  /* On a phone the section-card size drops below the text under it; the
+     heading keeps the page-title size there instead. */
+  @media (max-width: 800px) {
+    .about-craft__title {
+      font-size: clamp(34px, 9.4vw, 44px);
+      text-wrap: balance;
+    }
+  }
+</style>
