@@ -24,12 +24,17 @@ interface Stat {
   label: string;
 }
 
-// PLACEHOLDER numbers: replace each "00" with a real figure, or change the
-// label to something else worth counting.
+// The portrait comes from a photographer. Until it exists the card runs
+// without its photo column; set this to true (and swap the placeholder below
+// for an <Image class="founder__photo" />) when it does.
+const hasPortrait = false;
+
+// The years, from Hans's own introduction: computers since 1992, websites
+// since 2010, Astro since 2022.
 const stats: Stat[] = [
-  { value: '00', label: 'Placeholder: years building websites' },
-  { value: '00', label: 'Placeholder: websites launched' },
-  { value: '00', label: 'Placeholder: first year with Astro' },
+  { value: '2010', label: 'Building websites since' },
+  { value: '2022', label: 'With Astro since' },
+  { value: '1992', label: 'With computers since' },
   { value: 'NL', label: 'Based in Veghel' },
 ];
 
@@ -50,7 +55,11 @@ const desks: Desk[] = [
 ---
 
 <section class="shell pt-[130px] pb-[40px] max-[800px]:pt-[90px] max-[800px]:pb-[30px]">
-  <article class="founder" aria-labelledby="founder" data-reveal>
+  <article
+    class:list={['founder', !hasPortrait && 'founder--text']}
+    aria-labelledby="founder"
+    data-reveal
+  >
     {
       linkedIn && (
         <a
@@ -70,21 +79,24 @@ const desks: Desk[] = [
 
       <h2 class="founder__headline display-service" id="founder">
         <span class="rv-mask">
-          <span>Less handoff,</span>
+          <span>Building websites</span>
         </span>
         <span class="rv-mask">
-          <span><em>more hands-on.</em></span>
+          <span><em>since 2010.</em></span>
         </span>
       </h2>
 
       <div class="founder__prose">
         <p>
-          No agency layers between you and the work: the person who designs your site also builds
-          it, and is still around after launch.
+          In 1992 I bought a new computer, and I've been interested in both the operating system
+          and the hardware ever since. In 1998 I built my first computer from parts. From 2000 I
+          worked as a computer service engineer, repairing laptops, seconded to the Eindhoven
+          University of Technology.
         </p>
         <p>
-          [Placeholder: your background in two or three sentences. How you got into building for
-          the web, what you did before, and why Astro.]
+          In 2010 I built my first website, with WordPress, and I never stopped. In 2022 I moved to
+          Astro. Now I design and build my own websites and free Astro themes, such as Astro
+          Rocket.
         </p>
       </div>
 
@@ -110,6 +122,8 @@ const desks: Desk[] = [
       </ul>
     </div>
 
+    {
+      hasPortrait && (
     <figure class="founder__figure m-0">
       {/* PLACEHOLDER: a portrait of Hans. Swap for an <Image class="founder__photo" />
           when it exists; the card's fade and crop stay as they are. */}
@@ -117,6 +131,8 @@ const desks: Desk[] = [
         <Placeholder class="h-full w-full rounded-none" invert label="[ placeholder: portrait of Hans ]" />
       </div>
     </figure>
+      )
+    }
 
     <dl class="founder__stats">
       {
@@ -133,15 +149,15 @@ const desks: Desk[] = [
 
 <style>
   .founder {
-    --card-bg: var(--service-ink-bg);
+    /* The brand card, as the blog post header and the footer: deep violet
+       with the violet glow from the lower left and a light one top right. */
+    --card-bg: #1a1030;
     --card-fg: var(--service-ink-fg);
     --card-chip: var(--service-ink-chip);
-    /* Plain ink, the colour of the type: the blue glows the service card
-       carries stay off this one. Colour is left to the case study pages. */
-    --card-glow-a: transparent;
-    --card-glow-b: transparent;
-    --card-light: var(--service-ink-light);
-    --card-light-b: var(--service-ink-light-b);
+    --card-glow-a: rgb(124 58 237 / 0.55);
+    --card-glow-b: rgb(167 139 250 / 0.18);
+    --card-light: 0% 100%;
+    --card-light-b: 100% 0%;
     --card-grain: var(--service-ink-grain);
     --card-pad-x: 60px;
     --card-pad-y: 60px;
@@ -162,6 +178,15 @@ const desks: Desk[] = [
     background-image:
       radial-gradient(120% 95% at var(--card-light), var(--card-glow-a), transparent 62%),
       radial-gradient(95% 75% at var(--card-light-b), var(--card-glow-b), transparent 68%);
+  }
+
+  /* Without the portrait: one column, the text at a readable width. */
+  .founder.founder--text {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .founder--text .founder__prose {
+    max-width: 640px;
   }
 
   /* The ink card flips to ice in dark mode; the hairlines follow. */

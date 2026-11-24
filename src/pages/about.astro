@@ -3,15 +3,13 @@
  * About page
  * URL: /about (was /studio; the old address redirects, see astro.config.mjs)
  *
- * Who Hans is: the intro, the services, and the personal card. Anything only
- * Hans can supply (his photo, his story, his numbers) is a marked placeholder.
+ * Who Hans is: the intro and the personal card, with the facts from his own
+ * introduction. His photos come later, from a photographer.
  */
 import SiteLayout from '@/layouts/SiteLayout.astro';
 import SectionHead from '@/components/sections/SectionHead.astro';
 import Founder from '@/components/sections/Founder.astro';
-import Services from '@/components/sections/Services.astro';
 import Cta from '@/components/sections/Cta.astro';
-import Placeholder from '@/components/site/Placeholder.astro';
 import siteConfig from '@/config/site.config';
 ---
 
@@ -24,17 +22,13 @@ import siteConfig from '@/config/site.config';
     <SectionHead
       as="h1"
       title="About"
-      blurb="I'm Hans, an Astro developer in Veghel, the Netherlands. I design and build fast websites, one at a time."
+      blurb="I'm Hans, an Astro developer in Veghel, the Netherlands. I design and build my own websites and free Astro themes."
     />
   </header>
 
-  <div class="mt-16 shell max-[800px]:mt-10">
-    {/* PLACEHOLDER: a wide photo of Hans, or of where he works. Swap for an
-        <Image /> with the same classes when the photo exists. */}
-    <div class="h-[52vh] w-full overflow-hidden rounded-[14px] max-[800px]:h-[38vh]">
-      <Placeholder class="h-full w-full" label="[ placeholder: wide photo of Hans at work ]" />
-    </div>
-  </div>
+  {/* The wide photo of Hans at work comes from a photographer; it goes here,
+      as an <Image /> in a block like the one in git history (h-[52vh],
+      rounded-[14px]), when it exists. */}
 
   <section class="mt-20 shell max-[800px]:mt-12" data-reveal>
     <p class="max-w-[760px] text-[clamp(1.375rem,2.4vw,2rem)] leading-[1.35] tracking-[-0.02em]">
@@ -58,8 +52,6 @@ import siteConfig from '@/config/site.config';
       </div>
     </dl>
   </section>
-
-  <Services />
 
   <Founder />
   <Cta />
