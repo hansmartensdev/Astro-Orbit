@@ -22,6 +22,14 @@ const posts = (
   .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
 
 const postUrl = (id: string) => '/blog/' + id.replace('en/', '');
+
+// The category filter: a button for each category that has posts, in a
+// fixed order, so an empty one never shows.
+const CATEGORY_ORDER = ['Astro', 'Themes', 'Performance'] as const;
+const categories = CATEGORY_ORDER.filter((category) =>
+  posts.some((post) => post.data.category === category)
+);
+const slug = (category: string) => category.toLowerCase();
 ---
 
 <SiteLayout
@@ -34,9 +42,11 @@ const postUrl = (id: string) => '/blog/' + id.replace('en/', '');
       title="Blog"
       blurb="Notes on Astro, web performance and building fast websites: what I'm working on, and what I learn along the way."
     />
-    {/* The blog's two tools on one line: following it (RSS), and searching
+    {
+      /* The blog's two tools on one line: following it (RSS), and searching
         it. The search field is Pagefind's, hidden until the index is
-        confirmed present, so it never shows up broken in `astro dev`. */}
+        confirmed present, so it never shows up broken in `astro dev`. */
+    }
     <div class="blog-tools" data-reveal>
       <a class="blog-rss" href="/rss.xml">
         <Icon name="lucide:rss" aria-hidden="true" />
@@ -54,20 +64,47 @@ const postUrl = (id: string) => '/blog/' + id.replace('en/', '');
           enterkeyhint="search"
           placeholder="Search the blog"
         />
-        {/* Results already follow the typing; the button runs the same
-            search and, on a phone, puts the keyboard away. */}
+        {
+          /* Results already follow the typing; the button runs the same
+            search and, on a phone, puts the keyboard away. */
+        }
         <button class="blog-search__button" type="submit">Search</button>
       </form>
     </div>
   </header>
 
   <section class="shell mt-14 max-[800px]:mt-10">
+    {
+      categories.length > 0 && (
+        <div
+          class="blog-cats"
+          id="blog-cats"
+          role="group"
+          aria-label="Filter by category"
+          data-reveal
+        >
+          <button type="button" class="blog-cat" data-cat="" aria-pressed="true">
+            All
+          </button>
+          {categories.map((category) => (
+            <button type="button" class="blog-cat" data-cat={slug(category)} aria-pressed="false">
+              {category}
+            </button>
+          ))}
+        </div>
+      )
+    }
+
     <ul class="m-0 list-none p-0" id="lab-results" hidden></ul>
 
     <ul class="m-0 list-none p-0" id="lab-list">
       {
         posts.map((post) => (
-          <li class="border-border border-t last:border-b" data-reveal>
+          <li
+            class="border-border border-t last:border-b"
+            data-reveal
+            data-cat={post.data.category ? slug(post.data.category) : ''}
+          >
             <a
               class="group grid grid-cols-[minmax(0,1fr)_minmax(0,360px)] items-center gap-12 py-10 max-[800px]:grid-cols-1 max-[800px]:gap-6 max-[800px]:py-7"
               href={postUrl(post.id)}
@@ -205,9 +242,104 @@ const postUrl = (id: string) => '/blog/' + id.replace('en/', '');
 
   initLabSearch();
   document.addEventListener('astro:after-swap', initLabSearch);
+
+  /* The category filter: shows the posts of one category, keeps the choice
+     in the address (?category=…) so it can be shared, and leaves search to
+     search: choosing a category clears the search field. */
+  function initCategories() {
+    const group = document.getElementById('blog-cats');
+    const list = document.getElementById('lab-list');
+    if (!group || !list || group.dataset.ready) return;
+    group.dataset.ready = 'true';
+    const buttons = [...group.querySelectorAll<HTMLButtonElement>('.blog-cat')];
+    const items = [...list.querySelectorAll<HTMLLIElement>(':scope > li')];
+
+    const apply = (cat: string) => {
+      for (const b of buttons) b.setAttribute('aria-pressed', String(b.dataset.cat === cat));
+      const shown = items.filter((li) => !cat || li.dataset.cat === cat);
+      for (const li of items) {
+        li.hidden = !shown.includes(li);
+        li.classList.remove('is-last');
+        // A filtered-in post has already been seen arriving; no second reveal.
+        if (!li.hidden) li.classList.add('is-in');
+      }
+      shown[shown.length - 1]?.classList.add('is-last');
+    };
+
+    for (const b of buttons) {
+      b.addEventListener('click', () => {
+        const cat = b.dataset.cat ?? '';
+        const input = document.getElementById('lab-search-input') as HTMLInputElement | null;
+        if (input && input.value) {
+          input.value = '';
+          input.dispatchEvent(new Event('input'));
+        }
+        apply(cat);
+        const url = new URL(location.href);
+        if (cat) url.searchParams.set('category', cat);
+        else url.searchParams.delete('category');
+        history.replaceState(history.state, '', url);
+      });
+    }
+
+    const initial = new URL(location.href).searchParams.get('category') ?? '';
+    if (buttons.some((b) => b.dataset.cat === initial)) apply(initial);
+  }
+
+  initCategories();
+  document.addEventListener('astro:after-swap', initCategories);
 </script>
 
 <style>
+  /* The category filter: pills like the post tags; the chosen one filled
+     in the brand violet. */
+  .blog-cats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .blog-cat {
+    padding: 9px 18px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 9999px;
+    background: transparent;
+    color: var(--color-foreground);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .blog-cat:hover {
+    border-color: var(--hero-accent, #7c3aed);
+    color: var(--hero-accent, #7c3aed);
+  }
+
+  .blog-cat[aria-pressed='true'] {
+    border-color: var(--hero-accent, #7c3aed);
+    background: var(--hero-accent, #7c3aed);
+    color: #fff;
+  }
+
+  .blog-cat:focus-visible {
+    outline: 2px solid var(--hero-accent, #7c3aed);
+    outline-offset: 3px;
+  }
+
+  /* Every visible post keeps a rule above it and the last one below it. */
+  :global(#lab-list > li[hidden]) {
+    display: none;
+  }
+
+  :global(#lab-list > li.is-last) {
+    border-bottom-width: 1px;
+  }
+
   /* Search hits, marked in the brand violet rather than the browser's
      yellow. */
   :global(#lab-results mark) {
