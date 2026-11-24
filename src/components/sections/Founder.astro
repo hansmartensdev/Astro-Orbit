@@ -24,13 +24,17 @@ interface Stat {
   label: string;
 }
 
-// PLACEHOLDER numbers: replace each "00" with a real figure, or change the
-// label to something else worth counting.
+// The portrait comes from a photographer. Until it exists the card runs
+// without its photo column; set this to true (and swap the placeholder below
+// for an <Image class="founder__photo" />) when it does.
+const hasPortrait = false;
+
+// The years, from Hans's own introduction: websites since 2010, Astro since
+// 2022.
 const stats: Stat[] = [
-  { value: '00', label: 'Placeholder: years building websites' },
-  { value: '00', label: 'Placeholder: websites launched' },
-  { value: '00', label: 'Placeholder: first year with Astro' },
-  { value: 'NL', label: 'Based in Veghel' },
+  { value: '2010', label: 'Building websites since' },
+  { value: '2022', label: 'With Astro since' },
+  { value: 'Veghel', label: 'Based in' },
 ];
 
 interface Desk {
@@ -50,7 +54,11 @@ const desks: Desk[] = [
 ---
 
 <section class="shell pt-[130px] pb-[40px] max-[800px]:pt-[90px] max-[800px]:pb-[30px]">
-  <article class="founder" aria-labelledby="founder" data-reveal>
+  <article
+    class:list={['founder', !hasPortrait && 'founder--text']}
+    aria-labelledby="founder"
+    data-reveal
+  >
     {
       linkedIn && (
         <a
@@ -70,23 +78,16 @@ const desks: Desk[] = [
 
       <h2 class="founder__headline display-service" id="founder">
         <span class="rv-mask">
-          <span>Less handoff,</span>
+          <span>Building websites</span>
         </span>
         <span class="rv-mask">
-          <span><em>more hands-on.</em></span>
+          <span><em>since 2010.</em></span>
         </span>
       </h2>
 
-      <div class="founder__prose">
-        <p>
-          No agency layers between you and the work: the person who designs your site also builds
-          it, and is still around after launch.
-        </p>
-        <p>
-          [Placeholder: your background in two or three sentences. How you got into building for
-          the web, what you did before, and why Astro.]
-        </p>
-      </div>
+      {/* Hans's own text goes here, in a <div class="founder__prose"> with a
+          <p> per paragraph; until then the card shows the heading, the links
+          and the figures. */}
 
       <ul class="founder__desks">
         {
@@ -110,6 +111,8 @@ const desks: Desk[] = [
       </ul>
     </div>
 
+    {
+      hasPortrait && (
     <figure class="founder__figure m-0">
       {/* PLACEHOLDER: a portrait of Hans. Swap for an <Image class="founder__photo" />
           when it exists; the card's fade and crop stay as they are. */}
@@ -117,6 +120,8 @@ const desks: Desk[] = [
         <Placeholder class="h-full w-full rounded-none" invert label="[ placeholder: portrait of Hans ]" />
       </div>
     </figure>
+      )
+    }
 
     <dl class="founder__stats">
       {
@@ -133,19 +138,24 @@ const desks: Desk[] = [
 
 <style>
   .founder {
-    --card-bg: var(--service-ink-bg);
-    --card-fg: var(--service-ink-fg);
-    --card-chip: var(--service-ink-chip);
-    /* Plain ink, the colour of the type: the blue glows the service card
-       carries stay off this one. Colour is left to the case study pages. */
-    --card-glow-a: transparent;
-    --card-glow-b: transparent;
-    --card-light: var(--service-ink-light);
-    --card-light-b: var(--service-ink-light-b);
-    --card-grain: var(--service-ink-grain);
+    /* The brand card, as the blog post header and the footer: deep violet
+       with the violet glow from the lower left and a light one top right. */
+    --card-bg: #1a1030;
+    /* Violet-white for the text and lines, in both modes: the site's ice
+       white is a touch cool, and on violet its edges read faintly
+       blue-green. */
+    --card-fg: #f5f3ff;
+    --card-chip: rgb(245 243 255 / 0.32);
+    --card-glow-a: rgb(124 58 237 / 0.55);
+    --card-glow-b: rgb(167 139 250 / 0.18);
+    --card-light: 0% 100%;
+    --card-light-b: 100% 0%;
+    /* A light grain in both modes: a heavy one leaves blue-green specks on
+       the violet. */
+    --card-grain: 0.25;
     --card-pad-x: 60px;
     --card-pad-y: 60px;
-    --card-rule: rgb(238 242 244 / 0.14);
+    --card-rule: rgb(245 243 255 / 0.14);
 
     position: relative;
     isolation: isolate;
@@ -154,7 +164,7 @@ const desks: Desk[] = [
     grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
     grid-template-rows: auto auto;
     column-gap: 40px;
-    border: 1px solid var(--color-card-border);
+    border: 1px solid rgb(124 58 237 / 0.18);
     border-radius: var(--radius-xl);
     box-shadow: 0 -12px 40px rgb(12 16 22 / 0.1);
     color: var(--card-fg);
@@ -164,9 +174,13 @@ const desks: Desk[] = [
       radial-gradient(95% 75% at var(--card-light-b), var(--card-glow-b), transparent 68%);
   }
 
-  /* The ink card flips to ice in dark mode; the hairlines follow. */
-  :global(.dark) .founder {
-    --card-rule: rgb(12 16 22 / 0.14);
+  /* Without the portrait: one column, the text at a readable width. */
+  .founder.founder--text {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .founder--text .founder__prose {
+    max-width: 640px;
   }
 
   /* Same grain as the service cards, so the pile and this card are one
@@ -457,7 +471,7 @@ const desks: Desk[] = [
   /* The card flips to ice in dark mode: the glass panel and button follow. */
   :global(.dark) .founder :global(.founder-relight__info),
   :global(.dark) .founder :global(.founder-relight__panel) {
-    background-color: rgb(238 242 244 / 0.82);
+    background-color: rgb(245 243 255 / 0.82);
   }
 
   /* ---- the numbers ---------------------------------------------------- */
@@ -469,7 +483,7 @@ const desks: Desk[] = [
     grid-column: 1 / -1;
     grid-row: 2;
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     margin: 0;
     border-top: 1px solid var(--card-rule);
   }
@@ -572,27 +586,24 @@ const desks: Desk[] = [
       margin-top: 28px;
     }
 
+    /* Three figures, side by side on a phone too. */
     .founder__stats {
       grid-column: 1;
       grid-row: 3;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
     .founder__stat {
-      padding: 24px var(--card-pad-x) 28px;
+      padding: 20px 12px 24px;
     }
 
-    .founder__stat:nth-child(odd) {
-      border-left: 0;
-    }
-
-    .founder__stat:nth-child(n + 3) {
-      border-top: 1px solid var(--card-rule);
+    .founder__stat:first-child {
+      padding-left: 20px;
     }
 
     .founder__value {
-      margin-top: 12px;
-      font-size: 44px;
+      margin-top: 10px;
+      font-size: clamp(20px, 6.2vw, 30px);
     }
   }
 </style>
