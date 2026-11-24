@@ -125,14 +125,11 @@ import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
   }
 
   /* Dark mode. The service-card tokens the field borrows go blue-grey on
-     ink, and their heavy grain turns into grey static there, so the field
-     read as a grey, noisy patch between the violet cards and the violet
-     footer. On ink it takes the footer's own glow instead: brand violet
-     from the lower left, the lighter violet from the upper right, with
-     only a breath of grain. The watermark uses the violet made for ink. */
+     ink, and their heavy grain turns into grey static there. On ink the
+     field is left out: the sign-off sits on the plain neutral page (Hans's
+     choice; it had a violet glow at the lower left). */
   :global(.dark) .cta__field {
-    opacity: 1;
-    background-image: radial-gradient(70% 90% at 12% 88%, rgb(124 58 237 / 0.24), transparent 62%);
+    background-image: none;
   }
 
   /* No grain on ink: even faint, it showed as grey-green speckle. */
