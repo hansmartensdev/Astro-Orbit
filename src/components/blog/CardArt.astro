@@ -1,0 +1,145 @@
+---
+/**
+ * CardArt
+ *
+ * A post's image on the blog cards (homepage, /blog, related posts): the
+ * post's icon with a word or two under it, on a violet gradient with a grid
+ * over it. The same system as the blog images in Astro Rocket, in this
+ * theme's violet. The card already shows the title, so the image doesn't
+ * repeat it; the image inside the post and the share preview keep the
+ * title (generateBlogCover in lib/og.ts).
+ *
+ * Drawn as inline SVG, so the word is set in the site's own display face
+ * and stays sharp at any size. The icon is the post's `icon` (any Lucide
+ * name, or "claude"), else one picked from its tags; the word is its
+ * `cardWord`.
+ */
+import { coverIcon, lucideBody } from '@/lib/og';
+
+interface Props {
+  slug: string;
+  icon?: string;
+  tags?: string[];
+  word?: string;
+  class?: string;
+}
+
+const { slug, icon, tags = [], word, class: className } = Astro.props;
+const name = coverIcon(icon, tags);
+// Lucide draws at stroke-width 2 on each element; the card's own (thinner)
+// stroke is set in the stylesheet, so the attribute comes off.
+const body = (lucideBody(name) ?? '').replace(/ stroke-width="2"/g, '');
+// Lucide icons are strokes; a brand mark (the Claude logo) is a filled shape.
+const filled = body.includes('fill="currentColor"');
+
+// SVG ids are page-wide and a post can have a card twice on one page.
+const gradId = `card-grad-${slug}-${Math.random().toString(36).slice(2, 8)}`;
+
+/*
+ * The artwork is zoomed in its frame (see .ca__svg), so the frame shows the
+ * middle slice of it. The gradient's stops sit on the edges of that slice,
+ * or the visible part would show neither end colour; the cropped rest is
+ * padded with the end colours.
+ */
+const ZOOM = 1.35;
+const stopTop = +((1 - 1 / ZOOM) / 2).toFixed(4);
+const stopFoot = +(1 - stopTop).toFixed(4);
+
+// Long words get a smaller size, so they stay inside the visible slice.
+const size = !word ? 0 : word.length > 12 ? 80 : 96;
+---
+
+<span class:list={['ca', className]} aria-hidden="true">
+  <svg class="ca__svg" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+        <stop offset={stopTop} class="ca__top" />
+        <stop offset={stopFoot} class="ca__foot" />
+      </linearGradient>
+    </defs>
+    <rect width="1200" height="630" fill={`url(#${gradId})`} />
+    <g
+      transform={word ? 'translate(540, 205) scale(5)' : 'translate(510, 225) scale(7.5)'}
+      class:list={['ca__icon', filled && 'ca__icon--filled']}
+      set:html={body}
+    />
+    {
+      word && (
+        <text x="600" y="435" font-size={size} text-anchor="middle" letter-spacing="-2" class="ca__word">
+          {word}
+        </text>
+      )
+    }
+    <path d="M 36 60 L 36 36 L 60 36" class="ca__corner" />
+    <path d="M 1140 36 L 1164 36 L 1164 60" class="ca__corner" />
+    <path d="M 36 570 L 36 594 L 60 594" class="ca__corner" />
+    <path d="M 1140 594 L 1164 594 L 1164 570" class="ca__corner" />
+  </svg>
+</span>
+
+<style>
+  .ca {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    aspect-ratio: 1200 / 630;
+  }
+
+  .ca__svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    transform: scale(1.35);
+    transform-origin: center;
+  }
+
+  /* From a step under the brand violet at the top to a deep violet at the
+     foot; the same in light and dark mode. */
+  .ca__top {
+    stop-color: color-mix(in srgb, #2e1065 14%, #7c3aed);
+  }
+
+  .ca__foot {
+    stop-color: #2e1065;
+  }
+
+  .ca__icon {
+    color: #f5f3ff;
+    stroke: #f5f3ff;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0.9;
+  }
+
+  .ca__icon--filled {
+    stroke: none;
+  }
+
+  .ca__word {
+    fill: #f5f3ff;
+    font-family: var(--font-display);
+    font-weight: 800;
+  }
+
+  .ca__corner {
+    stroke: #ddd6fe;
+    stroke-opacity: 0.7;
+    stroke-width: 1.5;
+  }
+
+  /* The grid, part of the picture rather than the screen: sixteen columns at
+     every size, square cells, fading out towards the edges. */
+  .ca::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / 0.09) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.09) 1px, transparent 1px);
+    background-size: 6.25% 11.9048%;
+    -webkit-mask-image: radial-gradient(ellipse at center, #000 45%, transparent 100%);
+    mask-image: radial-gradient(ellipse at center, #000 45%, transparent 100%);
+  }
+</style>

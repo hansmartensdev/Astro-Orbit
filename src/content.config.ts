@@ -26,6 +26,9 @@ const blog = defineCollection({
       /** The cover's icon: any Lucide name (lucide.dev/icons), or "claude" for the Claude logo. Without it,
        *  one is picked from the tags. See generateBlogCover in lib/og.ts. */
       icon: z.string().optional(),
+      /** A word or two under the icon on the post's card image (CardArt), e.g.
+       *  "lighthouse". Without it the card image shows the icon alone. */
+      cardWord: z.string().optional(),
       locale: z.enum(['en', 'es', 'fr']).default('en'),
     }),
 });
@@ -129,9 +132,6 @@ const work = defineCollection({
              *  or 2 (What I built). Without it, the pictures are shared out
              *  half and half. */
             band: z.union([z.literal(1), z.literal(2)]).optional(),
-            /** "craft": from tablet up, the homepage's live pile of craft
-             *  cards stands in for this picture; phones keep the picture. */
-            live: z.literal('craft').optional(),
           }),
         )
         .default([]),

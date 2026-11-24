@@ -11,20 +11,29 @@ export interface OGImageOptions {
   type?: 'website' | 'article';
 }
 
-// Geist, the site's own face, as static instances (Satori reads TTF/OTF, not
-// WOFF2 or variable fonts). Made from @fontsource-variable/geist (SIL OFL).
+// The theme's own faces: Outfit for titles and the mark, Archivo for running
+// text. Satori reads TTF, OTF and WOFF but not WOFF2 or variable fonts, so
+// these are the static WOFF instances from @fontsource/outfit and
+// @fontsource/archivo (SIL OFL), not the variable files the site loads.
 //
 // Read fresh for every image, as a standalone ArrayBuffer holding exactly the
 // file's bytes. On Vercel a cached, shared copy reached Satori as other data
 // ("Unsupported OpenType signature") and failed the build; a Buffer's .buffer
-// is the memory it lives in, not the file, and need not stay put. 64 KB per
-// image is nothing next to that.
-function loadFont(weight: 400 | 600): ArrayBuffer {
-  const file = readFileSync(resolve(process.cwd(), `public/fonts/geist-latin-${weight}-normal.ttf`));
+// is the memory it lives in, not the file, and need not stay put.
+function loadFont(family: 'outfit' | 'archivo', weight: 400 | 600): ArrayBuffer {
+  const file = readFileSync(
+    resolve(process.cwd(), `node_modules/@fontsource/${family}/files/${family}-latin-${weight}-normal.woff`)
+  );
   const copy = new Uint8Array(file.byteLength);
   copy.set(file);
   return copy.buffer;
 }
+
+/** The fonts every image registers: Outfit for titles, Archivo for text. */
+const fonts = () => [
+  { name: 'Outfit', data: loadFont('outfit', 600), weight: 600 as const, style: 'normal' as const },
+  { name: 'Archivo', data: loadFont('archivo', 400), weight: 400 as const, style: 'normal' as const },
+];
 
 /** Ink, ice and the violet accent, as plain values: Satori cannot read CSS variables. */
 const INK = '#1a1030'; // a deep violet ground for covers and share cards, as the dark footer
@@ -69,15 +78,15 @@ export async function generateOGImage(options: OGImageOptions): Promise<Buffer> 
   // page's title and line, and the domain under a short violet rule.
   // Note: every div needs an explicit display for Satori.
   const markup = html`
-    <div style="height: 100%; width: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 64px 76px 60px; font-family: 'Geist'; background-color: ${INK}; background-image: radial-gradient(circle at 100% 100%, rgba(124, 58, 237, 0.55) 0%, rgba(124, 58, 237, 0.18) 38%, rgba(124, 58, 237, 0) 68%);">
+    <div style="height: 100%; width: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 64px 76px 60px; font-family: 'Archivo'; background-color: ${INK}; background-image: radial-gradient(circle at 100% 100%, rgba(124, 58, 237, 0.55) 0%, rgba(124, 58, 237, 0.18) 38%, rgba(124, 58, 237, 0) 68%);">
       <div style="display: flex; align-items: center; gap: 18px;">
         <div style="display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; background: ${VIOLET}; border-radius: 14px;">
-          <span style="font-size: 23px; font-weight: 600; color: #ffffff; letter-spacing: -0.04em;">${siteConfig.mark}</span>
+          <span style="font-family: 'Outfit'; font-size: 23px; font-weight: 600; color: #ffffff; letter-spacing: -0.04em;">${siteConfig.mark}</span>
         </div>
-        <span style="font-size: 30px; font-weight: 600; color: ${ICE}; letter-spacing: -0.02em;">${siteConfig.name}</span>
+        <span style="font-family: 'Outfit'; font-size: 30px; font-weight: 600; color: ${ICE}; letter-spacing: -0.02em;">${siteConfig.name}</span>
       </div>
       <div style="display: flex; flex-direction: column; gap: 22px;">
-        <div style="display: flex; font-size: ${titleSize}px; font-weight: 600; color: #ffffff; line-height: 1.08; letter-spacing: -0.035em; max-width: 1020px;">${title}</div>
+        <div style="display: flex; font-family: 'Outfit'; font-size: ${titleSize}px; font-weight: 600; color: #ffffff; line-height: 1.08; letter-spacing: -0.035em; max-width: 1020px;">${title}</div>
         <div style="display: ${truncatedDescription ? 'flex' : 'none'}; font-size: 27px; color: #aebcc4; line-height: 1.45; max-width: 900px;">${truncatedDescription}</div>
       </div>
       <div style="display: flex; align-items: center; gap: 18px;">
@@ -93,10 +102,7 @@ export async function generateOGImage(options: OGImageOptions): Promise<Buffer> 
   const svg = await satori(markup, {
     width: 1200,
     height: 630,
-    fonts: [
-      { name: 'Geist', data: loadFont(400), weight: 400, style: 'normal' },
-      { name: 'Geist', data: loadFont(600), weight: 600, style: 'normal' },
-    ],
+    fonts: fonts(),
   });
 
   // Convert SVG to PNG
@@ -109,7 +115,7 @@ export async function generateOGImage(options: OGImageOptions): Promise<Buffer> 
 // Blog covers
 //
 // Every post gets a cover in one house style: ink, a violet glow, a large
-// outline Lucide icon, the title in Geist and the hm/ mark. What changes per
+// outline Lucide icon, the title in Outfit and the hm/ mark. What changes per
 // post is seeded from its slug, so a cover is unique and the same on every
 // build: where the main glow sits and where its fainter partner sits. The
 // icon is the post's `icon` frontmatter (any lucide.dev name), or one picked
@@ -198,7 +204,7 @@ export async function generateBlogCover(options: {
   const titleSize = title.length > 70 ? 50 : title.length > 46 ? 58 : 66;
 
   const markup = html`
-    <div style="display: flex; flex-direction: column; justify-content: space-between; width: 100%; height: 100%; padding: 64px 72px; font-family: 'Geist'; background-color: ${INK}; background-image: radial-gradient(circle at ${glow}, rgba(124, 58, 237, 0.6) 0%, rgba(124, 58, 237, 0) 60%), radial-gradient(circle at ${glow2}, rgba(167, 139, 250, 0.22) 0%, rgba(167, 139, 250, 0) 45%);">
+    <div style="display: flex; flex-direction: column; justify-content: space-between; width: 100%; height: 100%; padding: 64px 72px; font-family: 'Outfit'; background-color: ${INK}; background-image: radial-gradient(circle at ${glow}, rgba(124, 58, 237, 0.6) 0%, rgba(124, 58, 237, 0) 60%), radial-gradient(circle at ${glow2}, rgba(167, 139, 250, 0.22) 0%, rgba(167, 139, 250, 0) 45%);">
       <div style="display: flex; justify-content: space-between; align-items: flex-start;">
         <span style="font-size: 26px; font-weight: 600; color: ${ICE}; letter-spacing: -0.04em;">${siteConfig.mark}</span>
         <img src="${iconSrc}" style="width: 220px; height: 220px;" />
@@ -212,10 +218,7 @@ export async function generateBlogCover(options: {
   const svg = await satori(markup, {
     width: 1200,
     height: 630,
-    fonts: [
-      { name: 'Geist', data: loadFont(400), weight: 400, style: 'normal' },
-      { name: 'Geist', data: loadFont(600), weight: 600, style: 'normal' },
-    ],
+    fonts: fonts(),
   });
   return Buffer.from(await sharp(Buffer.from(svg)).png().toBuffer());
 }

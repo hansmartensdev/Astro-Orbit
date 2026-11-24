@@ -2,8 +2,8 @@
 /**
  * PostCard
  *
- * A blog post as a card: the post's cover across the top (its own image, or
- * the generated cover), then the date, the title, the description and a
+ * A blog post as a card: the post's image across the top (its own image, or
+ * its card art), then the date, the title, the description and a
  * "Read the post" cue that turns violet on hover. Used by the homepage's
  * From the blog section and by Related posts under each post, so the two
  * always look the same.
@@ -11,7 +11,6 @@
 import { Icon } from 'astro-icon/components';
 import type { CollectionEntry } from 'astro:content';
 import PostCover from '@/components/blog/PostCover.astro';
-import { coverPath } from '@/lib/og';
 import { formatDate } from '@/lib/utils';
 
 interface Props {
@@ -27,7 +26,11 @@ const slug = post.id.replace(/^[a-z]{2}\//, '');
 ---
 
 <a class:list={['post', compact && 'post--compact']} href={`/blog/${slug}`} data-card>
-  <PostCover class="post__cover" src={post.data.image?.src ?? coverPath(slug)} />
+  <PostCover
+    class="post__cover"
+    src={post.data.image?.src}
+    art={{ slug, icon: post.data.icon, tags: post.data.tags, word: post.data.cardWord }}
+  />
   <span class="label-mono text-foreground-muted">
     {formatDate(post.data.publishedAt).toUpperCase()}
   </span>

@@ -4,22 +4,37 @@
  *
  * A post's cover inside a card link. On hover (or keyboard focus) of the
  * link, the image eases in a little and an ink veil with a "Read the post"
- * pill comes over it. The image is decorative (it is the title set as
- * artwork), and the pill repeats what the link already says, so both are
- * hidden from screen readers.
+ * pill comes over it. The image is the post's own (`src`), or else its card
+ * art (CardArt: icon and word on the violet grid). It is decorative, and the
+ * pill repeats what the link already says, so both are hidden from screen
+ * readers.
  */
 import { Icon } from 'astro-icon/components';
+import CardArt from '@/components/blog/CardArt.astro';
 
 interface Props {
-  src: string;
+  /** The post's own image. Without it the card art is drawn. */
+  src?: string;
+  /** What the card art needs: the post's slug, icon, tags and card word. */
+  art?: { slug: string; icon?: string; tags?: string[]; word?: string };
   class?: string;
 }
 
-const { src, class: className } = Astro.props;
+const { src, art, class: className } = Astro.props;
 ---
 
 <span class:list={['pc', className]}>
-  <img class="pc__img" src={src} alt="" width="1200" height="630" loading="lazy" decoding="async" />
+  {
+    src ? (
+      <img class="pc__img" src={src} alt="" width="1200" height="630" loading="lazy" decoding="async" />
+    ) : (
+      art && (
+        <span class="pc__img">
+          <CardArt {...art} />
+        </span>
+      )
+    )
+  }
   <span class="pc__veil" aria-hidden="true">
     <span class="pc__pill">
       Read the post
@@ -38,6 +53,7 @@ const { src, class: className } = Astro.props;
 
   .pc__img {
     display: block;
+    overflow: hidden;
     width: 100%;
     height: auto;
     aspect-ratio: 1200 / 630;
