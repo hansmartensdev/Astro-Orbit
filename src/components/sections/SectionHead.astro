@@ -58,6 +58,12 @@ const parts = at >= 0 ? [title.slice(0, at), title.slice(at, at + accent!.length
     color: var(--hero-accent, #7c3aed);
   }
 
+  /* A step lighter on the dark page, so the word doesn't sink into it
+     (Hans's choice): violet-500. */
+  :global(.dark) .sh__accent {
+    color: #8b5cf6;
+  }
+
   /* A page title leads the phone scale, a step above the section heads on
      the same page. Desktop keeps the shared size. */
   @media (max-width: 700px) {
