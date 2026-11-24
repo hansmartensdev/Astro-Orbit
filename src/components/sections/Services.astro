@@ -21,6 +21,14 @@ import SectionHead from './SectionHead.astro';
 import { lucideBody } from '@/lib/og';
 import { services } from '@/config/services.config';
 
+interface Props {
+  /** The bare pile, for a project page: no section heading or padding, no
+   *  page gutter, smaller cards that stack under the bar. */
+  bare?: boolean;
+}
+
+const { bare = false } = Astro.props;
+
 const last = services.length - 1;
 
 // Card text is plain text from the config, escaped, with [text](url) turned
@@ -28,7 +36,10 @@ const last = services.length - 1;
 const escape = (t: string) =>
   t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const withLinks = (t: string) =>
-  escape(t).replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a class="service__inline-link" href="$2">$1</a>');
+  escape(t).replace(
+    /\[([^\]]+)\]\(([^)\s]+)\)/g,
+    '<a class="service__inline-link" href="$2">$1</a>'
+  );
 // One named timeline per covering card (every card but the first).
 const timelineScope = services
   .slice(1)
@@ -36,24 +47,31 @@ const timelineScope = services
   .join(', ');
 ---
 
-<section class="pt-[130px] max-[800px]:pt-[90px]" style={`timeline-scope: ${timelineScope}`}>
-  <div class="shell mb-14">
-    <SectionHead
-      title="My craft"
-      blurb="I design, build, optimise and maintain websites with Astro — not as a business, but because it’s what I love to do."
-      id="services"
-    />
-  </div>
+<section
+  class:list={[bare ? 'services--bare' : 'pt-[130px] max-[800px]:pt-[90px]']}
+  style={`timeline-scope: ${timelineScope}`}
+>
+  {
+    !bare && (
+      <div class="shell mb-14">
+        <SectionHead
+          title="My craft"
+          blurb="I design, build, optimise and maintain websites with Astro — not as a business, but because it’s what I love to do."
+          id="services"
+        />
+      </div>
+    )
+  }
 
   {
     services.map((service, i) => (
       <div
-        class="services__slot shell"
+        class:list={['services__slot', !bare && 'shell']}
         data-reveal
         style={
           '--sticky-top:' +
-          (90 + i * 20) +
-          'px; --i:' +
+          (bare ? `calc(var(--sw-nav-h, 76px) + ${24 + i * 16}px)` : `${90 + i * 20}px`) +
+          '; --i:' +
           i +
           (i > 0 ? `; view-timeline-name: --svc-${i}` : '')
         }
@@ -72,7 +90,10 @@ const timelineScope = services
                 class="service__icon"
                 viewBox="0 0 24 24"
                 aria-hidden="true"
-                set:html={lucideBody(service.icon)?.replace(/stroke-width="2"/g, 'stroke-width="1.25"')}
+                set:html={lucideBody(service.icon)?.replace(
+                  /stroke-width="2"/g,
+                  'stroke-width="1.25"'
+                )}
               />
               <h3 class="service__title display-service m-0">
                 {service.title.map((line) => (
@@ -359,6 +380,53 @@ const timelineScope = services
       gap: 36px;
       padding: 40px 36px;
     }
+  }
+
+  /* --- bare: the pile on a project page -------------------------------
+     The same cards and the same stacking, at the size of a picture in the
+     case-study column: smaller type, padding and icon, and no fixed height,
+     so each card is as tall as its text. */
+  .services--bare .services__slot {
+    margin-bottom: 16px;
+  }
+
+  .services--bare .service {
+    min-height: 0;
+    gap: 32px;
+    padding: 32px 36px;
+    border-radius: var(--radius-lg);
+  }
+
+  .services--bare .service__lead {
+    gap: 20px;
+  }
+
+  .services--bare .service__title {
+    font-size: clamp(30px, 3vw, 44px);
+  }
+
+  .services--bare .service__icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 16px;
+  }
+
+  .services--bare .service__tags--lead {
+    margin-top: 16px;
+  }
+
+  .services--bare .service__tag {
+    padding: 5px 11px;
+    font-size: 12px;
+  }
+
+  .services--bare .service__desc {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .services--bare .service__link {
+    font-size: 14px;
   }
 
   @media (max-width: 800px) {

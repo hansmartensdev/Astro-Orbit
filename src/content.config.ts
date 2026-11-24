@@ -127,6 +127,9 @@ const work = defineCollection({
              *  or 2 (What I built). Without it, the pictures are shared out
              *  half and half. */
             band: z.union([z.literal(1), z.literal(2)]).optional(),
+            /** "craft": from tablet up, the homepage's live pile of craft
+             *  cards stands in for this picture; phones keep the picture. */
+            live: z.literal('craft').optional(),
           }),
         )
         .default([]),

@@ -45,6 +45,7 @@ gallery:
   - src: "../../assets/work/hansmartens-dev/craft-card.webp"
     alt: "The Web Development card from the homepage, with its code icon, tags and text"
     band: 2
+    live: craft
 challenge: "My previous website was good, but as a web designer and developer I wanted something more special and attractive: a portfolio, blog and homepage with a wow factor for me and, I think, for visitors too. That comes from the animated 3D hero. A ball comes out of it and follows a track down the homepage until it becomes the first project."
 solution: "I wanted a new Astro website, and I chose a new brand colour for it. My previous website was blue. The ball on the homepage is violet, so I made violet the new brand colour. I think the project cards, on the homepage and on the projects page, give the website a professional look. I'm proud of the result so far, and I'm still improving the site, both its design and its development.\n\nSWM26 came with Outfit for the headings, Archivo for the text and IBM Plex Mono for the small labels. I replaced all three with Geist, in regular and italic, so the whole site uses one typeface. Geist is an open-source font, served from the site itself."
 technologies: ["Astro", "TypeScript", "Tailwind CSS", "three.js", "Claude Code", "Vercel"]
