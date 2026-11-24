@@ -14,6 +14,10 @@
  *   data-reveal="lift"     rises 64px without fading, for a page's main
  *                          heading: it paints at once, so it still counts
  *                          as the first thing on screen
+ *   data-reveal-load       arrives with the first wave on load wherever it
+ *                          sits, not when scrolled to: for what belongs to
+ *                          the top of the page even where it falls low on a
+ *                          tall phone (a post's breadcrumbs and contents)
  *   data-reveal-delay      seconds to hold after entering view, for a row
  *                          of cards that should arrive one after another
  *   data-reveal-content    on a block of running text (a post, a case
@@ -97,7 +101,8 @@ export function initReveal(reduced: boolean): VoidFunction {
       for (const entry of entries) {
         firstPass.unobserve(entry.target);
         const els = byTarget.get(entry.target) ?? [];
-        if (entry.isIntersecting) {
+        const onLoad = (entry.target as HTMLElement).hasAttribute('data-reveal-load');
+        if (entry.isIntersecting || onLoad) {
           const offset = WAVE_START + wave++ * WAVE_STEP;
           for (const el of els) reveal(el, offset);
         } else {
