@@ -214,18 +214,6 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     color: var(--ice-100);
   }
 
-  /* The theme toggle's button goes white with the rest of the bar there.
-     Only the button: its panel keeps the page's own colours. */
-  .sw-nav[data-over-media]:not(.is-scrolled) :global(.ttg__trigger) {
-    border-color: rgb(238 242 244 / 0.4);
-    color: var(--ice-100);
-  }
-
-  .sw-nav[data-over-media]:not(.is-scrolled) :global(.ttg__trigger:hover),
-  .sw-nav[data-over-media]:not(.is-scrolled) :global(.ttg__trigger[aria-expanded='true']) {
-    background: rgb(238 242 244 / 0.14);
-  }
-
   .sw-nav[data-over-media]:not(.is-scrolled) .mark__context {
     color: var(--nav-context-on-media);
   }
