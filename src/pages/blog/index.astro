@@ -11,7 +11,6 @@ import SectionHead from '@/components/sections/SectionHead.astro';
 import Cta from '@/components/sections/Cta.astro';
 import { getCollection } from 'astro:content';
 import { formatDate } from '@/lib/utils';
-import { coverPath } from '@/lib/og';
 import PostCover from '@/components/blog/PostCover.astro';
 import { Icon } from 'astro-icon/components';
 
@@ -133,11 +132,17 @@ const slug = (category: string) => category.toLowerCase();
                   </div>
                 )}
               </div>
-              {/* The cover, beside the text (above it on a phone). Decorative:
-                  it is the title set as artwork. */}
+              {/* The post's image beside the text (above it on a phone): its
+                  own, or its card art. Decorative. */}
               <PostCover
                 class="border-border w-full rounded-[12px] border max-[800px]:order-1"
-                src={post.data.image?.src ?? coverPath(post.id.replace(/^en\//, ''))}
+                src={post.data.image?.src}
+                art={{
+                  slug: post.id.replace(/^en\//, ''),
+                  icon: post.data.icon,
+                  tags: post.data.tags,
+                  word: post.data.cardWord,
+                }}
               />
             </a>
           </li>
