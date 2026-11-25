@@ -1,0 +1,197 @@
+---
+/**
+ * BackToTop
+ *
+ * Astro Rocket's back-to-top button, brought over: a round button in the
+ * bottom-right corner with a ring around it that fills in brand violet as
+ * the reader scrolls down the page. It slides in once the page has scrolled
+ * 400px, and a click goes back to the top.
+ *
+ * Here the scroll goes through Lenis (window.__lenis, the site's smooth
+ * scrolling) when it runs, so the trip up is as smooth as the page, and
+ * straight to the top under reduced motion. The scroll position and page
+ * height come from scroll events and a ResizeObserver, never from a layout
+ * read before first paint.
+ */
+---
+
+<button type="button" class="btt" id="back-to-top" aria-label="Back to top">
+  {/* The ring, turned so the arc starts at 12 o'clock. */}
+  <svg class="btt__ring" viewBox="0 0 48 48" aria-hidden="true">
+    <circle class="btt__track" cx="24" cy="24" r="21" />
+    <circle class="btt__progress" id="back-to-top-ring" cx="24" cy="24" r="21" />
+  </svg>
+  <span class="btt__face" aria-hidden="true">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="m18 15-6-6-6 6" />
+    </svg>
+  </span>
+</button>
+
+<style>
+  .btt {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    /* Under the nav (60) and the open menu (54-55), above the page. */
+    z-index: 50;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    cursor: pointer;
+    opacity: 0;
+    translate: 0 2rem;
+    pointer-events: none;
+    transition:
+      opacity 300ms cubic-bezier(0.4, 0, 1, 1),
+      translate 300ms cubic-bezier(0.4, 0, 1, 1);
+  }
+
+  .btt.is-visible {
+    opacity: 1;
+    translate: 0 0;
+    pointer-events: auto;
+    transition:
+      opacity 250ms cubic-bezier(0, 0, 0.2, 1),
+      translate 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+
+  .btt:focus-visible {
+    outline: 2px solid var(--hero-accent, #7c3aed);
+    outline-offset: 3px;
+  }
+
+  .btt__ring {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    rotate: -90deg;
+  }
+
+  .btt__track,
+  .btt__progress {
+    fill: none;
+    stroke-width: 2.5;
+  }
+
+  .btt__track {
+    stroke: var(--color-border-strong);
+    stroke-width: 2;
+  }
+
+  /* 2 x pi x 21: the full ring, emptied at the top of the page. */
+  .btt__progress {
+    stroke: var(--hero-accent, #7c3aed);
+    stroke-linecap: round;
+    stroke-dasharray: 131.95;
+    stroke-dashoffset: 131.95;
+  }
+
+  /* The lighter violet on the dark page, as the accent words there. */
+  :global(.dark) .btt__progress {
+    stroke: #8b5cf6;
+  }
+
+  .btt__face {
+    position: absolute;
+    inset: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 999px;
+    background: var(--color-background);
+    color: var(--color-foreground-muted);
+    box-shadow: 0 4px 12px rgb(0 0 0 / 0.12);
+    transition: color var(--transition-fast);
+  }
+
+  .btt:hover .btt__face {
+    color: var(--color-foreground);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btt,
+    .btt.is-visible {
+      transition: none;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .btt {
+      right: 16px;
+      bottom: 16px;
+    }
+  }
+</style>
+
+<script>
+  const THRESHOLD = 400;
+  const CIRCUMFERENCE = 131.95;
+
+  function initBackToTop() {
+    const btn = document.getElementById('back-to-top');
+    if (!btn || btn.dataset.bttInit) return;
+    btn.dataset.bttInit = 'true';
+
+    const ring = document.getElementById('back-to-top-ring');
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // How far the page can scroll, cached so the scroll handler never reads
+    // layout; refreshed when the page or the window changes size.
+    let maxScroll = 0;
+    const measure = () => {
+      maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    };
+    window.addEventListener('resize', measure, { passive: true });
+    new ResizeObserver(measure).observe(document.documentElement);
+
+    let ticking = false;
+    const update = () => {
+      const y = window.scrollY;
+      const pct = maxScroll > 0 ? Math.min(1, Math.max(0, y / maxScroll)) : 0;
+      if (ring) ring.style.strokeDashoffset = String(CIRCUMFERENCE * (1 - pct));
+      btn.classList.toggle('is-visible', y > THRESHOLD);
+      ticking = false;
+    };
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(update);
+      },
+      { passive: true }
+    );
+
+    btn.addEventListener('click', () => {
+      const lenis = (window as unknown as { __lenis?: { scrollTo: (t: number, o?: object) => void } })
+        .__lenis;
+      if (lenis && !reduced) lenis.scrollTo(0);
+      else window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+    });
+
+    // The first reading after first paint.
+    requestAnimationFrame(() => {
+      measure();
+      update();
+    });
+  }
+
+  initBackToTop();
+  document.addEventListener('astro:after-swap', initBackToTop);
+</script>
