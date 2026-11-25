@@ -18,6 +18,8 @@
 import { Icon } from 'astro-icon/components';
 import siteConfig from '@/config/site.config';
 import Placeholder from '@/components/site/Placeholder.astro';
+import { Image } from 'astro:assets';
+import iphone from '@/assets/about/iphone.png';
 
 interface Stat {
   value: string;
@@ -145,24 +147,20 @@ const desks: Desk[] = [
     }
 
     {
-      /* Until the portrait exists: the dark-mode ball recording from project
-         1 in the card's empty right half, on desktop only (Hans's choice).
-         Hidden below 1101px, where the card is one column; it never
-         downloads there, as it loads only once on screen. */
+      /* Until the portrait exists: Hans's iPhone screenshot of the homepage,
+         on a phone standing on the card's violet, in the card's empty right
+         half on desktop only (Hans's choice). Hidden below 1101px, where the
+         card is one column; lazy, so it never downloads there. */
       !hasPortrait && (
-        <figure class="founder__video m-0">
-          <video
-            data-founder-video
-            data-src="/videos/hansmartens-dev-ball.mp4"
-            poster="/videos/hansmartens-dev-ball-poster.webp"
-            width="1440"
-            height="900"
-            muted
-            loop
-            playsinline
-            preload="none"
-            aria-label="Scrolling down the homepage: the ball leaves the 3D hero, follows its track down the page and lands as the first project card"
-          ></video>
+        <figure class="founder__phone m-0">
+          <Image
+            src={iphone}
+            alt="The hansmartens.dev homepage in dark mode on an iPhone: the 3D droplet and the violet ball above the headline"
+            widths={[440, 660, 880, 1100]}
+            sizes="440px"
+            loading="lazy"
+            decoding="async"
+          />
         </figure>
       )
     }
@@ -667,8 +665,8 @@ const desks: Desk[] = [
     }
   }
 
-  /* ---- the video in place of the portrait (desktop) ------------------- */
-  .founder__video {
+  /* ---- the phone in place of the portrait (desktop) ------------------- */
+  .founder__phone {
     display: none;
   }
 
@@ -677,51 +675,22 @@ const desks: Desk[] = [
       grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
     }
 
-    .founder__video {
+    .founder__phone {
       position: relative;
       z-index: 2;
       grid-column: 2;
       grid-row: 1;
       display: flex;
       align-items: center;
+      justify-content: center;
       padding: calc(var(--card-pad-y) + 40px) var(--card-pad-x) var(--card-pad-y) 0;
     }
 
-    .founder__video video {
+    .founder__phone :global(img) {
       display: block;
-      width: 100%;
-      height: auto;
-      border: 1px solid var(--card-rule);
-      border-radius: 14px;
-      background: #0e0e0e;
-      box-shadow: 0 30px 60px -20px rgb(0 0 0 / 0.6);
+      width: auto;
+      height: min(640px, 72vh);
+      filter: drop-shadow(0 30px 50px rgb(0 0 0 / 0.5));
     }
   }
 </style>
-
-<script>
-  // The About card's video: no download until it is near the screen (so
-  // never on a phone, where it is hidden), then it plays muted on a loop
-  // while on screen. Under reduced motion it stays on its poster.
-  function initFounderVideo() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const videos = document.querySelectorAll<HTMLVideoElement>('video[data-founder-video]');
-    if (!videos.length) return;
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          const v = entry.target as HTMLVideoElement;
-          if (entry.isIntersecting) {
-            if (!v.src && v.dataset.src) v.src = v.dataset.src;
-            v.play().catch(() => {});
-          } else if (!v.paused) {
-            v.pause();
-          }
-        }
-      },
-      { rootMargin: '200px 0px' }
-    );
-    videos.forEach((v) => io.observe(v));
-  }
-  document.addEventListener('astro:page-load', initFounderVideo);
-</script>
