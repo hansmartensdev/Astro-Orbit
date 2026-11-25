@@ -2,6 +2,15 @@ import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
+/** A screen recording on a project page; paths are under /public. */
+const videoSchema = z.object({
+  src: z.string(),
+  poster: z.string(),
+  alt: z.string(),
+  width: z.number(),
+  height: z.number(),
+});
+
 // Blog collection with Content Layer API
 const blog = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
@@ -119,9 +128,10 @@ const work = defineCollection({
       /** Optional: a short screen recording, shown first beside "Why I
        *  built it". It plays muted and on a loop, loads only when the reader
        *  is near it, and stays on its still (`poster`) under reduced motion.
-       *  Paths are under /public. */
+       *  Paths are under /public. One video, or a list of them, shown one
+       *  under another. */
       video: z
-        .object({ src: z.string(), poster: z.string(), alt: z.string(), width: z.number(), height: z.number() })
+        .union([videoSchema, z.array(videoSchema)])
         .optional(),
       /** The device mockup. Revealed on hover when a `feature` is set. */
       cover: image().optional(),
