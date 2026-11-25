@@ -77,6 +77,8 @@ const {
   year,
   services,
   url,
+  urlLabel,
+  repo,
   feature,
   featureMobile,
   pageHero,
@@ -287,11 +289,21 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
                       </ul>
                     </div>
                   )}
-                  {url && (
-                    <PillButton href={url} target="_blank" variant="solid">
-                      Visit the site
-                      <Icon name="lucide:arrow-up-right" aria-hidden="true" />
-                    </PillButton>
+                  {(url || repo) && (
+                    <div class="case__buttons">
+                      {url && (
+                        <PillButton href={url} target="_blank" variant="solid">
+                          {urlLabel ?? 'Visit the site'}
+                          <Icon name="lucide:arrow-up-right" aria-hidden="true" />
+                        </PillButton>
+                      )}
+                      {repo && (
+                        <PillButton href={repo} target="_blank" variant="outline">
+                          View on GitHub
+                          <Icon name="fa6-brands:github" aria-hidden="true" />
+                        </PillButton>
+                      )}
+                    </div>
                   )}
                 </div>
               )}
@@ -380,12 +392,20 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
     }
 
     {
-      !extrasInBand && url && (
-        <div class="case__visit shell" data-reveal>
-          <PillButton href={url} target="_blank" variant="solid">
-            Visit the site
-            <Icon name="lucide:arrow-up-right" aria-hidden="true" />
-          </PillButton>
+      !extrasInBand && (url || repo) && (
+        <div class="case__visit case__buttons shell" data-reveal>
+          {url && (
+            <PillButton href={url} target="_blank" variant="solid">
+              {urlLabel ?? 'Visit the site'}
+              <Icon name="lucide:arrow-up-right" aria-hidden="true" />
+            </PillButton>
+          )}
+          {repo && (
+            <PillButton href={repo} target="_blank" variant="outline">
+              View on GitHub
+              <Icon name="fa6-brands:github" aria-hidden="true" />
+            </PillButton>
+          )}
         </div>
       )
     }
@@ -977,6 +997,13 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
       margin-top: -24px;
     }
 
+  }
+
+  /* The link to the site and, when there is one, to its code. */
+  .case__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
   }
 </style>
 

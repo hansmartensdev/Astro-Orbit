@@ -3,6 +3,9 @@ title: "Astro Droplet"
 discipline: "Astro theme"
 description: "A free portfolio and blog theme for Astro. A 3D droplet leaves the hero as you scroll and becomes the first project card. Change one settings file to make it yours."
 year: 2026
+url: "https://astrodroplet.dev"
+urlLabel: "View the demo"
+repo: "https://github.com/hansmartensdev/Astro-Droplet"
 feature: "../../assets/work/astro-droplet/card.webp"
 featureMobile: "../../assets/work/astro-droplet/hero-mobile.webp"
 pageHero: "../../assets/work/astro-droplet/hero.webp"
@@ -10,6 +13,9 @@ pageHeroMobile: "../../assets/work/astro-droplet/hero-mobile.webp"
 gallery:
   - src: "../../assets/work/astro-droplet/banner.webp"
     alt: "The Astro Droplet banner: the name, a description of the theme and its droplet animation, 'Theme designed by Hans Martens', the Astro logo, and the demo homepage on a MacBook and an iPhone, on a violet ground"
+    band: 1
+  - src: "../../assets/work/astro-droplet/demo-about.webp"
+    alt: "The violet card on the Astro Droplet demo's About page: 'About me, Alex Morgan', 'Building websites since 2016', the demo text, GitHub and LinkedIn buttons, the homepage on an iPhone, and a marquee of tools such as Astro, three.js and TypeScript"
     band: 1
   - src: "../../assets/work/astro-droplet/demo-projects.webp"
     alt: "The Astro Droplet demo's homepage: 'Latest projects' with six project cards, Astro Droplet, Kern Foundry, Lumen, Atelier Nord, Relay and Compile, each a laptop on a ground in the project's colours"
