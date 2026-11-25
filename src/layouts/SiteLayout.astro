@@ -33,6 +33,8 @@ interface Props {
   navContext?: string;
   /** The page opens on a dark full-bleed image, so the nav must go light. */
   navOverMedia?: boolean;
+  /** A reading-progress line under the header (single projects). */
+  navProgress?: boolean;
   /** The whole page sits on ink, so the frosted bar must frost to ink too. */
   navTone?: 'dark';
 }
@@ -48,6 +50,7 @@ const {
   includeOrgSchema = false,
   navContext,
   navOverMedia = false,
+  navProgress = false,
   navTone,
 } = Astro.props;
 
@@ -69,7 +72,7 @@ const showFontSwitcher = import.meta.env.DEV;
   nofollow={nofollow}
   includeOrgSchema={includeOrgSchema}
 >
-  <Nav slot="header" context={navContext} overMedia={navOverMedia} tone={navTone} />
+  <Nav slot="header" context={navContext} overMedia={navOverMedia} tone={navTone} progress={navProgress} />
   <slot />
   <Footer slot="footer" />
   <BackToTop slot="footer" />
