@@ -133,6 +133,10 @@ const work = defineCollection({
       video: z
         .union([videoSchema, z.array(videoSchema)])
         .optional(),
+      /** More sections after "Why I built it" and "What I built", in the
+       *  same style: a small label and the text beside it. A blank line
+       *  starts a new paragraph; [text](url) is a link, **text** is bold. */
+      sections: z.array(z.object({ label: z.string(), text: z.string() })).default([]),
       /** The device mockup. Revealed on hover when a `feature` is set. */
       cover: image().optional(),
       coverAlt: z.string().optional(),
