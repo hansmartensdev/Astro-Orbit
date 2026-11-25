@@ -15,8 +15,8 @@ and the animation system are by Hans Martens, built with
 
 ## Stack
 
-Astro 6 · Tailwind CSS v4 · TypeScript · three.js for the hero and reel
-scenes · deployed on Vercel. Node 22.12 or later, pnpm 10.
+Astro 7 · Tailwind CSS v4 · TypeScript · three.js for the hero and reel
+scenes · deployed on Vercel. Node 22.23.4 or later, pnpm 10.
 
 ## Commands
 
