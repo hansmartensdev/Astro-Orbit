@@ -18,6 +18,8 @@
 import { Icon } from 'astro-icon/components';
 import siteConfig from '@/config/site.config';
 import Placeholder from '@/components/site/Placeholder.astro';
+import { Image } from 'astro:assets';
+import iphone from '@/assets/about/iphone.png';
 
 interface Stat {
   value: string;
@@ -141,6 +143,25 @@ const desks: Desk[] = [
         <Placeholder class="h-full w-full rounded-none" invert label="[ placeholder: portrait of Hans ]" />
       </div>
     </figure>
+      )
+    }
+
+    {
+      /* Until the portrait exists: Hans's iPhone screenshot of the homepage,
+         on a phone standing on the card's violet, in the card's empty right
+         half on desktop only (Hans's choice). Hidden below 1101px, where the
+         card is one column; lazy, so it never downloads there. */
+      !hasPortrait && (
+        <figure class="founder__phone m-0">
+          <Image
+            src={iphone}
+            alt="The hansmartens.dev homepage in dark mode on an iPhone: the 3D droplet and the violet ball above the headline"
+            widths={[440, 660, 880, 1100]}
+            sizes="440px"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
       )
     }
 
@@ -641,6 +662,35 @@ const desks: Desk[] = [
     .founder__value {
       margin-top: 10px;
       font-size: clamp(20px, 6.2vw, 30px);
+    }
+  }
+
+  /* ---- the phone in place of the portrait (desktop) ------------------- */
+  .founder__phone {
+    display: none;
+  }
+
+  @media (min-width: 1101px) {
+    .founder.founder--text {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    }
+
+    .founder__phone {
+      position: relative;
+      z-index: 2;
+      grid-column: 2;
+      grid-row: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: calc(var(--card-pad-y) + 40px) var(--card-pad-x) var(--card-pad-y) 0;
+    }
+
+    .founder__phone :global(img) {
+      display: block;
+      width: auto;
+      height: min(640px, 72vh);
+      filter: drop-shadow(0 30px 50px rgb(0 0 0 / 0.5));
     }
   }
 </style>
