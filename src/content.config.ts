@@ -105,6 +105,10 @@ const work = defineCollection({
       services: z.array(z.string()).default([]),
       /** Live site, if the work is public. */
       url: z.url().optional(),
+      /** The text on the button to `url`. Defaults to "Visit the site". */
+      urlLabel: z.string().max(30).optional(),
+      /** The project's code on GitHub, if it's public: a second button. */
+      repo: z.url().optional(),
       /**
        * The resting card image — a photograph or brand shot rather than a
        * screen. The mockup in `cover` is what the card reveals on hover.
