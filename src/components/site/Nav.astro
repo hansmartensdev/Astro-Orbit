@@ -83,6 +83,15 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     </div>
 
     <div class="sw-nav__actions">
+      {/* A home icon beside Menu, in the bar's text colour (Hans's choice). */}
+      <a
+        class="sw-nav__home"
+        href="/"
+        aria-label="Home"
+        aria-current={path === '/' ? 'page' : undefined}
+      >
+        <Icon name="lucide:house" aria-hidden="true" />
+      </a>
       <button
         class="burger"
         id="sw-nav-toggle"
@@ -334,6 +343,33 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     display: flex;
     align-items: center;
     gap: 18px;
+  }
+
+  /* The home icon: the toggle's old place and look, no ring, the bar's
+     own text colour, a soft disc on hover. */
+  .sw-nav__home {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    color: inherit;
+    transition: background-color var(--transition-fast);
+  }
+
+  .sw-nav__home:hover {
+    background: color-mix(in srgb, currentColor 12%, transparent);
+  }
+
+  .sw-nav__home:focus-visible {
+    outline: 2px solid var(--hero-accent, #7c3aed);
+    outline-offset: 3px;
+  }
+
+  .sw-nav__home :global(svg) {
+    width: 19px;
+    height: 19px;
   }
 
   /* The word in the bar's own text colour, as the template's control was:
