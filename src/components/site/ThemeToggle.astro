@@ -137,10 +137,17 @@ const moon =
     }
   }
 
+  // One set of listeners per document. The ClientRouter keeps this module
+  // between pages but replaces <html>'s attributes on every swap, so the
+  // flag lives here, not on <html>: kept there, it was wiped by each swap,
+  // every page change added another click listener, and with two a click
+  // switched the mode twice, so the button seemed to do nothing.
+  let ready = false;
+
   function initThemeToggle() {
     render();
-    if (root.dataset.themeToggleInit) return;
-    root.dataset.themeToggleInit = 'true';
+    if (ready) return;
+    ready = true;
 
     document.addEventListener('click', (event) => {
       if (!(event.target as Element).closest('[data-theme-toggle]')) return;
@@ -152,6 +159,16 @@ const moon =
     // Keep other open tabs in step.
     window.addEventListener('storage', (event) => {
       if (event.key === KEY || event.key === null) render();
+    });
+
+    // The ClientRouter's swap gives <html> the new page's attributes,
+    // without .dark: set it on the incoming page before it shows, so a page
+    // change never flashes the wrong mode.
+    document.addEventListener('astro:before-swap', (event) => {
+      (event as unknown as { newDocument: Document }).newDocument.documentElement.classList.toggle(
+        'dark',
+        isDark()
+      );
     });
   }
 

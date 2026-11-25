@@ -11,7 +11,8 @@
  * scrolling) when it runs, so the trip up is as smooth as the page, and
  * straight to the top under reduced motion. The scroll position and page
  * height come from scroll events and a ResizeObserver, never from a layout
- * read before first paint.
+ * read before first paint. Its window listeners are set once, since the
+ * ClientRouter keeps the script between pages.
  */
 ---
 
@@ -142,50 +143,52 @@
 <script>
   const THRESHOLD = 400;
   const CIRCUMFERENCE = 131.95;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // The ClientRouter keeps this module between pages and swaps in a new
+  // button each time, so the window listeners are added once and always
+  // look the button up afresh; only the button's own click is per page.
+  let maxScroll = 0;
+  let ticking = false;
+
+  const measure = () => {
+    maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+  };
+
+  const update = () => {
+    ticking = false;
+    const btn = document.getElementById('back-to-top');
+    if (!btn) return;
+    const y = window.scrollY;
+    const pct = maxScroll > 0 ? Math.min(1, Math.max(0, y / maxScroll)) : 0;
+    const ring = document.getElementById('back-to-top-ring');
+    if (ring) ring.style.strokeDashoffset = String(CIRCUMFERENCE * (1 - pct));
+    btn.classList.toggle('is-visible', y > THRESHOLD);
+  };
+
+  window.addEventListener('resize', measure, { passive: true });
+  new ResizeObserver(measure).observe(document.documentElement);
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    },
+    { passive: true }
+  );
 
   function initBackToTop() {
     const btn = document.getElementById('back-to-top');
-    if (!btn || btn.dataset.bttInit) return;
-    btn.dataset.bttInit = 'true';
-
-    const ring = document.getElementById('back-to-top-ring');
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    // How far the page can scroll, cached so the scroll handler never reads
-    // layout; refreshed when the page or the window changes size.
-    let maxScroll = 0;
-    const measure = () => {
-      maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    };
-    window.addEventListener('resize', measure, { passive: true });
-    new ResizeObserver(measure).observe(document.documentElement);
-
-    let ticking = false;
-    const update = () => {
-      const y = window.scrollY;
-      const pct = maxScroll > 0 ? Math.min(1, Math.max(0, y / maxScroll)) : 0;
-      if (ring) ring.style.strokeDashoffset = String(CIRCUMFERENCE * (1 - pct));
-      btn.classList.toggle('is-visible', y > THRESHOLD);
-      ticking = false;
-    };
-    window.addEventListener(
-      'scroll',
-      () => {
-        if (ticking) return;
-        ticking = true;
-        requestAnimationFrame(update);
-      },
-      { passive: true }
-    );
-
-    btn.addEventListener('click', () => {
-      const lenis = (window as unknown as { __lenis?: { scrollTo: (t: number, o?: object) => void } })
-        .__lenis;
-      if (lenis && !reduced) lenis.scrollTo(0);
-      else window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
-    });
-
-    // The first reading after first paint.
+    if (btn && !btn.dataset.bttInit) {
+      btn.dataset.bttInit = 'true';
+      btn.addEventListener('click', () => {
+        const lenis = (window as unknown as { __lenis?: { scrollTo: (t: number) => void } }).__lenis;
+        if (lenis && !reduced) lenis.scrollTo(0);
+        else window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+      });
+    }
+    // The first reading after first paint, and after each page change.
     requestAnimationFrame(() => {
       measure();
       update();
