@@ -3,6 +3,7 @@ import type { ImageMetadata } from 'astro';
 import BaseLayout from './BaseLayout.astro';
 import Nav from '@/components/site/Nav.astro';
 import Footer from '@/components/site/Footer.astro';
+import BackToTop from '@/components/site/BackToTop.astro';
 import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
 import ArticleHero from '@/components/blog/ArticleHero.astro';
 import ShareButtons from '@/components/blog/ShareButtons.astro';
@@ -160,6 +161,7 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
   }
 
   <Footer slot="footer" />
+  <BackToTop slot="footer" />
 </BaseLayout>
 
 <script>
