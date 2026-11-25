@@ -19,8 +19,8 @@ video:
     width: 1440
     height: 900
 coverAlt: "The hansmartens.dev homepage in dark mode on a MacBook: the 3D droplet above the headline, on a violet ground"
-# PLACEHOLDER: the two halves of the case study wait for Hans's own words.
-challenge: "Placeholder: what the client needed, and why it mattered to them."
+# PLACEHOLDER: "What I built" (solution) waits for Hans's own words.
+challenge: "I built this website because I needed a new, modern developer website for myself: a portfolio with a blog, in dark and light mode. The site is built with Astro 6.\n\nThe homepage hero has a 3D animation. A droplet comes out of the hero, follows a track down the homepage and turns into a card, with text running over it. Then the card becomes a droplet again, follows the track further and turns into the first project card. You can see it in the videos on this page."
 solution: "Placeholder: what you built, the decisions you made, and the result."
 technologies: ["Astro", "TypeScript", "Tailwind CSS", "three.js"]
 order: 1
