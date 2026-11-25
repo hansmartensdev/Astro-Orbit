@@ -20,6 +20,7 @@ import siteConfig from '@/config/site.config';
 import Placeholder from '@/components/site/Placeholder.astro';
 import { Image } from 'astro:assets';
 import iphone from '@/assets/about/iphone.png';
+import StackMarquee from '@/components/sections/StackMarquee.astro';
 
 interface Stat {
   value: string;
@@ -45,7 +46,6 @@ interface Desk {
   href: string;
 }
 
-const linkedIn = siteConfig.socialLinks.find((url) => url.includes('linkedin.com'));
 
 // Where to find Hans. (Michael's version listed the roles he held; add
 // current roles or companies here the same way if you want them shown.)
@@ -62,19 +62,6 @@ const desks: Desk[] = [
     data-reveal
     data-reveal-load
   >
-    {
-      linkedIn && (
-        <a
-          class="founder__linkedin"
-          href={linkedIn}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`${siteConfig.name} on LinkedIn`}
-        >
-          <Icon name="fa6-brands:linkedin-in" aria-hidden="true" />
-        </a>
-      )
-    }
 
     <div class="founder__body">
       <span class="label-mono founder__eyebrow"> ABOUT ME · HANS MARTENS </span>
@@ -164,6 +151,10 @@ const desks: Desk[] = [
         </figure>
       )
     }
+
+    {/* Desktop: the stack marquee in place of the figures below (Hans's
+        choice); smaller screens keep the figures. */}
+    <StackMarquee class="founder__stack" />
 
     <dl class="founder__stats">
       {
@@ -286,43 +277,8 @@ const desks: Desk[] = [
     text-decoration-thickness: 2px;
   }
 
-  /* ---- linkedin ------------------------------------------------------- */
-  /* A round icon button in the card's corner, over the quiet part of the
-     portrait backdrop. */
-  .founder__linkedin {
-    position: absolute;
-    top: 28px;
-    right: 28px;
-    z-index: 3;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    border: 1.5px solid var(--card-chip);
-    border-radius: var(--radius-full);
-    color: var(--card-fg);
-    /* No backdrop blur: this sits inside a scroll-driven 3D reveal, and a
-       live blur inside an animating layer is re-sampled every frame. */
-    background-color: rgb(12 16 22 / 0.35);
-    transition:
-      background-color 0.25s ease,
-      color 0.25s ease,
-      border-color 0.25s ease,
-      transform 0.3s ease;
-  }
 
-  .founder__linkedin :global(svg) {
-    width: 18px;
-    height: 18px;
-  }
 
-  .founder__linkedin:hover {
-    background-color: var(--card-fg);
-    border-color: var(--card-fg);
-    color: var(--card-bg);
-    transform: scale(1.06);
-  }
 
   /* ---- the roles ------------------------------------------------------ */
   .founder__desks {
@@ -611,12 +567,6 @@ const desks: Desk[] = [
       padding-top: var(--card-pad-y);
     }
 
-    .founder__linkedin {
-      top: 16px;
-      right: 16px;
-      width: 44px;
-      height: 44px;
-    }
 
     .founder :global(.founder-relight__ui) {
       top: 16px;
@@ -689,8 +639,29 @@ const desks: Desk[] = [
     .founder__phone :global(img) {
       display: block;
       width: auto;
-      height: min(640px, 72vh);
+      height: min(720px, 82vh);
       filter: drop-shadow(0 30px 50px rgb(0 0 0 / 0.5));
+    }
+  }
+
+  /* ---- the stack marquee (desktop) ----------------------------------- */
+  .founder :global(.founder__stack) {
+    display: none !important;
+  }
+
+  @media (min-width: 1101px) {
+    .founder :global(.founder__stack) {
+      position: relative;
+      z-index: 2;
+      grid-column: 1 / -1;
+      grid-row: 2;
+      display: flex !important;
+      padding: 36px 0 40px;
+      border-top: 1px solid var(--card-rule);
+    }
+
+    .founder__stats {
+      display: none;
     }
   }
 </style>

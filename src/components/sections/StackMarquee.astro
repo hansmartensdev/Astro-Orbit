@@ -1,0 +1,145 @@
+---
+/**
+ * StackMarquee
+ *
+ * Astro Rocket's double stack marquee, for the About card: two rows of tool
+ * cards scrolling slowly in opposite directions, faded at the edges. Pure
+ * CSS: each row is its list twice, moved by -50%, so the loop has no seam.
+ * A row pauses under the pointer; under reduced motion both stand still.
+ * The cards are labels, not links (Hans's choice). Only the first row's
+ * first copy is read out; the rest is decoration.
+ *
+ * Tools: src/config/stack.config.ts.
+ */
+import { stackTools, type StackTool } from '@/config/stack.config';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+
+// One copy must be wider than the row, or the seam shows on a wide screen.
+const fill = (list: StackTool[]) => {
+  const out = [...list];
+  while (out.length < 8) out.push(...list);
+  return out;
+};
+
+const rows = [
+  { tools: fill(stackTools), reverse: false, duration: 70, exposed: stackTools.length },
+  { tools: fill([...stackTools].reverse()), reverse: true, duration: 66, exposed: 0 },
+];
+---
+
+<div class:list={['smq', className]}>
+  {
+    rows.map((row, r) => (
+      <div
+        class="smq__row"
+        data-reverse={row.reverse ? '' : undefined}
+        style={`--smq-duration: ${row.duration}s`}
+        aria-hidden={r > 0 ? 'true' : undefined}
+      >
+        <ul class="smq__track" role="list" aria-label={r === 0 ? 'Tech stack' : undefined}>
+          {[...row.tools, ...row.tools].map((tool, i) => (
+            <li class="smq__item" aria-hidden={r === 0 && i >= row.exposed ? 'true' : undefined}>
+              <span class="smq__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22" set:html={tool.icon} />
+              </span>
+              <span class="smq__name">{tool.name}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .smq {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .smq__row {
+    overflow-x: clip;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 8%, #000 92%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, #000 8%, #000 92%, transparent 100%);
+  }
+
+  .smq__track {
+    display: flex;
+    gap: 16px;
+    width: max-content;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    animation: smq-scroll var(--smq-duration, 70s) linear infinite;
+    will-change: transform;
+  }
+
+  .smq__row[data-reverse] .smq__track {
+    animation-direction: reverse;
+  }
+
+  @media (hover: hover) {
+    .smq__row:hover .smq__track {
+      animation-play-state: paused;
+    }
+  }
+
+  .smq__item {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 210px;
+    padding: 14px 18px;
+    border: 1px solid rgb(245 243 255 / 0.14);
+    border-radius: 14px;
+    background: rgb(245 243 255 / 0.05);
+  }
+
+  /* Light violet logos in a soft violet disc: the brand violet itself would
+     sink into the card's deep violet. */
+  .smq__icon {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    background: rgb(167 139 250 / 0.16);
+    color: #c4b5fd;
+  }
+
+  .smq__icon :global(path) {
+    fill: currentColor;
+  }
+
+  .smq__name {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--card-fg, #f5f3ff);
+  }
+
+  @keyframes smq-scroll {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      /* Half the track plus half a gap: the copy lands on the original. */
+      transform: translate3d(calc(-50% - 8px), 0, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .smq__track {
+      animation: none;
+    }
+  }
+</style>
