@@ -75,6 +75,8 @@ const {
   feature,
   featureMobile,
   pageHero,
+  pageHeroMobile,
+  heroImage,
   video,
   cover,
   coverAlt,
@@ -99,12 +101,16 @@ const facts = [
 // is not dropped — it becomes the first capture in the bands below.
 // A project can give its page its own hero picture (pageHero), shaped for
 // the screen rather than the card.
-const hero = pageHero ?? feature ?? cover;
+const picture = pageHero ?? feature ?? cover;
+// heroImage: false leaves the hero without a picture (title on ink); the
+// project still has one for the card, the share preview and the index.
+const hero = heroImage ? picture : undefined;
 // The phone version of the hero picture, if the project has one: composed
 // for a narrow screen, shown whole at the top of the hero on phones.
-const heroMobile = featureMobile
+const heroMobileSrc = pageHeroMobile ?? featureMobile;
+const heroMobile = heroMobileSrc
   ? await getImage({
-      src: featureMobile,
+      src: heroMobileSrc,
       widths: [600, 900, 1200, 1600],
       format: 'webp',
       quality: 90,
@@ -146,8 +152,8 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
 <SiteLayout
   title={title}
   description={description}
-  noindex={!hero}
-  image={hero?.src}
+  noindex={!picture}
+  image={picture?.src}
   imageAlt={coverAlt ?? title}
   navContext={client ?? title}
   navOverMedia
@@ -160,7 +166,7 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
           <picture class="case__hero-picture">
             {heroMobile && (
               <source
-                media="(max-width: 700px)"
+                media="(max-width: 800px), (max-width: 1100px) and (orientation: portrait)"
                 srcset={heroMobile.srcSet.attribute}
                 sizes="100vw"
                 type="image/webp"
@@ -178,6 +184,8 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
               fetchpriority="high"
             />
           </picture>
+        ) : picture ? (
+          <div class="case__hero-img case__hero-img--plain" />
         ) : (
           <div class="case__hero-img">
             <Placeholder class="h-full w-full rounded-none" invert label={placeholder ?? title} />
@@ -900,9 +908,26 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
       font-size: min(15vw, calc((100vw - 48px) / (var(--len, 10) * 0.52)));
     }
 
-    /* With a phone picture: the hero is the picture, shown whole below the
-       nav, fading into the ink at its foot, with the title right under it.
-       No full-screen hero with a gap, no hard edge, nothing under the nav. */
+    .case__lede {
+      font-size: 1rem;
+      margin-top: 20px;
+    }
+
+    .case__scroll {
+      display: none;
+    }
+
+    .case__build-inner {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 40px;
+    }
+  }
+
+  /* With a phone picture (phones, and tablets held upright): the hero is the
+     picture, shown whole below the nav, fading into the ink at its foot,
+     with the title right under it. No full-screen hero with a gap, no hard
+     edge, nothing under the nav. */
+  @media (max-width: 800px), (max-width: 1100px) and (orientation: portrait) {
     .case__hero:has(.case__hero-img--has-mobile) {
       flex-direction: column;
       align-items: stretch;
@@ -929,19 +954,6 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
       margin-top: -24px;
     }
 
-    .case__lede {
-      font-size: 1rem;
-      margin-top: 20px;
-    }
-
-    .case__scroll {
-      display: none;
-    }
-
-    .case__build-inner {
-      grid-template-columns: minmax(0, 1fr);
-      gap: 40px;
-    }
   }
 </style>
 
