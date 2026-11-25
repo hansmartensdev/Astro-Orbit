@@ -30,6 +30,8 @@ const blog = defineCollection({
       tags: z.array(z.string()).default([]),
       draft: z.boolean().default(false),
       featured: z.boolean().default(false),
+      /** Keeps the post first on the homepage, whatever its date. */
+      pinned: z.boolean().default(false),
       /** Set false to hide the table of contents on this post. */
       toc: z.boolean().default(true),
       /** The cover's icon: any Lucide name (lucide.dev/icons), or "claude" or "astro" for those logos. Without it,

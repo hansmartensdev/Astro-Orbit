@@ -5,7 +5,8 @@
  * One or two posts from the blog on the homepage, as cards beside each
  * other: date, title, line, and a "Read the post" cue that turns violet on
  * hover. Which posts: the newest marked `featured: true` in their
- * frontmatter, or the newest posts when none are. Shares the giant-title
+ * frontmatter, or the newest posts when none are. A post marked
+ * `pinned: true` stays first. Shares the giant-title
  * header with the craft and projects sections, and ends on a link to the
  * whole blog.
  */
@@ -29,7 +30,10 @@ const posts = (
   .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
 
 const featured = posts.filter((post) => post.data.featured);
-const shown = (featured.length > 0 ? featured : posts).slice(0, count);
+// A post marked `pinned: true` comes first, before the newest.
+const shown = (featured.length > 0 ? featured : posts)
+  .toSorted((a, b) => Number(b.data.pinned) - Number(a.data.pinned))
+  .slice(0, count);
 
 ---
 
