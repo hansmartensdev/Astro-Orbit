@@ -10,12 +10,12 @@
  * visible ones rather than a second label fading in beside them.
  *
  * The menu control is the word "Menu" in the bar's text colour ("Close"
- * while the menu is open), beside the theme toggle (ThemeToggle.astro), a two-state sun/moon button.
+ * while the menu is open). The theme toggle (ThemeToggle.astro) is off the bar
+ * while the site is dark only.
  */
 import { Icon } from 'astro-icon/components';
 import { getNavItems } from '@/config/nav.config';
 import siteConfig from '@/config/site.config';
-import ThemeToggle from '@/components/site/ThemeToggle.astro';
 
 interface Props {
   /**
@@ -83,7 +83,6 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     </div>
 
     <div class="sw-nav__actions">
-      <ThemeToggle />
       <button
         class="burger"
         id="sw-nav-toggle"

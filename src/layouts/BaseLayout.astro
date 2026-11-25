@@ -49,7 +49,7 @@ void includeOrgSchema;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -102,30 +102,18 @@ void includeOrgSchema;
       document.documentElement.classList.add('js');
     </script>
 
-    <!-- Theme, before first paint so it never flashes: dark, unless the
-         visitor switched to light with the header's ThemeToggle
-         (localStorage.theme = 'light'). Dark comes first for everyone on
-         arrival (Hans's choice: the 3D scene is at its best on ink). An older
-         'system' from the earlier three-way menu still follows the system.
-         Sets .dark for the theme and the browser bar's colour. -->
+    <!-- Dark mode only, for everyone (Hans's choice): .dark is set on <html>
+         above, so it is there from the first byte and survives the
+         ClientRouter's page swaps, which copy <html>'s attributes from the
+         new page. The light theme stays in the stylesheets for later; the
+         header's toggle (site/ThemeToggle.astro) is off the bar. The choice
+         a visitor made with it is cleared, so nothing stays in their browser. -->
     <script is:inline>
-      (function () {
-        let mode = 'dark';
-        try {
-          const saved = localStorage.getItem('theme');
-          if (saved === 'light' || saved === 'dark' || saved === 'system') mode = saved;
-        } catch {
-          // Storage blocked (private mode, site data off): follow the system.
-        }
-        const dark =
-          mode === 'dark' ||
-          (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-        const root = document.documentElement;
-        root.setAttribute('data-theme-mode', mode);
-        root.classList.toggle('dark', dark);
-        const bar = document.getElementById('theme-color');
-        if (bar) bar.setAttribute('content', dark ? '#0e0e0e' : '#eef2f4');
-      })();
+      try {
+        localStorage.removeItem('theme');
+      } catch {
+        // Storage blocked: nothing to clear.
+      }
     </script>
   </head>
 
