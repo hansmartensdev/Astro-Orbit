@@ -75,6 +75,7 @@ const {
   feature,
   featureMobile,
   pageHero,
+  heroImage,
   video,
   cover,
   coverAlt,
@@ -99,7 +100,10 @@ const facts = [
 // is not dropped — it becomes the first capture in the bands below.
 // A project can give its page its own hero picture (pageHero), shaped for
 // the screen rather than the card.
-const hero = pageHero ?? feature ?? cover;
+const picture = pageHero ?? feature ?? cover;
+// heroImage: false leaves the hero without a picture (title on ink); the
+// project still has one for the card, the share preview and the index.
+const hero = heroImage ? picture : undefined;
 // The phone version of the hero picture, if the project has one: composed
 // for a narrow screen, shown whole at the top of the hero on phones.
 const heroMobile = featureMobile
@@ -146,8 +150,8 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
 <SiteLayout
   title={title}
   description={description}
-  noindex={!hero}
-  image={hero?.src}
+  noindex={!picture}
+  image={picture?.src}
   imageAlt={coverAlt ?? title}
   navContext={client ?? title}
   navOverMedia
@@ -178,6 +182,8 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
               fetchpriority="high"
             />
           </picture>
+        ) : picture ? (
+          <div class="case__hero-img case__hero-img--plain" />
         ) : (
           <div class="case__hero-img">
             <Placeholder class="h-full w-full rounded-none" invert label={placeholder ?? title} />

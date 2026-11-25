@@ -110,6 +110,9 @@ const work = defineCollection({
        *  screen. Without it the hero uses `feature`, which is shaped for
        *  the card and gets cropped and enlarged there. */
       pageHero: image().optional(),
+      /** Set false for a hero without a picture: the title on the plain ink
+       *  ground. The card on the projects page keeps its picture. */
+      heroImage: z.boolean().default(true),
       /** Optional: a short screen recording, shown first beside "Why I
        *  built it". It plays muted and on a loop, loads only when the reader
        *  is near it, and stays on its still (`poster`) under reduced motion.
