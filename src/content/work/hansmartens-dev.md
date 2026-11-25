@@ -3,10 +3,11 @@ title: "hansmartens.dev"
 discipline: "Personal site"
 description: "Portfolio, blog, developer's website."
 year: 2026
-feature: "../../assets/work/hansmartens-dev/hero.webp"
+feature: "../../assets/work/hansmartens-dev/laptop-card.webp"
+featureMobile: "../../assets/work/hansmartens-dev/laptop-hero-mobile.webp"
 pageHero: "../../assets/work/hansmartens-dev/laptop-hero.webp"
 pageHeroMobile: "../../assets/work/hansmartens-dev/laptop-hero-mobile.webp"
-coverAlt: "The 3D scene from the hansmartens.dev homepage hero in dark mode: a glass droplet, a small grey sphere and a violet one"
+coverAlt: "The hansmartens.dev homepage in dark mode on a MacBook: the 3D droplet above the headline, on a violet ground"
 # PLACEHOLDER: the two halves of the case study wait for Hans's own words.
 challenge: "Placeholder: what the client needed, and why it mattered to them."
 solution: "Placeholder: what you built, the decisions you made, and the result."
