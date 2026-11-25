@@ -583,6 +583,13 @@ const desks: Desk[] = [
       padding: 0 var(--card-pad-x) 40px;
     }
 
+    /* Without the portrait above it the text starts the card, so it takes
+       the card's own top spacing instead of sitting on the edge. */
+    .founder--text .founder__body {
+      grid-row: 1;
+      padding-top: var(--card-pad-y);
+    }
+
     .founder__linkedin {
       top: 16px;
       right: 16px;
