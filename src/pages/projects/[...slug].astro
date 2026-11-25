@@ -569,6 +569,13 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
     color: var(--color-foreground);
   }
 
+  /* In dark mode the page itself is ink, so the light band would match the
+     dark one and the alternation would vanish: it lifts one step instead,
+     to the grey of the footer and the cards (Hans's choice). */
+  :global(.dark) .band[data-tone='ice'] {
+    background: var(--ink-900);
+  }
+
   .band__inner {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 2.1fr);
