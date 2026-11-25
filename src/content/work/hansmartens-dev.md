@@ -20,6 +20,10 @@ video:
     height: 900
 coverAlt: "The hansmartens.dev homepage in dark mode on a MacBook: the 3D droplet above the headline, on a violet ground"
 challenge: "I built this website because I needed a new developer website for myself: a portfolio with a blog, in dark and light mode. The site is built with Astro 7. I explain my choice in [Why I Build with Astro](/blog/why-i-build-with-astro/).\n\nMy previous website was good, but as a web designer and developer I wanted something more special and attractive: a portfolio, blog and homepage with a wow factor for me and, I think, for visitors too. That comes from the 3D animation in the homepage hero.\n\nA droplet comes out of the hero, follows a track down the homepage and turns into a card whose words light up one by one as you scroll. Then the card becomes a droplet again, follows the track further and turns into the first project card. You can see it in the videos on this page."
+solution: "I wanted a new Astro website, and I chose violet as the brand colour, because I thought it would look great on the 3D droplet that comes out of the hero. To match that prominent element on the homepage, I gave other elements the same violet."
+sections:
+  - label: "The fonts"
+    text: "This website uses three fonts, which work together as one style.\n\n**Outfit** is used for the headings and the large titles. It's a geometric sans-serif designed by Rodrigo Fuenzalida. It works well at a large size, and it looks perfect together with the 3D animation in the hero.\n\n**Archivo** is used for the running text, the buttons and the menu. It's a grotesque sans-serif from Omnibus-Type. It's easy to read, and it pairs well with Outfit.\n\n**IBM Plex Mono** is used for the small labels, such as dates and section names. It's the monospaced member of IBM's Plex family. It fits this combination and style, and it looks good in capitals, which is how the labels are set.\n\nAll three are free, open-source fonts. The website serves them itself, so loading a page doesn't contact a font service such as Google Fonts."
 technologies: ["Astro", "TypeScript", "Tailwind CSS", "three.js"]
 order: 1
 featured: true
