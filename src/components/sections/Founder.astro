@@ -686,7 +686,26 @@ const desks: Desk[] = [
       padding: calc(var(--card-pad-y) + 40px) var(--card-pad-x) var(--card-pad-y) 0;
     }
 
+    /* The blog cards' grid behind the phone: white at 13% (9% sank into
+       the deep violet), square cells,
+       fading out towards the edges so it has no hard border (Hans's
+       choice). */
+    .founder__phone::before {
+      content: '';
+      position: absolute;
+      inset: 0 0 0 -24px;
+      pointer-events: none;
+      background-image:
+        linear-gradient(to right, rgb(255 255 255 / 0.13) 1px, transparent 1px),
+        linear-gradient(to bottom, rgb(255 255 255 / 0.13) 1px, transparent 1px);
+      background-size: 48px 48px;
+      background-position: center;
+      -webkit-mask-image: radial-gradient(ellipse 58% 56% at 50% 52%, #000 50%, transparent 100%);
+      mask-image: radial-gradient(ellipse 58% 56% at 50% 52%, #000 50%, transparent 100%);
+    }
+
     .founder__phone :global(img) {
+      position: relative;
       display: block;
       width: auto;
       height: min(640px, 72vh);
