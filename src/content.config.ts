@@ -110,6 +110,9 @@ const work = defineCollection({
        *  screen. Without it the hero uses `feature`, which is shaped for
        *  the card and gets cropped and enlarged there. */
       pageHero: image().optional(),
+      /** Optional: the phone version of `pageHero` (1200x940), also used on a
+       *  tablet held upright. Without it, `featureMobile` serves the hero. */
+      pageHeroMobile: image().optional(),
       /** Set false for a hero without a picture: the title on the plain ink
        *  ground. The card on the projects page keeps its picture. */
       heroImage: z.boolean().default(true),
