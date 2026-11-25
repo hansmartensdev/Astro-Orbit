@@ -13,7 +13,8 @@
  *                  Manager only when PUBLIC_GA_MEASUREMENT_ID or
  *                  PUBLIC_GTM_ID is set. If either is ever set, this page
  *                  must say so, and the cookie section below changes too.
- *   cookies        none; the colour mode is kept in localStorage.theme
+ *   cookies        none, and nothing in local storage (the site is dark only;
+ *                  an older stored colour choice is cleared on arrival)
  *   fonts          self-hosted (@fontsource in global.css), no font CDN
  *   hosting        Vercel
  *
@@ -24,7 +25,7 @@ import SiteLayout from '@/layouts/SiteLayout.astro';
 import SectionHead from '@/components/sections/SectionHead.astro';
 import siteConfig from '@/config/site.config';
 
-const updated = new Date('2026-11-23');
+const updated = new Date('2026-11-25');
 const updatedLabel = updated.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 const mail = `mailto:${siteConfig.email}`;
 ---
@@ -91,10 +92,7 @@ const mail = `mailto:${siteConfig.email}`;
 
       <h2>Cookies and storage</h2>
       <p>
-        This website sets no cookies. If you choose light or dark mode with the button in the
-        header, your browser remembers that choice in its local storage, so the next page opens in
-        the same mode. The choice stays on your device and isn't sent to me or anyone else. You can
-        delete it by clearing this website's data in your browser.
+        This website sets no cookies and stores nothing in your browser.
       </p>
       <p>
         The fonts are served from this website itself, so loading a page doesn't contact a font
