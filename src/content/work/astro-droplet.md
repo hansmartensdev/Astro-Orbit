@@ -1,7 +1,7 @@
 ---
 title: "Astro Droplet"
 discipline: "Astro theme"
-description: "A free portfolio and blog theme for Astro, with a 3D droplet in the hero."
+description: "A free portfolio and blog theme for Astro. A 3D droplet leaves the hero as you scroll and becomes the first project card. Change one settings file to make it yours."
 year: 2026
 feature: "../../assets/work/astro-droplet/card.webp"
 featureMobile: "../../assets/work/astro-droplet/hero-mobile.webp"
