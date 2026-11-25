@@ -20,7 +20,7 @@ video:
     height: 900
 coverAlt: "The hansmartens.dev homepage in dark mode on a MacBook: the 3D droplet above the headline, on a violet ground"
 # PLACEHOLDER: "What I built" (solution) waits for Hans's own words.
-challenge: "I built this website because I needed a new, modern developer website for myself: a portfolio with a blog, in dark and light mode. The site is built with Astro 6.\n\nThe homepage hero has a 3D animation. A droplet comes out of the hero, follows a track down the homepage and turns into a card, with text running over it. Then the card becomes a droplet again, follows the track further and turns into the first project card. You can see it in the videos on this page."
+challenge: "I built this website because I needed a new developer website for myself: a portfolio with a blog, in dark and light mode. The site is built with Astro 7. I explain my choice in [Why I Build with Astro](/blog/why-i-build-with-astro/).\n\nMy previous website was good, but as a web designer and developer I wanted something more special and attractive: a portfolio, blog and homepage with a wow factor for me and, I think, for visitors too. That comes from the 3D animation in the homepage hero.\n\nA droplet comes out of the hero, follows a track down the homepage and turns into a card whose words light up one by one as you scroll. Then the card becomes a droplet again, follows the track further and turns into the first project card. You can see it in the videos on this page."
 solution: "Placeholder: what you built, the decisions you made, and the result."
 technologies: ["Astro", "TypeScript", "Tailwind CSS", "three.js"]
 order: 1

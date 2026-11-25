@@ -54,14 +54,17 @@ export async function getStaticPaths() {
 
 const { project, next } = Astro.props;
 
-// Band text is plain text, escaped, with [text](url) turned into a link.
+// Band text is plain text, escaped, with [text](url) turned into a link:
+// another site's in a new tab, a page on this site (/…) in the same one.
 const escapeHtml = (t: string) =>
   t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const withLinks = (t: string) =>
-  escapeHtml(t).replace(
-    /\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g,
-    '<a class="band__link" href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
-  );
+  escapeHtml(t)
+    .replace(
+      /\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g,
+      '<a class="band__link" href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
+    )
+    .replace(/\[([^\]]+)\]\((\/[^)\s]*)\)/g, '<a class="band__link" href="$2">$1</a>');
 const { Content } = await render(project);
 
 const {
