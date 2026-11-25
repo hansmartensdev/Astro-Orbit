@@ -10,7 +10,6 @@ import SiteLayout from '@/layouts/SiteLayout.astro';
 import SectionHead from '@/components/sections/SectionHead.astro';
 import Founder from '@/components/sections/Founder.astro';
 import Cta from '@/components/sections/Cta.astro';
-import siteConfig from '@/config/site.config';
 ---
 
 <SiteLayout
@@ -30,29 +29,6 @@ import siteConfig from '@/config/site.config';
       as an <Image /> in a block like the one in git history (h-[52vh],
       rounded-[14px]), when it exists. */}
 
-  {/* The facts and the card below them arrive with the page on load, not on
-      scroll: on a laptop or a phone they sit low on the first screen, and
-      the space stood empty until a scroll. */}
-  <section class="mt-20 shell max-[800px]:mt-12" data-reveal data-reveal-load>
-    {/* The facts. The large line that stood above them repeated the header
-        blurb, so it's gone. */}
-    <dl class="grid grid-cols-3 gap-10 border-t border-border pt-10 max-[800px]:grid-cols-1">
-      <div>
-        <dt class="label-mono text-foreground-muted">BASED IN</dt>
-        <dd class="mt-3 ml-0 text-[17px]">{siteConfig.location}</dd>
-      </div>
-      <div>
-        <dt class="label-mono text-foreground-muted">BUILDS WITH</dt>
-        <dd class="mt-3 ml-0 text-[17px]">Astro</dd>
-      </div>
-      <div>
-        <dt class="label-mono text-foreground-muted">SAY HI</dt>
-        <dd class="mt-3 ml-0 text-[17px]">
-          <a href={'mailto:' + siteConfig.email}>{siteConfig.email}</a>
-        </dd>
-      </div>
-    </dl>
-  </section>
 
   <Founder />
 
