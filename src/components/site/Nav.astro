@@ -39,9 +39,14 @@ interface Props {
    * scheme; light lays a sheet of the page ground over a dimmed page.
    */
   menuTone?: 'ink' | 'light';
+  /**
+   * A reading-progress line along the bottom of the bar, filling in brand
+   * violet as the reader scrolls, as in Astro Rocket. Blog posts set it.
+   */
+  progress?: boolean;
 }
 
-const { context, overMedia = false, tone, menuTone = 'light' } = Astro.props;
+const { context, overMedia = false, tone, menuTone = 'light', progress = false } = Astro.props;
 
 const items = getNavItems();
 const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
@@ -97,6 +102,7 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
       </button>
     </div>
   </div>
+  {progress && <div class="sw-nav__progress" id="sw-nav-progress" aria-hidden="true"></div>}
 </header>
 
 {
@@ -666,6 +672,30 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
       transition: none;
     }
   }
+
+  /* Reading progress (blog posts): a 2px line on the bar's bottom edge,
+     scaled from the left by the script below. transform, not width, so
+     each frame is a composite rather than a layout. */
+  .sw-nav__progress {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--hero-accent, #7c3aed);
+    transform: scaleX(var(--read, 0));
+    transform-origin: left center;
+    pointer-events: none;
+  }
+
+  :global(.dark) .sw-nav__progress {
+    background: #8b5cf6;
+  }
+
+  /* Out of the way while the menu is open. */
+  .sw-nav[data-menu-open='true'] .sw-nav__progress {
+    opacity: 0;
+  }
 </style>
 
 <script>
@@ -836,4 +866,41 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
 
   initNav();
   document.addEventListener('astro:after-swap', initNav);
+</script>
+
+<script>
+  // Reading progress on blog posts. The ClientRouter keeps this module
+  // between pages, so the listeners are set once and look the line up
+  // afresh; the page height is cached and re-read on resize, so the scroll
+  // handler never forces a layout.
+  let maxScroll = 0;
+  let ticking = false;
+  const measure = () => {
+    maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+  };
+  const update = () => {
+    ticking = false;
+    const bar = document.getElementById('sw-nav-progress');
+    if (!bar) return;
+    const pct = maxScroll > 0 ? Math.min(1, Math.max(0, window.scrollY / maxScroll)) : 0;
+    bar.style.setProperty('--read', String(pct));
+  };
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    },
+    { passive: true }
+  );
+  window.addEventListener('resize', measure, { passive: true });
+  new ResizeObserver(measure).observe(document.documentElement);
+  const start = () =>
+    requestAnimationFrame(() => {
+      measure();
+      update();
+    });
+  start();
+  document.addEventListener('astro:after-swap', start);
 </script>
