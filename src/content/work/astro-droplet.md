@@ -17,6 +17,7 @@ gallery:
   - src: "../../assets/work/astro-droplet/demo-blog.webp"
     alt: "The Astro Droplet demo's homepage: 'From the blog' with three post cards, each with an icon and a short phrase on a violet grid"
     band: 2
+challenge: "Astro Droplet is a fork of my new website, [hansmartens.dev](/projects/hansmartens-dev/): my own developer website, with a portfolio and a blog.\n\nI'm so happy with the result that I thought other Astro developers and web designers might like it too, and want to use it for their own websites. It suits anyone who needs a portfolio website.\n\nThe theme comes filled with demo content, written for a fictive designer, Alex Morgan. That content is easy to swap for your own. The card pictures of the blog posts and the violet card on the About page stay as they are: you only replace their text with yours.\n\nAdd your own text and images, and the theme is ready to launch as your new website."
 coverAlt: "The Astro Droplet demo homepage on a MacBook and an iPhone, with the Astro logo, on a violet ground"
 technologies: ["Astro", "TypeScript", "Tailwind CSS", "three.js"]
 order: 2
