@@ -228,7 +228,7 @@ const posters = await Promise.all(
     /* Tighter than .display-hero's 0.93: this pair is lowercase, and line one
        has no descenders, so the space under it reads as a gap. One token in
        themes/southwell.css. */
-    line-height: var(--hero-leading, 0.88);
+    line-height: var(--hero-leading, 0.95);
     /* Sized to the shell, not the viewport: the second line is about 12.4em
        of light Outfit at this tracking, and 7.7cqi puts it at roughly 95% of
        the container's width at every size — one row per line on a phone as
@@ -279,8 +279,9 @@ const posters = await Promise.all(
      A line-height under 1 makes the line box SHORTER than the glyphs, so the
      mask has to be padded out vertically or it shears the ascenders and
      descenders off — the negative margins put the layout back exactly where
-     it was (see the flex note on .hero__headline). 0.2em covers the p in
-     "apps" at 0.88 leading with room to spare. */
+     it was (see the flex note on .hero__headline). 0.2em covers the p of
+     "developer" and the g of "building" at the hero's leading (0.95 on
+     desktop and tablet, 1.04 on phones) with room to spare. */
   .hero__line {
     display: block;
     overflow: hidden;
