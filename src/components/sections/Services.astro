@@ -355,6 +355,35 @@ const timelineScope = services
     opacity: 0.88;
   }
 
+  /* Desktop: a calmer card (Hans's choice). The title stays below the
+     section heading's size, the icon is smaller, the card is as tall as its
+     content instead of 62% of the screen, and the title and the text share
+     the card in two halves, centred, with more room around them. The
+     stacking and the colours are unchanged. */
+  @media (min-width: 1001px) {
+    .service {
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 72px;
+      min-height: 0;
+      padding: 64px 72px;
+    }
+
+    .service__title {
+      font-size: clamp(40px, 3.6vw, 52px);
+    }
+
+    .service__icon {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 20px;
+    }
+
+    .service__desc {
+      font-size: 16px;
+    }
+  }
+
   @media (max-width: 1000px) {
     .service {
       gap: 36px;
