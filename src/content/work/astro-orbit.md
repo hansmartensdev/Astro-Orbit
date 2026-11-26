@@ -36,5 +36,5 @@ coverAlt: "The Astro Orbit demo homepage on a MacBook: the 3D droplet above the 
 technologies: ["Astro", "TypeScript", "Tailwind CSS", "three.js"]
 order: 2
 featured: true
-draft: true
+draft: false
 ---
