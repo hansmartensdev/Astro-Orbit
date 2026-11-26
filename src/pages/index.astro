@@ -10,6 +10,8 @@ import WorkGrid from '@/components/sections/WorkGrid.astro';
 import FeaturedPosts from '@/components/sections/FeaturedPosts.astro';
 import Cta from '@/components/sections/Cta.astro';
 import ThemeBand from '@/components/sections/ThemeBand.astro';
+import Services from '@/components/sections/Services.astro';
+import { services } from '@/config/services.config';
 import siteConfig from '@/config/site.config';
 ---
 
@@ -27,6 +29,8 @@ import siteConfig from '@/config/site.config';
       first five of the pattern over three. Any of 1, 6 or 11 tiles cleanly. */
   }
   <WorkGrid count={6} deliverLead />
+  {/* What I do: the four stacked cards (config/services.config.ts; show: false removes them). */}
+  {services.show && <Services />}
   {/* Up to two posts marked featured: true, else the newest two. */}
   <FeaturedPosts />
   {

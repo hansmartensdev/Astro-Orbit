@@ -147,17 +147,39 @@ export function brandRoles(hex: string = brandColor): Roles {
   };
 }
 
+/**
+ * The four stacked cards on the homepage (Services.astro): one shade deeper
+ * per card, starting at the fill shade (white text at 4.5:1 or more), and in
+ * dark mode one step deeper again. For the default violet: 600, 700, 800, 900
+ * in light and 700, 800, 900, 950 in dark, the ramp the cards were designed with.
+ */
+export function brandCards(hex: string = brandColor): { light: string[]; dark: string[] } {
+  const s = brandShades(hex);
+  const fill = brandRoles(hex).fill;
+  const start = DARKER.findIndex((k) => s[k] === fill);
+  const at = (i: number) => s[DARKER[Math.min(i, DARKER.indexOf(950))]];
+  return {
+    light: [0, 1, 2, 3].map((n) => at(start + n)),
+    dark: [1, 2, 3, 4].map((n) => at(start + n)),
+  };
+}
+
 /** The shades and the roles as CSS custom properties, for :root. */
 export function brandCss(hex: string = brandColor): string {
   const s = brandShades(hex);
   const r = brandRoles(hex);
+  const cards = brandCards(hex);
   const kebab = (k: string) => k.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase());
   return (
     ':root{' +
     [
       ...(Object.keys(s) as Shade[]).map((k) => `--orbit-${k}:${s[k]}`),
       ...(Object.keys(r) as Array<keyof Roles>).map((k) => `--orbit-${kebab(k)}:${r[k]}`),
+      ...cards.light.map((c, i) => `--orbit-card-${i + 1}:${c}`),
     ].join(';') +
+    '}' +
+    '.dark{' +
+    cards.dark.map((c, i) => `--orbit-card-${i + 1}:${c}`).join(';') +
     '}'
   );
 }
