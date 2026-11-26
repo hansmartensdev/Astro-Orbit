@@ -159,7 +159,7 @@ const desks: Desk[] = [
         stats.map((stat) => (
           <div class="founder__stat">
             <dt class="founder__label label-mono">{stat.label.toUpperCase()}</dt>
-            <dd class="founder__value">{stat.value}</dd>
+            <dd class="founder__value" style={`--len: ${stat.value.length}`}>{stat.value}</dd>
           </div>
         ))
       }
@@ -607,9 +607,16 @@ const desks: Desk[] = [
       padding-left: 20px;
     }
 
+    /* A column is a third of the card, so a longer value (a city such as
+       "Amsterdam") shrinks to fit its column: about 0.6em per character in
+       this face, measured on the stat's own width. */
+    .founder__stat {
+      container-type: inline-size;
+    }
+
     .founder__value {
       margin-top: 10px;
-      font-size: clamp(20px, 6.2vw, 30px);
+      font-size: min(clamp(20px, 6.2vw, 30px), calc(100cqi / (var(--len, 4) * 0.6)));
     }
   }
 
