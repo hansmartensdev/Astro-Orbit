@@ -31,11 +31,10 @@ import siteConfig from '@/config/site.config';
   <WorkGrid count={6} deliverLead />
   {/* What I do: the four stacked cards (config/services.config.ts; show: false removes them). */}
   {services.show && <Services />}
-  {/* Astro Orbit, the next theme. Set released once it is public. Above the
-      blog, so it has its own place and the page ends with one call: the
-      sign-off. */}
-  <ThemeBand />
-  {/* Up to two posts marked featured: true, else the newest two. */}
+  {/* Astro Orbit, the newest theme, out now. Above the blog, so it has its
+      own place and the page ends with one call: the sign-off. */}
+  <ThemeBand released />
+  {/* Three posts: those marked featured: true first, then the newest. */}
   <FeaturedPosts />
   {
     /* The founder section (@/components/sections/Founder.astro) is parked
