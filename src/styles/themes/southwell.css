@@ -141,10 +141,10 @@
   --hero-panel-display: block;
   --hero-headline-pull: -0.52em;
   --hero-headline-pull-sm: -0.4em;
-  /* Leading of the two-line hero headline only. .display-hero elsewhere
-     stays at 0.93; this pair is lowercase with no descenders on line one,
-     so it wants to sit tighter. Tune by eye between 0.86 and 0.92. */
-  --hero-leading: 0.88;
+  /* Leading of the two-line hero headline on desktop and tablet (phones
+     have their own in Hero.astro). 0.95 keeps the p of "developer" clear of
+     the f of "beautiful" below it, which touched at 0.88 (Hans's choice). */
+  --hero-leading: 0.95;
 
   --display-em-style: normal;
   --display-em-weight: 300;
