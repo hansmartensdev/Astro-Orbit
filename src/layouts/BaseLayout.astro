@@ -47,10 +47,29 @@ const {
 const schemas: Array<WithContext<WebSite> | WithContext<Person>> = [createWebsiteSchema(), createPersonSchema()];
 void includeOrgSchema;
 import { brandCss } from '@/lib/brand';
+import { darkOnly } from '@/config/mode.config';
+
+// Set before first paint (see the comment at the script in <head>).
+const themeScript = `(function () {
+  let mode = 'dark';
+  try {
+    const saved = localStorage.getItem('theme');
+    if (saved === 'light' || saved === 'dark' || saved === 'system') mode = saved;
+  } catch {
+    // Storage blocked (private mode, site data off): dark.
+  }
+  const dark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const root = document.documentElement;
+  root.setAttribute('data-theme-mode', mode);
+  root.classList.toggle('dark', dark);
+  const bar = document.getElementById('theme-color');
+  if (bar) bar.setAttribute('content', dark ? '#0e0e0e' : '#eef2f4');
+})();`;
+const clearThemeScript = `try { localStorage.removeItem('theme'); } catch {}`;
 ---
 
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en" class={darkOnly ? 'dark' : undefined}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -107,19 +126,14 @@ import { brandCss } from '@/lib/brand';
       document.documentElement.classList.add('js');
     </script>
 
-    <!-- Dark mode only, for everyone (Hans's choice): .dark is set on <html>
-         above, so it is there from the first byte and survives the
-         ClientRouter's page swaps, which copy <html>'s attributes from the
-         new page. The light theme stays in the stylesheets for later; the
-         header's toggle (site/ThemeToggle.astro) is off the bar. The choice
-         a visitor made with it is cleared, so nothing stays in their browser. -->
-    <script is:inline>
-      try {
-        localStorage.removeItem('theme');
-      } catch {
-        // Storage blocked: nothing to clear.
-      }
-    </script>
+    <!-- Theme, before first paint so it never flashes: dark, unless the
+         visitor switched to light with the header's ThemeToggle
+         (localStorage.theme = 'light'). Dark comes first for everyone on
+         arrival (Hans's choice: the 3D scene is at its best on ink). Sets
+         .dark for the theme and the browser bar's colour.
+         Dark mode only (config/mode.config darkOnly): .dark is in the markup
+         above, and a colour choice stored earlier is cleared. -->
+    <script is:inline set:html={darkOnly ? clearThemeScript : themeScript} />
   </head>
 
   <body class="bg-background text-foreground min-h-screen antialiased">

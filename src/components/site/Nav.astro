@@ -10,12 +10,14 @@
  * visible ones rather than a second label fading in beside them.
  *
  * The menu control is the word "Menu" in the bar's text colour ("Close"
- * while the menu is open). The theme toggle (ThemeToggle.astro) is off the bar
- * while the site is dark only.
+ * while the menu is open), beside the theme toggle (ThemeToggle.astro), a two-state sun/moon button,
+ * and the home icon. darkOnly in config/mode.config leaves the toggle out.
  */
 import { Icon } from 'astro-icon/components';
 import { getNavItems } from '@/config/nav.config';
 import siteConfig from '@/config/site.config';
+import ThemeToggle from '@/components/site/ThemeToggle.astro';
+import { darkOnly } from '@/config/mode.config';
 
 interface Props {
   /**
@@ -83,6 +85,7 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     </div>
 
     <div class="sw-nav__actions">
+      {!darkOnly && <ThemeToggle />}
       {/* A home icon beside Menu, in the bar's text colour (Hans's choice). */}
       <a
         class="sw-nav__home"
