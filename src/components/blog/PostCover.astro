@@ -3,13 +3,12 @@
  * PostCover
  *
  * A post's cover inside a card link. On hover (or keyboard focus) of the
- * link, the image eases in a little and an ink veil with a "Read the post"
- * pill comes over it. The image is the post's own (`src`), or else its card
- * art (CardArt: icon and word on the violet grid). It is decorative, and the
- * pill repeats what the link already says, so both are hidden from screen
- * readers.
+ * link, the image eases in a little. Nothing is laid over it: the card's own
+ * "Read the post" line says where the link goes, and a veil and a pill on
+ * the picture hid the picture. The image is the post's own (`src`), or else
+ * its card art (CardArt: icon and word on the violet grid). It is
+ * decorative, so it is hidden from screen readers.
  */
-import { Icon } from 'astro-icon/components';
 import CardArt from '@/components/blog/CardArt.astro';
 
 interface Props {
@@ -35,12 +34,6 @@ const { src, art, class: className } = Astro.props;
       )
     )
   }
-  <span class="pc__veil" aria-hidden="true">
-    <span class="pc__pill">
-      Read the post
-      <Icon name="lucide:arrow-right" />
-    </span>
-  </span>
 </span>
 
 <style>
@@ -61,62 +54,13 @@ const { src, art, class: className } = Astro.props;
     transition: transform 0.6s var(--ease-sw, ease);
   }
 
-  .pc__veil {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    background: rgb(12 16 22 / 0.42);
-    opacity: 0;
-    transition: opacity 0.35s ease;
-  }
-
-  .pc__pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 22px;
-    border-radius: 999px;
-    background: #fff;
-    color: #0c1016;
-    font-size: 15px;
-    font-weight: 500;
-    transform: translateY(8px);
-    transition: transform 0.45s var(--ease-sw, ease);
-  }
-
-  .pc__pill :global(svg) {
-    width: 16px;
-    height: 16px;
-    color: var(--hero-accent, var(--orbit-600));
-  }
-
   :global(a:hover) .pc__img,
   :global(a:focus-visible) .pc__img {
     transform: scale(1.04);
   }
 
-  :global(a:hover) .pc__veil,
-  :global(a:focus-visible) .pc__veil {
-    opacity: 1;
-  }
-
-  :global(a:hover) .pc__pill,
-  :global(a:focus-visible) .pc__pill {
-    transform: none;
-  }
-
-  /* Touch screens have no hover: nothing to show, and a tap that leaves the
-     veil standing would look broken. */
-  @media (hover: none) {
-    .pc__veil {
-      display: none;
-    }
-  }
-
   @media (prefers-reduced-motion: reduce) {
-    .pc__img,
-    .pc__pill {
+    .pc__img {
       transition: none;
       transform: none !important;
     }
