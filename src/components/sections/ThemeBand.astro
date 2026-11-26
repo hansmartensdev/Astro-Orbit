@@ -5,13 +5,13 @@
  * The violet band about Astro Orbit, above the sign-off on the homepage: the
  * same band as the theme's demo ("About this demo"), with Hans's own text.
  * Until the release the repository is private and the demo isn't on its
- * address, so the buttons stay hidden and the text says the theme comes out
- * soon. On release day, set `released` to true in pages/index.astro.
+ * address, so the buttons show but aren't links yet, and the text says the
+ * theme comes out soon. On release day, set `released` to true in pages/index.astro.
  */
 import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
 
 interface Props {
-  /** True once Astro Orbit is public: shows the two buttons. */
+  /** True once Astro Orbit is public: the two buttons become links. */
   released?: boolean;
 }
 
@@ -29,27 +29,28 @@ const { released = false } = Astro.props;
         released ? "it's available now." : 'it comes out soon.'
       }
     </p>
-    {
-      released && (
-        <div class="theme-band__actions">
-          <ArrowFillButton
-            href="https://github.com/hansmartensdev/Astro-Orbit"
-            target="_blank"
-            icon="fa6-brands:github"
-          >
-            Get the theme
-          </ArrowFillButton>
-          <ArrowFillButton
-            href="https://orbit.hansmartens.dev"
-            target="_blank"
-            icon="lucide:arrow-up-right"
-            variant="outline"
-          >
-            View the demo
-          </ArrowFillButton>
-        </div>
-      )
-    }
+    {/* The buttons show before the release, but aren't links yet: the
+        repository is private and the demo isn't on its address. They don't
+        react to the pointer, and screen readers hear "coming soon". */}
+    <div class="theme-band__actions" data-soon={released ? undefined : ''}>
+      <ArrowFillButton
+        href={released ? 'https://github.com/hansmartensdev/Astro-Orbit' : undefined}
+        type={released ? undefined : 'button'}
+        target={released ? '_blank' : undefined}
+        icon="fa6-brands:github"
+      >
+        Get the theme{!released && <span class="sr-only"> (coming soon)</span>}
+      </ArrowFillButton>
+      <ArrowFillButton
+        href={released ? 'https://orbit.hansmartens.dev' : undefined}
+        type={released ? undefined : 'button'}
+        target={released ? '_blank' : undefined}
+        icon="lucide:arrow-up-right"
+        variant="outline"
+      >
+        View the demo{!released && <span class="sr-only"> (coming soon)</span>}
+      </ArrowFillButton>
+    </div>
   </div>
 </section>
 
@@ -117,6 +118,11 @@ const { released = false } = Astro.props;
     --afb-text: #1a1030;
     --afb-fill-bg: #1a1030;
     --afb-fill-text: #fff;
+  }
+
+  /* Before the release: shown, but not clickable. */
+  .theme-band__actions[data-soon] :global(.afb) {
+    pointer-events: none;
   }
 
   .theme-band__actions :global(.afb--outline) {
