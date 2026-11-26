@@ -250,9 +250,12 @@ const posters = await Promise.all(
     text-wrap: balance;
   }
 
+  /* Phones: a step larger (Hans's choice). "an astro developer" fills about
+     96% of the row instead of 90%: 39.6px on a 393px iPhone, 31px at 320. */
   @media (max-width: 700px) {
     .hero__headline {
       line-height: 0.92;
+      font-size: min(calc((100vw - 56px) / 8.5), 64px);
     }
   }
 
