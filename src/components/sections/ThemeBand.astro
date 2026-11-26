@@ -22,7 +22,10 @@ const { released = false } = Astro.props;
   <div class="theme-band__card">
     <span class="label-mono theme-band__label">My next theme</span>
     <h2 class="theme-band__title display-service" id="theme-band-title">
-      Astro Orbit is a <em>free Astro theme.</em>
+      {/* All bold, in two set lines, so no word is left on a line of its own
+          (Hans's choice). */}
+      <span class="theme-band__line">Astro Orbit is</span>
+      <span class="theme-band__line">a free Astro theme.</span>
     </h2>
     <p class="theme-band__text">
       This website has the same design. The theme is MIT-licensed, and {
@@ -88,12 +91,15 @@ const { released = false } = Astro.props;
     position: relative;
   }
 
+  .theme-band__line {
+    display: block;
+  }
+
   .theme-band__label {
     opacity: 0.7;
   }
 
   .theme-band__title {
-    max-width: 16ch;
     margin: 20px 0 0;
   }
 
@@ -140,6 +146,24 @@ const { released = false } = Astro.props;
 
     .theme-band__card {
       padding: 40px 28px;
+    }
+  }
+
+  /* Phones: centred, like the sign-off right under it ("let's talk astro"),
+     so the buttons stay in line as the visitor scrolls from one to the
+     other (Hans's choice). */
+  @media (max-width: 700px) {
+    .theme-band__card {
+      text-align: center;
+    }
+
+    .theme-band__title,
+    .theme-band__text {
+      margin-inline: auto;
+    }
+
+    .theme-band__actions {
+      justify-content: center;
     }
   }
 </style>
