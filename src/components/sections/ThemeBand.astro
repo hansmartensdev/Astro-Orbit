@@ -149,21 +149,19 @@ const { released = false } = Astro.props;
     }
   }
 
-  /* Phones: centred, like the sign-off right under it ("let's talk astro"),
-     so the buttons stay in line as the visitor scrolls from one to the
-     other (Hans's choice). */
-  @media (max-width: 700px) {
-    .theme-band__card {
-      text-align: center;
-    }
+  /* Centred on every screen size, like the sign-off right under it, so the
+     buttons stay in line with "Start a conversation" and "WhatsApp me" as
+     the visitor scrolls from one to the other (Hans's choice). */
+  .theme-band__card {
+    text-align: center;
+  }
 
-    .theme-band__title,
-    .theme-band__text {
-      margin-inline: auto;
-    }
+  .theme-band__title,
+  .theme-band__text {
+    margin-inline: auto;
+  }
 
-    .theme-band__actions {
-      justify-content: center;
-    }
+  .theme-band__actions {
+    justify-content: center;
   }
 </style>
