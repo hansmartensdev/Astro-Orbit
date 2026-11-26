@@ -66,7 +66,7 @@ export const services = {
       tags: ['Astro Updates', 'Security', 'GitHub Issues', 'Feature Requests'],
       desc: [
         "I maintain what I've built: my own website, my free Astro theme Astro Rocket and its demo website. I solve the issues people report on GitHub, even when one takes a lot of time to get right. I keep everything secure and up to date with each new version of Astro.",
-        'Maintenance also means adding what people ask for. A user from Indonesia emailed me to ask how to use Umami, a cookieless analytics service, with Astro Rocket. I built it into the theme with Claude Code, so now every site on Astro Rocket can use it.',
+        'Maintenance also means adding what people ask for. When users of my themes ask for a feature, I build it into the theme, so every site on it can use it.',
       ],
     },
   ] as ServiceCard[],
