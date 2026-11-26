@@ -327,6 +327,16 @@ const posters = await Promise.all(
     }
   }
 
+  /* A short phone (an iPhone SE in Safari is 548px tall): the 3D panel's
+     floor of 42vh pushed the end of the intro off the screen. It may shrink
+     to a quarter of the screen there; on taller phones it fills the space
+     the text leaves, as before. */
+  @media (max-width: 700px) and (orientation: portrait) and (max-height: 600px) {
+    .hero :global(.hero__render) {
+      min-height: 25svh;
+    }
+  }
+
   @media (max-width: 700px) {
     .hero__headline {
       margin-top: var(--hero-headline-pull-sm, -0.4em);
