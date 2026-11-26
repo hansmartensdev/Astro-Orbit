@@ -20,7 +20,7 @@ const { released = false } = Astro.props;
 
 <section class="theme-band shell" aria-labelledby="theme-band-title" data-reveal>
   <div class="theme-band__card">
-    <span class="label-mono theme-band__label">My next theme</span>
+    <span class="label-mono theme-band__label">Check out my new theme</span>
     <h2 class="theme-band__title display-service" id="theme-band-title">
       {/* All bold, in two set lines, so no word is left on a line of its own
           (Hans's choice). */}
@@ -149,21 +149,19 @@ const { released = false } = Astro.props;
     }
   }
 
-  /* Phones: centred, like the sign-off right under it ("let's talk astro"),
-     so the buttons stay in line as the visitor scrolls from one to the
-     other (Hans's choice). */
-  @media (max-width: 700px) {
-    .theme-band__card {
-      text-align: center;
-    }
+  /* Centred on every screen size, like the sign-off right under it, so the
+     buttons stay in line with "Start a conversation" and "WhatsApp me" as
+     the visitor scrolls from one to the other (Hans's choice). */
+  .theme-band__card {
+    text-align: center;
+  }
 
-    .theme-band__title,
-    .theme-band__text {
-      margin-inline: auto;
-    }
+  .theme-band__title,
+  .theme-band__text {
+    margin-inline: auto;
+  }
 
-    .theme-band__actions {
-      justify-content: center;
-    }
+  .theme-band__actions {
+    justify-content: center;
   }
 </style>
