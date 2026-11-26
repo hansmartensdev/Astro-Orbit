@@ -314,6 +314,16 @@ const posters = await Promise.all(
     animation: sw-scrollpulse 1.8s ease-in-out infinite;
   }
 
+  /* A phone held upright: the hero is the height of the screen that's visible
+     when the page opens, with Safari's address bar showing (svh). The class's
+     100vh is the height with the bar hidden, which put the end of the intro
+     behind the bar on an iPhone. Desktop, tablet and landscape are unchanged. */
+  @media (max-width: 700px) and (orientation: portrait) {
+    .hero {
+      min-height: 100svh;
+    }
+  }
+
   @media (max-width: 700px) {
     .hero__headline {
       margin-top: var(--hero-headline-pull-sm, -0.4em);
