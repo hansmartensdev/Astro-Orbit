@@ -8,7 +8,9 @@
  * address, so the buttons show but aren't links yet, and the text says the
  * theme comes out soon. On release day, set `released` to true in pages/index.astro.
  */
+import { Image } from 'astro:assets';
 import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
+import iphone from '@/assets/about/iphone.png';
 
 interface Props {
   /** True once Astro Orbit is public: the two buttons become links. */
@@ -51,6 +53,19 @@ const { released = false } = Astro.props;
         View the demo{!released && <span class="sr-only"> (coming soon)</span>}
       </ArrowFillButton>
     </div>
+    {/* The homepage on Hans's iPhone, rising from the band's lower edge on
+        the right: desktop and tablet landscape only (from 1000px), where
+        there is room beside the text. Lazy, so phones never download it. */}
+    <figure class="theme-band__phone m-0" aria-hidden="true">
+      <Image
+        src={iphone}
+        alt=""
+        widths={[380, 570, 760]}
+        sizes="380px"
+        loading="lazy"
+        decoding="async"
+      />
+    </figure>
   </div>
 </section>
 
@@ -131,6 +146,31 @@ const { released = false } = Astro.props;
     --afb-border: #fff;
     --afb-fill-bg: #fff;
     --afb-fill-text: #1a1030;
+  }
+
+  .theme-band__phone {
+    display: none;
+  }
+
+  @media (min-width: 1000px) {
+    .theme-band__card {
+      padding-right: 460px;
+    }
+
+    /* Beats .theme-band__card > *, which sets position: relative. */
+    .theme-band__card > .theme-band__phone {
+      position: absolute;
+      top: 48px;
+      right: 64px;
+      display: block;
+    }
+
+    .theme-band__phone :global(img) {
+      display: block;
+      width: 360px;
+      height: auto;
+      filter: drop-shadow(0 30px 50px rgb(0 0 0 / 0.5));
+    }
   }
 
   @media (max-width: 800px) {
