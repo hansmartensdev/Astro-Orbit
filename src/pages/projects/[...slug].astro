@@ -999,6 +999,80 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
 
   }
 
+  /* Desktop, laptop and tablet landscape: the text on the left, the picture
+     on the right as a rounded card, both on one screen (Hans's choice). The
+     full-bleed picture with the type laid over it put the laptop under the
+     nav and let the title run into it on a short screen. */
+  @media (min-width: 801px) and (orientation: landscape), (min-width: 1101px) {
+    .case__hero:has(.case__hero-picture) {
+      display: grid;
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      align-items: center;
+      column-gap: clamp(32px, 4vw, 64px);
+      min-height: 100svh;
+      padding: calc(var(--sw-nav-h, 72px) + 24px) var(--gutter) 48px;
+    }
+
+    .case__hero:has(.case__hero-picture) .case__hero-img {
+      position: relative;
+      inset: auto;
+      z-index: 0;
+      grid-column: 2;
+      grid-row: 1;
+      height: auto;
+      aspect-ratio: 16 / 10;
+      border-radius: var(--radius-xl);
+    }
+
+    .case__hero:has(.case__hero-picture) .case__hero-body {
+      grid-column: 1;
+      grid-row: 1;
+      width: auto;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* The title fits its column: about 0.52em per character. */
+    .case__hero:has(.case__hero-picture) .case__title {
+      font-size: min(6.4vw, 100px, calc((40vw - 48px) / (var(--len, 10) * 0.52)));
+    }
+
+    .case__hero:has(.case__hero-picture) .case__lede {
+      font-size: clamp(1rem, 1.25vw, 1.25rem);
+    }
+
+    .case__hero:has(.case__hero-picture) .case__hero-scrim,
+    .case__hero:has(.case__hero-picture) .case__scroll {
+      display: none;
+    }
+  }
+
+  /* Tablets held upright: the title and the text above, the phone picture
+     below as a rounded card (Hans's choice). Phones keep their own layout. */
+  @media (min-width: 801px) and (max-width: 1100px) and (orientation: portrait) {
+    .case__hero:has(.case__hero-img--has-mobile) {
+      padding: calc(var(--sw-nav-h, 72px) + 40px) var(--gutter) 0;
+    }
+
+    .case__hero:has(.case__hero-img--has-mobile) .case__hero-body {
+      order: -1;
+      width: auto;
+      margin: 0 0 40px;
+      padding: 0;
+    }
+
+    .case__hero-img--has-mobile {
+      border-radius: var(--radius-xl);
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+
+    .case__hero:has(.case__hero-img--has-mobile) .case__scroll {
+      display: none;
+    }
+  }
+
   /* The link to the site and, when there is one, to its code. */
   .case__buttons {
     display: flex;
