@@ -254,12 +254,12 @@ const posters = await Promise.all(
   /* The promise in the brand violet: the two words that say what Hans
      builds. Large text, so this violet passes contrast comfortably. */
   .hero__accent {
-    color: var(--hero-accent, #7c3aed);
+    color: var(--hero-accent, var(--orbit-600));
   }
 
   /* A step lighter on the dark page (Hans's choice): violet-500. */
   :global(.dark) .hero__accent {
-    color: #8b5cf6;
+    color: var(--orbit-on-dark);
   }
 
   .hero__word--2 {

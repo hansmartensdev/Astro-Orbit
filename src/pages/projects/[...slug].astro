@@ -826,7 +826,7 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
     margin-top: 32px;
     padding: 16px 28px;
     border-radius: var(--radius-full);
-    background: var(--hero-accent, #7c3aed);
+    background: var(--orbit-fill);
     color: #fff;
     font-weight: 600;
     font-size: 16px;
@@ -843,7 +843,7 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
   }
 
   .nextup:focus-visible {
-    outline: 2px solid var(--hero-accent, #7c3aed);
+    outline: 2px solid var(--hero-accent, var(--orbit-600));
     outline-offset: -4px;
   }
 
@@ -855,8 +855,8 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
     background-color: #0c1016;
     background-image: radial-gradient(
       circle at 0% 100%,
-      rgb(124 58 237 / 0.55),
-      rgb(124 58 237 / 0) 55%
+      color-mix(in srgb, var(--orbit-600) 55%, transparent),
+      color-mix(in srgb, var(--orbit-600) 0%, transparent) 55%
     );
     box-shadow: 0 30px 60px -36px rgb(12 16 22 / 0.45);
   }
@@ -879,7 +879,7 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
     inset: 0;
     display: grid;
     place-items: center;
-    color: var(--hero-accent-on-ink, #a78bfa);
+    color: var(--hero-accent-on-ink, var(--orbit-400));
     text-transform: uppercase;
   }
 

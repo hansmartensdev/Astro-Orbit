@@ -81,11 +81,11 @@ const slug = post.id.replace(/^[a-z]{2}\//, '');
   }
 
   :global(.dark) .post:hover .post__more {
-    color: var(--hero-accent-on-ink, #a78bfa);
+    color: var(--hero-accent-on-ink, var(--orbit-400));
   }
 
   .post:focus-visible {
-    outline: 2px solid var(--hero-accent, #7c3aed);
+    outline: 2px solid var(--hero-accent, var(--orbit-600));
     outline-offset: 4px;
   }
 
@@ -145,7 +145,7 @@ const slug = post.id.replace(/^[a-z]{2}\//, '');
   }
 
   .post:hover .post__more {
-    color: var(--hero-accent, #7c3aed);
+    color: var(--hero-accent, var(--orbit-600));
   }
 
   .post:hover .post__more :global(svg) {

@@ -71,7 +71,7 @@
   }
 
   .btt:focus-visible {
-    outline: 2px solid var(--hero-accent, #7c3aed);
+    outline: 2px solid var(--hero-accent, var(--orbit-600));
     outline-offset: 3px;
   }
 
@@ -96,7 +96,7 @@
 
   /* 2 x pi x 21: the full ring, emptied at the top of the page. */
   .btt__progress {
-    stroke: var(--hero-accent, #7c3aed);
+    stroke: var(--hero-accent, var(--orbit-600));
     stroke-linecap: round;
     stroke-dasharray: 131.95;
     stroke-dashoffset: 131.95;
@@ -104,7 +104,7 @@
 
   /* The lighter violet on the dark page, as the accent words there. */
   :global(.dark) .btt__progress {
-    stroke: #8b5cf6;
+    stroke: var(--orbit-on-dark);
   }
 
   .btt__face {

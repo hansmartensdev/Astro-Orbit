@@ -46,6 +46,7 @@ const {
 // (includeOrgSchema is kept so existing pages still compile.)
 const schemas: Array<WithContext<WebSite> | WithContext<Person>> = [createWebsiteSchema(), createPersonSchema()];
 void includeOrgSchema;
+import { brandCss } from '@/lib/brand';
 ---
 
 <!doctype html>
@@ -63,6 +64,10 @@ void includeOrgSchema;
         ThemeToggle keep it in step. Not branding.colors.themeColor, which
         the share images use and stays the light ground. */}
     <meta name="theme-color" content="#0e0e0e" id="theme-color" />
+
+    {/* The brand colour's shades (config/brand.config.ts, see lib/brand.ts),
+        before any stylesheet that uses them. */}
+    <style is:inline set:html={brandCss()} />
 
     <!-- Fonts: latin subsets of the display and body faces -->
     <link rel="preload" href={outfitWoff2} as="font" type="font/woff2" crossorigin />

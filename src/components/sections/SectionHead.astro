@@ -55,13 +55,13 @@ const parts = at >= 0 ? [title.slice(0, at), title.slice(at, at + accent!.length
 
 <style>
   .sh__accent {
-    color: var(--hero-accent, #7c3aed);
+    color: var(--hero-accent, var(--orbit-600));
   }
 
   /* A step lighter on the dark page, so the word doesn't sink into it
      (Hans's choice): violet-500. */
   :global(.dark) .sh__accent {
-    color: #8b5cf6;
+    color: var(--orbit-on-dark);
   }
 
   /* A page title leads the phone scale, a step above the section heads on

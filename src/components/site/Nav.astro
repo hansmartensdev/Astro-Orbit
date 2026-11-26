@@ -363,7 +363,7 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
   }
 
   .sw-nav__home:focus-visible {
-    outline: 2px solid var(--hero-accent, #7c3aed);
+    outline: 2px solid var(--hero-accent, var(--orbit-600));
     outline-offset: 3px;
   }
 
@@ -717,14 +717,14 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     right: 0;
     bottom: 0;
     height: 2px;
-    background: var(--hero-accent, #7c3aed);
+    background: var(--hero-accent, var(--orbit-600));
     transform: scaleX(var(--read, 0));
     transform-origin: left center;
     pointer-events: none;
   }
 
   :global(.dark) .sw-nav__progress {
-    background: #8b5cf6;
+    background: var(--orbit-on-dark);
   }
 
   /* Out of the way while the menu is open. */

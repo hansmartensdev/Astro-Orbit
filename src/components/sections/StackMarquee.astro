@@ -112,8 +112,8 @@ const rows = [
     width: 40px;
     height: 40px;
     border-radius: 999px;
-    background: rgb(167 139 250 / 0.16);
-    color: #c4b5fd;
+    background: color-mix(in srgb, var(--orbit-400) 16%, transparent);
+    color: var(--orbit-300);
   }
 
   .smq__icon :global(path) {
@@ -124,7 +124,7 @@ const rows = [
     font-family: var(--font-display);
     font-size: 16px;
     font-weight: 600;
-    color: var(--card-fg, #f5f3ff);
+    color: var(--card-fg, var(--orbit-50));
   }
 
   @keyframes smq-scroll {

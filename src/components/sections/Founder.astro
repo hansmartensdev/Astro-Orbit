@@ -173,14 +173,14 @@ const desks: Desk[] = [
   .founder {
     /* The brand card, as the blog post header and the footer: deep violet
        with the violet glow from the lower left and a light one top right. */
-    --card-bg: #1a1030;
+    --card-bg: var(--orbit-ink);
     /* Violet-white for the text and lines, in both modes: the site's ice
        white is a touch cool, and on violet its edges read faintly
        blue-green. */
-    --card-fg: #f5f3ff;
+    --card-fg: var(--orbit-50);
     --card-chip: rgb(245 243 255 / 0.32);
-    --card-glow-a: rgb(124 58 237 / 0.55);
-    --card-glow-b: rgb(167 139 250 / 0.18);
+    --card-glow-a: color-mix(in srgb, var(--orbit-600) 55%, transparent);
+    --card-glow-b: color-mix(in srgb, var(--orbit-400) 18%, transparent);
     --card-light: 0% 100%;
     --card-light-b: 100% 0%;
     /* A light grain in both modes: a heavy one leaves blue-green specks on
@@ -197,7 +197,7 @@ const desks: Desk[] = [
     grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
     grid-template-rows: auto auto;
     column-gap: 40px;
-    border: 1px solid rgb(124 58 237 / 0.18);
+    border: 1px solid color-mix(in srgb, var(--orbit-600) 18%, transparent);
     border-radius: var(--radius-xl);
     box-shadow: 0 -12px 40px rgb(12 16 22 / 0.1);
     color: var(--card-fg);

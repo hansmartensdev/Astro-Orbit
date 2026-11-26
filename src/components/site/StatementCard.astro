@@ -115,7 +115,7 @@ const words = phrases.flatMap((phrase) =>
   }
 
   .stmt__w--accent {
-    color: var(--statement-accent, #8b5cf6);
+    color: var(--statement-accent, var(--orbit-500));
   }
 
   .stmt__foot {
@@ -139,7 +139,7 @@ const words = phrases.flatMap((phrase) =>
     width: clamp(40px, 8cqh, 56px);
     height: clamp(40px, 8cqh, 56px);
     flex: none;
-    border: 2px solid var(--statement-accent, #8b5cf6);
+    border: 2px solid var(--statement-accent, var(--orbit-500));
     border-radius: 50%;
     background: var(--ink-800);
     font-family: var(--font-display);
@@ -182,11 +182,11 @@ const words = phrases.flatMap((phrase) =>
 
   .stmt__more:hover {
     color: #fff;
-    text-decoration-color: var(--statement-accent, #8b5cf6);
+    text-decoration-color: var(--statement-accent, var(--orbit-500));
   }
 
   .stmt__more:focus-visible {
-    outline: 2px solid var(--statement-accent, #8b5cf6);
+    outline: 2px solid var(--statement-accent, var(--orbit-500));
     outline-offset: 4px;
     border-radius: 2px;
   }
