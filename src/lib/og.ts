@@ -4,6 +4,7 @@ import satori from 'satori';
 import { html } from 'satori-html';
 import sharp from 'sharp';
 import siteConfig from '@/config/site.config';
+import { brandRoles, brandShades } from '@/lib/brand';
 
 export interface OGImageOptions {
   title: string;
@@ -36,10 +37,12 @@ const fonts = () => [
 ];
 
 /** Ink, ice and the violet accent, as plain values: Satori cannot read CSS variables. */
-const INK = '#1a1030'; // a deep violet ground for covers and share cards, as the dark footer
+const BRAND = brandShades();
+const ROLES = brandRoles();
+const INK = BRAND.ink; // a deep violet ground for covers and share cards, as the dark footer
 const ICE = '#eef2f4';
-const VIOLET = '#7c3aed';
-const VIOLET_ON_INK = '#8b5cf6';
+const VIOLET = ROLES.fill; // under the white mark
+const VIOLET_ON_INK = ROLES.onDark;
 
 /**
  * satori-html escapes interpolated text (& → &amp;) but hands the parsed tree
@@ -199,7 +202,7 @@ export async function generateBlogCover(options: {
   const glow = GLOW_AT[seed % GLOW_AT.length];
   const glow2 = GLOW_AT[(seed >>> 7) % GLOW_AT.length];
   const body = lucideBody(coverIcon(options.icon, tags))!
-    .replace(/currentColor/g, '#c4b5fd')
+    .replace(/currentColor/g, BRAND[300])
     .replace(/stroke-width="2"/g, 'stroke-width="1.25"');
   const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220" viewBox="0 0 24 24">${body}</svg>`;
   const iconSrc = `data:image/svg+xml;base64,${Buffer.from(iconSvg).toString('base64')}`;

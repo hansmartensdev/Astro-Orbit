@@ -32,15 +32,15 @@
   /* Ink is the primary. The one colour on the site is the droplet that falls
      out of the hero and travels down the page (scripts/hero-scene.ts, reel/morph.ts),
      in electric violet — a nod to Astro's purple, deeper and less sweet. */
-  --hero-accent: #7c3aed;
+  --hero-accent: var(--orbit-text);
   /* The same violet lifted for text and marks on ink (7:1); #7c3aed itself is
      only 3.4:1 there. */
-  --hero-accent-on-ink: #a78bfa;
+  --hero-accent-on-ink: var(--orbit-on-ink);
   /* The statement card the droplet blooms into (StatementCard.astro): its ink
      ground, and the violet its key phrases are set in (4.5:1 on that ink, so
      it holds at phone sizes too). */
   --reel-card-bg: var(--ink-950);
-  --statement-accent: #8b5cf6;
+  --statement-accent: var(--orbit-on-dark);
 
   --primary: var(--ink-950);
   --primary-hover: var(--ink-800);
@@ -227,6 +227,9 @@
    Dark Mode — ink ground, ice type.
    ------------------------------------------------------------------------- */
 .dark {
+  /* The brand colour on the dark page: shades with enough contrast on ink
+     (lib/brand.ts). For the default violet these are the designed ones. */
+  --hero-accent: var(--orbit-mark-dark);
   /* Text in dark mode: neutral greys, like the dark backgrounds (Hans's
      choice). The first three keep the brightness of the cool ice greys they
      replace; the faintest is lifted to 4.5:1 on the footer as well. */

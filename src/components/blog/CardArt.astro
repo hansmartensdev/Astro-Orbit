@@ -96,16 +96,16 @@ const size = !word ? 0 : word.length > 12 ? 80 : 96;
   /* From a step under the brand violet at the top to a deep violet at the
      foot; the same in light and dark mode. */
   .ca__top {
-    stop-color: color-mix(in srgb, #2e1065 14%, #7c3aed);
+    stop-color: color-mix(in srgb, var(--orbit-950) 14%, var(--orbit-fill));
   }
 
   .ca__foot {
-    stop-color: #2e1065;
+    stop-color: var(--orbit-950);
   }
 
   .ca__icon {
-    color: #f5f3ff;
-    stroke: #f5f3ff;
+    color: var(--orbit-50);
+    stroke: var(--orbit-50);
     stroke-width: 1.6;
     stroke-linecap: round;
     stroke-linejoin: round;
@@ -117,13 +117,13 @@ const size = !word ? 0 : word.length > 12 ? 80 : 96;
   }
 
   .ca__word {
-    fill: #f5f3ff;
+    fill: var(--orbit-50);
     font-family: var(--font-display);
     font-weight: 800;
   }
 
   .ca__corner {
-    stroke: #ddd6fe;
+    stroke: var(--orbit-200);
     stroke-opacity: 0.7;
     stroke-width: 1.5;
   }

@@ -66,11 +66,11 @@ const { released = false } = Astro.props;
     position: relative;
     overflow: hidden;
     padding: 64px 60px;
-    border: 1px solid rgb(124 58 237 / 0.18);
+    border: 1px solid color-mix(in srgb, var(--orbit-600) 18%, transparent);
     border-radius: var(--radius-xl);
-    background-color: #2e1065;
-    background-image: linear-gradient(to bottom, color-mix(in srgb, #2e1065 14%, #7c3aed), #2e1065);
-    color: #f5f3ff;
+    background-color: var(--orbit-950);
+    background-image: linear-gradient(to bottom, color-mix(in srgb, var(--orbit-950) 14%, var(--orbit-fill)), var(--orbit-950));
+    color: var(--orbit-50);
   }
 
   /* The blog cards' grid, fading towards the edges. */
@@ -121,8 +121,8 @@ const { released = false } = Astro.props;
   /* White buttons on the violet. */
   .theme-band__actions :global(.afb) {
     --afb-bg: #fff;
-    --afb-text: #1a1030;
-    --afb-fill-bg: #1a1030;
+    --afb-text: var(--orbit-ink);
+    --afb-fill-bg: var(--orbit-ink);
     --afb-fill-text: #fff;
   }
 
@@ -136,7 +136,7 @@ const { released = false } = Astro.props;
     --afb-text: #fff;
     --afb-border: #fff;
     --afb-fill-bg: #fff;
-    --afb-fill-text: #1a1030;
+    --afb-fill-text: var(--orbit-ink);
   }
 
   @media (max-width: 800px) {

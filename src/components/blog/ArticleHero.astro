@@ -99,15 +99,15 @@ const label = ['Blog', tags[0]].filter(Boolean).join(' · ').toUpperCase();
     padding: clamp(32px, 6vw, 88px);
     border-radius: 22px;
     /* The same deep violet ground as the blog covers and the dark footer. */
-    background-color: #1a1030;
+    background-color: var(--orbit-ink);
     background-image:
-      radial-gradient(circle at 0% 100%, rgb(124 58 237 / 0.55), rgb(124 58 237 / 0) 55%),
-      radial-gradient(circle at 100% 0%, rgb(167 139 250 / 0.18), rgb(167 139 250 / 0) 45%);
+      radial-gradient(circle at 0% 100%, color-mix(in srgb, var(--orbit-600) 55%, transparent), color-mix(in srgb, var(--orbit-600) 0%, transparent) 55%),
+      radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--orbit-400) 18%, transparent), color-mix(in srgb, var(--orbit-400) 0%, transparent) 45%);
     color: #fff;
   }
 
   .ah__label {
-    color: var(--hero-accent-on-ink, #a78bfa);
+    color: var(--hero-accent-on-ink, var(--orbit-400));
   }
 
   .ah__title {
@@ -203,7 +203,7 @@ const label = ['Blog', tags[0]].filter(Boolean).join(' · ').toUpperCase();
       right: clamp(48px, 5vw, 80px);
       width: clamp(140px, 13vw, 190px);
       height: clamp(140px, 13vw, 190px);
-      color: var(--hero-accent-on-ink, #a78bfa);
+      color: var(--hero-accent-on-ink, var(--orbit-400));
     }
 
     .ah__card--icon .ah__title {

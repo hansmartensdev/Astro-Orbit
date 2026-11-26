@@ -317,18 +317,18 @@ const slug = (category: string) => category.toLowerCase();
   }
 
   .blog-cat:hover {
-    border-color: var(--hero-accent, #7c3aed);
-    color: var(--hero-accent, #7c3aed);
+    border-color: var(--hero-accent, var(--orbit-600));
+    color: var(--hero-accent, var(--orbit-600));
   }
 
   .blog-cat[aria-pressed='true'] {
-    border-color: var(--hero-accent, #7c3aed);
-    background: var(--hero-accent, #7c3aed);
+    border-color: var(--hero-accent, var(--orbit-600));
+    background: var(--orbit-fill);
     color: #fff;
   }
 
   .blog-cat:focus-visible {
-    outline: 2px solid var(--hero-accent, #7c3aed);
+    outline: 2px solid var(--hero-accent, var(--orbit-600));
     outline-offset: 3px;
   }
 
@@ -344,7 +344,7 @@ const slug = (category: string) => category.toLowerCase();
   /* Search hits, marked in the brand violet rather than the browser's
      yellow. */
   :global(#lab-results mark) {
-    background: rgb(124 58 237 / 0.14);
+    background: color-mix(in srgb, var(--orbit-600) 14%, transparent);
     color: inherit;
     border-radius: 3px;
     padding: 0 2px;
@@ -403,7 +403,7 @@ const slug = (category: string) => category.toLowerCase();
     padding: 0 18px;
     border: 0;
     border-radius: 9999px;
-    background: var(--hero-accent, #7c3aed);
+    background: var(--orbit-fill);
     color: #fff;
     font-size: 14px;
     font-weight: 600;
@@ -412,11 +412,11 @@ const slug = (category: string) => category.toLowerCase();
   }
 
   .blog-search__button:hover {
-    background: #6d28d9;
+    background: var(--orbit-fill-hover);
   }
 
   .blog-search__button:focus-visible {
-    outline: 2px solid var(--hero-accent, #7c3aed);
+    outline: 2px solid var(--hero-accent, var(--orbit-600));
     outline-offset: 3px;
   }
 
@@ -430,7 +430,7 @@ const slug = (category: string) => category.toLowerCase();
   }
 
   .blog-search__input:focus {
-    border-color: var(--hero-accent, #7c3aed);
-    box-shadow: 0 0 0 3px rgb(124 58 237 / 0.15);
+    border-color: var(--hero-accent, var(--orbit-600));
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--orbit-600) 15%, transparent);
   }
 </style>

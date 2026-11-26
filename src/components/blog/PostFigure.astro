@@ -89,7 +89,7 @@ const hasCaption = Astro.slots.has('default');
   }
 
   a.pf__media:focus-visible {
-    outline: 2px solid var(--hero-accent, #7c3aed);
+    outline: 2px solid var(--hero-accent, var(--orbit-600));
     outline-offset: 4px;
   }
 
@@ -101,27 +101,27 @@ const hasCaption = Astro.slots.has('default');
 
   /* Same as links in the post's text: violet, with a violet underline. */
   .pf figcaption :global(a) {
-    color: var(--hero-accent, #7c3aed);
+    color: var(--hero-accent, var(--orbit-600));
     font-weight: 500;
     font-style: normal;
     text-decoration: underline;
     text-decoration-thickness: 1.5px;
     text-underline-offset: 3px;
-    text-decoration-color: rgb(124 58 237 / 0.45);
+    text-decoration-color: color-mix(in srgb, var(--orbit-600) 45%, transparent);
   }
 
   .pf figcaption :global(a:hover) {
-    text-decoration-color: var(--hero-accent, #7c3aed);
+    text-decoration-color: var(--hero-accent, var(--orbit-600));
     text-decoration-thickness: 2.5px;
   }
 
   /* On ink: the violet made for ink, as in the post's text. */
   :global(.dark) .pf figcaption :global(a) {
-    color: var(--hero-accent-on-ink, #a78bfa);
-    text-decoration-color: rgb(167 139 250 / 0.45);
+    color: var(--hero-accent-on-ink, var(--orbit-400));
+    text-decoration-color: color-mix(in srgb, var(--orbit-400) 45%, transparent);
   }
 
   :global(.dark) .pf figcaption :global(a:hover) {
-    text-decoration-color: var(--hero-accent-on-ink, #a78bfa);
+    text-decoration-color: var(--hero-accent-on-ink, var(--orbit-400));
   }
 </style>

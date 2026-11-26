@@ -90,7 +90,7 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
 
 <style>
   .toc {
-    border: 1px solid rgb(124 58 237 / 0.35);
+    border: 1px solid color-mix(in srgb, var(--orbit-600) 35%, transparent);
     border-radius: 14px;
     /* The page ground shows through: only the violet line frames it. */
     background: transparent;
@@ -124,7 +124,7 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
   .toc :global(.toc__icon) {
     width: 16px;
     height: 16px;
-    color: var(--hero-accent, #7c3aed);
+    color: var(--hero-accent, var(--orbit-600));
   }
 
   .toc-hint {
@@ -173,13 +173,13 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
 
   .toc-link:hover {
     color: var(--color-foreground);
-    border-left-color: var(--hero-accent, #7c3aed);
+    border-left-color: var(--hero-accent, var(--orbit-600));
   }
 
   /* The section being read: the violet rule and full ink. */
   .toc-link[data-active='true'] {
     color: var(--color-foreground);
-    border-left-color: var(--hero-accent, #7c3aed);
+    border-left-color: var(--hero-accent, var(--orbit-600));
     font-weight: 500;
   }
 
