@@ -25,4 +25,5 @@ coverAlt: "The Astro Droplet demo homepage on a MacBook and an iPhone, with the 
 technologies: ["Astro", "TypeScript", "Tailwind CSS", "three.js"]
 order: 2
 featured: true
+draft: true
 ---
