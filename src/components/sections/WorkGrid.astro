@@ -378,13 +378,17 @@ const SIZING: Record<'hero' | 'large' | 'wide' | 'standard', { widths: number[];
 
   /* The pill follows the dissolve in by a beat and leaves at once. Same
      near-zero resting opacity as the colour layer, for the same reason, and
-     it rises rather than scales so its raster scale never changes either. */
+     it rises rather than scales so its raster scale never changes either.
+     It sits in the bottom-right corner, level with the project's name, so
+     it never covers the picture's subject: in the centre it sat right on
+     the laptop's screen (Hans's catch). */
   .card__view {
     position: absolute;
     inset: 0;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 20px 22px;
     pointer-events: none;
     opacity: 0.001;
     transform: translateY(12px);
@@ -456,6 +460,10 @@ const SIZING: Record<'hero' | 'large' | 'wide' | 'standard', { widths: number[];
 
   .card[data-span='large'] .card__name {
     font-size: clamp(2.25rem, 3.4vw, 3.25rem);
+  }
+
+  .card[data-span='hero'] .card__view {
+    padding: 36px 40px;
   }
 
   .card[data-span='hero'] .card__caption {
