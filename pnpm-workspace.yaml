@@ -7,3 +7,8 @@ overrides:
   # malformed ZIP64 archive); 0.7.5 is the patch release that
   # fixes it. Remove this once satori depends on 0.7.5 or later itself.
   fflate@0.7.3: 0.7.5
+  # @astrojs/vercel's @vercel/routing-utils pins path-to-regexp 6.1.0, which
+  # can build a slow regular expression (a ReDoS, GHSA-9wv6-86v2-598j);
+  # 6.3.0 is the patch release that fixes it. Remove this once
+  # @vercel/routing-utils depends on 6.3.0 or later itself.
+  path-to-regexp@6.1.0: 6.3.0
