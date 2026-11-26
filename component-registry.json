@@ -48,6 +48,14 @@
       "name": "Patterns",
       "description": "Reusable form and UI patterns"
     },
+    "sections": {
+      "name": "Sections",
+      "description": "Full-width page sections - page hero, features, pricing, FAQ, steps, stats, testimonials, logos, team, timeline, contact, call to action, hours"
+    },
+    "seo": {
+      "name": "SEO",
+      "description": "Structured data and page metadata components"
+    },
     "hero": {
       "name": "Hero",
       "description": "Flexible hero section component"
@@ -57,13 +65,178 @@
     "cn": {
       "name": "cn utility",
       "description": "Tailwind CSS class merging utility",
-      "files": ["src/lib/cn.ts"],
-      "npm": ["clsx", "tailwind-merge"]
+      "files": [
+        "src/lib/cn.ts"
+      ],
+      "npm": [
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    "anchor": {
+      "name": "anchor utility",
+      "description": "Places a top-layer popover next to its trigger: CSS anchor positioning where supported, a measured script fallback elsewhere",
+      "files": [
+        "src/lib/anchor.ts"
+      ],
+      "npm": []
+    },
+    "field-errors": {
+      "name": "field-errors utility",
+      "description": "Shows a field's validation message after interaction (:user-invalid) and keeps aria-invalid and aria-describedby in sync",
+      "files": [
+        "src/lib/field-errors.ts"
+      ],
+      "npm": []
     }
   },
   "components": {
+    "accordion": {
+      "name": "Accordion",
+      "description": "Collapsible sections built on native <details>/<summary> (works without JS), with an exclusive single-open mode.",
+      "category": "ui",
+      "subcategory": "overlay",
+      "files": [
+        "src/components/ui/overlay/Accordion/Accordion.astro",
+        "src/components/ui/overlay/Accordion/accordion.variants.ts",
+        "src/components/ui/overlay/Accordion/index.ts",
+        "src/components/ui/overlay/Accordion/Accordion.tsx"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": [
+          "icon"
+        ]
+      },
+      "premium": false,
+      "useInstead": [
+        "Item content is plain text; for rich content per item use native <details> with the same classes, or Tabs."
+      ],
+      "example": "---\nimport Accordion from '@/components/ui/overlay/Accordion/Accordion.astro';\n---\n\n<Accordion\n  variant=\"card\"\n  exclusive\n  items={[\n    { title: 'Is it free?', content: 'Yes, Velocity is MIT licensed.', defaultOpen: true },\n    { title: 'Can I use React?', content: 'Yes, as islands.' },\n  ]}\n/>"
+    },
+    "alert": {
+      "name": "Alert",
+      "description": "Inline message box (info, success, warning, error) with an icon, optional title and dismiss button.",
+      "category": "ui",
+      "subcategory": "feedback",
+      "files": [
+        "src/components/ui/feedback/Alert/Alert.astro",
+        "src/components/ui/feedback/Alert/alert.variants.ts",
+        "src/components/ui/feedback/Alert/index.ts",
+        "src/components/ui/feedback/Alert/Alert.tsx"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": [
+          "icon"
+        ]
+      },
+      "premium": false,
+      "useInstead": [
+        "Use Toast for transient notifications triggered from a React island; Alert is static, in-page content."
+      ],
+      "example": "---\nimport Alert from '@/components/ui/feedback/Alert/Alert.astro';\n---\n\n<Alert variant=\"warning\" title=\"Scheduled maintenance\" dismissible>\n  The dashboard is read-only on Sunday from 02:00 to 04:00 UTC.\n</Alert>"
+    },
+    "announcement-bar": {
+      "name": "AnnouncementBar",
+      "description": "A strip above the header for a launch or notice: message, optional link and close button; a dismissed bar stays closed per id.",
+      "category": "ui",
+      "subcategory": "marketing",
+      "files": [
+        "src/components/ui/marketing/AnnouncementBar/AnnouncementBar.astro",
+        "src/components/ui/marketing/AnnouncementBar/index.ts"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": [
+          "icon"
+        ]
+      },
+      "premium": false,
+      "useInstead": [
+        "Use AnnouncementBar for site-wide notices instead of an Alert at the top of a page; change its id for each new announcement."
+      ],
+      "example": "---\nimport AnnouncementBar from '@/components/ui/marketing/AnnouncementBar/AnnouncementBar.astro';\n---\n\n<AnnouncementBar id=\"launch-2-6\" href=\"/blog/velocity-2-6\" linkLabel=\"Read the post\" tone=\"brand\">\n  Velocity 2.6 is out.\n</AnnouncementBar>"
+    },
+    "avatar": {
+      "name": "Avatar",
+      "description": "Circular user image that falls back to initials (from fallback or alt) when there is no src.",
+      "category": "ui",
+      "subcategory": "data-display",
+      "files": [
+        "src/components/ui/data-display/Avatar/Avatar.astro",
+        "src/components/ui/data-display/Avatar/avatar.variants.ts",
+        "src/components/ui/data-display/Avatar/index.ts",
+        "src/components/ui/data-display/Avatar/Avatar.tsx"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": []
+      },
+      "premium": false,
+      "useInstead": [
+        "Use AvatarGroup for a stacked row of avatars with a \"+N\" overflow."
+      ],
+      "example": "---\nimport Avatar from '@/components/ui/data-display/Avatar/Avatar.astro';\n---\n\n<Avatar src=\"/avatars/ada.jpg\" alt=\"Ada Lovelace\" size=\"lg\" />\n<Avatar fallback=\"GH\" size=\"sm\" />"
+    },
+    "avatar-group": {
+      "name": "AvatarGroup",
+      "description": "Overlapping stack of Avatars that collapses extras into a \"+N\" count.",
+      "category": "ui",
+      "subcategory": "data-display",
+      "files": [
+        "src/components/ui/data-display/AvatarGroup/AvatarGroup.astro",
+        "src/components/ui/data-display/AvatarGroup/index.ts",
+        "src/components/ui/data-display/AvatarGroup/AvatarGroup.tsx"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": [
+          "avatar"
+        ]
+      },
+      "premium": false,
+      "useInstead": [
+        "Use SocialProof for avatars next to a short trust line on marketing pages."
+      ],
+      "example": "---\nimport AvatarGroup from '@/components/ui/data-display/AvatarGroup/AvatarGroup.astro';\n---\n\n<AvatarGroup\n  max={3}\n  avatars={[\n    { src: '/avatars/ada.jpg', alt: 'Ada Lovelace' },\n    { alt: 'Grace Hopper' },\n    { fallback: 'AT' },\n    { alt: 'Alan Kay' },\n  ]}\n/>"
+    },
+    "badge": {
+      "name": "Badge",
+      "description": "Small inline label for status, tags or counts, with semantic color variants, a pill style and a pulsing dot.",
+      "category": "ui",
+      "subcategory": "data-display",
+      "files": [
+        "src/components/ui/data-display/Badge/Badge.astro",
+        "src/components/ui/data-display/Badge/badge.variants.ts",
+        "src/components/ui/data-display/Badge/index.ts",
+        "src/components/ui/data-display/Badge/Badge.tsx"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": []
+      },
+      "premium": false,
+      "useInstead": [
+        "Use Badge for status and tags instead of a styled <span>; it is a <span>, so it can sit inside text."
+      ],
+      "example": "---\nimport Badge from '@/components/ui/data-display/Badge/Badge.astro';\n---\n\n<Badge variant=\"success\" size=\"sm\">Live</Badge>\n<Badge variant=\"brand\" pill pulse>New release</Badge>"
+    },
     "button": {
       "name": "Button",
+      "description": "Button or button-styled link with variants (brand, primary, secondary, outline, ghost, link, destructive), sizes, loading state and optional leading/trailing icons. With unstyled it drops its own look and takes yours from class.",
       "category": "ui",
       "subcategory": "form",
       "files": [
@@ -73,109 +246,26 @@
         "src/components/ui/form/Button/index.ts"
       ],
       "dependencies": {
-        "utilities": ["cn"],
-        "components": []
+        "utilities": [
+          "cn"
+        ],
+        "components": [
+          "icon"
+        ]
       },
-      "premium": false
-    },
-    "input": {
-      "name": "Input",
-      "category": "ui",
-      "subcategory": "form",
-      "files": [
-        "src/components/ui/form/Input/Input.astro",
-        "src/components/ui/form/Input/Input.tsx",
-        "src/components/ui/form/Input/input.variants.ts",
-        "src/components/ui/form/Input/index.ts"
+      "premium": false,
+      "useInstead": [
+        "Use Button with href for links styled as buttons, not a styled <a>; external URLs get target=\"_blank\" and rel automatically.",
+        "Use icon (with size) for square icon-only buttons, and give them an aria-label.",
+        "Use the link variant for inline text actions, not a plain <button> with custom classes.",
+        "Use variant=\"brand\" for the main action in the brand colour (its text uses --brand-ink, so it passes contrast) instead of custom bg-brand classes; restyle tones in a wrapper, not by editing Button.",
+        "Use unstyled for a button with its own look (an icon tile, a chip, a swatch) and style it with class, instead of a raw <button>: it keeps Button's link handling, focus ring and disabled state."
       ],
-      "dependencies": {
-        "utilities": ["cn"],
-        "components": []
-      },
-      "premium": false
-    },
-    "textarea": {
-      "name": "Textarea",
-      "category": "ui",
-      "subcategory": "form",
-      "files": [
-        "src/components/ui/form/Textarea/Textarea.astro",
-        "src/components/ui/form/Textarea/Textarea.tsx",
-        "src/components/ui/form/Textarea/textarea.variants.ts",
-        "src/components/ui/form/Textarea/index.ts"
-      ],
-      "dependencies": {
-        "utilities": ["cn"],
-        "components": []
-      },
-      "premium": false
-    },
-    "select": {
-      "name": "Select",
-      "category": "ui",
-      "subcategory": "form",
-      "files": [
-        "src/components/ui/form/Select/Select.astro",
-        "src/components/ui/form/Select/Select.tsx",
-        "src/components/ui/form/Select/select.variants.ts",
-        "src/components/ui/form/Select/index.ts"
-      ],
-      "dependencies": {
-        "utilities": ["cn"],
-        "components": []
-      },
-      "premium": false
-    },
-    "checkbox": {
-      "name": "Checkbox",
-      "category": "ui",
-      "subcategory": "form",
-      "files": [
-        "src/components/ui/form/Checkbox/Checkbox.astro",
-        "src/components/ui/form/Checkbox/Checkbox.tsx",
-        "src/components/ui/form/Checkbox/checkbox.variants.ts",
-        "src/components/ui/form/Checkbox/index.ts"
-      ],
-      "dependencies": {
-        "utilities": ["cn"],
-        "components": []
-      },
-      "premium": false
-    },
-    "radio": {
-      "name": "Radio",
-      "category": "ui",
-      "subcategory": "form",
-      "files": [
-        "src/components/ui/form/Radio/Radio.astro",
-        "src/components/ui/form/Radio/Radio.tsx",
-        "src/components/ui/form/Radio/radio.variants.ts",
-        "src/components/ui/form/Radio/index.ts"
-      ],
-      "dependencies": {
-        "utilities": ["cn"],
-        "components": []
-      },
-      "premium": false
-    },
-    "switch": {
-      "name": "Switch",
-      "category": "ui",
-      "subcategory": "form",
-      "files": [
-        "src/components/ui/form/Switch/Switch.astro",
-        "src/components/ui/form/Switch/Switch.tsx",
-        "src/components/ui/form/Switch/switch.variants.ts",
-        "src/components/ui/form/Switch/index.ts"
-      ],
-      "dependencies": {
-        "utilities": ["cn"],
-        "components": []
-      },
-      "premium": false
+      "example": "---\nimport Button from '@/components/ui/form/Button/Button.astro';\n---\n\n<Button variant=\"brand\" size=\"lg\" trailingIcon=\"arrow-right\" href=\"/contact\">Get in touch</Button>\n<Button variant=\"outline\" type=\"submit\" loading>Saving</Button>"
     },
     "card": {
       "name": "Card",
+      "description": "Surface container with variants and padding; becomes a block link when given href.",
       "category": "ui",
       "subcategory": "data-display",
       "files": [
@@ -185,263 +275,67 @@
         "src/components/ui/data-display/Card/index.ts"
       ],
       "dependencies": {
-        "utilities": ["cn"],
+        "utilities": [
+          "cn"
+        ],
         "components": []
       },
-      "premium": false
+      "premium": false,
+      "useInstead": [
+        "Use Card with href for a clickable card, not a Card wrapped in <a>.",
+        "Use StatCard for a metric with a trend, and Section for page-level bands."
+      ],
+      "example": "---\nimport Card from '@/components/ui/data-display/Card/Card.astro';\n---\n\n<Card variant=\"elevated\" padding=\"lg\" hover href=\"/blog\">\n  <h3 class=\"font-semibold text-foreground\">Read the blog</h3>\n  <p class=\"text-foreground-muted text-sm\">Guides and release notes.</p>\n</Card>"
     },
-    "badge": {
-      "name": "Badge",
+    "carousel": {
+      "name": "Carousel",
+      "description": "A sideways-scrolling row of slides on CSS scroll snap (swipe, trackpad, keyboard) with previous / next buttons, a marker per position and a screen-reader status line; 1-4 slides in view.",
       "category": "ui",
       "subcategory": "data-display",
       "files": [
-        "src/components/ui/data-display/Badge/Badge.astro",
-        "src/components/ui/data-display/Badge/badge.variants.ts",
-        "src/components/ui/data-display/Badge/index.ts"
+        "src/components/ui/data-display/Carousel/Carousel.astro",
+        "src/components/ui/data-display/Carousel/index.ts"
       ],
       "dependencies": {
-        "utilities": ["cn"],
+        "utilities": [
+          "cn"
+        ],
+        "components": [
+          "icon"
+        ]
+      },
+      "premium": false,
+      "useInstead": [
+        "Use Carousel for galleries and card rows that scroll sideways instead of a hand-built slider script."
+      ],
+      "example": "---\nimport Carousel from '@/components/ui/data-display/Carousel/Carousel.astro';\nimport Card from '@/components/ui/data-display/Card/Card.astro';\n---\n\n<Carousel label=\"Customer stories\" perView={3}>\n  <Card>One</Card>\n  <Card>Two</Card>\n  <Card>Three</Card>\n  <Card>Four</Card>\n</Carousel>"
+    },
+    "checkbox": {
+      "name": "Checkbox",
+      "description": "Native checkbox with label, optional description and error message. A label with links or emphasis goes in the default slot.",
+      "category": "ui",
+      "subcategory": "form",
+      "files": [
+        "src/components/ui/form/Checkbox/Checkbox.astro",
+        "src/components/ui/form/Checkbox/Checkbox.tsx",
+        "src/components/ui/form/Checkbox/checkbox.variants.ts",
+        "src/components/ui/form/Checkbox/index.ts"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
         "components": []
       },
-      "premium": false
-    },
-    "avatar": {
-      "name": "Avatar",
-      "category": "ui",
-      "subcategory": "data-display",
-      "files": [
-        "src/components/ui/data-display/Avatar/Avatar.astro",
-        "src/components/ui/data-display/Avatar/avatar.variants.ts",
-        "src/components/ui/data-display/Avatar/index.ts"
+      "premium": false,
+      "useInstead": [
+        "Use Switch for settings that take effect immediately (on/off), Checkbox for form choices and consent."
       ],
-      "dependencies": {
-        "utilities": ["cn"],
-        "components": []
-      },
-      "premium": false
-    },
-    "avatar-group": {
-      "name": "AvatarGroup",
-      "category": "ui",
-      "subcategory": "data-display",
-      "files": [
-        "src/components/ui/data-display/AvatarGroup/AvatarGroup.astro",
-        "src/components/ui/data-display/AvatarGroup/index.ts"
-      ],
-      "dependencies": {
-        "utilities": ["cn"],
-        "components": ["avatar"]
-      },
-      "premium": false
-    },
-    "table": {
-      "name": "Table",
-      "category": "ui",
-      "subcategory": "data-display",
-      "files": [
-        "src/components/ui/data-display/Table/Table.astro",
-        "src/components/ui/data-display/Table/index.ts"
-      ],
-      "dependencies": {
-        "utilities": ["cn"],
-        "components": []
-      },
-      "premium": false
-    },
-    "pagination": {
-      "name": "Pagination",
-      "category": "ui",
-      "subcategory": "data-display",
-      "files": [
-        "src/components/ui/data-display/Pagination/Pagination.astro",
-        "src/components/ui/data-display/Pagination/pagination.variants.ts",
-        "src/components/ui/data-display/Pagination/index.ts"
-      ],
-      "dependencies": {
-        "utilities": ["cn"],
-        "components": ["icon"]
-      },
-      "premium": false
-    },
-    "progress": {
-      "name": "Progress",
-      "category": "ui",
-      "subcategory": "data-display",
-      "files": [
-        "src/components/ui/data-display/Progress/Progress.astro",
-        "src/components/ui/data-display/Progress/progress.variants.ts",
-        "src/components/ui/data-display/Progress/index.ts"
-      ],
-      "dependencies": {
-        "utilities": ["cn"],
-        "components": []
-      },
-      "premium": false
-    },
-    "skeleton": {
-      "name": "Skeleton",
-      "category": "ui",
-      "subcategory": "data-display",
-      "files": [
-        "src/components/ui/data-display/Skeleton/Skeleton.astro",
-        "src/components/ui/data-display/Skeleton/skeleton.variants.ts",
-        "src/components/ui/data-display/Skeleton/index.ts"
-      ],
-      "dependencies": {
-        "utilities": ["cn"],
-        "components": []
-      },
-      "premium": false
-    },
-    "alert": {
-      "name": "Alert",
-      "category": "ui",
-      "subcategory": "feedback",
-      "files": [
-        "src/components/ui/feedback/Alert/Alert.astro",
-        "src/components/ui/feedback/Alert/alert.variants.ts",
-        "src/components/ui/feedback/Alert/index.ts"
-      ],
-      "dependencies": {
-        "utilities": ["cn"],
-        "components": []
-      },
-      "premium": false
-    },
-    "toast": {
-      "name": "Toast",
-      "category": "ui",
-      "subcategory": "feedback",
-      "files": [
-        "src/components/ui/feedback/Toast/Toast.astro",
-        "src/components/ui/feedback/Toast/Toast.tsx",
-        "src/components/ui/feedback/Toast/ToastDemo.tsx",
-        "src/components/ui/feedback/Toast/toast.variants.ts",
-        "src/components/ui/feedback/Toast/index.ts"
-      ],
-      "dependencies": {
-        "utilities": ["cn"],
-        "components": []
-      },
-      "premium": false
-    },
-    "tooltip": {
-      "name": "Tooltip",
-      "category": "ui",
-      "subcategory": "feedback",
-      "files": [
-        "src/components/ui/feedback/Tooltip/Tooltip.astro",
-        "src/components/ui/feedback/Tooltip/index.ts"
-      ],
-      "dependencies": {
-        "utilities": ["cn"],
-        "components": []
-      },
-      "premium": false
-    },
-    "dialog": {
-      "name": "Dialog",
-      "category": "ui",
-      "subcategory": "overlay",
-      "files": [
-        "src/components/ui/overlay/Dialog/Dialog.astro",
-        "src/components/ui/overlay/Dialog/index.ts"
-      ],
-      "dependencies": {
-        "utilities": ["cn"],
-        "components": []
-      },
-      "premium": false
-    },
-    "dropdown": {
-      "name": "Dropdown",
-      "category": "ui",
-      "subcategory": "overlay",
-      "files": [
-        "src/components/ui/overlay/Dropdown/Dropdown.astro",
-        "src/components/ui/overlay/Dropdown/index.ts"
-      ],
-      "dependencies": {
-        "utilities": ["cn"],
-        "components": []
-      },
-      "premium": false
-    },
-    "tabs": {
-      "name": "Tabs",
-      "category": "ui",
-      "subcategory": "overlay",
-      "files": [
-        "src/components/ui/overlay/Tabs/Tabs.astro",
-        "src/components/ui/overlay/Tabs/index.ts"
-      ],
-      "dependencies": {
-        "utilities": ["cn"],
-        "components": []
-      },
-      "premium": false
-    },
-    "vertical-tabs": {
-      "name": "VerticalTabs",
-      "category": "ui",
-      "subcategory": "overlay",
-      "files": [
-        "src/components/ui/overlay/VerticalTabs/VerticalTabs.astro",
-        "src/components/ui/overlay/VerticalTabs/VerticalTabs.tsx",
-        "src/components/ui/overlay/VerticalTabs/index.ts"
-      ],
-      "dependencies": {
-        "utilities": ["cn"],
-        "components": []
-      },
-      "premium": false
-    },
-    "accordion": {
-      "name": "Accordion",
-      "category": "ui",
-      "subcategory": "overlay",
-      "files": [
-        "src/components/ui/overlay/Accordion/Accordion.astro",
-        "src/components/ui/overlay/Accordion/accordion.variants.ts",
-        "src/components/ui/overlay/Accordion/index.ts"
-      ],
-      "dependencies": {
-        "utilities": ["cn"],
-        "components": ["icon"]
-      },
-      "premium": false
-    },
-    "separator": {
-      "name": "Separator",
-      "category": "ui",
-      "subcategory": "layout",
-      "files": [
-        "src/components/ui/layout/Separator/Separator.astro",
-        "src/components/ui/layout/Separator/separator.variants.ts",
-        "src/components/ui/layout/Separator/index.ts"
-      ],
-      "dependencies": {
-        "utilities": ["cn"],
-        "components": []
-      },
-      "premium": false
-    },
-    "icon": {
-      "name": "Icon",
-      "category": "ui",
-      "subcategory": "primitives",
-      "files": [
-        "src/components/ui/primitives/Icon/Icon.astro",
-        "src/components/ui/primitives/Icon/index.ts"
-      ],
-      "dependencies": {
-        "utilities": ["cn"],
-        "components": []
-      },
-      "premium": false
+      "example": "---\nimport Checkbox from '@/components/ui/form/Checkbox/Checkbox.astro';\n---\n\n<Checkbox name=\"updates\" label=\"Send me product updates\" description=\"You can unsubscribe at any time.\" />\n\n<Checkbox name=\"terms\" required>\n  I agree to the <a href=\"/terms\" class=\"underline\">terms</a>\n</Checkbox>"
     },
     "code-block": {
       "name": "CodeBlock",
+      "description": "Static code display with a window header, optional filename, line numbers and a copy button.",
       "category": "ui",
       "subcategory": "content",
       "files": [
@@ -449,27 +343,38 @@
         "src/components/ui/content/CodeBlock/index.ts"
       ],
       "dependencies": {
-        "utilities": ["cn"],
+        "utilities": [
+          "cn"
+        ],
         "components": []
       },
-      "premium": false
+      "premium": false,
+      "useInstead": [
+        "In Markdown/MDX content, use fenced code blocks; CodeBlock is for code shown in .astro pages."
+      ],
+      "example": "---\nimport CodeBlock from '@/components/ui/content/CodeBlock/CodeBlock.astro';\n---\n\n<CodeBlock filename=\"astro.config.mjs\" code={`export default defineConfig({\\n  site: 'https://example.com',\\n});`} />"
     },
-    "logo": {
-      "name": "Logo",
-      "category": "ui",
-      "subcategory": "marketing",
+    "contact-form": {
+      "name": "ContactForm",
+      "category": "patterns",
       "files": [
-        "src/components/ui/marketing/Logo/Logo.astro",
-        "src/components/ui/marketing/Logo/index.ts"
+        "src/components/patterns/ContactForm.astro"
       ],
       "dependencies": {
-        "utilities": ["cn"],
-        "components": []
+        "utilities": [
+          "cn"
+        ],
+        "components": [
+          "input",
+          "textarea",
+          "button"
+        ]
       },
       "premium": false
     },
     "cta": {
       "name": "CTA",
+      "description": "Closing call-to-action band centered, with logo, heading, description and actions slots (each rendered only when filled).",
       "category": "ui",
       "subcategory": "marketing",
       "files": [
@@ -477,120 +382,164 @@
         "src/components/ui/marketing/CTA/index.ts"
       ],
       "dependencies": {
-        "utilities": ["cn"],
-        "components": ["logo"]
+        "utilities": [
+          "cn"
+        ],
+        "components": [
+          "logo"
+        ]
       },
-      "premium": false
+      "premium": false,
+      "useInstead": [
+        "Use Section for ordinary content bands; CTA is the closing conversion block.",
+        "For a closing band built from tokens and Buttons (brand, invert or tinted panel), prefer the CtaBand section; CTA is the centered, slot-based variant."
+      ],
+      "example": "---\nimport CTA from '@/components/ui/marketing/CTA/CTA.astro';\nimport Button from '@/components/ui/form/Button/Button.astro';\n---\n\n<CTA variant=\"invert\" size=\"md\">\n  <h2 slot=\"heading\">Ready to launch?</h2>\n  <p slot=\"description\">Start from a site that is fast, accessible and translated.</p>\n  <Button slot=\"actions\" size=\"lg\" href=\"/contact\">Talk to us</Button>\n</CTA>"
     },
-    "npm-copy-button": {
-      "name": "NpmCopyButton",
+    "dialog": {
+      "name": "Dialog",
+      "description": "Modal on the native <dialog> (showModal): focus containment, Escape, backdrop click and focus return come from the browser. Title, description and a footer slot. Open it with data-dialog-open=\"id\" or window.openDialog(id).",
       "category": "ui",
-      "subcategory": "marketing",
+      "subcategory": "overlay",
       "files": [
-        "src/components/ui/marketing/NpmCopyButton/NpmCopyButton.astro",
-        "src/components/ui/marketing/NpmCopyButton/index.ts"
+        "src/components/ui/overlay/Dialog/Dialog.astro",
+        "src/components/ui/overlay/Dialog/index.ts",
+        "src/components/ui/overlay/Dialog/Dialog.tsx"
       ],
       "dependencies": {
-        "utilities": ["cn"],
-        "components": ["icon"]
+        "utilities": [
+          "cn"
+        ],
+        "components": [
+          "icon"
+        ]
       },
-      "premium": false
+      "premium": false,
+      "useInstead": [
+        "Inline onclick is blocked by the CSP: open dialogs from any button with data-dialog-open=\"id\" (or a bundled <script> calling window.openDialog(id)). Elements with data-dialog-close inside the dialog close it.",
+        "Use Tooltip for hints and Alert for in-page messages; reserve Dialog for tasks that need focus."
+      ],
+      "example": "---\nimport Dialog from '@/components/ui/overlay/Dialog/Dialog.astro';\nimport Button from '@/components/ui/form/Button/Button.astro';\n---\n\n<Button variant=\"destructive\" data-dialog-open=\"delete-dialog\">Delete project</Button>\n\n<Dialog id=\"delete-dialog\" title=\"Delete project?\" description=\"This can't be undone.\" size=\"sm\">\n  <p class=\"text-sm text-foreground-muted\">All deployments will be removed.</p>\n  <div slot=\"footer\" class=\"flex justify-end gap-3 px-6 pb-6\">\n    <Button variant=\"outline\" data-dialog-close>Cancel</Button>\n    <Button variant=\"destructive\" data-dialog-close>Delete</Button>\n  </div>\n</Dialog>"
     },
-    "social-proof": {
-      "name": "SocialProof",
+    "dropdown": {
+      "name": "Dropdown",
+      "description": "Menu of links (with icons, separators and disabled items) opened from a trigger slot. A native popover in the top layer, anchored to its button, with arrow-key navigation.",
       "category": "ui",
-      "subcategory": "marketing",
+      "subcategory": "overlay",
       "files": [
-        "src/components/ui/marketing/SocialProof/SocialProof.astro",
-        "src/components/ui/marketing/SocialProof/index.ts"
+        "src/components/ui/overlay/Dropdown/Dropdown.astro",
+        "src/components/ui/overlay/Dropdown/index.ts",
+        "src/components/ui/overlay/Dropdown/Dropdown.tsx"
       ],
       "dependencies": {
-        "utilities": ["cn"],
-        "components": []
+        "utilities": [
+          "cn",
+          "anchor"
+        ],
+        "components": [
+          "icon"
+        ]
       },
-      "premium": false
-    },
-    "terminal-demo": {
-      "name": "TerminalDemo",
-      "category": "ui",
-      "subcategory": "marketing",
-      "files": [
-        "src/components/ui/marketing/TerminalDemo/TerminalDemo.tsx",
-        "src/components/ui/marketing/TerminalDemo/index.ts"
+      "premium": false,
+      "useInstead": [
+        "Use Select for picking a form value."
       ],
-      "dependencies": {
-        "utilities": ["cn"],
-        "components": []
-      },
-      "premium": false
+      "example": "---\nimport Dropdown from '@/components/ui/overlay/Dropdown/Dropdown.astro';\nimport Button from '@/components/ui/form/Button/Button.astro';\n---\n\n<Dropdown\n  align=\"end\"\n  items={[\n    { label: 'Edit', href: '/settings', icon: 'edit' },\n    { label: '', separator: true },\n    { label: 'Archive', href: '/archive', icon: 'archive', disabled: true },\n  ]}\n>\n  <Button slot=\"trigger\" variant=\"outline\" trailingIcon=\"chevron-down\">Actions</Button>\n</Dropdown>"
     },
-    "contact-form": {
-      "name": "ContactForm",
+    "empty-state": {
+      "name": "EmptyState",
+      "description": "Centered placeholder for empty lists or results: icon, title, description and an optional action button or slot.",
       "category": "patterns",
-      "files": ["src/components/patterns/ContactForm.astro"],
+      "files": [
+        "src/components/patterns/EmptyState.astro"
+      ],
       "dependencies": {
-        "utilities": ["cn"],
-        "components": ["input", "textarea", "button"]
+        "utilities": [
+          "cn"
+        ],
+        "components": [
+          "icon",
+          "button"
+        ]
       },
-      "premium": false
+      "premium": false,
+      "example": "---\nimport EmptyState from '@/components/patterns/EmptyState.astro';\n---\n\n<EmptyState icon=\"search\" title=\"No results\" description=\"Try a different search term.\" actionLabel=\"Clear search\" actionHref=\"/search\" />"
     },
-    "newsletter-form": {
-      "name": "NewsletterForm",
-      "category": "patterns",
-      "files": ["src/components/patterns/NewsletterForm.astro"],
+    "footer": {
+      "name": "Footer",
+      "category": "layout",
+      "files": [
+        "src/components/layout/Footer.astro",
+        "src/components/layout/footer.variants.ts"
+      ],
       "dependencies": {
-        "utilities": ["cn"],
-        "components": ["input", "button"]
+        "utilities": [
+          "cn"
+        ],
+        "components": [
+          "icon",
+          "logo"
+        ]
       },
       "premium": false
     },
     "form-field": {
       "name": "FormField",
+      "description": "Label, hint, error and required marker around a custom control passed in the input slot.",
       "category": "patterns",
-      "files": ["src/components/patterns/FormField.astro"],
+      "files": [
+        "src/components/patterns/FormField.astro"
+      ],
       "dependencies": {
-        "utilities": ["cn"],
+        "utilities": [
+          "cn"
+        ],
         "components": []
       },
-      "premium": false
+      "premium": false,
+      "useInstead": [
+        "Input, Textarea, Select, Checkbox and Switch have label/hint/error built in; use FormField only for custom controls."
+      ],
+      "example": "---\nimport FormField from '@/components/patterns/FormField.astro';\n---\n\n<FormField label=\"Favorite color\" hint=\"Pick any color.\" required>\n  <input slot=\"input\" type=\"color\" name=\"color\" class=\"h-10 w-16 rounded-md border border-border\" />\n</FormField>"
     },
-    "search-input": {
-      "name": "SearchInput",
-      "category": "patterns",
-      "files": ["src/components/patterns/SearchInput.astro"],
+    "google-map": {
+      "name": "GoogleMap",
+      "description": "Consent-aware Google Maps embed by coordinates or address; shows a setup prompt without PUBLIC_GOOGLE_MAPS_API_KEY and a placeholder until consent.",
+      "category": "ui",
+      "subcategory": "data-display",
+      "files": [
+        "src/components/ui/data-display/GoogleMap/GoogleMap.astro",
+        "src/components/ui/data-display/GoogleMap/googleMap.variants.ts",
+        "src/components/ui/data-display/GoogleMap/index.ts"
+      ],
       "dependencies": {
-        "utilities": ["cn"],
-        "components": ["input"]
+        "utilities": [
+          "cn"
+        ],
+        "components": []
       },
-      "premium": false
+      "premium": false,
+      "useInstead": [
+        "Use GoogleMap rather than a raw Maps <iframe>, which would load Google before the visitor consents."
+      ],
+      "example": "---\nimport GoogleMap from '@/components/ui/data-display/GoogleMap/GoogleMap.astro';\n---\n\n<GoogleMap address=\"1 Infinite Loop, Cupertino, CA\" zoom={14} size=\"lg\" ariaLabel=\"Map of our office\" />"
     },
-    "password-input": {
-      "name": "PasswordInput",
-      "category": "patterns",
-      "files": ["src/components/patterns/PasswordInput.astro"],
+    "header": {
+      "name": "Header",
+      "category": "layout",
+      "files": [
+        "src/components/layout/Header.astro",
+        "src/components/layout/header.variants.ts"
+      ],
       "dependencies": {
-        "utilities": ["cn"],
-        "components": ["input", "icon"]
-      },
-      "premium": false
-    },
-    "stat-card": {
-      "name": "StatCard",
-      "category": "patterns",
-      "files": ["src/components/patterns/StatCard.astro"],
-      "dependencies": {
-        "utilities": ["cn"],
-        "components": ["card", "icon"]
-      },
-      "premium": false
-    },
-    "empty-state": {
-      "name": "EmptyState",
-      "category": "patterns",
-      "files": ["src/components/patterns/EmptyState.astro"],
-      "dependencies": {
-        "utilities": ["cn"],
-        "components": ["icon", "button"]
+        "utilities": [
+          "cn"
+        ],
+        "components": [
+          "button",
+          "icon",
+          "logo"
+        ]
       },
       "premium": false
     },
@@ -603,36 +552,683 @@
         "src/components/hero/index.ts"
       ],
       "dependencies": {
-        "utilities": ["cn"],
+        "utilities": [
+          "cn"
+        ],
         "components": []
       },
       "premium": false
     },
-    "header": {
-      "name": "Header",
-      "category": "layout",
+    "icon": {
+      "name": "Icon",
+      "description": "Inline SVG icon: any Lucide icon by its kebab-case name (lucide.dev/icons), drawn at build time, plus a few brand marks, sized by preset.",
+      "category": "ui",
+      "subcategory": "primitives",
       "files": [
-        "src/components/layout/Header.astro",
-        "src/components/layout/header.variants.ts"
+        "src/components/ui/primitives/Icon/Icon.astro",
+        "src/components/ui/primitives/Icon/index.ts",
+        "src/components/ui/primitives/Icon/Icon.tsx",
+        "src/components/ui/primitives/Icon/brand-icons.ts"
       ],
       "dependencies": {
-        "utilities": ["cn"],
-        "components": ["button", "icon", "logo"]
+        "utilities": [
+          "cn"
+        ],
+        "components": []
+      },
+      "premium": false,
+      "useInstead": [
+        "Use the leadingIcon/trailingIcon props of Button and Input instead of placing Icon inside them by hand.",
+        "Use any Lucide icon by name (https://lucide.dev/icons). Do not hand-draw SVGs, copy icon paths into a wrapper, or add another icon set.",
+        "In a React island that needs the icon in its server HTML, import it from lucide-react by name (import { MapPin } from \"lucide-react\")."
+      ],
+      "example": "---\nimport Icon from '@/components/ui/primitives/Icon/Icon.astro';\n---\n\n<Icon name=\"calendar-check\" size=\"sm\" class=\"text-primary\" />"
+    },
+    "input": {
+      "name": "Input",
+      "description": "Text input with built-in label, hint, error message and optional leading/trailing icons.",
+      "category": "ui",
+      "subcategory": "form",
+      "files": [
+        "src/components/ui/form/Input/Input.astro",
+        "src/components/ui/form/Input/Input.tsx",
+        "src/components/ui/form/Input/input.variants.ts",
+        "src/components/ui/form/Input/index.ts"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn",
+          "field-errors"
+        ],
+        "components": [
+          "icon"
+        ]
+      },
+      "premium": false,
+      "useInstead": [
+        "Use Input with label/hint/error instead of wrapping it in FormField; it already wires ids and aria-describedby.",
+        "Use PasswordInput for passwords and SearchInput for search fields."
+      ],
+      "example": "---\nimport Input from '@/components/ui/form/Input/Input.astro';\n---\n\n<Input name=\"email\" type=\"email\" label=\"Email\" hint=\"We never share it.\" leadingIcon=\"mail\" required />"
+    },
+    "kbd": {
+      "name": "Kbd",
+      "description": "A keyboard key, or a combination such as ⌘ K from a keys array.",
+      "category": "ui",
+      "subcategory": "content",
+      "files": [
+        "src/components/ui/content/Kbd/Kbd.astro",
+        "src/components/ui/content/Kbd/index.ts"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": []
+      },
+      "premium": false,
+      "useInstead": [
+        "Use Kbd for keys and shortcuts in docs and UI hints instead of styled <code>."
+      ],
+      "example": "---\nimport Kbd from '@/components/ui/content/Kbd/Kbd.astro';\n---\n\nPress <Kbd keys={['⌘', 'K']} /> to search, or <Kbd>Esc</Kbd> to close."
+    },
+    "logo": {
+      "name": "Logo",
+      "category": "ui",
+      "subcategory": "marketing",
+      "files": [
+        "src/components/ui/marketing/Logo/Logo.astro",
+        "src/components/ui/marketing/Logo/index.ts"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": []
       },
       "premium": false
     },
-    "footer": {
-      "name": "Footer",
-      "category": "layout",
+    "media-slot": {
+      "name": "MediaSlot",
+      "description": "Optimized image from src/assets/photos/<photo> at a fixed aspect ratio, or a labelled placeholder until the photo exists.",
+      "category": "patterns",
       "files": [
-        "src/components/layout/Footer.astro",
-        "src/components/layout/footer.variants.ts"
+        "src/components/patterns/MediaSlot.astro"
       ],
       "dependencies": {
-        "utilities": ["cn"],
-        "components": ["icon", "logo"]
+        "utilities": [
+          "cn"
+        ],
+        "components": [
+          "icon"
+        ]
+      },
+      "premium": false,
+      "useInstead": [
+        "Use MediaSlot for page photos instead of a raw <img>; drop the file into src/assets/photos/ and it appears."
+      ],
+      "example": "---\nimport MediaSlot from '@/components/patterns/MediaSlot.astro';\n---\n\n<MediaSlot photo=\"team\" alt=\"Our team outside the office\" label=\"Team photo\" ratio=\"4/3\" />"
+    },
+    "newsletter-form": {
+      "name": "NewsletterForm",
+      "category": "patterns",
+      "files": [
+        "src/components/patterns/NewsletterForm.astro"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": [
+          "input",
+          "button"
+        ]
       },
       "premium": false
+    },
+    "npm-copy-button": {
+      "name": "NpmCopyButton",
+      "description": "Button that shows a shell command and copies it to the clipboard, with \"copied\" feedback.",
+      "category": "ui",
+      "subcategory": "marketing",
+      "files": [
+        "src/components/ui/marketing/NpmCopyButton/NpmCopyButton.astro",
+        "src/components/ui/marketing/NpmCopyButton/index.ts"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": [
+          "icon"
+        ]
+      },
+      "premium": false,
+      "useInstead": [
+        "Use CodeBlock for multi-line code."
+      ],
+      "example": "---\nimport NpmCopyButton from '@/components/ui/marketing/NpmCopyButton/NpmCopyButton.astro';\n---\n\n<NpmCopyButton command=\"npm create velocity-astro@latest\" size=\"md\" />"
+    },
+    "page-header": {
+      "name": "PageHeader",
+      "description": "Opening band for inner pages with eyebrow, title and lead; holds the page's only <h1>.",
+      "category": "patterns",
+      "files": [
+        "src/components/patterns/PageHeader.astro"
+      ],
+      "dependencies": {
+        "utilities": [],
+        "components": []
+      },
+      "premium": false,
+      "useInstead": [
+        "Use Hero for landing pages and blocks/PageHero when the opening band needs breadcrumbs, buttons or an image. Do not add another <h1> to a page that uses PageHeader."
+      ],
+      "example": "---\nimport PageHeader from '@/components/patterns/PageHeader.astro';\n---\n\n<PageHeader eyebrow=\"Company\" title=\"About us\" lead=\"We build fast, accessible websites.\" />"
+    },
+    "pagination": {
+      "name": "Pagination",
+      "description": "Page navigation (<nav>) with previous/next links and a window of numbered pages built from baseUrl.",
+      "category": "ui",
+      "subcategory": "data-display",
+      "files": [
+        "src/components/ui/data-display/Pagination/Pagination.astro",
+        "src/components/ui/data-display/Pagination/pagination.variants.ts",
+        "src/components/ui/data-display/Pagination/index.ts",
+        "src/components/ui/data-display/Pagination/Pagination.tsx"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": [
+          "icon"
+        ]
+      },
+      "premium": false,
+      "example": "---\nimport Pagination from '@/components/ui/data-display/Pagination/Pagination.astro';\n---\n\n<Pagination currentPage={2} totalPages={8} baseUrl=\"/blog/page/\" />"
+    },
+    "password-input": {
+      "name": "PasswordInput",
+      "description": "Password field built from Input with a show/hide toggle button.",
+      "category": "patterns",
+      "files": [
+        "src/components/patterns/PasswordInput.astro"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": [
+          "input",
+          "icon"
+        ]
+      },
+      "premium": false,
+      "example": "---\nimport PasswordInput from '@/components/patterns/PasswordInput.astro';\n---\n\n<PasswordInput name=\"password\" label=\"Password\" autocomplete=\"new-password\" hint=\"At least 12 characters.\" />"
+    },
+    "popover": {
+      "name": "Popover",
+      "description": "A small panel anchored to its button (details, a few actions), on the native popover attribute: Escape and outside clicks close it with no script; CSS anchor positioning keeps it beside the button.",
+      "category": "ui",
+      "subcategory": "overlay",
+      "files": [
+        "src/components/ui/overlay/Popover/Popover.astro",
+        "src/components/ui/overlay/Popover/index.ts"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn",
+          "anchor"
+        ],
+        "components": []
+      },
+      "premium": false,
+      "useInstead": [
+        "Use Popover for interactive content next to a button; use Tooltip for a short read-only hint and Dropdown for a menu of actions."
+      ],
+      "example": "---\nimport Popover from '@/components/ui/overlay/Popover/Popover.astro';\n---\n\n<Popover label=\"Plan details\">\n  <Fragment slot=\"trigger\">Details</Fragment>\n  <p>Billed yearly. Cancel any time.</p>\n</Popover>"
+    },
+    "progress": {
+      "name": "Progress",
+      "description": "Progress bar with semantic color variants and optional percentage label; omit value for an indeterminate bar.",
+      "category": "ui",
+      "subcategory": "data-display",
+      "files": [
+        "src/components/ui/data-display/Progress/Progress.astro",
+        "src/components/ui/data-display/Progress/progress.variants.ts",
+        "src/components/ui/data-display/Progress/index.ts",
+        "src/components/ui/data-display/Progress/Progress.tsx"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": []
+      },
+      "premium": false,
+      "useInstead": [
+        "Use Skeleton for loading placeholders that mimic content shape."
+      ],
+      "example": "---\nimport Progress from '@/components/ui/data-display/Progress/Progress.astro';\n---\n\n<Progress value={64} variant=\"brand\" showLabel aria-label=\"Upload progress\" />"
+    },
+    "radio": {
+      "name": "Radio",
+      "description": "Single native radio input with label and description; give a group the same name. The card variant renders a selectable card, with a media slot for a photo or icon and a default slot for extra content.",
+      "category": "ui",
+      "subcategory": "form",
+      "files": [
+        "src/components/ui/form/Radio/Radio.astro",
+        "src/components/ui/form/Radio/Radio.tsx",
+        "src/components/ui/form/Radio/radio.variants.ts",
+        "src/components/ui/form/Radio/index.ts"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": []
+      },
+      "premium": false,
+      "example": "---\nimport Radio from '@/components/ui/form/Radio/Radio.astro';\nimport Icon from '@/components/ui/primitives/Icon/Icon.astro';\n---\n\n<fieldset class=\"space-y-3\">\n  <legend class=\"text-sm font-medium\">Billing</legend>\n  <Radio name=\"billing\" value=\"monthly\" label=\"Monthly\" checked />\n  <Radio name=\"billing\" value=\"yearly\" label=\"Yearly\" description=\"Two months free\" variant=\"card\">\n    <Icon slot=\"media\" name=\"calendar\" />\n  </Radio>\n</fieldset>"
+    },
+    "search-input": {
+      "name": "SearchInput",
+      "description": "Search field (type=\"search\") built from Input with a leading search icon; used by the Pagefind search page.",
+      "category": "patterns",
+      "files": [
+        "src/components/patterns/SearchInput.astro"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": [
+          "input"
+        ]
+      },
+      "premium": false,
+      "example": "---\nimport SearchInput from '@/components/patterns/SearchInput.astro';\n---\n\n<form action=\"/search\" role=\"search\">\n  <SearchInput name=\"q\" placeholder=\"Search the docs\" aria-label=\"Search\" />\n</form>"
+    },
+    "select": {
+      "name": "Select",
+      "description": "Native <select> built from an options array, with label, placeholder, hint and error.",
+      "category": "ui",
+      "subcategory": "form",
+      "files": [
+        "src/components/ui/form/Select/Select.astro",
+        "src/components/ui/form/Select/Select.tsx",
+        "src/components/ui/form/Select/select.variants.ts",
+        "src/components/ui/form/Select/index.ts"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn",
+          "field-errors"
+        ],
+        "components": [
+          "icon"
+        ]
+      },
+      "premium": false,
+      "useInstead": [
+        "Use Dropdown for a menu of actions or links; Select is for choosing a form value."
+      ],
+      "example": "---\nimport Select from '@/components/ui/form/Select/Select.astro';\n---\n\n<Select\n  name=\"plan\"\n  label=\"Plan\"\n  placeholder=\"Choose a plan\"\n  options={[\n    { value: 'starter', label: 'Starter' },\n    { value: 'pro', label: 'Pro' },\n  ]}\n/>"
+    },
+    "separator": {
+      "name": "Separator",
+      "description": "Horizontal or vertical divider line, optionally with a centered label.",
+      "category": "ui",
+      "subcategory": "layout",
+      "files": [
+        "src/components/ui/layout/Separator/Separator.astro",
+        "src/components/ui/layout/Separator/separator.variants.ts",
+        "src/components/ui/layout/Separator/index.ts",
+        "src/components/ui/layout/Separator/Separator.tsx"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": []
+      },
+      "premium": false,
+      "useInstead": [
+        "Use Separator instead of a bare <hr> or bordered <div>."
+      ],
+      "example": "---\nimport Separator from '@/components/ui/layout/Separator/Separator.astro';\n---\n\n<Separator label=\"or\" />\n<div class=\"flex h-6 items-center gap-3\">Docs <Separator orientation=\"vertical\" /> Blog</div>"
+    },
+    "sheet": {
+      "name": "Sheet",
+      "description": "A panel that slides in and out from the left, right or bottom (filters, cart, menu), on the native <dialog>: focus stays inside, Escape or a backdrop click closes it. Opened by any button with data-sheet-open.",
+      "category": "ui",
+      "subcategory": "overlay",
+      "files": [
+        "src/components/ui/overlay/Sheet/Sheet.astro",
+        "src/components/ui/overlay/Sheet/index.ts"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": [
+          "icon"
+        ]
+      },
+      "premium": false,
+      "useInstead": [
+        "Use Sheet for a side panel or bottom drawer; use Dialog for a centered modal."
+      ],
+      "example": "---\nimport Sheet from '@/components/ui/overlay/Sheet/Sheet.astro';\nimport Button from '@/components/ui/form/Button/Button.astro';\n---\n\n<Button data-sheet-open=\"filters\">Filters</Button>\n<Sheet id=\"filters\" title=\"Filters\" side=\"right\">\n  <p>Filter controls go here.</p>\n  <Button slot=\"footer\" data-sheet-close fullWidth>Show results</Button>\n</Sheet>"
+    },
+    "skeleton": {
+      "name": "Skeleton",
+      "description": "Animated placeholder block, circle or text line for content that is still loading.",
+      "category": "ui",
+      "subcategory": "data-display",
+      "files": [
+        "src/components/ui/data-display/Skeleton/Skeleton.astro",
+        "src/components/ui/data-display/Skeleton/skeleton.variants.ts",
+        "src/components/ui/data-display/Skeleton/index.ts",
+        "src/components/ui/data-display/Skeleton/Skeleton.tsx"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": []
+      },
+      "premium": false,
+      "example": "---\nimport Skeleton from '@/components/ui/data-display/Skeleton/Skeleton.astro';\n---\n\n<div class=\"flex items-center gap-3\">\n  <Skeleton variant=\"circular\" width=\"40px\" height=\"40px\" />\n  <Skeleton variant=\"text\" width=\"60%\" />\n</div>"
+    },
+    "social-proof": {
+      "name": "SocialProof",
+      "description": "Row of overlapping avatar circles (images or placeholders) next to a short trust line.",
+      "category": "ui",
+      "subcategory": "marketing",
+      "files": [
+        "src/components/ui/marketing/SocialProof/SocialProof.astro",
+        "src/components/ui/marketing/SocialProof/index.ts"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": []
+      },
+      "premium": false,
+      "useInstead": [
+        "Use AvatarGroup for user lists outside marketing copy."
+      ],
+      "example": "---\nimport SocialProof from '@/components/ui/marketing/SocialProof/SocialProof.astro';\n---\n\n<SocialProof text=\"Trusted by 2,000+ teams\" avatarCount={4} size=\"md\" />"
+    },
+    "spinner": {
+      "name": "Spinner",
+      "description": "A loading spinner that inherits the text colour, with a screen-reader label; stops with reduced motion.",
+      "category": "ui",
+      "subcategory": "feedback",
+      "files": [
+        "src/components/ui/feedback/Spinner/Spinner.astro",
+        "src/components/ui/feedback/Spinner/index.ts"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": []
+      },
+      "premium": false,
+      "useInstead": [
+        "Use Spinner for a loading state outside a button; Button has its own loading prop."
+      ],
+      "example": "---\nimport Spinner from '@/components/ui/feedback/Spinner/Spinner.astro';\n---\n\n<Spinner size=\"sm\" label=\"Loading results\" />"
+    },
+    "stat-card": {
+      "name": "StatCard",
+      "description": "Metric card with label, value, optional icon and an up/down/neutral trend line.",
+      "category": "patterns",
+      "files": [
+        "src/components/patterns/StatCard.astro"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": [
+          "card",
+          "icon"
+        ]
+      },
+      "premium": false,
+      "example": "---\nimport StatCard from '@/components/patterns/StatCard.astro';\n---\n\n<StatCard label=\"Monthly visitors\" value=\"48.2k\" trend=\"up\" trendText=\"+12% from last month\" icon=\"users\" />"
+    },
+    "switch": {
+      "name": "Switch",
+      "description": "Accessible on/off toggle (a checkbox with role=\"switch\") with label and description. Other attributes go to the input, so a switch without a visible label can take aria-label.",
+      "category": "ui",
+      "subcategory": "form",
+      "files": [
+        "src/components/ui/form/Switch/Switch.astro",
+        "src/components/ui/form/Switch/Switch.tsx",
+        "src/components/ui/form/Switch/switch.variants.ts",
+        "src/components/ui/form/Switch/index.ts"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": []
+      },
+      "premium": false,
+      "useInstead": [
+        "Use Checkbox for agreeing to terms or picking several options in a form."
+      ],
+      "example": "---\nimport Switch from '@/components/ui/form/Switch/Switch.astro';\n---\n\n<Switch name=\"updates\" label=\"Product updates\" description=\"One email a month.\" checked />"
+    },
+    "table": {
+      "name": "Table",
+      "description": "Responsive data table rendered from columns and rows arrays, with hover, striped and compact options, a caption for screen readers, row headers and icon cells.",
+      "category": "ui",
+      "subcategory": "data-display",
+      "files": [
+        "src/components/ui/data-display/Table/Table.astro",
+        "src/components/ui/data-display/Table/index.ts",
+        "src/components/ui/data-display/Table/Table.tsx"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": [
+          "icon"
+        ]
+      },
+      "premium": false,
+      "useInstead": [
+        "A cell is text, or { icon, label } for an icon read as its label (a check for \"Included\"), or { text, class }. For anything richer write a <table> with the same semantic classes."
+      ],
+      "example": "---\nimport Table from '@/components/ui/data-display/Table/Table.astro';\n---\n\n<Table\n  caption=\"What each plan includes\"\n  columns={[\n    { key: 'feature', label: 'Feature', rowHeader: true },\n    { key: 'starter', label: 'Starter', align: 'center' },\n    { key: 'pro', label: 'Pro', align: 'center' },\n  ]}\n  rows={[\n    { feature: 'Projects', starter: '3', pro: 'Unlimited' },\n    { feature: 'Priority support', starter: { text: '–', label: 'Not included' }, pro: { icon: 'check', label: 'Included' } },\n  ]}\n/>"
+    },
+    "tabs": {
+      "name": "Tabs",
+      "description": "Horizontal tabs with keyboard navigation; panels are children marked data-tab-content=\"<tab id>\".",
+      "category": "ui",
+      "subcategory": "overlay",
+      "files": [
+        "src/components/ui/overlay/Tabs/Tabs.astro",
+        "src/components/ui/overlay/Tabs/index.ts",
+        "src/components/ui/overlay/Tabs/Tabs.tsx"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": []
+      },
+      "premium": false,
+      "useInstead": [
+        "Use VerticalTabs for settings-style navigation with descriptions and icons, and Accordion for long stacked content."
+      ],
+      "example": "---\nimport Tabs from '@/components/ui/overlay/Tabs/Tabs.astro';\n---\n\n<Tabs tabs={[{ id: 'overview', label: 'Overview' }, { id: 'pricing', label: 'Pricing' }]}>\n  <div data-tab-content=\"overview\">Overview content</div>\n  <div data-tab-content=\"pricing\">Pricing content</div>\n</Tabs>"
+    },
+    "terminal-demo": {
+      "name": "TerminalDemo",
+      "description": "React island that animates a terminal replaying the create-velocity-astro CLI prompts. Takes no props.",
+      "category": "ui",
+      "subcategory": "marketing",
+      "files": [
+        "src/components/ui/marketing/TerminalDemo/TerminalDemo.tsx",
+        "src/components/ui/marketing/TerminalDemo/index.ts"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": []
+      },
+      "premium": false,
+      "useInstead": [
+        "Use CodeBlock for static commands, or NpmCopyButton for a copyable install command."
+      ],
+      "example": "---\nimport TerminalDemo from '@/components/ui/marketing/TerminalDemo/TerminalDemo';\n---\n\n<TerminalDemo client:visible />"
+    },
+    "textarea": {
+      "name": "Textarea",
+      "description": "Multi-line text field with built-in label, hint and error message; grows with its content where supported (autoResize).",
+      "category": "ui",
+      "subcategory": "form",
+      "files": [
+        "src/components/ui/form/Textarea/Textarea.astro",
+        "src/components/ui/form/Textarea/Textarea.tsx",
+        "src/components/ui/form/Textarea/textarea.variants.ts",
+        "src/components/ui/form/Textarea/index.ts"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn",
+          "field-errors"
+        ],
+        "components": [
+          "icon"
+        ]
+      },
+      "premium": false,
+      "example": "---\nimport Textarea from '@/components/ui/form/Textarea/Textarea.astro';\n---\n\n<Textarea name=\"message\" label=\"Message\" rows={6} error=\"Please enter a message.\" />"
+    },
+    "toast": {
+      "name": "Toast",
+      "description": "React toast notifications: ToastProvider renders the stack and useToast() returns toast()/dismiss(). Toast.astro mounts the provider as an island around its slot.",
+      "category": "ui",
+      "subcategory": "feedback",
+      "files": [
+        "src/components/ui/feedback/Toast/Toast.astro",
+        "src/components/ui/feedback/Toast/Toast.tsx",
+        "src/components/ui/feedback/Toast/ToastDemo.tsx",
+        "src/components/ui/feedback/Toast/toast.variants.ts",
+        "src/components/ui/feedback/Toast/index.ts"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": []
+      },
+      "premium": false,
+      "useInstead": [
+        "Trigger toasts from a React component rendered inside ToastProvider in the same island; Astro islands passed into Toast.astro's slot hydrate separately and cannot reach its context.",
+        "Use Alert for static, in-page messages."
+      ],
+      "example": "---\n// src/components/SaveButton.tsx, a React island:\n//   import { ToastProvider, useToast } from '@/components/ui/feedback/Toast/Toast';\n//   function Save() { const { toast } = useToast(); return <button onClick={() => toast({ title: 'Saved', variant: 'success' })}>Save</button>; }\n//   export default function SaveButton() { return <ToastProvider><Save /></ToastProvider>; }\nimport SaveButton from '@/components/SaveButton';\n---\n\n<SaveButton client:load />"
+    },
+    "toggle-group": {
+      "name": "ToggleGroup",
+      "description": "A segmented control (one choice from a few, e.g. Monthly / Yearly) built from native radio inputs: works without JavaScript and submits with a form. An option can be disabled or carry its own attributes; inputAttrs go to every input.",
+      "category": "ui",
+      "subcategory": "form",
+      "files": [
+        "src/components/ui/form/ToggleGroup/ToggleGroup.astro",
+        "src/components/ui/form/ToggleGroup/index.ts"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": [
+          "icon"
+        ]
+      },
+      "premium": false,
+      "useInstead": [
+        "Use ToggleGroup for a short set of mutually exclusive options instead of hand-built segmented buttons; use Tabs when each option shows different content."
+      ],
+      "example": "---\nimport ToggleGroup from '@/components/ui/form/ToggleGroup/ToggleGroup.astro';\n---\n\n<ToggleGroup\n  name=\"billing\"\n  label=\"Billing period\"\n  value=\"monthly\"\n  options={[{ value: 'monthly', label: 'Monthly' }, { value: 'yearly', label: 'Yearly' }]}\n/>"
+    },
+    "tooltip": {
+      "name": "Tooltip",
+      "description": "Text tooltip shown on hover and focus around a trigger passed in the default slot.",
+      "category": "ui",
+      "subcategory": "feedback",
+      "files": [
+        "src/components/ui/feedback/Tooltip/Tooltip.astro",
+        "src/components/ui/feedback/Tooltip/index.ts",
+        "src/components/ui/feedback/Tooltip/Tooltip.tsx"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": []
+      },
+      "premium": false,
+      "useInstead": [
+        "Tooltips are supplementary: icon-only triggers still need their own aria-label. Use Dropdown or Dialog for interactive content."
+      ],
+      "example": "---\nimport Tooltip from '@/components/ui/feedback/Tooltip/Tooltip.astro';\nimport Button from '@/components/ui/form/Button/Button.astro';\n---\n\n<Tooltip content=\"Copy to clipboard\" position=\"bottom\">\n  <Button variant=\"ghost\" size=\"sm\" icon leadingIcon=\"copy\" aria-label=\"Copy\" />\n</Tooltip>"
+    },
+    "vertical-tabs": {
+      "name": "VerticalTabs",
+      "description": "Side-list tabs with optional descriptions and icons that turn into a dropdown or bottom sheet on mobile; panels use data-tab-content.",
+      "category": "ui",
+      "subcategory": "overlay",
+      "files": [
+        "src/components/ui/overlay/VerticalTabs/VerticalTabs.astro",
+        "src/components/ui/overlay/VerticalTabs/VerticalTabs.tsx",
+        "src/components/ui/overlay/VerticalTabs/index.ts"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": [
+          "icon"
+        ]
+      },
+      "premium": false,
+      "example": "---\nimport VerticalTabs from '@/components/ui/overlay/VerticalTabs/VerticalTabs.astro';\n---\n\n<VerticalTabs\n  mobileVariant=\"sheet\"\n  tabs={[\n    { id: 'account', label: 'Account', description: 'Profile and email', icon: 'settings' },\n    { id: 'security', label: 'Security', description: 'Password and 2FA', icon: 'shield' },\n  ]}\n>\n  <div data-tab-content=\"account\">Account settings</div>\n  <div data-tab-content=\"security\">Security settings</div>\n</VerticalTabs>"
+    },
+    "video-embed": {
+      "name": "VideoEmbed",
+      "description": "A YouTube or Vimeo video that loads only on play: until then a poster and no third-party request or cookies (youtube-nocookie, Vimeo dnt).",
+      "category": "ui",
+      "subcategory": "marketing",
+      "files": [
+        "src/components/ui/marketing/VideoEmbed/VideoEmbed.astro",
+        "src/components/ui/marketing/VideoEmbed/index.ts"
+      ],
+      "dependencies": {
+        "utilities": [
+          "cn"
+        ],
+        "components": [
+          "icon"
+        ]
+      },
+      "premium": false,
+      "useInstead": [
+        "Use VideoEmbed for any YouTube or Vimeo video instead of a raw <iframe>, which loads third-party scripts and cookies on page load."
+      ],
+      "example": "---\nimport VideoEmbed from '@/components/ui/marketing/VideoEmbed/VideoEmbed.astro';\n---\n\n<VideoEmbed provider=\"youtube\" videoId=\"dQw4w9WgXcQ\" title=\"Product tour\" />"
     }
   }
 }

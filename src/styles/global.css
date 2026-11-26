@@ -71,6 +71,16 @@
   --color-warning: var(--warning);
   --color-error: var(--error);
 
+  /* Errors in forms and destructive buttons (Velocity's components). */
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  /* Velocity's brand button, in the brand colour's fill role (lib/brand.ts):
+     a ground chosen for 4.5:1 with white text, whatever the brand colour. */
+  --color-brand-fill: var(--orbit-fill);
+  --color-brand-fill-hover: var(--orbit-fill-hover);
+  --color-brand-ink: var(--gray-0);
+
   /* Inverted/Contrast Sections */
   --color-surface-invert: var(--surface-invert);
   --color-surface-invert-secondary: var(--surface-invert-secondary);

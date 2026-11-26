@@ -66,7 +66,9 @@
 
   --ring: var(--ink-950);
 
-  --destructive: var(--error);
+  /* The darker red: --error is 3.5:1 on the page, too faint for an error
+     message; this one passes 4.5:1, and white text on it passes too. */
+  --destructive: var(--error-foreground);
   --destructive-foreground: var(--ice-100);
 
   --gradient-start: var(--ice-200);

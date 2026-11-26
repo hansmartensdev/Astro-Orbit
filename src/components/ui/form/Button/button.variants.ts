@@ -3,7 +3,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 export const buttonVariants = cva(
   [
     'inline-flex items-center justify-center gap-2',
-    'font-medium rounded-md',
+    'font-[number:var(--theme-button-weight,500)] rounded-[var(--theme-radius-button,var(--theme-radius-md))]',
     'transition-all duration-150 ease-out',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
     'disabled:pointer-events-none disabled:opacity-50',
@@ -12,8 +12,10 @@ export const buttonVariants = cva(
   {
     variants: {
       variant: {
+        brand:
+          'bg-brand-fill text-brand-ink hover:bg-brand-fill-hover focus-visible:ring-brand-600 active:scale-[0.98]',
         primary:
-          'bg-foreground text-background hover:bg-foreground/90 active:scale-[0.98]',
+          'bg-primary text-primary-foreground hover:bg-primary/90 active:scale-[0.98]',
         secondary:
           'bg-secondary text-secondary-foreground border border-border hover:bg-secondary-hover hover:border-border-strong active:scale-[0.98]',
         outline:
@@ -33,7 +35,7 @@ export const buttonVariants = cva(
         true: 'w-full',
       },
       icon: {
-        true: 'rounded-md',
+        true: 'rounded-[var(--theme-radius-button,var(--theme-radius-md))]',
       },
     },
     compoundVariants: [
@@ -47,5 +49,16 @@ export const buttonVariants = cva(
     },
   }
 );
+
+/**
+ * What a button keeps when it brings its own look (`unstyled`): the layout, the
+ * focus ring and the disabled state. No colour, size, radius, weight or hover.
+ */
+export const buttonUnstyled = [
+  'inline-flex items-center justify-center',
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+  'disabled:pointer-events-none disabled:opacity-50',
+  '[&_svg]:pointer-events-none [&_svg]:shrink-0',
+].join(' ');
 
 export type ButtonVariants = VariantProps<typeof buttonVariants>;
