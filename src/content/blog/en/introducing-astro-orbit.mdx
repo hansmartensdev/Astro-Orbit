@@ -1,0 +1,62 @@
+---
+title: "Introducing Astro Orbit"
+description: "Astro Orbit is my new free Astro theme: a portfolio and blog with a 3D droplet in the hero. It's on GitHub now, with a demo."
+publishedAt: 2026-11-27T10:00:00Z
+author: "Hans Martens"
+category: "Themes"
+tags: ["Astro", "Themes", "Astro Orbit"]
+icon: "orbit"
+cardWord: "astro orbit"
+featured: true
+pinned: true
+draft: true
+locale: en
+---
+
+Astro Orbit is a free Astro theme for a portfolio and a blog. It's the second theme I've built for the Astro community, after Astro Rocket. It's MIT-licensed and [on GitHub](https://github.com/hansmartensdev/Astro-Orbit).
+
+[HANS: why you built it, in your own words.]
+
+## You're looking at it
+
+This website has the same design as Astro Orbit: I made the theme from it. So my own website is a demo of the theme too.
+
+The theme also has a demo of its own, with a fictive designer, Alex Morgan, and six projects: [orbit.hansmartens.dev](https://orbit.hansmartens.dev).
+
+## The droplet
+
+The homepage hero has a 3D animation, made with three.js. A droplet comes out of the hero, follows a track down the homepage and turns into a card whose words light up one by one as you scroll. Then the card becomes a droplet again, follows the track further and turns into the first project card.
+
+The 3D scenes only run on a device with a graphics chip. Other devices see a still picture of the hero.
+
+## What's in it
+
+- **Homepage**: the 3D hero, the droplet's track, the latest projects, quotes from clients, four stacked cards for your services, the latest blog posts, and a sign-off with a contact button.
+- **About page**: a card in your brand colour with your text, your links and a marquee of the tools you work with.
+- **Projects**: a page for each project, with a hero picture, a gallery, videos and sections of text.
+- **Blog**: posts in Markdown or MDX, with a table of contents and search. Each post gets a card picture with an icon and a short phrase, made when the site is built, so a post doesn't need an image of its own.
+- **Contact**: a contact form that sends messages to your email through Resend.
+- **Components**: the 46 design-system components of Velocity 2, shown on a [page of their own](https://orbit.hansmartens.dev/components/) in the demo.
+- **Languages**: English, Spanish, French and Dutch, and another language takes one file to translate.
+- **For search engines and AI assistants**: a sitemap, an RSS feed, structured data and an `llms.txt` file.
+- **Fonts**: Outfit, Archivo and IBM Plex Mono, served by the website itself.
+
+It builds for Vercel, Netlify and Cloudflare.
+
+## Making it yours
+
+Most of what makes the website yours is in one file, `theme.config.ts`: your name, your wordmark, your email, your social links, and the text on the homepage, the About page, the menu and the sign-off. The same file sets your brand colour, the language of the site, and whether visitors can switch between dark and light mode. Change that file, write your posts and add your projects, and the theme is your website.
+
+The demo's blog has a post for each of these, starting with [Getting Started with Astro Orbit](https://orbit.hansmartens.dev/blog/getting-started/).
+
+## Where it comes from
+
+Astro Orbit started as a fork of SWM26, which [Southwell Media](https://southwellmedia.com) were working on at the time. That repository is no longer public. SWM26 is built on [Velocity](https://github.com/southwellmedia/velocity), Southwell Media's Astro starter. The credit for that work goes to Southwell Media.
+
+After the fork, I spent four days on the design, updates and Lighthouse optimisation to make the theme what it is now.
+
+[HANS: the draft said four days, written before the theme was released. Is that still right, or how long has it been now?]
+
+## What's next
+
+[HANS: the draft said you'd submit the theme to the themes on the Astro website once it was released. Have you, or when will you?]
