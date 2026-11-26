@@ -14,10 +14,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # The pnpm version comes from packageManager in package.json, as on
+      # Vercel. pnpm 9 ignored the overrides in pnpm-workspace.yaml and
+      # failed the frozen install.
       - name: Setup pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 9
+        uses: pnpm/action-setup@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
