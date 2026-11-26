@@ -1,0 +1,145 @@
+---
+/**
+ * ThemeBand
+ *
+ * The violet band about Astro Orbit, above the sign-off on the homepage: the
+ * same band as the theme's demo ("About this demo"), with Hans's own text.
+ * Until the release the repository is private and the demo isn't on its
+ * address, so the buttons show but aren't links yet, and the text says the
+ * theme comes out soon. On release day, set `released` to true in pages/index.astro.
+ */
+import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
+
+interface Props {
+  /** True once Astro Orbit is public: the two buttons become links. */
+  released?: boolean;
+}
+
+const { released = false } = Astro.props;
+---
+
+<section class="theme-band shell" aria-labelledby="theme-band-title" data-reveal>
+  <div class="theme-band__card">
+    <span class="label-mono theme-band__label">My next theme</span>
+    <h2 class="theme-band__title display-service" id="theme-band-title">
+      Astro Orbit is a <em>free Astro theme.</em>
+    </h2>
+    <p class="theme-band__text">
+      This website has the same design. The theme is MIT-licensed, and {
+        released ? "it's available now." : 'it comes out soon.'
+      }
+    </p>
+    {/* The buttons show before the release, but aren't links yet: the
+        repository is private and the demo isn't on its address. They don't
+        react to the pointer, and screen readers hear "coming soon". */}
+    <div class="theme-band__actions" data-soon={released ? undefined : ''}>
+      <ArrowFillButton
+        href={released ? 'https://github.com/hansmartensdev/Astro-Orbit' : undefined}
+        type={released ? undefined : 'button'}
+        target={released ? '_blank' : undefined}
+        icon="fa6-brands:github"
+      >
+        Get the theme{!released && <span class="sr-only"> (coming soon)</span>}
+      </ArrowFillButton>
+      <ArrowFillButton
+        href={released ? 'https://orbit.hansmartens.dev' : undefined}
+        type={released ? undefined : 'button'}
+        target={released ? '_blank' : undefined}
+        icon="lucide:arrow-up-right"
+        variant="outline"
+      >
+        View the demo{!released && <span class="sr-only"> (coming soon)</span>}
+      </ArrowFillButton>
+    </div>
+  </div>
+</section>
+
+<style>
+  .theme-band {
+    padding-top: 130px;
+  }
+
+  .theme-band__card {
+    position: relative;
+    overflow: hidden;
+    padding: 64px 60px;
+    border: 1px solid rgb(124 58 237 / 0.18);
+    border-radius: var(--radius-xl);
+    background-color: #2e1065;
+    background-image: linear-gradient(to bottom, color-mix(in srgb, #2e1065 14%, #7c3aed), #2e1065);
+    color: #f5f3ff;
+  }
+
+  /* The blog cards' grid, fading towards the edges. */
+  .theme-band__card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / 0.09) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.09) 1px, transparent 1px);
+    background-size: 48px 48px;
+    -webkit-mask-image: radial-gradient(ellipse at center, #000 40%, transparent 100%);
+    mask-image: radial-gradient(ellipse at center, #000 40%, transparent 100%);
+  }
+
+  .theme-band__card > * {
+    position: relative;
+  }
+
+  .theme-band__label {
+    opacity: 0.7;
+  }
+
+  .theme-band__title {
+    max-width: 16ch;
+    margin: 20px 0 0;
+  }
+
+  .theme-band__text {
+    max-width: 520px;
+    margin: 24px 0 0;
+    font-size: 18px;
+    line-height: 1.6;
+    opacity: 0.85;
+  }
+
+  .theme-band__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 36px;
+  }
+
+  /* White buttons on the violet. */
+  .theme-band__actions :global(.afb) {
+    --afb-bg: #fff;
+    --afb-text: #1a1030;
+    --afb-fill-bg: #1a1030;
+    --afb-fill-text: #fff;
+  }
+
+  /* Before the release: shown, but not clickable. */
+  .theme-band__actions[data-soon] :global(.afb) {
+    pointer-events: none;
+  }
+
+  .theme-band__actions :global(.afb--outline) {
+    --afb-bg: transparent;
+    --afb-text: #fff;
+    --afb-border: #fff;
+    --afb-fill-bg: #fff;
+    --afb-fill-text: #1a1030;
+  }
+
+  @media (max-width: 800px) {
+    .theme-band {
+      padding-top: 90px;
+    }
+
+    .theme-band__card {
+      padding: 40px 28px;
+    }
+  }
+</style>
