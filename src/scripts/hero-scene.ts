@@ -55,6 +55,11 @@ const NBLOB = 11;
 const FLOOR_Y = -1.0;
 /** Camera focal length, as the shaders define it. */
 const FOCAL = 1.9;
+/** The scene is framed by the panel's height, so on a panel taller than
+ *  it is wide (a tall phone, such as a Pixel 7 or a Galaxy A55) the droplet
+ *  came out wider than the panel. Below this width-to-height ratio it is
+ *  framed by the width instead. The shaders carry the same value. */
+const MIN_ASPECT = 1;
 
 /**
  * Handoff to the reel (src/scripts/reel/morph.ts). Each rendered frame the
@@ -104,6 +109,7 @@ const marchFragment = /* glsl */ `
 
   #define FLOOR_Y ${FLOOR_Y.toFixed(1)}
   #define FOCAL 1.9
+  #define MIN_ASPECT 1.0
 
   float smin(float a, float b, float k) {
     float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0);
@@ -222,14 +228,14 @@ const marchFragment = /* glsl */ `
   }
 
   void main() {
-    vec2 uv = (gl_FragCoord.xy - 0.5 * uRes) / uRes.y;
+    vec2 uv = (gl_FragCoord.xy - 0.5 * uRes) / min(uRes.y, uRes.x / MIN_ASPECT);
     vec3 ro = uRo;
     vec3 rd = normalize(uFw * FOCAL + uRt * uv.x + uUp * uv.y);
     if (uMirror > 0.5) {
       ro.y = 2.0 * FLOOR_Y - ro.y;
       rd.y = -rd.y;
     }
-    float px = 1.0 / (uRes.y * FOCAL);
+    float px = 1.0 / (min(uRes.y, uRes.x / MIN_ASPECT) * FOCAL);
 
     float t = 0.0, d = 0.0, minD = 1e5, tMin = 0.0;
     bool hit = false;
@@ -279,6 +285,7 @@ const compositeFragment = /* glsl */ `
   #define BACK_Z -3.8
   #define SIDE_X 7.5
   #define FOCAL 1.9
+  #define MIN_ASPECT 1.0
 
   float smin(float a, float b, float k) {
     float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0);
@@ -360,7 +367,7 @@ const compositeFragment = /* glsl */ `
   const vec3 KEY = vec3(-0.55, 0.8, 0.4);
 
   void main() {
-    vec2 uv = (gl_FragCoord.xy - 0.5 * uRes) / uRes.y;
+    vec2 uv = (gl_FragCoord.xy - 0.5 * uRes) / min(uRes.y, uRes.x / MIN_ASPECT);
     vec3 ro = uRo;
     vec3 rd = normalize(uFw * FOCAL + uRt * uv.x + uUp * uv.y);
 
@@ -931,15 +938,16 @@ class HeroEngine {
     const z = v.dot(cam.uFw.value);
     if (z <= 0.1) return;
     if (rect.width < 1 || rect.height < 1) return;
-    // The shaders map uv = (px - res/2) / res.y and rd = fw·FOCAL + rt·u + up·v,
+    // The shaders map uv = (px - res/2) / fit and rd = fw·FOCAL + rt·u + up·v,
     // so a view-space point lands at u = x/z·FOCAL, v = y/z·FOCAL, in units
-    // of the panel's height.
+    // of fit: the panel's height, or width / MIN_ASPECT on a narrow panel.
+    const fit = Math.min(rect.height, rect.width / MIN_ASPECT);
     const u = (v.dot(cam.uRt.value) / z) * FOCAL;
     const w = (v.dot(cam.uUp.value) / z) * FOCAL;
     const h = this.handoff;
-    h.x = rect.left + rect.width * 0.5 + u * rect.height;
-    h.y = rect.top + rect.height * 0.5 - w * rect.height;
-    h.r = (b.w / z) * FOCAL * rect.height;
+    h.x = rect.left + rect.width * 0.5 + u * fit;
+    h.y = rect.top + rect.height * 0.5 - w * fit;
+    h.r = (b.w / z) * FOCAL * fit;
     h.at = now;
     window.__heroDroplet = h;
   }
@@ -1151,8 +1159,9 @@ class HeroEngine {
           );
           const z = lerp(zNat, EXIT_Z, e);
           // The inverse of publishDroplet: screen px → view-plane units at z.
-          const u = ((p.x - rect.left - rect.width * 0.5) / rect.height) * (z / FOCAL);
-          const w = (-(p.y - scrollY - rect.top - rect.height * 0.5) / rect.height) * (z / FOCAL);
+          const fit = Math.min(rect.height, rect.width / MIN_ASPECT);
+          const u = ((p.x - rect.left - rect.width * 0.5) / fit) * (z / FOCAL);
+          const w = (-(p.y - scrollY - rect.top - rect.height * 0.5) / fit) * (z / FOCAL);
           const at = this.tmpArc
             .copy(cam.uRo.value)
             .addScaledVector(cam.uFw.value, z)
@@ -1161,7 +1170,7 @@ class HeroEngine {
           stray.x = lerp(stray.x, at.x, e);
           stray.y = lerp(stray.y, at.y, e);
           stray.z = lerp(stray.z, at.z, e);
-          stray.w = lerp(stray.w, (p.r * z) / (FOCAL * rect.height), e);
+          stray.w = lerp(stray.w, (p.r * z) / (FOCAL * fit), e);
         }
       }
     }
