@@ -9,6 +9,7 @@ import Reel from '@/components/sections/Reel.astro';
 import WorkGrid from '@/components/sections/WorkGrid.astro';
 import FeaturedPosts from '@/components/sections/FeaturedPosts.astro';
 import Cta from '@/components/sections/Cta.astro';
+import ThemeBand from '@/components/sections/ThemeBand.astro';
 import siteConfig from '@/config/site.config';
 ---
 
@@ -32,5 +33,7 @@ import siteConfig from '@/config/site.config';
     /* The founder section (@/components/sections/Founder.astro) is parked
       off the homepage for now; it runs on /about. */
   }
+  {/* Astro Orbit, the next theme. Set released once it is public. */}
+  <ThemeBand />
   <Cta />
 </SiteLayout>
