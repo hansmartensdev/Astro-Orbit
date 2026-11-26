@@ -43,6 +43,11 @@ const INK = BRAND.ink; // a deep violet ground for covers and share cards, as th
 const ICE = '#eef2f4';
 const VIOLET = ROLES.fill; // under the white mark
 const VIOLET_ON_INK = ROLES.onDark;
+/** A brand shade with transparency, for the glows (satori takes rgba()). */
+const tint = (hex: string, alpha: number) => {
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`;
+};
 
 /**
  * satori-html escapes interpolated text (& → &amp;) but hands the parsed tree
@@ -81,7 +86,7 @@ export async function generateOGImage(options: OGImageOptions): Promise<Buffer> 
   // page's title and line, and the domain under a short violet rule.
   // Note: every div needs an explicit display for Satori.
   const markup = html`
-    <div style="height: 100%; width: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 64px 76px 60px; font-family: 'Archivo'; background-color: ${INK}; background-image: radial-gradient(circle at 100% 100%, rgba(124, 58, 237, 0.55) 0%, rgba(124, 58, 237, 0.18) 38%, rgba(124, 58, 237, 0) 68%);">
+    <div style="box-sizing: border-box; height: 100%; width: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 64px 76px 60px; font-family: 'Archivo'; background-color: ${INK}; background-image: radial-gradient(circle at 100% 100%, ${tint(BRAND[600], 0.55)} 0%, ${tint(BRAND[600], 0.18)} 38%, ${tint(BRAND[600], 0)} 68%);">
       <div style="display: flex; align-items: center; gap: 18px;">
         <div style="display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; background: ${VIOLET}; border-radius: 14px;">
           <span style="font-family: 'Outfit'; font-size: 23px; font-weight: 600; color: #ffffff; letter-spacing: -0.04em;">${siteConfig.mark}</span>
@@ -209,7 +214,7 @@ export async function generateBlogCover(options: {
   const titleSize = title.length > 70 ? 50 : title.length > 46 ? 58 : 66;
 
   const markup = html`
-    <div style="display: flex; flex-direction: column; justify-content: space-between; width: 100%; height: 100%; padding: 64px 72px; font-family: 'Outfit'; background-color: ${INK}; background-image: radial-gradient(circle at ${glow}, rgba(124, 58, 237, 0.6) 0%, rgba(124, 58, 237, 0) 60%), radial-gradient(circle at ${glow2}, rgba(167, 139, 250, 0.22) 0%, rgba(167, 139, 250, 0) 45%);">
+    <div style="box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; width: 100%; height: 100%; padding: 64px 72px; font-family: 'Outfit'; background-color: ${INK}; background-image: radial-gradient(circle at ${glow}, ${tint(BRAND[600], 0.6)} 0%, ${tint(BRAND[600], 0)} 60%), radial-gradient(circle at ${glow2}, ${tint(BRAND[400], 0.22)} 0%, ${tint(BRAND[400], 0)} 45%);">
       <div style="display: flex; justify-content: space-between; align-items: flex-start;">
         <span style="font-size: 26px; font-weight: 600; color: ${ICE}; letter-spacing: -0.04em;">${siteConfig.mark}</span>
         <img src="${iconSrc}" style="width: 220px; height: 220px;" />

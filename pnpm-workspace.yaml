@@ -2,3 +2,8 @@ packages: []
 onlyBuiltDependencies:
   - esbuild
   - sharp
+overrides:
+  # satori pins fflate 0.7.3, which has a known bug (an endless loop on a
+  # malformed ZIP64 archive); 0.7.5 is the patch release that
+  # fixes it. Remove this once satori depends on 0.7.5 or later itself.
+  fflate@0.7.3: 0.7.5
