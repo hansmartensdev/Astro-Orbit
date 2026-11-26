@@ -142,4 +142,22 @@ const { released = false } = Astro.props;
       padding: 40px 28px;
     }
   }
+
+  /* Phones: centred, like the sign-off right under it ("let's talk astro"),
+     so the buttons stay in line as the visitor scrolls from one to the
+     other (Hans's choice). */
+  @media (max-width: 700px) {
+    .theme-band__card {
+      text-align: center;
+    }
+
+    .theme-band__title,
+    .theme-band__text {
+      margin-inline: auto;
+    }
+
+    .theme-band__actions {
+      justify-content: center;
+    }
+  }
 </style>
