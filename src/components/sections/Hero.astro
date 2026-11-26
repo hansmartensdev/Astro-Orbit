@@ -24,21 +24,29 @@ import heroPoster from '@/assets/hero-poster.png';
 import heroPosterDark from '@/assets/hero-poster-dark.png';
 import heroPosterPhone from '@/assets/hero-poster-phone.png';
 import heroPosterPhoneDark from '@/assets/hero-poster-phone-dark.png';
+import heroPosterPhoneTall from '@/assets/hero-poster-phone-tall.png';
+import heroPosterPhoneTallDark from '@/assets/hero-poster-phone-tall-dark.png';
 
 // Stills of the scene, captured from the live 3D at full quality: wide for
 // the desktop panel, near-square for a phone's, each in light and in dark
 // (the dark scene is a light slab in a dark studio). The page shows the one
 // that matches; a device without a graphics chip keeps it as the hero.
+// A tall phone (a Pixel 7, a Galaxy A55) has a panel taller than it is wide,
+// where the near-square still was cropped to its middle and the droplet cut
+// off. It gets a tall version: the same still with the room carried on above
+// and below, as the live scene frames it there (see MIN_ASPECT in
+// scripts/hero-scene.ts).
 const wide = { widths: [640, 960, 1336, 2000, 2672], format: 'webp' as const, quality: 82 };
 const tall = { widths: [400, 800, 1146], format: 'webp' as const, quality: 82 };
 const posters = await Promise.all(
   [
-    { tone: 'light', desktop: heroPoster, phone: heroPosterPhone },
-    { tone: 'dark', desktop: heroPosterDark, phone: heroPosterPhoneDark },
-  ].map(async ({ tone, desktop, phone }) => ({
+    { tone: 'light', desktop: heroPoster, phone: heroPosterPhone, phoneTall: heroPosterPhoneTall },
+    { tone: 'dark', desktop: heroPosterDark, phone: heroPosterPhoneDark, phoneTall: heroPosterPhoneTallDark },
+  ].map(async ({ tone, desktop, phone, phoneTall }) => ({
     tone,
     desktop: await getImage({ src: desktop, ...wide }),
     phone: await getImage({ src: phone, ...tall }),
+    phoneTall: await getImage({ src: phoneTall, ...tall }),
   }))
 );
 ---
@@ -58,8 +66,16 @@ const posters = await Promise.all(
         keep it (see scripts/gpu.ts). Decorative, like the panel itself. */
     }
     {
-      posters.map(({ tone, desktop, phone }) => (
+      posters.map(({ tone, desktop, phone, phoneTall }) => (
         <picture class:list={['hero__poster-pic', `hero__poster-pic--${tone}`]}>
+          {/* A screen narrower than about 10:19 leaves the panel taller than
+              it is wide. */}
+          <source
+            media="(max-width: 700px) and (max-aspect-ratio: 10/19)"
+            srcset={phoneTall.srcSet.attribute}
+            sizes="calc(100vw - 48px)"
+            type="image/webp"
+          />
           <source
             media="(max-width: 700px)"
             srcset={phone.srcSet.attribute}
