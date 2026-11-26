@@ -126,8 +126,10 @@ const posters = await Promise.all(
   <div class="hero__foot mt-9 flex items-end justify-between gap-10 min-[701px]:mt-6">
     <p class="text-foreground-secondary m-0 max-w-[440px] text-[17px] leading-[1.6]">
       I'm <span class="whitespace-nowrap">Hans Martens</span>, an Astro developer in Veghel, the
-      Netherlands. I create free themes for Astro. The next one, Astro&nbsp;Orbit, has the same
-      design as this website, and it comes out soon.
+      Netherlands. I create free themes for Astro. The newest one, <a
+        class="hero__link"
+        href="/projects/astro-orbit/">Astro&nbsp;Orbit</a
+      >, has the same design as this website.
     </p>
 
     <div class="hero__scroll" aria-hidden="true">
@@ -138,6 +140,19 @@ const posters = await Promise.all(
 </section>
 
 <style>
+  /* The theme's name in the introduction: the text's own colour, underlined,
+     as the inline links elsewhere on the site. */
+  .hero__link {
+    color: var(--color-foreground);
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 3px;
+  }
+
+  .hero__link:hover {
+    text-decoration-thickness: 2.5px;
+  }
+
   /* One still at a time: light, or dark under .dark. */
   .hero__poster-pic {
     display: contents;
