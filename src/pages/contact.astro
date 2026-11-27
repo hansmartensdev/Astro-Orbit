@@ -3,28 +3,24 @@
  * Contact page
  * URL: /contact
  *
- * Velocity's contact form and /api/contact endpoint, wearing the studio's
- * type. The submit handler is carried over from the stock page unchanged.
+ * In the style of the project, blog and About pages (Hans's choice): the
+ * shared cinema hero (site/CinemaHero.astro) with a mail icon and the ways
+ * to reach me in its strip, then the form in the card with the violet glow (Hans's earlier choice),
+ * on the second ground. Velocity's form and /api/contact endpoint; the
+ * submit handler is carried over unchanged.
  */
-import { Icon } from 'astro-icon/components';
 import SiteLayout from '@/layouts/SiteLayout.astro';
-import SectionHead from '@/components/sections/SectionHead.astro';
+import CinemaHero from '@/components/site/CinemaHero.astro';
 import Input from '@/components/ui/form/Input/Input.astro';
 import Textarea from '@/components/ui/form/Textarea/Textarea.astro';
 import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
 import siteConfig from '@/config/site.config';
 
 const channels = [
-  { label: 'EMAIL', value: siteConfig.email, href: 'mailto:' + siteConfig.email, icon: 'mail' },
+  { label: 'Email', value: siteConfig.email, href: 'mailto:' + siteConfig.email },
   // Messages, not calls: they come in from everywhere.
-  {
-    label: 'WHATSAPP',
-    value: 'Send a message',
-    href: siteConfig.whatsapp,
-    icon: 'message-circle',
-    external: true,
-  },
-  { label: 'BASED IN', value: siteConfig.location, href: undefined, icon: 'map-pin' },
+  { label: 'WhatsApp', value: 'Send a message', href: siteConfig.whatsapp, external: true },
+  { label: 'Based in', value: siteConfig.location },
 ];
 ---
 
@@ -33,103 +29,76 @@ const channels = [
   description="Let's talk Astro. An idea for a website, a question about a theme, a blog post or something on GitHub: say hello to Hans Martens."
   includeOrgSchema
 >
-  <header class="contact__head shell pt-[180px] max-[800px]:pt-[130px]">
-    <SectionHead
-      as="h1"
-      title="Let’s talk Astro"
-      accent="Astro"
-      blurb="An idea for a website, a question about one of my themes, a blog post or something I shared on GitHub? Everybody is welcome. I read and answer every message myself."
-    />
-  </header>
+  <CinemaHero
+    label="CONTACT"
+    title="Let’s talk Astro"
+    accent="Astro"
+    description="An idea for a website, a question about one of my themes, a blog post or something I shared on GitHub? Everybody is welcome. I read and answer every message myself."
+    facts={channels}
+    factsLabel="Other ways to reach me"
+    icon="mail"
+  />
 
-  {/* The form in a card with a violet glow behind it, the same glow as on
-      the project pages, and the ways to reach me as buttons under it. One
-      centred column at every width (Hans's choice). */}
-  <section class="contact shell">
-    <div class="contact__stage" data-reveal>
-      <div class="contact__card">
-        <form id="contact-form" action="/api/contact" method="POST" class="contact__form">
-          <Input label="Your name" name="name" type="text" required autocomplete="name" />
-          <Input label="Email address" name="email" type="email" required autocomplete="email" />
-          <Input label="Subject" name="subject" type="text" />
-          <Textarea
-            label="Message"
-            name="message"
-            placeholder="Your idea, your question, or just hello."
-            rows={6}
-            required
-          />
+  {/* --- the form: the glow card, on the second ground ------------------- */}
+  <section class="ct">
+    <div class="ct__inner shell">
+      <span class="label-mono ct__label" data-reveal>SEND A MESSAGE</span>
+      <div class="ct__stage" data-reveal>
+        <div class="ct__card">
+          <form id="contact-form" action="/api/contact" method="POST" class="contact__form">
+            <Input label="Your name" name="name" type="text" required autocomplete="name" />
+            <Input label="Email address" name="email" type="email" required autocomplete="email" />
+            <Input label="Subject" name="subject" type="text" />
+            <Textarea
+              label="Message"
+              name="message"
+              placeholder="Your idea, your question, or just hello."
+              rows={6}
+              required
+            />
 
-          <!-- Honeypot field for spam protection -->
-          <div class="hidden" aria-hidden="true">
-            <input type="text" name="honeypot" tabindex="-1" autocomplete="off" />
-          </div>
+            <!-- Honeypot field for spam protection -->
+            <div class="hidden" aria-hidden="true">
+              <input type="text" name="honeypot" tabindex="-1" autocomplete="off" />
+            </div>
 
-          <div id="form-message" class="hidden text-sm" role="status" aria-live="polite"></div>
+            <div id="form-message" class="hidden text-sm" role="status" aria-live="polite"></div>
 
-          <ArrowFillButton type="submit" id="submit-button" icon="lucide:send" class="self-start">
-            Send message
-          </ArrowFillButton>
-        </form>
+            <ArrowFillButton type="submit" id="submit-button" icon="lucide:send" class="self-start">
+              Send message
+            </ArrowFillButton>
+          </form>
+        </div>
       </div>
     </div>
-
-    <ul class="contact__chips" data-reveal data-reveal-delay="0.1">
-      {
-        channels.map((channel) => (
-          <li>
-            {channel.href ? (
-              <a
-                class="chip"
-                href={channel.href}
-                target={'external' in channel && channel.external ? '_blank' : undefined}
-                rel={'external' in channel && channel.external ? 'noopener noreferrer' : undefined}
-              >
-                <Icon name={'lucide:' + channel.icon} aria-hidden="true" />
-                <span class="sr-only">{channel.label}: </span>
-                {channel.value}
-              </a>
-            ) : (
-              <span class="chip">
-                <Icon name={'lucide:' + channel.icon} aria-hidden="true" />
-                <span class="sr-only">{channel.label}: </span>
-                {channel.value}
-              </span>
-            )}
-          </li>
-        ))
-      }
-    </ul>
   </section>
-
-  <div class="h-[140px] max-[800px]:h-[100px]"></div>
 </SiteLayout>
 
 <style>
-  /* The heading and its line, centred above the card. */
-  .contact__head :global(header) {
-    flex-direction: column;
-    align-items: center;
-    gap: 22px;
-    text-align: center;
+  /* --- the form -------------------------------------------------------- */
+  .ct {
+    padding-block: clamp(88px, 11vw, 160px);
+    background: var(--background-secondary);
   }
 
-  .contact__head :global(header > p) {
-    max-width: 52ch;
-  }
-
-  .contact {
+  .ct__inner {
     max-width: 820px;
-    margin-top: 56px;
+  }
+
+  .ct__label {
+    display: block;
+    margin-bottom: 24px;
+    text-align: center;
+    color: var(--foreground-muted);
   }
 
   /* The violet glow behind the card: the brand colour, blurred. */
-  .contact__stage {
+  .ct__stage {
     position: relative;
     isolation: isolate;
   }
 
-  .contact__stage::before {
+  .ct__stage::before {
     content: '';
     position: absolute;
     z-index: -1;
@@ -141,11 +110,11 @@ const channels = [
     pointer-events: none;
   }
 
-  :global(.dark) .contact__stage::before {
+  :global(.dark) .ct__stage::before {
     opacity: 0.45;
   }
 
-  .contact__card {
+  .ct__card {
     padding: clamp(28px, 4vw, 52px);
     border: 1px solid var(--border);
     border-radius: 28px;
@@ -176,47 +145,6 @@ const channels = [
     .contact__form > :global(div:nth-of-type(-n + 2)) {
       grid-column: 1 / -1;
     }
-  }
-
-  /* The ways to reach me, as buttons under the card. */
-  .contact__chips {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 12px;
-    margin: 32px 0 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 20px;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    background: var(--background-elevated, #fff);
-    color: inherit;
-    font-size: 16px;
-    text-decoration: none;
-    transition: border-color 0.25s ease;
-  }
-
-  a.chip:hover {
-    border-color: var(--border-strong);
-  }
-
-  a.chip:focus-visible {
-    outline: 2px solid var(--hero-accent, var(--orbit-600));
-    outline-offset: 3px;
-  }
-
-  .chip :global(svg) {
-    width: 16px;
-    height: 16px;
-    stroke-width: 1.75;
-    flex: none;
   }
 </style>
 

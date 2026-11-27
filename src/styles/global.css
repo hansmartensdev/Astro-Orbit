@@ -1018,3 +1018,24 @@
 [data-pagefind-body] :is(h2, h3, h4) {
   scroll-margin-top: calc(var(--sw-nav-h, 84px) + 24px);
 }
+
+/* The cinema heroes (components/site/CinemaHero.astro): the picture is
+   unveiled from the bottom up while it settles from slightly larger, as on
+   the project pages. scripts/motion/case.ts adds .is-in when the picture
+   is ready; the transition is on the arrived state only, so the hidden
+   state applies at once. Under reduced motion the script adds .is-in
+   straight away. */
+[data-cinema] [data-cinema-picture] {
+  clip-path: inset(0 0 0 0);
+}
+
+[data-cinema].is-in [data-cinema-picture] {
+  transition:
+    clip-path 1.25s cubic-bezier(0.76, 0, 0.24, 1),
+    scale 1.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html.js [data-cinema]:not(.is-in) [data-cinema-picture] {
+  clip-path: inset(100% 0 0 0);
+  scale: 1.08;
+}

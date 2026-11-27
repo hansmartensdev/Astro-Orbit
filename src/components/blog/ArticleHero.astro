@@ -2,20 +2,13 @@
 /**
  * ArticleHero
  *
- * The top of a blog post, in the project pages' cinema style (Hans's
- * choice): the post's card art fills the screen, the violet grid with the
- * post's icon drawn large in the middle; the title sits large at its foot
- * with the description beside it, and the facts (author, date, reading
- * time, category) run along the bottom in a strip of frosted glass. A post
- * with its own photo (`image`) shows that instead of the art.
- *
- * The shading over the picture is the page ground, so light mode gets a
- * light hero with dark type and dark mode an ink one with light type.
- * Phones: the picture on top, fading out, the title and the facts under it.
+ * The top of a blog post: the shared cinema hero (site/CinemaHero.astro)
+ * with the post's card art, the violet grid with its icon drawn large, or
+ * the post's own photo (`image`) when it has one. The facts are the
+ * author, the dates, the reading time and the category, four at most.
  */
-import { Image } from 'astro:assets';
-import { lucideBody } from '@/lib/og';
 import type { ImageMetadata } from 'astro';
+import CinemaHero, { type CinemaFact } from '@/components/site/CinemaHero.astro';
 import { formatDate } from '@/lib/utils';
 
 interface Props {
@@ -48,267 +41,28 @@ const {
   readingTime,
 } = Astro.props;
 
-// Drawn inline from Lucide's data with thin lines, as on the cover.
-const iconBody = icon ? lucideBody(icon)?.replace(/stroke-width="2"/g, 'stroke-width="1"') : undefined;
-
 const topic = category ?? tags[0];
 const label = ['Blog', topic].filter(Boolean).join(' · ').toUpperCase();
 
-const facts = [
-  { label: 'Written by', value: author },
-  { label: 'Published', value: formatDate(publishedAt), date: publishedAt },
-  updatedAt ? { label: 'Updated', value: formatDate(updatedAt), date: updatedAt } : null,
-  readingTime ? { label: 'Reading time', value: `${readingTime} min read` } : null,
-  topic ? { label: 'Category', value: topic } : null,
-]
-  .filter((fact) => fact !== null)
-  .slice(0, 4);
+const facts = (
+  [
+    { label: 'Written by', value: author },
+    { label: 'Published', value: formatDate(publishedAt), date: publishedAt },
+    updatedAt ? { label: 'Updated', value: formatDate(updatedAt), date: updatedAt } : null,
+    readingTime ? { label: 'Reading time', value: `${readingTime} min read` } : null,
+    topic ? { label: 'Category', value: topic } : null,
+  ].filter((fact) => fact !== null) as CinemaFact[]
+).slice(0, 4);
 ---
 
-<header class="ah">
-  <div class="ah__picture">
-    {
-      image ? (
-        <Image
-          src={image}
-          alt={imageAlt || title}
-          layout="none"
-          widths={[768, 1280, 1920, 2560]}
-          sizes="100vw"
-          class="ah__photo"
-          loading="eager"
-          fetchpriority="high"
-        />
-      ) : (
-        iconBody && (
-          <svg
-            class="ah__icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-            set:html={iconBody}
-          />
-        )
-      )
-    }
-  </div>
-  <div class="ah__scrim" aria-hidden="true"></div>
-
-  <div class="ah__body shell">
-    <span class="label-mono ah__label">{label}</span>
-    <h1 class="ah__title" style={`--len: ${title.length}`}>{title}</h1>
-    <p class="ah__desc">{description}</p>
-  </div>
-
-  <div class="ah__ledger" role="group" aria-label="Post details">
-    <dl class="ah__facts shell">
-      {
-        facts.map((fact) => (
-          <div>
-            <dt class="label-mono">{fact.label.toUpperCase()}</dt>
-            <dd>{fact.date ? <time datetime={fact.date.toISOString()}>{fact.value}</time> : fact.value}</dd>
-          </div>
-        ))
-      }
-    </dl>
-  </div>
-</header>
-
-<style>
-  .ah {
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    min-height: 100svh;
-    padding-top: calc(var(--sw-nav-h, 72px) + 24px);
-    background: var(--background);
-  }
-
-  /* The card art: the violet of the blog covers, darker at its foot, with
-     the grid over it, as on the newsletter card. */
-  .ah__picture {
-    position: absolute;
-    inset: 0;
-    z-index: -2;
-    background: linear-gradient(
-      to bottom,
-      color-mix(in srgb, var(--orbit-950) 14%, var(--orbit-fill)),
-      var(--orbit-950)
-    );
-  }
-
-  .ah__picture::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    opacity: 0.16;
-    background-image:
-      linear-gradient(rgb(255 255 255 / 0.35) 1px, transparent 1px),
-      linear-gradient(90deg, rgb(255 255 255 / 0.35) 1px, transparent 1px);
-    background-size: 64px 64px;
-  }
-
-  .ah__icon {
-    position: absolute;
-    left: 50%;
-    top: 40%;
-    translate: -50% -50%;
-    width: min(22vw, 30svh);
-    height: auto;
-    color: #fff;
-    filter: drop-shadow(0 0 60px rgb(255 255 255 / 0.35));
-  }
-
-  .ah__photo {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  /* The page ground rises over the picture's foot, so the type reads in
-     either mode, and a little at the top for the nav. */
-  .ah__scrim {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background:
-      linear-gradient(
-        to top,
-        color-mix(in srgb, var(--background) 96%, transparent) 0%,
-        color-mix(in srgb, var(--background) 62%, transparent) 30%,
-        transparent 62%
-      ),
-      linear-gradient(to bottom, color-mix(in srgb, var(--background) 55%, transparent), transparent 22%);
-  }
-
-  .ah__body {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 36ch);
-    align-items: end;
-    column-gap: 48px;
-    width: 100%;
-    padding-bottom: 48px;
-    color: var(--foreground);
-  }
-
-  .ah__label {
-    grid-column: 1;
-    margin-bottom: 14px;
-    color: var(--foreground-secondary);
-  }
-
-  /* A short title runs large on one line; a long one gets smaller so it
-     stays within a few lines. */
-  .ah__title {
-    grid-column: 1;
-    margin: 0;
-    font-family: var(--font-display);
-    font-weight: var(--display-weight);
-    text-transform: var(--display-case);
-    letter-spacing: var(--display-tracking);
-    font-size: clamp(2.8rem, calc(7.4vw * min(1, 28 / var(--len, 20))), 8.4rem);
-    line-height: 0.92;
-    text-wrap: balance;
-  }
-
-  .ah__desc {
-    grid-column: 2;
-    grid-row: 1 / span 2;
-    align-self: end;
-    margin: 0 0 10px;
-    font-size: 19px;
-    line-height: 1.55;
-    color: var(--foreground-secondary);
-  }
-
-  .ah__ledger {
-    width: 100%;
-    border-top: 1px solid var(--border-strong);
-    background: color-mix(in srgb, var(--background) 55%, transparent);
-    -webkit-backdrop-filter: blur(14px);
-    backdrop-filter: blur(14px);
-    color: var(--foreground);
-  }
-
-  .ah__facts {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 32px;
-    margin: 0;
-    padding-block: 26px 30px;
-  }
-
-  .ah__facts dt {
-    color: var(--foreground-muted);
-  }
-
-  .ah__facts dd {
-    margin: 12px 0 0;
-    font-size: 17px;
-    line-height: 1.45;
-  }
-
-  @media (max-width: 1000px) {
-    .ah__facts {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 24px;
-    }
-  }
-
-  /* Phones and tablets held upright: the picture at the top, fading out,
-     and the title, the line and the facts under it on the page ground. */
-  @media (max-width: 800px), (max-width: 1100px) and (orientation: portrait) {
-    .ah {
-      min-height: 0;
-      padding-top: 0;
-    }
-
-    .ah__picture {
-      position: relative;
-      inset: auto;
-      height: 64svh;
-      -webkit-mask-image: linear-gradient(#000 70%, transparent);
-      mask-image: linear-gradient(#000 70%, transparent);
-    }
-
-    .ah__icon {
-      top: 52%;
-      width: min(32vw, 24svh);
-    }
-
-    .ah__scrim {
-      display: none;
-    }
-
-    .ah__body {
-      grid-template-columns: minmax(0, 1fr);
-      margin-top: -24px;
-      padding-bottom: 40px;
-    }
-
-    .ah__desc {
-      grid-column: 1;
-      grid-row: auto;
-      margin: 20px 0 0;
-      font-size: 17px;
-    }
-
-    .ah__title {
-      font-size: clamp(2.4rem, calc(12vw * min(1, 22 / var(--len, 20))), 5rem);
-    }
-
-    .ah__ledger {
-      background: var(--background);
-      -webkit-backdrop-filter: none;
-      backdrop-filter: none;
-    }
-  }
-</style>
+<CinemaHero
+  label={label}
+  title={title}
+  description={description}
+  facts={facts}
+  factsLabel="Post details"
+  icon={icon}
+  image={image}
+  imageAlt={imageAlt}
+  fit
+/>
