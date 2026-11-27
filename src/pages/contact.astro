@@ -37,6 +37,7 @@ const channels = [
     facts={channels}
     factsLabel="Other ways to reach me"
     icon="mail"
+    short
   />
 
   {/* --- the form: the glow card, on the second ground ------------------- */}
@@ -76,8 +77,10 @@ const channels = [
 
 <style>
   /* --- the form -------------------------------------------------------- */
+  /* The hero is lower here, and the card starts close under it, so the
+     form shows on the first screen (Hans's choice). */
   .ct {
-    padding-block: clamp(88px, 11vw, 160px);
+    padding-block: clamp(48px, 5vw, 72px) clamp(88px, 11vw, 160px);
     background: var(--background-secondary);
   }
 
