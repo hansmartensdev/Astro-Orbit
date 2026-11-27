@@ -221,13 +221,13 @@ const nextGlow = nextImage ? await getImage({ src: nextImage, width: 480, format
       {heroGlow && <img class="case__hero-glow" src={heroGlow.src} alt="" aria-hidden="true" decoding="async" />}
 
       <div class="case__hero-body shell">
-        <div class="case__eyebrow" data-reveal>
+        <div class="case__eyebrow">
           <span class="label-mono">{discipline}</span>
           {badge && <span class="case__badge label-mono">{badge}</span>}
         </div>
 
-        <h1 class="case__title" style={`--len: ${title.length}`} data-reveal="lift">{title}</h1>
-        <p class="case__lede" data-reveal>{description}</p>
+        <h1 class="case__title" style={`--len: ${title.length}`}>{title}</h1>
+        <p class="case__lede">{description}</p>
       </div>
 
       {
@@ -494,27 +494,32 @@ const nextGlow = nextImage ? await getImage({ src: nextImage, width: 480, format
     object-fit: cover;
   }
 
-  /* The picture's arrival (scripts/motion/case.ts adds .is-in once it has
-     loaded): it fades in and settles from slightly larger here, where it
-     fills the hero; on a wide screen it rises as a card (below). Its glow
-     follows. The transition is on the arrived state only, as with
-     [data-reveal], so a hidden state applies at once. `translate` and
-     `scale` leave the picture's own `transform` alone. */
+  /* The picture's arrival, the only motion in the hero: the label, title and
+     line above it stand still (Hans's choice). Once the picture has loaded
+     (scripts/motion/case.ts adds .is-in) it is unveiled from the bottom up,
+     like a curtain rising, while it settles from slightly larger; its glow
+     comes up after. The transition is on the arrived state only, as with
+     [data-reveal], so the hidden state applies at once. `scale` leaves the
+     picture's own `transform` alone. The clip's corners follow the card's
+     (--hero-clip-radius, set for the card layout below). */
+  .case__hero-img {
+    --hero-clip-radius: 0px;
+    clip-path: inset(0 0 0 0 round var(--hero-clip-radius));
+  }
+
   .case__hero:where(.is-in) .case__hero-img {
-    --reveal-ease: cubic-bezier(0.16, 1, 0.3, 1);
     transition:
-      opacity 0.8s var(--reveal-ease),
-      translate 1.1s var(--reveal-ease),
-      scale 1.1s var(--reveal-ease);
+      clip-path 1.25s cubic-bezier(0.76, 0, 0.24, 1),
+      scale 1.6s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .case__hero:where(.is-in) .case__hero-glow {
-    transition: opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.25s;
+    transition: opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.6s;
   }
 
   :global(html.js) .case__hero:not(.is-in) .case__hero-img {
-    opacity: 0;
-    scale: 1.04;
+    clip-path: inset(100% 0 0 0 round var(--hero-clip-radius));
+    scale: 1.08;
   }
 
   :global(html.js) .case__hero:not(.is-in) .case__hero-glow {
@@ -1121,11 +1126,9 @@ const nextGlow = nextImage ? await getImage({ src: nextImage, width: 480, format
      the text, and the picture's colours glow into the ink around it, so the
      hero isn't a small card on a black page. */
   @media (min-width: 801px) and (orientation: landscape), (min-width: 1101px) {
-    /* A card under the title: it rises from slightly below and smaller, as
-       the homepage hero's panel does. */
-    :global(html.js) .case__hero:not(.is-in):has(.case__hero-picture) .case__hero-img {
-      translate: 0 34px;
-      scale: 0.97;
+    /* A card under the title: the unveil keeps its rounded corners. */
+    .case__hero:has(.case__hero-picture) .case__hero-img {
+      --hero-clip-radius: var(--radius-xl);
     }
 
     .case__hero:has(.case__hero-picture) {
