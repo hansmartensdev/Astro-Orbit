@@ -10,6 +10,7 @@
 import type { ImageMetadata } from 'astro';
 import CinemaHero, { type CinemaFact } from '@/components/site/CinemaHero.astro';
 import { formatDate } from '@/lib/utils';
+import { toneFor } from '@/lib/post-tone';
 
 interface Props {
   title: string;
@@ -62,6 +63,7 @@ const facts = (
   facts={facts}
   factsLabel="Post details"
   icon={icon}
+  tone={toneFor(category)}
   image={image}
   imageAlt={imageAlt}
   fit

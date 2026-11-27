@@ -144,6 +144,13 @@ const OPEN_SPAN = 0.22;
 /** The statement's words light up, first to last, over this stretch … */
 const READ_START = 0.24;
 const READ_END = 0.6;
+/** The card's button comes in over this stretch, while the last quarter
+ *  of the words light up, and goes again over the next, just before the
+ *  frame folds (--reel-foot, Hans's choice). */
+const FOOT_IN_START = 0.46;
+const FOOT_IN_END = 0.54;
+const FOOT_OUT_START = 0.63;
+const FOOT_OUT_END = 0.67;
 /** … it folds back into a ball over this one … */
 const CLOSE_START = 0.68;
 const CLOSE_END = 0.82;
@@ -633,6 +640,7 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
   let pointerLast = -Infinity;
   let asleep = false;
   let lastRead = -1;
+  let lastFoot = -1;
   // The display's own frame interval: the shortest gap the loop has seen.
   // The scene's governor judges lateness against this, not a fixed 60 Hz,
   // so a 30 Hz screen or a throttled tab is not mistaken for a slow GPU.
@@ -733,6 +741,13 @@ export function createReelMorph(options: ReelMorphOptions): ReelMorph {
     if (Math.abs(read - lastRead) > 0.0005) {
       lastRead = read;
       root.style.setProperty('--reel-read', read.toFixed(4));
+    }
+    // The button: in near the end of the reading, out before the fold.
+    const foot =
+      smoothstep(FOOT_IN_START, FOOT_IN_END, f) * (1 - smoothstep(FOOT_OUT_START, FOOT_OUT_END, f));
+    if (Math.abs(foot - lastFoot) > 0.0005) {
+      lastFoot = foot;
+      root.style.setProperty('--reel-foot', foot.toFixed(4));
     }
     const inHold = sY >= pinScroll && sY < dropScroll;
 

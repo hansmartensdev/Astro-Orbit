@@ -111,13 +111,13 @@ const words = phrases.flatMap((phrase) =>
     color: var(--statement-accent, var(--orbit-500));
   }
 
-  /* The button comes in once the statement has been read: it fades up
-     over the last stretch of the reading, after the last word has lit
-     (--reel-read from n/(n+1) to 1). Without the engine the variable
-     falls back to 1 and the button simply shows. A keyboard user who tabs
-     to it sees it at once. */
+  /* The button fades up while the last quarter of the statement lights
+     and goes again just before the card folds away: the reel engine
+     writes that as --reel-foot (scripts/reel/morph.ts, FOOT_*). Without
+     the engine the variable falls back to 1 and the button simply shows.
+     A keyboard user who tabs to it sees it at once. */
   .stmt__foot {
-    --foot-in: clamp(0, calc(var(--reel-read, 1) * (var(--n) + 1) - var(--n)), 1);
+    --foot-in: var(--reel-foot, 1);
     display: flex;
     align-items: center;
     opacity: var(--foot-in);

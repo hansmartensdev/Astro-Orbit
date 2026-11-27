@@ -12,6 +12,7 @@ import { Icon } from 'astro-icon/components';
 import type { CollectionEntry } from 'astro:content';
 import PostCover from '@/components/blog/PostCover.astro';
 import { formatDate } from '@/lib/utils';
+import { toneFor } from '@/lib/post-tone';
 
 interface Props {
   post: CollectionEntry<'blog'>;
@@ -29,7 +30,13 @@ const slug = post.id.replace(/^[a-z]{2}\//, '');
   <PostCover
     class="post__cover"
     src={post.data.image?.src}
-    art={{ slug, icon: post.data.icon, tags: post.data.tags, word: post.data.cardWord }}
+    art={{
+      slug,
+      icon: post.data.icon,
+      tags: post.data.tags,
+      word: post.data.cardWord,
+      tone: toneFor(post.data.category),
+    }}
   />
   <span class="label-mono text-foreground-muted">
     {formatDate(post.data.publishedAt).toUpperCase()}

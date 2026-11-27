@@ -12,19 +12,23 @@
  * Drawn as inline SVG, so the word is set in the site's own display face
  * and stays sharp at any size. The icon is the post's `icon` (any Lucide
  * name, or "claude"), else one picked from its tags; the word is its
- * `cardWord`.
+ * `cardWord`. A Performance post is emerald instead of violet
+ * (lib/post-tone.ts).
  */
 import { coverIcon, lucideBody } from '@/lib/og';
+import type { PostTone } from '@/lib/post-tone';
 
 interface Props {
   slug: string;
   icon?: string;
   tags?: string[];
   word?: string;
+  /** The post's colour: violet, or emerald for Performance. */
+  tone?: PostTone;
   class?: string;
 }
 
-const { slug, icon, tags = [], word, class: className } = Astro.props;
+const { slug, icon, tags = [], word, tone = 'violet', class: className } = Astro.props;
 const name = coverIcon(icon, tags);
 // Lucide draws at stroke-width 2 on each element; the card's own (thinner)
 // stroke is set in the stylesheet, so the attribute comes off.
@@ -49,7 +53,7 @@ const stopFoot = +(1 - stopTop).toFixed(4);
 const size = !word ? 0 : word.length > 12 ? 80 : 96;
 ---
 
-<span class:list={['ca', className]} aria-hidden="true">
+<span class:list={['ca', tone === 'emerald' && 'tone-emerald', className]} aria-hidden="true">
   <svg class="ca__svg" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
