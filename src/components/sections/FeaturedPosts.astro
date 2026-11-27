@@ -2,7 +2,7 @@
 /**
  * FeaturedPosts
  *
- * Up to three posts from the blog on the homepage, as cards beside each
+ * Up to four posts from the blog on the homepage, as cards beside each
  * other: date, title, line, and a "Read the post" cue that turns violet on
  * hover. Which posts: those marked `featured: true` in their frontmatter
  * first, newest first, then the newest of the rest. A post marked
@@ -17,8 +17,8 @@ import PillButton from '@/components/site/PillButton.astro';
 import PostCard from '@/components/blog/PostCard.astro';
 
 interface Props {
-  /** How many posts to show: one, two or three. */
-  count?: 1 | 2 | 3;
+  /** How many posts to show: one to four. */
+  count?: 1 | 2 | 3 | 4;
 }
 
 const { count = 3 } = Astro.props;
@@ -51,6 +51,7 @@ const shown = [...featured, ...posts.filter((post) => !post.data.featured)]
             'posts m-0 mt-14 list-none p-0 max-[800px]:mt-10',
             shown.length === 1 && 'posts--single',
             shown.length === 3 && 'posts--three',
+            shown.length === 4 && 'posts--four',
           ]}
         >
           {shown.map((post, i) => (
@@ -97,6 +98,18 @@ const shown = [...featured, ...posts.filter((post) => !post.data.featured)]
   @media (max-width: 900px) {
     .posts--three {
       grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  /* Four cards across the full width, in line with the project grid above
+     (Hans's choice); two by two from tablet landscape down, one on a phone. */
+  .posts--four {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  @media (max-width: 1179px) {
+    .posts--four {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 

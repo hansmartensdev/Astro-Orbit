@@ -36,8 +36,9 @@ import siteConfig from '@/config/site.config';
       with `released`) is parked off the homepage for now, to use elsewhere
       later. */
   }
-  {/* Three posts: those marked featured: true first, then the newest. */}
-  <FeaturedPosts />
+  {/* Four posts across the full width: those marked featured: true first,
+      then the newest. */}
+  <FeaturedPosts count={4} />
   {
     /* The founder section (@/components/sections/Founder.astro) is parked
       off the homepage for now; it runs on /about. */
