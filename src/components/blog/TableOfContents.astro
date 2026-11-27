@@ -261,8 +261,8 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
 
       // The collapsed card folds before the jump, or the open panel above the
       // target makes the landing short. Caught on the window in the capture
-      // phase, ahead of the site's smooth-scroll handler on the document, so
-      // the scroll is measured against the folded layout.
+      // phase, so the scroll is measured against the folded layout. The
+      // heading's scroll-margin-top (global.css) keeps it clear of the nav.
       if (toc.tagName === 'DETAILS') {
         window.addEventListener(
           'click',
@@ -276,10 +276,7 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
               const target = document.getElementById(slug);
               if (!target) return;
               history.pushState(null, '', `#${slug}`);
-              const lenis = window.__lenis;
-              const nav = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sw-nav-h'));
-              if (lenis) lenis.scrollTo(target, { offset: -((nav || 84) + 24) });
-              else target.scrollIntoView();
+              target.scrollIntoView();
             });
           },
           true
