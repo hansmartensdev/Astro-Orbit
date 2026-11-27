@@ -16,5 +16,6 @@ challenge: "Astro Rocket is my free, open-source Astro theme. It didn't begin as
 solution: "**The colour system.** Astro Rocket has 8 colour themes on a token-based colour system. Change the default colour and the whole site follows: the favicon, drawn from your settings with the first letter of your site name, the logo, the blog cover images and every component. A theme selector in the header lets visitors and you switch between all 8 themes and watch the site change live, without opening a file.\n\n**Everything a site needs.** 44 designed, accessible components. Project pages with an image gallery or a video. Search with Pagefind, which runs in the browser with no server. Comments with Giscus, Cusdis or Artalk, off by default. A multi-language setup with a route for every page, which grew because users raised issues and pushed it forward.\n\n**The blog is the documentation.** 25 how-to posts, from getting started to every feature, so someone new to the theme learns to make it their own by reading.\n\n**On astro.build.** I submitted Astro Rocket to the official Astro themes directory, where it went through their review and was accepted. Developers anywhere can find it where they would look for a theme."
 technologies: ["Astro", "TypeScript", "Tailwind CSS", "Pagefind"]
 order: 3
+nextLayout: split
 featured: true
 ---

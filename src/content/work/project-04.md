@@ -13,5 +13,6 @@ challenge: "Placeholder: what the client needed, and why it mattered to them."
 solution: "Placeholder: what you built, the decisions you made, and the result."
 technologies: ["Astro", "TypeScript"]
 order: 4
+nextLayout: split
 featured: true
 ---
