@@ -25,10 +25,11 @@ import siteConfig from '@/config/site.config';
       statement card (StatementCard.astro). */}
   <Reel />
   {
-    /* Six lands on a row boundary: the full-width lead over two rows, then the
-      first five of the pattern over three. Any of 1, 6 or 11 tiles cleanly. */
+    /* Four lands on a row boundary: the full-width lead over two rows, then
+      the pattern's first segment (a large card beside two standard ones)
+      over two more. Project five and six stay on /projects. */
   }
-  <WorkGrid count={6} deliverLead />
+  <WorkGrid count={4} deliverLead />
   {/* What I do: the four stacked cards (config/services.config.ts; show: false removes them). */}
   {services.show && <Services />}
   {/* Astro Orbit, the newest theme, out now. Above the blog, so it has its
