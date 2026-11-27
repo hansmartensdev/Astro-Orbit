@@ -1,0 +1,475 @@
+---
+/**
+ * ProjectView
+ *
+ * What the invited person sees on /workspace (and Hans too, to check it):
+ * what Hans needs from them, where the project stands, Hans's notes and
+ * their messages with a box to write one, and the links. The sections take
+ * turns on the two grounds, as on the rest of the site.
+ */
+import { Icon } from 'astro-icon/components';
+import Textarea from '@/components/ui/form/Textarea/Textarea.astro';
+import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
+import Thread from '@/components/workspace/Thread.astro';
+import SignedIn from '@/components/workspace/SignedIn.astro';
+import type { Entry, Project } from '@/lib/workspace/model';
+
+interface Props {
+  project: Project;
+  thread: Entry[];
+  viewer: 'admin' | 'member';
+  email: string;
+  /** Set after a message was sent. */
+  sent?: boolean;
+}
+
+const { project, thread, viewer, email, sent = false } = Astro.props;
+const open = project.needs.filter((need) => !need.done);
+const done = project.needs.filter((need) => need.done);
+const needs = [...open, ...done];
+const doneSteps = project.steps.filter((step) => step.state === 'done').length;
+---
+
+<SignedIn email={email} link={viewer === 'admin' ? { href: '/workspace/admin', label: 'Edit the workspace' } : undefined} />
+
+{
+  needs.length > 0 && (
+    <section class="wsv wsv--alt" aria-labelledby="ws-needs">
+      <div class="shell">
+        <div class="wsv__head">
+          <h2 class="label-mono wsv__label" id="ws-needs">WHAT I NEED FROM YOU</h2>
+          {open.length > 0 && <span class="wsv__count">{open.length} open</span>}
+        </div>
+        <ul class="need">
+          {needs.map((need) => (
+            <li class:list={['need__item', need.done && 'is-done']}>
+              <Icon name={need.done ? 'lucide:check' : 'lucide:circle'} class="need__mark" aria-hidden="true" />
+              <div>
+                <h3 class="need__title">
+                  {need.title}
+                  {need.done && <span class="sr-only"> (done)</span>}
+                </h3>
+                {need.detail && <p class="need__detail">{need.detail}</p>}
+              </div>
+              <span class="label-mono need__due">{need.done ? 'DONE' : need.due ? `BY ${need.due.toUpperCase()}` : ''}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}
+
+{
+  project.steps.length > 0 && (
+    <section class="wsv" aria-labelledby="ws-steps">
+      <div class="shell">
+        <h2 class="label-mono wsv__label" id="ws-steps">WHERE THINGS STAND</h2>
+        <ol class="steps" style={`--n: ${project.steps.length}; --done: ${doneSteps}`}>
+          {project.steps.map((step) => (
+            <li class:list={['steps__item', `is-${step.state}`]}>
+              <Icon
+                name={step.state === 'done' ? 'lucide:check' : step.state === 'now' ? 'lucide:circle-dot' : 'lucide:circle'}
+                class="steps__mark"
+                aria-hidden="true"
+              />
+              <span class="steps__name">{step.name}</span>
+              <span class="label-mono steps__date">
+                {step.state === 'done' ? 'DONE' : step.state === 'now' ? 'NOW' : 'NEXT'}
+                {step.date && ` · ${step.date.toUpperCase()}`}
+              </span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  )
+}
+
+<section class="wsv wsv--alt" aria-labelledby="ws-thread" id="thread">
+  <div class:list={['shell', project.links.length > 0 && 'wsv__split']}>
+    <div>
+      <h2 class="label-mono wsv__label" id="ws-thread">NOTES AND MESSAGES</h2>
+      {
+        viewer === 'member' && (
+          <form method="post" data-astro-reload class="wsv__form">
+            <input type="hidden" name="do" value="message" />
+            <Textarea
+              label="Leave a message for Hans"
+              name="message"
+              rows={4}
+              required
+              maxlength={4000}
+              placeholder="A question, an answer, or something you sent."
+            />
+            <ArrowFillButton type="submit" icon="lucide:send">Send message</ArrowFillButton>
+            {sent && <p class="wsv__sent" role="status">Sent. Hans gets an email about it.</p>}
+          </form>
+        )
+      }
+      <div class="wsv__thread">
+        <Thread entries={thread} viewer={viewer} member={project.member} />
+      </div>
+    </div>
+    {
+      project.links.length > 0 && (
+        <div>
+          <h2 class="label-mono wsv__label">LINKS</h2>
+          <ul class="links">
+            {project.links.map((link) => (
+              <li>
+                <a href={link.url} target="_blank" rel="noopener noreferrer">
+                  <Icon name="lucide:external-link" aria-hidden="true" />
+                  <span>
+                    <strong>{link.label}</strong>
+                    {link.note && <small>{link.note}</small>}
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<div class="me shell">
+  <span>Signed in as <strong>{email}</strong></span>
+  <span class="me__actions">
+    {viewer === 'admin' && <a class="me__btn" href="/workspace/admin">Edit the workspace</a>}
+    <form method="post" data-astro-reload action="/workspace/signout">
+      <button type="submit" class="me__btn">
+        <Icon name="lucide:log-out" aria-hidden="true" />
+        Sign out
+      </button>
+    </form>
+  </span>
+</div>
+
+<style>
+  .wsv {
+    padding-block: clamp(64px, 8vw, 112px);
+    background: var(--background);
+    color: var(--foreground);
+  }
+
+  .wsv--alt {
+    background: var(--background-secondary);
+  }
+
+  .wsv__label {
+    display: block;
+    margin: 0;
+    font-size: inherit;
+    font-weight: inherit;
+    color: var(--foreground-muted);
+  }
+
+  .wsv__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+  }
+
+  .wsv__count {
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: var(--orbit-fill);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  /* What I need from you */
+  .need {
+    display: grid;
+    gap: 12px;
+    margin: 28px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .need__item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 18px;
+    align-items: start;
+    padding: 22px 26px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: var(--background-elevated);
+  }
+
+  .need__item.is-done {
+    background: transparent;
+  }
+
+  .need__item :global(.need__mark) {
+    width: 24px;
+    height: 24px;
+    margin-top: 1px;
+    color: var(--hero-accent);
+  }
+
+  :global(.dark) .need__item :global(.need__mark) {
+    color: var(--orbit-on-dark);
+  }
+
+  .need__title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
+  .is-done .need__title {
+    color: var(--foreground-muted);
+    text-decoration: line-through;
+    text-decoration-thickness: 1.5px;
+  }
+
+  .need__detail {
+    margin: 6px 0 0;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--foreground-secondary);
+    white-space: pre-wrap;
+  }
+
+  .need__due {
+    padding-top: 4px;
+    white-space: nowrap;
+    color: var(--foreground-muted);
+  }
+
+  /* Where things stand */
+  .steps {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+    margin: 36px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .steps::before,
+  .steps::after {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 11px;
+    height: 2px;
+  }
+
+  .steps::before {
+    right: calc(100% / var(--n) - 12px);
+    background: var(--border-strong);
+  }
+
+  .steps::after {
+    width: calc(100% / var(--n) * var(--done));
+    background: var(--orbit-fill);
+  }
+
+  .steps__item {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 6px;
+    padding-right: 12px;
+  }
+
+  .steps__item :global(.steps__mark) {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--background);
+    color: var(--foreground-muted);
+  }
+
+  .is-done :global(.steps__mark) {
+    padding: 4px;
+    background: var(--orbit-fill);
+    color: #fff;
+  }
+
+  .is-now :global(.steps__mark) {
+    color: var(--hero-accent);
+  }
+
+  :global(.dark) .is-now :global(.steps__mark) {
+    color: var(--orbit-on-dark);
+  }
+
+  .steps__name {
+    margin-top: 10px;
+    font-family: var(--font-display);
+    font-weight: var(--display-weight);
+    text-transform: var(--display-case);
+    letter-spacing: var(--display-tracking);
+    font-size: clamp(1.4rem, 2.2vw, 2rem);
+    line-height: 1;
+  }
+
+  .is-next .steps__name {
+    color: var(--foreground-muted);
+  }
+
+  .steps__date {
+    color: var(--foreground-muted);
+  }
+
+  /* Notes and messages, links */
+  .wsv__split {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 64px;
+  }
+
+  .wsv__form {
+    display: grid;
+    gap: 16px;
+    justify-items: start;
+    margin-top: 24px;
+  }
+
+  .wsv__form > :global(div) {
+    width: 100%;
+  }
+
+  .wsv__sent {
+    margin: 0;
+    font-size: 15px;
+    color: var(--foreground-secondary);
+  }
+
+  .wsv__thread {
+    margin-top: 28px;
+  }
+
+  .links {
+    display: grid;
+    gap: 12px;
+    margin: 24px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .links a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 20px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--background-elevated);
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .links a:hover {
+    border-color: var(--border-strong);
+  }
+
+  .links a:focus-visible {
+    outline: 2px solid var(--hero-accent, var(--orbit-600));
+    outline-offset: 3px;
+  }
+
+  .links :global(svg) {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    color: var(--hero-accent);
+  }
+
+  :global(.dark) .links :global(svg) {
+    color: var(--orbit-on-dark);
+  }
+
+  .links small {
+    display: block;
+    margin-top: 2px;
+    font-size: 14px;
+    color: var(--foreground-muted);
+  }
+
+  /* Signed in as … */
+  .me {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-block: 28px 40px;
+    font-size: 15px;
+    color: var(--foreground-secondary);
+  }
+
+  .me__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .me__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: none;
+    color: var(--foreground);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .me__btn :global(svg) {
+    width: 16px;
+    height: 16px;
+  }
+
+  @media (max-width: 800px) {
+    .need__item {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .need__due {
+      grid-column: 2;
+      padding-top: 0;
+    }
+
+    .steps {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 22px;
+    }
+
+    .steps::before,
+    .steps::after {
+      display: none;
+    }
+
+    .steps__item {
+      grid-template-columns: 24px minmax(0, 1fr);
+      column-gap: 14px;
+    }
+
+    .steps__name {
+      margin-top: 0;
+    }
+
+    .steps__date {
+      grid-column: 2;
+    }
+
+    .wsv__split {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 48px;
+    }
+  }
+</style>
