@@ -1,11 +1,9 @@
 /**
  * Project page hero: the picture's arrival.
  *
- * The label, title and line arrive through [data-reveal] (reveal.ts). The
- * picture arrives the way the homepage hero's panel does (hero.ts): on a
- * wide screen, where it is a card under the title, it rises from slightly
- * below and smaller; on a phone, where it fills the hero, it fades in and
- * settles from slightly larger. Its glow follows. The motion itself is CSS
+ * The picture is the only thing in the hero that moves: the label, title
+ * and line stand still. It is unveiled from the bottom up while it settles
+ * from slightly larger, and its glow follows. The motion itself is CSS
  * (`.case__hero.is-in` in the project page's styles); this script only
  * decides when, by adding `.is-in` once the picture has loaded, so the
  * arrival never plays over an empty frame. A slow picture is not waited on
