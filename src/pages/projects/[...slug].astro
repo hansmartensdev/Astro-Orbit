@@ -167,6 +167,9 @@ const extrasInBand = bands.length > 0;
 // The written case study under the bands, only when the project has one.
 const hasBody = Boolean(project.body?.trim());
 const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
+// A small copy of that picture: blurred, it tints the text card and glows
+// behind the preview, so 480px is plenty.
+const nextGlow = nextImage ? await getImage({ src: nextImage, width: 480, format: 'webp', quality: 60 }) : null;
 ---
 
 <SiteLayout
@@ -419,7 +422,10 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
       next && (
         <a class="nextup" href={'/projects/' + next.id} data-card>
           <div class="nextup__inner shell">
+            {nextGlow && <img class="nextup__glow" src={nextGlow.src} alt="" aria-hidden="true" decoding="async" loading="lazy" />}
             <div class="nextup__text" data-reveal>
+              {nextGlow && <img class="nextup__tint" src={nextGlow.src} alt="" aria-hidden="true" decoding="async" loading="lazy" />}
+              <span class="nextup__shade" aria-hidden="true"></span>
               <span class="label-mono nextup__label">NEXT PROJECT</span>
               <span class="nextup__title" style={`--len: ${next.data.title.length}`}>
                 {next.data.title}
@@ -785,10 +791,11 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
   }
 
   /* --- next project -----------------------------------------------------
-     Light, on the page ground, so it stands apart from the ink footer
-     below: the next project's label, title, line and a violet button on
-     the left, a preview card of it on the right (its picture, or the
-     violet glow when it has none yet). */
+     On the page ground, so it stands apart from the ink footer below: on
+     the left a dark card with the next project's label, title, line and a
+     violet button, tinted with that project's picture; on the right a
+     preview card of it (its picture, or the violet glow when it has none
+     yet), with the picture's colours glowing behind it (Hans's choice). */
   .nextup {
     display: block;
     padding-block: clamp(64px, 8vw, 112px);
@@ -798,14 +805,70 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
   }
 
   .nextup__inner {
+    position: relative;
+    isolation: isolate;
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
     gap: clamp(32px, 5vw, 72px);
-    align-items: center;
+    align-items: stretch;
+  }
+
+  /* The text card: ink in both modes, so it reads the same on the light and
+     the dark page, with the next project's picture blurred into it. The
+     title is sized to the card's width (container units), so a long name
+     stays inside it. */
+  .nextup__text {
+    container-type: inline-size;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: clamp(36px, 4vw, 64px);
+    border: 1px solid rgb(238 242 244 / 0.08);
+    border-radius: 24px;
+    background: var(--ink-950);
+    color: var(--ice-100);
+  }
+
+  .nextup__tint {
+    position: absolute;
+    z-index: -2;
+    inset: -20%;
+    width: 140%;
+    height: 140%;
+    object-fit: cover;
+    filter: blur(80px) saturate(1.3);
+    opacity: 0.55;
+  }
+
+  .nextup__shade {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background: linear-gradient(135deg, rgb(10 10 12 / 0.35), rgb(10 10 12 / 0.78));
+  }
+
+  /* The preview's colours, blurred, behind it: in the preview's grid cell,
+     outside the preview, so its hover zoom stays inside its corners. */
+  .nextup__glow {
+    grid-column: 2;
+    grid-row: 1;
+    z-index: -1;
+    align-self: center;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    transform: translateY(6%) scale(0.92);
+    filter: blur(70px) saturate(1.4);
+    opacity: 0.6;
+    pointer-events: none;
   }
 
   .nextup__label {
-    color: var(--color-foreground-muted);
+    color: rgb(238 242 244 / 0.72);
   }
 
   .nextup__title {
@@ -814,7 +877,7 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
     font-family: var(--font-display);
     font-weight: var(--display-weight);
     text-transform: var(--display-case);
-    font-size: min(6vw, 88px, calc((50vw - 96px) / (var(--len, 10) * 0.52)));
+    font-size: min(6vw, 88px, calc(100cqi / (var(--len, 10) * 0.52)));
     line-height: 1;
     letter-spacing: var(--display-tracking);
   }
@@ -825,7 +888,7 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
     margin-top: 18px;
     font-size: 18px;
     line-height: 1.55;
-    color: var(--color-foreground-secondary);
+    color: rgb(238 242 244 / 0.84);
   }
 
   .nextup__go {
@@ -858,6 +921,9 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
 
   .nextup__preview {
     position: relative;
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
     aspect-ratio: 16 / 10;
     overflow: hidden;
     border-radius: 18px;
@@ -867,7 +933,6 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
       color-mix(in srgb, var(--orbit-600) 55%, transparent),
       color-mix(in srgb, var(--orbit-600) 0%, transparent) 55%
     );
-    box-shadow: 0 30px 60px -36px rgb(12 16 22 / 0.45);
   }
 
   .nextup__img {
@@ -897,12 +962,19 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
       grid-template-columns: minmax(0, 1fr);
     }
 
-    .nextup__preview {
-      order: -1;
+    /* One column: the preview and its glow first, the card under them. */
+    .nextup__preview,
+    .nextup__glow {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .nextup__text {
+      grid-row: 2;
     }
 
     .nextup__title {
-      font-size: min(13vw, calc((100vw - 48px) / (var(--len, 10) * 0.52)));
+      font-size: min(13vw, calc(100cqi / (var(--len, 10) * 0.52)));
     }
   }
 
