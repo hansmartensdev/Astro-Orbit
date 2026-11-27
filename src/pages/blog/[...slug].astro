@@ -26,6 +26,7 @@ const readingTime = Math.max(1, Math.round((post.body ?? '').split(/\s+/).filter
   publishedAt={post.data.publishedAt}
   updatedAt={post.data.updatedAt}
   author={post.data.author}
+  category={post.data.category}
   image={post.data.image}
   imageAlt={post.data.imageAlt}
   cover={coverPath(post.id.replace(/^en\//, ''))}
