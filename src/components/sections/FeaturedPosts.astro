@@ -82,8 +82,13 @@ const shown = [...featured, ...posts.filter((post) => !post.data.featured)]
     grid-template-columns: minmax(0, 1fr);
   }
 
+  /* Three cards at the related posts' width (BlogLayout: max-w-6xl less its
+     px-6 padding), centred: on the full width the cards, and the icon and
+     word in their pictures, grew a quarter larger than everywhere else. */
   .posts--three {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    max-width: calc(72rem - 48px);
+    margin-inline: auto;
   }
 
   /* Two or three posts use the compact card, as the related posts under a
