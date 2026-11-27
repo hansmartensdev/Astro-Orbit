@@ -88,7 +88,15 @@ const facts = project
   : steps;
 ---
 
-<SiteLayout title="Workspace" description="The workspace for the people Hans builds a project with." noindex navOverMedia>
+{/* Signed out the page ends on the second ground (the panel), so the
+    footer takes the darker one; the project view ends on the page ground. */}
+<SiteLayout
+  title="Workspace"
+  description="The workspace for the people Hans builds a project with."
+  noindex
+  navOverMedia
+  footerDeep={!(who && project)}
+>
   {
     who && project ? (
       <>
