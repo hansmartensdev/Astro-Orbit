@@ -158,7 +158,9 @@
 
   html {
     font-family: var(--font-sans);
-    /* The page scrolls natively, with no smoothing: a #link jumps. */
+    /* No scroll-behavior: smooth here. Inertial scrolling is Lenis
+       (src/scripts/smooth-scroll.ts); native smooth scrolling on top of it
+       double-eases every anchor jump. */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     /* The scrollbar's gutter is reserved whether or not the page can scroll,
