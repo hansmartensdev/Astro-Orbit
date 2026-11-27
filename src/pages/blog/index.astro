@@ -3,15 +3,16 @@
  * Blog index
  * URL: /blog
  *
- * The listing is an editorial list rather than Velocity's card grid — the
- * identity is built on big type and hairline rules, not cards.
+ * In the style of the other pages (Hans's choice): the shared cinema hero
+ * (site/CinemaHero.astro), then the posts as cards, four in a row on a
+ * wide screen as on the homepage, on the second ground, with the category
+ * filter and the search above them, and the sign-off.
  */
 import SiteLayout from '@/layouts/SiteLayout.astro';
-import SectionHead from '@/components/sections/SectionHead.astro';
+import CinemaHero from '@/components/site/CinemaHero.astro';
+import PostCard from '@/components/blog/PostCard.astro';
 import Cta from '@/components/sections/Cta.astro';
 import { getCollection } from 'astro:content';
-import { formatDate } from '@/lib/utils';
-import PostCover from '@/components/blog/PostCover.astro';
 import { Icon } from 'astro-icon/components';
 
 const posts = (
@@ -29,128 +30,92 @@ const categories = CATEGORY_ORDER.filter((category) =>
   posts.some((post) => post.data.category === category)
 );
 const slug = (category: string) => category.toLowerCase();
+
+const latest = posts[0];
+const facts = [
+  { label: 'Posts', value: String(posts.length) },
+  categories.length ? { label: 'Categories', value: categories.join(', ') } : null,
+  latest ? { label: 'Latest', value: latest.data.title, href: postUrl(latest.id) } : null,
+  { label: 'Follow', value: 'RSS feed', href: '/rss.xml' },
+].filter((fact) => fact !== null);
 ---
 
 <SiteLayout
   title="Blog"
   description="Notes on Astro, web performance and building fast websites, by Hans Martens."
+  navOverMedia
 >
-  <header class="shell pt-[180px] max-[800px]:pt-[130px]">
-    <SectionHead
-      as="h1"
-      title="Blog"
-      blurb="Notes on Astro, web performance and building fast websites: what I'm working on, and what I learn along the way."
-    />
-    {
-      /* Searching the blog, on the right under the blurb. The search field
-        is Pagefind's, hidden until the index is confirmed present, so it
-        never shows up broken in `astro dev`. */
-    }
-    <div class="blog-tools" data-reveal>
-      <form class="blog-search" id="lab-search" role="search" action="/blog/" hidden>
-        <label class="sr-only" for="lab-search-input">Search the blog</label>
-        <Icon name="lucide:search" class="blog-search__icon" aria-hidden="true" />
-        <input
-          id="lab-search-input"
-          class="blog-search__input"
-          type="search"
-          name="q"
-          autocomplete="off"
-          enterkeyhint="search"
-          placeholder="Search the blog"
-        />
+  <CinemaHero
+    label="BLOG"
+    title="Blog"
+    description="Notes on Astro, web performance and building fast websites: what I'm working on, and what I learn along the way."
+    facts={facts}
+    factsLabel="The blog in short"
+    icon="pen-line"
+  />
+
+  <section class="blog">
+    <div class="shell">
+      {/* The category filter on the left, the search on the right. The
+          search field is Pagefind's, hidden until the index is confirmed
+          present, so it never shows up broken in `astro dev`. */}
+      <div class="blog-tools" data-reveal>
         {
-          /* Results already follow the typing; the button runs the same
-            search and, on a phone, puts the keyboard away. */
+          categories.length > 0 && (
+            <div class="blog-cats" id="blog-cats" role="group" aria-label="Filter by category">
+              <button type="button" class="blog-cat" data-cat="" aria-pressed="true">
+                All
+              </button>
+              {categories.map((category) => (
+                <button type="button" class="blog-cat" data-cat={slug(category)} aria-pressed="false">
+                  {category}
+                </button>
+              ))}
+            </div>
+          )
         }
-        <button class="blog-search__button" type="submit">Search</button>
-      </form>
-    </div>
-  </header>
+        <form class="blog-search" id="lab-search" role="search" action="/blog/" hidden>
+          <label class="sr-only" for="lab-search-input">Search the blog</label>
+          <Icon name="lucide:search" class="blog-search__icon" aria-hidden="true" />
+          <input
+            id="lab-search-input"
+            class="blog-search__input"
+            type="search"
+            name="q"
+            autocomplete="off"
+            enterkeyhint="search"
+            placeholder="Search the blog"
+          />
+          {/* Results already follow the typing; the button runs the same
+              search and, on a phone, puts the keyboard away. */}
+          <button class="blog-search__button" type="submit">Search</button>
+        </form>
+      </div>
 
-  <section class="shell mt-14 max-[800px]:mt-10">
-    {
-      categories.length > 0 && (
-        <div
-          class="blog-cats"
-          id="blog-cats"
-          role="group"
-          aria-label="Filter by category"
-          data-reveal
-        >
-          <button type="button" class="blog-cat" data-cat="" aria-pressed="true">
-            All
-          </button>
-          {categories.map((category) => (
-            <button type="button" class="blog-cat" data-cat={slug(category)} aria-pressed="false">
-              {category}
-            </button>
-          ))}
-        </div>
-      )
-    }
+      <ul class="m-0 list-none p-0" id="lab-results" hidden></ul>
 
-    <ul class="m-0 list-none p-0" id="lab-results" hidden></ul>
-
-    <ul class="m-0 list-none p-0" id="lab-list">
-      {
-        posts.map((post) => (
-          <li
-            class="border-border border-t last:border-b"
-            data-reveal
-            data-cat={post.data.category ? slug(post.data.category) : ''}
-          >
-            <a
-              class="group grid grid-cols-[minmax(0,1fr)_minmax(0,360px)] items-center gap-12 py-10 max-[800px]:grid-cols-1 max-[800px]:gap-6 max-[800px]:py-7"
-              href={postUrl(post.id)}
-              data-card
+      {/* Four in a row on a wide screen, two on a tablet, one on a phone:
+          the homepage's blog cards. */}
+      <ul class="blog-grid" id="lab-list">
+        {
+          posts.map((post, i) => (
+            <li
+              data-reveal
+              data-reveal-delay={(i % 4) * 0.08}
+              data-cat={post.data.category ? slug(post.data.category) : ''}
             >
-              <div class="max-[800px]:order-2">
-                <span class="label-mono text-foreground-muted">
-                  {formatDate(post.data.publishedAt).toUpperCase()}
-                </span>
+              <PostCard post={post} as="h2" compact />
+            </li>
+          ))
+        }
+      </ul>
 
-                <h2 class="font-display mt-4 mb-0 text-[clamp(1.75rem,4.4vw,3.25rem)] leading-[1.05] font-semibold tracking-[var(--display-tracking)] [text-transform:var(--display-case)]">
-                  {post.data.title}
-                </h2>
-
-                <p class="text-foreground-secondary mt-4 mb-0 max-w-[620px] text-[17px] leading-[1.55]">
-                  {post.data.description}
-                </p>
-
-                {post.data.tags.length > 0 && (
-                  <div class="mt-5 flex flex-wrap gap-2">
-                    {post.data.tags.map((tag) => (
-                      <span class="border-border rounded-full border px-3.5 py-1.5 text-[13px] font-medium">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-              {/* The post's image beside the text (above it on a phone): its
-                  own, or its card art. Decorative. */}
-              <PostCover
-                class="border-border w-full rounded-[12px] border max-[800px]:order-1"
-                src={post.data.image?.src}
-                art={{
-                  slug: post.id.replace(/^en\//, ''),
-                  icon: post.data.icon,
-                  tags: post.data.tags,
-                  word: post.data.cardWord,
-                }}
-              />
-            </a>
-          </li>
-        ))
+      {
+        posts.length === 0 && (
+          <p class="text-foreground-secondary py-10 text-[17px]">Nothing published yet.</p>
+        )
       }
-    </ul>
-
-    {
-      posts.length === 0 && (
-        <p class="text-foreground-secondary py-10 text-[17px]">Nothing published yet.</p>
-      )
-    }
+    </div>
   </section>
 
   <Cta />
@@ -298,7 +263,6 @@ const slug = (category: string) => category.toLowerCase();
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    margin-bottom: 28px;
   }
 
   .blog-cat {
@@ -332,13 +296,35 @@ const slug = (category: string) => category.toLowerCase();
     outline-offset: 3px;
   }
 
-  /* Every visible post keeps a rule above it and the last one below it. */
+  /* The posts on the second ground: the zebra of the other pages. */
+  .blog {
+    padding-block: clamp(56px, 7vw, 96px) clamp(88px, 11vw, 140px);
+    background: var(--background-secondary);
+  }
+
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 40px 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
   :global(#lab-list > li[hidden]) {
     display: none;
   }
 
-  :global(#lab-list > li.is-last) {
-    border-bottom-width: 1px;
+  @media (max-width: 1179px) {
+    .blog-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 800px) {
+    .blog-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
   }
 
   /* Search hits, marked in the brand violet rather than the browser's
@@ -354,9 +340,9 @@ const slug = (category: string) => category.toLowerCase();
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
     gap: 20px 32px;
-    margin-top: 28px;
+    margin-bottom: clamp(32px, 4vw, 48px);
   }
 
   .blog-search {
