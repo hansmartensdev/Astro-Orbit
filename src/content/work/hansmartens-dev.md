@@ -1,6 +1,7 @@
 ---
 title: "hansmartens.dev"
 discipline: "Personal site"
+services: ["Design", "Astro development"]
 description: "Portfolio, blog, developer's website."
 year: 2026
 feature: "../../assets/work/hansmartens-dev/laptop-card.webp"

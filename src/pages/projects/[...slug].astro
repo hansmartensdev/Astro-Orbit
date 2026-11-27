@@ -99,7 +99,8 @@ const {
 
 // Only the facts that were actually filled in get a slot.
 const facts = [
-  client ? { label: 'Client', value: client } : null,
+  // My own projects have no client: they are for the Astro community.
+  { label: 'Client', value: client || 'The Astro Community' },
   year ? { label: 'Year', value: String(year) } : null,
   { label: 'Discipline', value: discipline },
   services.length ? { label: 'Services', value: services.join(', ') } : null,

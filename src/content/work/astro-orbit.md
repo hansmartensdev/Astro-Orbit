@@ -1,6 +1,7 @@
 ---
 title: "Astro Orbit"
 discipline: "Astro theme"
+services: ["Design", "Astro development"]
 description: "A free portfolio and blog theme for Astro. A 3D droplet leaves the hero as you scroll and becomes the first project card. Change one settings file to make it yours."
 year: 2026
 url: "https://orbit.hansmartens.dev"

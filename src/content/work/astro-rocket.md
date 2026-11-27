@@ -1,6 +1,7 @@
 ---
 title: "Astro Rocket"
 discipline: "Astro theme"
+services: ["Design", "Astro development"]
 description: "A free, MIT-licensed Astro 7 theme with 44 components and 8 colour themes, listed on Astro's official theme directory."
 year: 2026
 url: "https://astrorocket.dev"
