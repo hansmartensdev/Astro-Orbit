@@ -113,6 +113,9 @@ const picture = pageHero ?? feature ?? cover;
 // heroImage: false leaves the hero without a picture (title on ink); the
 // project still has one for the card, the share preview and the index.
 const hero = heroImage ? picture : undefined;
+// A small copy of the hero picture for the glow under it on desktop: blurred
+// to a wash of the picture's colours, so 480px is plenty.
+const heroGlow = hero ? await getImage({ src: hero, width: 480, format: 'webp', quality: 60 }) : null;
 // The phone version of the hero picture, if the project has one: composed
 // for a narrow screen, shown whole at the top of the hero on phones.
 const heroMobileSrc = pageHeroMobile ?? featureMobile;
@@ -211,6 +214,7 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
       }
 
       <div class="case__hero-scrim"></div>
+      {heroGlow && <img class="case__hero-glow" src={heroGlow.src} alt="" aria-hidden="true" decoding="async" />}
 
       <div class="case__hero-body shell">
         <div class="case__eyebrow" data-reveal>
@@ -457,6 +461,11 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
 
   .case__hero-picture {
     display: contents;
+  }
+
+  /* The picture's colours, blurred, under the stage on desktop (below). */
+  .case__hero-glow {
+    display: none;
   }
 
   .case__hero {
@@ -999,47 +1008,86 @@ const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
 
   }
 
-  /* Desktop, laptop and tablet landscape: the text on the left, the picture
-     on the right as a rounded card, both on one screen (Hans's choice). The
-     full-bleed picture with the type laid over it put the laptop under the
-     nav and let the title run into it on a short screen. */
+  /* Desktop, laptop and tablet landscape: the title and its line side by side
+     at the top, the picture below them as a wide stage (Hans's choice). The
+     laptop in the picture is about twice the size it had in a card beside
+     the text, and the picture's colours glow into the ink around it, so the
+     hero isn't a small card on a black page. */
   @media (min-width: 801px) and (orientation: landscape), (min-width: 1101px) {
     .case__hero:has(.case__hero-picture) {
       display: grid;
-      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-      align-items: center;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-rows: auto auto;
+      align-content: center;
       column-gap: clamp(32px, 4vw, 64px);
+      row-gap: clamp(28px, 4vh, 48px);
       min-height: 100svh;
       padding: calc(var(--sw-nav-h, 72px) + 24px) var(--gutter) 48px;
     }
 
-    .case__hero:has(.case__hero-picture) .case__hero-img {
-      position: relative;
-      inset: auto;
-      z-index: 0;
-      grid-column: 2;
-      grid-row: 1;
-      height: auto;
-      aspect-ratio: 16 / 10;
-      border-radius: var(--radius-xl);
-    }
-
     .case__hero:has(.case__hero-picture) .case__hero-body {
-      grid-column: 1;
+      display: grid;
+      grid-template-columns: subgrid;
+      grid-column: 1 / -1;
       grid-row: 1;
+      align-items: end;
       width: auto;
       max-width: none;
       margin: 0;
       padding: 0;
     }
 
-    /* The title fits its column: about 0.52em per character. */
+    .case__hero:has(.case__hero-picture) .case__eyebrow {
+      grid-column: 1;
+      grid-row: 1;
+      margin-bottom: 18px;
+    }
+
+    /* The title fits its half of the row: about 0.52em per character. */
     .case__hero:has(.case__hero-picture) .case__title {
-      font-size: min(6.4vw, 100px, calc((40vw - 48px) / (var(--len, 10) * 0.52)));
+      grid-column: 1;
+      grid-row: 2;
+      margin: 0;
+      font-size: min(7vw, 112px, calc((50vw - 96px) / (var(--len, 10) * 0.52)));
     }
 
     .case__hero:has(.case__hero-picture) .case__lede {
-      font-size: clamp(1rem, 1.25vw, 1.25rem);
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      align-self: end;
+      max-width: 34ch;
+      margin: 0 0 8px;
+      font-size: 19px;
+      line-height: 1.55;
+    }
+
+    /* The picture's top: in the project pictures the laptop sits in the
+       upper part, so a 21:9 crop loses only gradient at the bottom. */
+    .case__hero:has(.case__hero-picture) .case__hero-img {
+      position: relative;
+      inset: auto;
+      z-index: 0;
+      grid-column: 1 / -1;
+      grid-row: 2;
+      height: auto;
+      aspect-ratio: 21 / 9;
+      object-position: 50% 0%;
+      border-radius: var(--radius-xl);
+      box-shadow: 0 40px 120px -30px rgb(0 0 0 / 0.8);
+    }
+
+    .case__hero:has(.case__hero-picture) .case__hero-glow {
+      display: block;
+      position: absolute;
+      z-index: -1;
+      left: 10%;
+      bottom: 0;
+      width: 80%;
+      height: 55%;
+      object-fit: cover;
+      filter: blur(110px) saturate(1.4);
+      opacity: 0.5;
+      pointer-events: none;
     }
 
     .case__hero:has(.case__hero-picture) .case__hero-scrim,
