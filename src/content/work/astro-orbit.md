@@ -42,6 +42,7 @@ challenge: "Astro Orbit is a fork of my new website, [hansmartens.dev](/projects
 coverAlt: "The Astro Orbit demo homepage on a MacBook: the 3D droplet above the headline, on a violet ground"
 technologies: ["Astro", "TypeScript", "Tailwind CSS", "three.js"]
 order: 2
+nextLayout: split
 featured: true
 draft: false
 ---

@@ -30,5 +30,6 @@ sections:
     text: "I wanted a new Astro website, and I chose violet as the brand colour, because I thought it would look great on the 3D droplet that comes out of the hero. To match that prominent element on the homepage, I gave other elements the same violet.\n\nThis website uses three fonts, which work together as one style.\n\n**Outfit** is used for the headings and the large titles. It's a geometric sans-serif designed by Rodrigo Fuenzalida. It works well at a large size, and it looks perfect together with the 3D animation in the hero.\n\n**Archivo** is used for the running text, the buttons and the menu. It's a grotesque sans-serif from Omnibus-Type. It's easy to read, and it pairs well with Outfit.\n\n**IBM Plex Mono** is used for the small labels, such as dates and section names. It's the monospaced member of IBM's Plex family. It fits this combination and style, and it looks good in capitals, which is how the labels are set.\n\nAll three are free, open-source fonts. The website serves them itself, so loading a page doesn't contact a font service such as Google Fonts."
 technologies: ["Astro", "TypeScript", "Tailwind CSS", "three.js"]
 order: 1
+nextLayout: split
 featured: true
 ---
