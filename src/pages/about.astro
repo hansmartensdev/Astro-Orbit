@@ -82,7 +82,18 @@ const work = (
         {
           timeline.map((item, i) => (
             <li data-reveal data-reveal-delay={(i % 3) * 0.08}>
-              <span class="ab-tl__year">{item.year}</span>
+              {/* A year counts up when it scrolls into view (the script
+                  below); screen readers get the year itself. */}
+              <span class="ab-tl__year">
+                {/^\d+$/.test(item.year) ? (
+                  <>
+                    <span aria-hidden="true" data-count={item.year}>{item.year}</span>
+                    <span class="sr-only">{item.year}</span>
+                  </>
+                ) : (
+                  item.year
+                )}
+              </span>
               <p>{item.text}</p>
             </li>
           ))
@@ -204,6 +215,7 @@ const work = (
 
   .ab-tl__year {
     display: block;
+    font-variant-numeric: tabular-nums;
     font-family: var(--font-display);
     font-weight: var(--display-weight);
     font-size: clamp(3.4rem, 6vw, 6rem);
@@ -401,3 +413,51 @@ const work = (
     }
   }
 </style>
+
+<script>
+  /* The years in the timeline count up from 0 when they scroll into view,
+     fast at first and slowing into the year (an ease-out), each once. The
+     page holds the years themselves, so without the script, or under
+     reduced motion, they simply show. */
+  const DURATION = 1400;
+
+  function initCount() {
+    const els = [...document.querySelectorAll<HTMLElement>('[data-count]')].filter(
+      (el) => !el.dataset.counted
+    );
+    if (!els.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const run = (el: HTMLElement) => {
+      const end = Number(el.dataset.count);
+      const start = performance.now();
+      const tick = (now: number) => {
+        const t = Math.min((now - start) / DURATION, 1);
+        const eased = 1 - Math.pow(1 - t, 4);
+        el.textContent = String(Math.round(end * eased));
+        if (t < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          const el = entry.target as HTMLElement;
+          io.unobserve(el);
+          run(el);
+        }
+      },
+      { rootMargin: '0px 0px -15% 0px' }
+    );
+
+    for (const el of els) {
+      el.dataset.counted = 'true';
+      el.textContent = '0';
+      io.observe(el);
+    }
+  }
+
+  initCount();
+  document.addEventListener('astro:after-swap', initCount);
+</script>
