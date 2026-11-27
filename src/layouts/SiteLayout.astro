@@ -37,6 +37,9 @@ interface Props {
   navProgress?: boolean;
   /** The whole page sits on ink, so the frosted bar must frost to ink too. */
   navTone?: 'dark';
+  /** The page's last section is on the second ground, which in dark mode
+   *  is the footer's grey: the footer takes the darker ground instead. */
+  footerDeep?: boolean;
 }
 
 const {
@@ -52,6 +55,7 @@ const {
   navOverMedia = false,
   navProgress = false,
   navTone,
+  footerDeep = false,
 } = Astro.props;
 
 // Dev-only display-font switcher, rendered below.
@@ -74,7 +78,7 @@ const showFontSwitcher = import.meta.env.DEV;
 >
   <Nav slot="header" context={navContext} overMedia={navOverMedia} tone={navTone} progress={navProgress} />
   <slot />
-  <Footer slot="footer" />
+  <Footer slot="footer" deep={footerDeep} />
   <BackToTop slot="footer" />
   {showFontSwitcher && <FontSwitcher slot="footer" />}
 </BaseLayout>

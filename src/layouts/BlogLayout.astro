@@ -172,7 +172,9 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
     )
   }
 
-  <Footer slot="footer" />
+  {/* The related posts sit on the second ground: the footer takes the
+      darker one in dark mode, to keep the zebra. */}
+  <Footer slot="footer" deep={tags.length > 0} />
   <BackToTop slot="footer" />
 </BaseLayout>
 
