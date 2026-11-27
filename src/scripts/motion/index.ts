@@ -16,7 +16,6 @@
 import { initReveal } from './reveal';
 import { initHero } from './hero';
 import { initWork } from './work';
-import { initFlow } from './flow';
 import { initCase } from './case';
 
 const reducedQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -26,7 +25,7 @@ let teardown: VoidFunction[] = [];
 function setup() {
   document.documentElement.classList.add('js');
   const reduced = reducedQuery.matches;
-  teardown = [initReveal(reduced), initHero(reduced), initWork(reduced), initFlow(reduced), initCase(reduced)];
+  teardown = [initReveal(reduced), initHero(reduced), initWork(reduced), initCase(reduced)];
 }
 
 function cleanup() {

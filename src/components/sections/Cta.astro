@@ -12,6 +12,11 @@
  * type has to negotiate with.
  *
  * "Start a conversation" goes to the contact page.
+ *
+ * The headline's two lines rise out of their masks one after the other,
+ * then the line and the buttons fade in, each as it is reached: a reveal on
+ * the whole tall block fired while only its empty top padding showed, so it
+ * was over before the headline came in.
  */
 import siteConfig from '@/config/site.config';
 import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
@@ -23,22 +28,25 @@ import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
   </div>
 
   <div
-    data-reveal
     class="shell relative flex flex-col items-center pt-[130px] pb-[130px] max-[800px]:pt-[100px] max-[800px]:pb-[100px]"
   >
     <h2 class="cta__title display-section m-0 text-center">
-      <span class="block">Let&rsquo;s talk</span>
-      <span class="block"><em>Astro.</em></span>
+      <span class="rv-mask"><span class="block" data-reveal="rise">Let&rsquo;s talk</span></span>
+      <span class="rv-mask"
+        ><span class="block" data-reveal="rise" data-reveal-delay="0.1"><em>Astro.</em></span
+      ></span>
     </h2>
 
     <p
       class="text-foreground-secondary m-0 mt-6 max-w-[440px] text-center text-[18px] leading-[1.55] max-[800px]:mt-5 max-[800px]:text-base"
+      data-reveal
+      data-reveal-delay="0.25"
     >
       A question about Astro, one of my themes or a blog post? I read and answer every message
       myself.
     </p>
 
-    <div class="mt-10 flex flex-wrap justify-center gap-[18px] max-[800px]:mt-8">
+    <div class="mt-10 flex flex-wrap justify-center gap-[18px] max-[800px]:mt-8" data-reveal data-reveal-delay="0.35">
       <ArrowFillButton href="/contact" icon="fa6-solid:envelope"
         >Start a conversation</ArrowFillButton
       >

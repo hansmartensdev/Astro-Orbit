@@ -1,31 +1,23 @@
 /**
  * [data-reveal]: arrivals for any element, on any page.
  *
- * The motion itself is CSS (southwell.css, "Reveals"): one ease-out curve,
- * cubic-bezier(0.16, 1, 0.3, 1), no spring and no bounce. The opacity
- * settles in 0.8s while the movement glides on for 1.1s, so an element
- * arrives rather than appears. This script only decides *when*, by adding
- * `.is-in`. The same system as Astro Rocket's.
+ * The motion itself is CSS (southwell.css, "Reveals"): a short fade with
+ * 16px of rise, on one ease-out curve, cubic-bezier(0.16, 1, 0.3, 1), no
+ * spring and no bounce. This script only decides *when*, by adding `.is-in`.
+ * Page titles and running text don't move.
  *
- *   data-reveal            the element rises 64px and fades in, as one unit.
+ *   data-reveal            the element rises 16px and fades in, as one unit.
  *                          Put it on the card, not on the things inside it.
  *   data-reveal="rise"     masked rise: slides up from 112% inside a parent
  *                          that clips (.rv-mask)
- *   data-reveal="lift"     rises 64px without fading, for a page's main
- *                          heading: it paints at once, so it still counts
- *                          as the first thing on screen
+ *   data-reveal="lift"     a page's main heading: shown at once, it
+ *                          doesn't move
  *   data-reveal-load       arrives with the first wave on load wherever it
  *                          sits, not when scrolled to: for what belongs to
  *                          the top of the page even where it falls low on a
  *                          tall phone (a post's breadcrumbs and contents)
  *   data-reveal-delay      seconds to hold after entering view, for a row
  *                          of cards that should arrive one after another
- *   data-reveal-content    on a block of running text (a post, a case
- *                          study): each paragraph, heading, list and picture
- *                          in it arrives on its own as it is reached. A list
- *                          taller than half the screen hands over to its
- *                          items, or the last of them would have arrived
- *                          long before the reader got there.
  *
  * On load, what is already on screen arrives as one wave in document order,
  * 80ms apart. Everything else arrives once it is 15% in view (tall elements
@@ -38,22 +30,6 @@ const WAVE_STEP = 80;
 
 export function initReveal(reduced: boolean): VoidFunction {
   const elements = [...document.querySelectorAll<HTMLElement>('[data-reveal]:not(.is-in)')];
-  for (const container of document.querySelectorAll<HTMLElement>('[data-reveal-content]')) {
-    for (const child of container.children as HTMLCollectionOf<HTMLElement>) {
-      if (child.classList.contains('is-in')) continue;
-      if (
-        (child.tagName === 'UL' || child.tagName === 'OL') &&
-        child.children.length > 2 &&
-        child.getBoundingClientRect().height > window.innerHeight * 0.5
-      ) {
-        child.setAttribute('data-reveal-items', '');
-        child.classList.add('is-in');
-        elements.push(...(child.children as HTMLCollectionOf<HTMLElement>));
-      } else {
-        elements.push(child);
-      }
-    }
-  }
 
   if (reduced) {
     for (const el of elements) el.classList.add('is-in');
@@ -133,10 +109,10 @@ export function initReveal(reduced: boolean): VoidFunction {
   window.addEventListener('scroll', atEnd, { passive: true });
 
   // A jump to a heading (the table of contents, a #link) is measured while
-  // the text above it still waits 56px low, and would land short. Everything
+  // blocks above it still wait 16px low, and would land short. Everything
   // up to the target arrives in place first, without moving, so the scroll
   // is measured against the finished page. Window capture runs ahead of the
-  // smooth-scroll handler and the table of contents' own.
+  // table of contents' own handler.
   const jumpTo = (id: string) => {
     const target = id ? document.getElementById(id) : null;
     if (!target) return;
