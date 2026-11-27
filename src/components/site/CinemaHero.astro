@@ -9,7 +9,9 @@
  * the facts run along the bottom in a strip of frosted glass.
  *
  * The shading over the picture is the page ground, so light mode gets a
- * light hero with dark type and dark mode an ink one with light type.
+ * light hero with dark type and dark mode an ink one with light type. The
+ * top stays dark violet, and every page with this hero sets the nav over
+ * it in white until the page scrolls (navOverMedia / overMedia).
  * Phones and tablets held upright: the picture at the top, fading out, and
  * the title, the line and the facts under it.
  *
@@ -49,6 +51,9 @@ interface Props {
   imageAlt?: string;
   /** A long title (a blog post's) is set smaller so it keeps to a few lines. */
   fit?: boolean;
+  /** A lower hero, so what comes under it shows on the first screen
+   *  (the contact page's form). */
+  short?: boolean;
 }
 
 const {
@@ -63,6 +68,7 @@ const {
   image,
   imageAlt,
   fit = false,
+  short = false,
 } = Astro.props;
 
 // Drawn inline from Lucide's data with thin lines, as on the covers.
@@ -80,7 +86,7 @@ const parts =
     : [title, '', ''];
 ---
 
-<header class:list={['cin', fit && 'cin--fit', longLink && 'cin--long']} data-cinema>
+<header class:list={['cin', fit && 'cin--fit', short && 'cin--short', longLink && 'cin--long']} data-cinema>
   <div class:list={['cin__picture', image && 'cin__picture--photo']} data-cinema-picture>
     {
       image ? (
@@ -165,6 +171,28 @@ const parts =
     background: var(--background);
   }
 
+  .cin--short {
+    min-height: 62svh;
+  }
+
+  /* In the lower hero the text takes most of the height: no room for the
+     icon above it on desktop (a phone shows it above the text), and the
+     shading reaches further up. */
+  .cin--short .cin__icon {
+    display: none;
+  }
+
+  .cin--short .cin__scrim {
+    background:
+      linear-gradient(
+        to top,
+        color-mix(in srgb, var(--background) 96%, transparent) 0%,
+        color-mix(in srgb, var(--background) 78%, transparent) 45%,
+        transparent 88%
+      ),
+      linear-gradient(to bottom, rgb(20 8 48 / 0.35), transparent 22%);
+  }
+
   /* The violet grid: the violet of the blog covers, darker at its foot,
      with the grid over it, as on the newsletter card. */
   .cin__picture {
@@ -223,7 +251,9 @@ const parts =
   }
 
   /* The page ground rises over the picture's foot, so the type reads in
-     either mode, and a little at the top for the nav. */
+     either mode. At the top a darker violet, so the nav's white letters
+     and icons read over it in light mode too (navOverMedia, Hans's choice
+     for people who need the contrast). */
   .cin__scrim {
     position: absolute;
     inset: 0;
@@ -235,7 +265,7 @@ const parts =
         color-mix(in srgb, var(--background) 62%, transparent) 30%,
         transparent 62%
       ),
-      linear-gradient(to bottom, color-mix(in srgb, var(--background) 55%, transparent), transparent 22%);
+      linear-gradient(to bottom, rgb(20 8 48 / 0.35), transparent 22%);
   }
 
   .cin__body {
@@ -349,6 +379,16 @@ const parts =
     .cin__icon {
       top: 52%;
       width: min(32vw, 24svh);
+    }
+
+    .cin--short .cin__picture {
+      height: 40svh;
+    }
+
+    .cin--short .cin__icon {
+      display: block;
+      top: 52%;
+      width: min(24vw, 16svh);
     }
 
     .cin__mark {
