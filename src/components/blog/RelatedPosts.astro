@@ -40,7 +40,7 @@ const relatedPosts = allPosts
 
 {
   relatedPosts.length > 0 && (
-    <section class="related">
+    <section class:list={['related', relatedPosts.length === 4 && 'related--four']}>
       <h2 class="related__title">Related posts</h2>
       <ul class:list={['related__list', `related__list--${relatedPosts.length}`]}>
         {relatedPosts.map((post, i) => (
@@ -57,6 +57,30 @@ const relatedPosts = allPosts
   .related {
     padding-top: clamp(56px, 7vw, 96px);
     border-top: 1px solid var(--color-border);
+  }
+
+  /* Up to three: the width of the post's column (max-w-6xl less its
+     padding), centred, as the cards have always had. Four: the page's full
+     width, in line with the homepage's four blog cards (Hans's choice). */
+  .related:not(.related--four) {
+    max-width: calc(72rem - 48px);
+    margin-inline: auto;
+  }
+
+  .related--four .related__list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  @media (max-width: 1179px) {
+    .related--four .related__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 800px) {
+    .related--four .related__list {
+      grid-template-columns: minmax(0, 1fr);
+    }
   }
 
   .related__title {
