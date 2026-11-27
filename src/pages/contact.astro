@@ -96,7 +96,8 @@ const channels = [
     color: var(--foreground-muted);
   }
 
-  /* The violet glow behind the card: the brand colour, blurred. */
+  /* The violet glow behind the card: the brand colour, blurred. Softer in
+     dark mode, where it showed stronger (Hans's choice). */
   .ct__stage {
     position: relative;
     isolation: isolate;
@@ -115,7 +116,7 @@ const channels = [
   }
 
   :global(.dark) .ct__stage::before {
-    opacity: 0.45;
+    opacity: 0.24;
   }
 
   .ct__card {
