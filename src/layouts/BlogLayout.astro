@@ -78,7 +78,8 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
     tags,
   }}
 >
-  <Nav slot="header" />
+  {/* White over the violet hero until the page scrolls. */}
+  <Nav slot="header" overMedia />
 
   <!-- Article Hero -->
   <ArticleHero
