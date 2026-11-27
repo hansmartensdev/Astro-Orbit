@@ -4,19 +4,19 @@
  * URL: /about (was /studio; the old address redirects, see astro.config.mjs)
  *
  * In the style of the project and blog pages (Hans's choice): the shared
- * cinema hero (site/CinemaHero.astro) with the hm/ mark, then sections
- * that take turns on the page ground and the second ground. The facts come
- * from the earlier About page and Hans's post "Hi, I'm Hans Martens".
+ * cinema hero (site/CinemaHero.astro) with Hans's photo (Hans's own,
+ * assets/about/hans-martens.jpg), then sections that take turns on the
+ * page ground and the second ground. The facts come from the earlier About
+ * page and Hans's post "Hi, I'm Hans Martens".
  *
- * The About card (sections/Founder.astro) is parked, not deleted. His photo
- * comes later, from a photographer: it would take the mark's place in the
- * hero.
+ * The About card (sections/Founder.astro) is parked, not deleted.
  */
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
 import SiteLayout from '@/layouts/SiteLayout.astro';
 import CinemaHero from '@/components/site/CinemaHero.astro';
+import portrait from '@/assets/about/hans-martens.jpg';
 import StackMarquee from '@/components/sections/StackMarquee.astro';
 import Cta from '@/components/sections/Cta.astro';
 
@@ -70,7 +70,9 @@ const work = (
     description="I'm Hans Martens, an Astro developer in Veghel, the Netherlands. I design and build my own websites and free Astro themes."
     facts={facts}
     factsLabel="About me in short"
-    mark="hm/"
+    image={portrait}
+    imageAlt="Hans Martens in a green field under a blue sky with white clouds"
+    imagePosition="50% 30%"
   />
 
   {/* --- the years ------------------------------------------------------- */}
