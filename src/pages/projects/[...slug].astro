@@ -238,21 +238,21 @@ const nextGlow = nextImage ? await getImage({ src: nextImage, width: 480, format
         Scroll
         <span class="case__scroll-line"></span>
       </span>
+      {/* --- facts: along the foot of the hero, over the picture on desktop */}
+      <div class="case__ledger" role="group" aria-label="Project details">
+        <dl class="case__ledger-inner shell">
+          {
+            facts.map((fact, i) => (
+              <div class="case__fact" data-reveal data-reveal-delay={i * 0.08}>
+                <dt class="label-mono">{fact.label.toUpperCase()}</dt>
+                <dd>{fact.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
     </header>
 
-    {/* --- facts: a thin ledger closing off the hero -------------------- */}
-    <section class="case__ledger" aria-label="Project details">
-      <dl class="case__ledger-inner shell">
-        {
-          facts.map((fact, i) => (
-            <div class="case__fact" data-reveal data-reveal-delay={i * 0.08}>
-              <dt class="label-mono">{fact.label.toUpperCase()}</dt>
-              <dd>{fact.value}</dd>
-            </div>
-          ))
-        }
-      </dl>
-    </section>
 
     {/* --- alternating bands -------------------------------------------- */}
     {
@@ -478,7 +478,8 @@ const nextGlow = nextImage ? await getImage({ src: nextImage, width: 480, format
   .case__hero {
     position: relative;
     display: flex;
-    align-items: flex-end;
+    flex-direction: column;
+    justify-content: flex-end;
     min-height: 100svh;
     overflow: hidden;
     background: var(--ink-950);
@@ -538,6 +539,7 @@ const nextGlow = nextImage ? await getImage({ src: nextImage, width: 480, format
   }
 
   .case__hero-body {
+    width: 100%;
     padding-bottom: 88px;
     color: var(--ice-100);
   }
@@ -599,6 +601,7 @@ const nextGlow = nextImage ? await getImage({ src: nextImage, width: 480, format
   /* --- ledger ---------------------------------------------------------- */
 
   .case__ledger {
+    width: 100%;
     background: var(--ink-950);
     color: var(--ice-100);
     border-top: 1px solid rgb(238 242 244 / 0.14);
@@ -1120,94 +1123,76 @@ const nextGlow = nextImage ? await getImage({ src: nextImage, width: 480, format
 
   }
 
-  /* Desktop, laptop and tablet landscape: the title and its line side by side
-     at the top, the picture below them as a wide stage (Hans's choice). The
-     laptop in the picture is about twice the size it had in a card beside
-     the text, and the picture's colours glow into the ink around it, so the
-     hero isn't a small card on a black page. */
+  /* Desktop and landscape tablets: the cinema (Hans's choice). The picture
+     fills the whole hero, edge to edge; the title sits large at the bottom
+     left over a dark gradient, the line beside it on the right, and the
+     facts run along the foot in a strip of frosted glass. The unveil opens
+     the whole picture from the bottom up. */
   @media (min-width: 801px) and (orientation: landscape), (min-width: 1101px) {
-    /* A card under the title: the unveil keeps its rounded corners. */
-    .case__hero:has(.case__hero-picture) .case__hero-img {
-      --hero-clip-radius: var(--radius-xl);
+    .case__hero:has(.case__hero-picture) {
+      padding-top: calc(var(--sw-nav-h, 72px) + 24px);
     }
 
-    .case__hero:has(.case__hero-picture) {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      grid-template-rows: auto auto;
-      align-content: center;
-      column-gap: clamp(32px, 4vw, 64px);
-      row-gap: clamp(28px, 4vh, 48px);
-      min-height: 100svh;
-      padding: calc(var(--sw-nav-h, 72px) + 24px) var(--gutter) 48px;
+    /* In the project pictures the laptop sits in the upper part. */
+    .case__hero:has(.case__hero-picture) .case__hero-img {
+      object-position: 50% 35%;
+    }
+
+    .case__hero:has(.case__hero-picture) .case__hero-scrim {
+      background:
+        linear-gradient(to top, rgb(10 10 12 / 0.94) 0%, rgb(10 10 12 / 0.6) 30%, rgb(10 10 12 / 0) 62%),
+        linear-gradient(to bottom, rgb(10 10 12 / 0.55), rgb(10 10 12 / 0) 22%);
     }
 
     .case__hero:has(.case__hero-picture) .case__hero-body {
       display: grid;
-      grid-template-columns: subgrid;
-      grid-column: 1 / -1;
-      grid-row: 1;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 36ch);
       align-items: end;
-      width: auto;
-      max-width: none;
-      margin: 0;
-      padding: 0;
+      column-gap: 48px;
+      padding-bottom: 48px;
     }
 
     .case__hero:has(.case__hero-picture) .case__eyebrow {
       grid-column: 1;
       grid-row: 1;
-      margin-bottom: 18px;
+      margin-bottom: 14px;
     }
 
-    /* The title fits its half of the row: about 0.52em per character. */
+    /* The title fits its column: about 0.52em per character. */
     .case__hero:has(.case__hero-picture) .case__title {
       grid-column: 1;
       grid-row: 2;
       margin: 0;
-      font-size: min(7vw, 112px, calc((50vw - 96px) / (var(--len, 10) * 0.52)));
+      font-size: min(9vw, 144px, calc((100vw - 96px - 36ch - 48px) / (var(--len, 10) * 0.52)));
+      line-height: 0.9;
     }
 
     .case__hero:has(.case__hero-picture) .case__lede {
       grid-column: 2;
       grid-row: 1 / span 2;
       align-self: end;
-      max-width: 34ch;
-      margin: 0 0 8px;
+      max-width: 36ch;
+      margin: 0 0 10px;
       font-size: 19px;
       line-height: 1.55;
+      color: rgb(238 242 244 / 0.88);
     }
 
-    /* The picture's top: in the project pictures the laptop sits in the
-       upper part, so a 21:9 crop loses only gradient at the bottom. */
-    .case__hero:has(.case__hero-picture) .case__hero-img {
-      position: relative;
-      inset: auto;
-      z-index: 0;
-      grid-column: 1 / -1;
-      grid-row: 2;
-      height: auto;
-      aspect-ratio: 21 / 9;
-      object-position: 50% 0%;
-      border-radius: var(--radius-xl);
-      box-shadow: 0 40px 120px -30px rgb(0 0 0 / 0.8);
+    /* The facts over the foot of the picture, in frosted glass. */
+    .case__hero:has(.case__hero-picture) .case__ledger {
+      background: rgb(10 10 12 / 0.45);
+      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px);
     }
 
-    .case__hero:has(.case__hero-picture) .case__hero-glow {
-      display: block;
-      position: absolute;
-      z-index: -1;
-      left: 10%;
-      bottom: 0;
-      width: 80%;
-      height: 55%;
-      object-fit: cover;
-      filter: blur(110px) saturate(1.4);
-      opacity: 0.5;
-      pointer-events: none;
+    .case__hero:has(.case__hero-picture) .case__ledger-inner {
+      padding-block: 26px 30px;
     }
 
-    .case__hero:has(.case__hero-picture) .case__hero-scrim,
+    .case__hero:has(.case__hero-picture) .case__fact dt {
+      color: rgb(238 242 244 / 0.7);
+    }
+
     .case__hero:has(.case__hero-picture) .case__scroll {
       display: none;
     }
