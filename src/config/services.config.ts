@@ -23,7 +23,8 @@ export interface ServiceCard {
 }
 
 export const services = {
-  show: true,
+  // Off the homepage for now (Hans's choice); true puts the cards back.
+  show: false,
   title: 'What I do',
   blurb:
     'I design, build, optimise and maintain websites with Astro — not as a business, but because it’s what I love to do.',
