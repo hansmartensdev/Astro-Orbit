@@ -3,7 +3,7 @@
  * StatementCard
  *
  * The dark card the droplet blooms into on the homepage (Reel.astro): a label,
- * one statement set big, and a signature row. Every word of the statement is
+ * one statement set big, and a button to the About page. Every word of the statement is
  * its own span with an index, and lights up from dim to full as
  * `--reel-read` (0..1, written on the section by the reel engine) climbs —
  * first word to last, in step with the scroll. Without the engine the
@@ -12,7 +12,7 @@
  * Sized in container units, so whatever box it fills (the engine's fixed
  * overlay, or the static frame) must be a size container.
  */
-import siteConfig from '@/config/site.config';
+import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
 
 interface Props {
   /** Paint the card's own ink ground and corners. Off when the WebGL frame
@@ -53,18 +53,11 @@ const words = phrases.flatMap((phrase) =>
     </p>
   </blockquote>
 
-  <figcaption class="stmt__foot">
-    <span class="stmt__who">
-      {/* PLACEHOLDER: the monogram stands in for a round portrait of Hans. */}
-      <span class="stmt__avatar" aria-hidden="true">{siteConfig.mark}</span>
-      <span class="stmt__id">
-        <span class="stmt__name">{siteConfig.name}</span>
-        <span class="stmt__role">Design and code, for the love of it</span>
-      </span>
-    </span>
-    <span class="stmt__meta label-mono">Astro developer · Veghel, NL</span>
-    <a class="stmt__more" href="/about">More about me <span aria-hidden="true">→</span></a>
-  </figcaption>
+  {/* The way on to the About page, as a button so it is seen (Hans's
+      choice): it replaced the signature row of name, role and place. */}
+  <div class="stmt__foot">
+    <ArrowFillButton href="/about" class="stmt__button">More about me</ArrowFillButton>
+  </div>
 </figure>
 
 <style>
@@ -120,81 +113,21 @@ const words = phrases.flatMap((phrase) =>
 
   .stmt__foot {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
-    justify-content: space-between;
-    gap: 14px 32px;
-    font-family: var(--font-sans);
   }
 
-  .stmt__who {
-    display: inline-flex;
-    align-items: center;
-    gap: 14px;
-  }
-
-  .stmt__avatar {
-    display: inline-grid;
-    place-items: center;
-    width: clamp(40px, 8cqh, 56px);
-    height: clamp(40px, 8cqh, 56px);
-    flex: none;
-    border: 2px solid var(--statement-accent, var(--orbit-500));
-    border-radius: 50%;
-    background: var(--ink-800);
-    font-family: var(--font-display);
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: -0.04em;
-  }
-
-  .stmt__id {
-    display: grid;
-    gap: 2px;
-    line-height: 1.25;
-  }
-
-  .stmt__name {
-    font-size: 16px;
-    font-weight: 500;
-  }
-
-  .stmt__role {
-    font-size: 14px;
-    color: rgb(238 242 244 / 0.62);
-  }
-
-  .stmt__meta {
-    color: rgb(238 242 244 / 0.5);
-  }
-
-  .stmt__more {
-    color: rgb(238 242 244 / 0.86);
-    font-size: 16px;
-    text-decoration: underline;
-    text-decoration-color: rgb(238 242 244 / 0.35);
-    text-underline-offset: 6px;
+  /* The site's arrow button, turned round for the ink card: a light pill
+     with a violet disc, which fills the pill violet on hover. The card's
+     overlay lets clicks through; the button takes them. */
+  .stmt .stmt__foot :global(.stmt__button) {
+    --afb-bg: var(--ice-100);
+    --afb-text: var(--ink-950);
+    --afb-fill-bg: var(--orbit-fill);
+    --afb-fill-text: #fff;
     pointer-events: auto;
-    transition:
-      color 0.25s ease,
-      text-decoration-color 0.25s ease;
   }
 
-  .stmt__more:hover {
-    color: #fff;
-    text-decoration-color: var(--statement-accent, var(--orbit-500));
-  }
-
-  .stmt__more:focus-visible {
-    outline: 2px solid var(--statement-accent, var(--orbit-500));
-    outline-offset: 4px;
-    border-radius: 2px;
-  }
-
-  /* A narrow card keeps the signature and the link; the meta line goes. */
-  @container (max-width: 560px) {
-    .stmt__meta {
-      display: none;
-    }
+  .stmt .stmt__foot :global(.stmt__button:focus-visible) {
+    outline-color: var(--statement-accent, var(--orbit-500));
   }
 </style>
