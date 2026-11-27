@@ -184,6 +184,10 @@ const work = defineCollection({
       parent: z.string().optional(),
       /** Lower sorts first — the homepage grid takes the first several. */
       order: z.number().default(99),
+      /** How the next project is shown at the foot of this project's page:
+       *  'split' (text left, picture right) or 'cinema' (its picture across
+       *  the width). Without it the two take turns in project order. */
+      nextLayout: z.enum(['split', 'cinema']).optional(),
       featured: z.boolean().default(false),
       draft: z.boolean().default(false),
     }),

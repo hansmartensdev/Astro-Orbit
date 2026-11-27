@@ -4,8 +4,9 @@
  * URL: /projects/<slug>
  *
  * Built as a run of full-bleed bands rather than a column of sections. The
- * page changes temperature as you move down it — ink, ice, ink — so the
- * chapters are felt before they are read.
+ * bands take turns on the page ground and the second ground, in light and in
+ * dark mode (a zebra, Hans's choice), so each new section shows where it
+ * starts. Light mode has no black grounds; only the footer stays ink.
  *
  * Each band's heading is sticky: it pins while that band's captures scroll past
  * it, then the next band pushes it out. That ties a caption to the pictures it
@@ -47,12 +48,17 @@ export async function getStaticPaths() {
       const after = [...ring.slice(from + 1), ...ring.slice(0, Math.max(from, 0))];
       const next =
         parent ?? after.find((candidate) => candidate !== project && hasPicture(candidate));
-      return { params: { slug: project.id }, props: { project, next } };
+      // Two designs for the next project take turns down the portfolio, so
+      // a reader going from one project to the next sees both: the split
+      // (Hans's first choice) and the cinema. `nextLayout` overrides it.
+      const nextLayout =
+        project.data.nextLayout ?? (Math.max(from, 0) % 2 === 0 ? 'split' : 'cinema');
+      return { params: { slug: project.id }, props: { project, next, nextLayout } };
     })
     .filter(({ props }) => !props.project.data.story);
 }
 
-const { project, next } = Astro.props;
+const { project, next, nextLayout } = Astro.props;
 
 // Band text is plain text, escaped, with **text** in bold and [text](url)
 // turned into a link:
@@ -128,8 +134,8 @@ const heroMobile = heroMobileSrc
       quality: 90,
     })
   : null;
-// The hero is ink with or without a picture, so the nav always reads light
-// over it (navOverMedia below).
+// The hero takes the page ground: light in light mode, ink in dark mode,
+// so the nav keeps its own colours over it.
 const shots = feature && cover ? [{ src: cover, alt: coverAlt ?? title }, ...gallery] : gallery;
 
 /* The written half of a case study, split across two bands. Most projects have
@@ -167,10 +173,19 @@ const hasBuild = technologies.length > 0 || features.length > 0;
 const extrasInBand = bands.length > 0;
 // The written case study under the bands, only when the project has one.
 const hasBody = Boolean(project.body?.trim());
+// The cinema fills the width, so it takes the next project's page hero,
+// which is shaped for a screen; the split's half fits the card picture.
+const nextWide = next ? (next.data.pageHero ?? next.data.feature ?? next.data.cover) : undefined;
 const nextImage = next ? (next.data.feature ?? next.data.cover) : undefined;
-// A small copy of that picture: blurred, it tints the text card and glows
-// behind the preview, so 480px is plenty.
-const nextGlow = nextImage ? await getImage({ src: nextImage, width: 480, format: 'webp', quality: 60 }) : null;
+// The cinema needs a picture; without one the split is used.
+const nextCinema = nextLayout === 'cinema' && Boolean(nextWide);
+
+// The zebra, counted back from the next project: that sits on the second
+// ground, so it stands apart from the sign-off under it, and the bands above
+// take turns from there. Without a next project the last band takes the
+// second ground instead.
+const toneOf = (i: number) =>
+  (bands.length - 1 - i + (next ? 0 : 1)) % 2 === 0 ? 'base' : 'alt';
 ---
 
 <SiteLayout
@@ -180,7 +195,6 @@ const nextGlow = nextImage ? await getImage({ src: nextImage, width: 480, format
   image={picture?.src}
   imageAlt={coverAlt ?? title}
   navContext={client ?? title}
-  navOverMedia
 >
   <article class="case">
     {/* --- hero: full-bleed, viewport tall, type over the picture -------- */}
@@ -212,7 +226,7 @@ const nextGlow = nextImage ? await getImage({ src: nextImage, width: 480, format
           <div class="case__hero-img case__hero-img--plain" />
         ) : (
           <div class="case__hero-img">
-            <Placeholder class="h-full w-full rounded-none" invert label={placeholder ?? title} />
+            <Placeholder class="h-full w-full rounded-none" label={placeholder ?? title} />
           </div>
         )
       }
@@ -230,34 +244,26 @@ const nextGlow = nextImage ? await getImage({ src: nextImage, width: 480, format
         <p class="case__lede">{description}</p>
       </div>
 
-      {
-        /* The homepage's indicator: the word over a line that pulses
-          (sw-scrollpulse), here in the light colours of the dark hero. */
-      }
-      <span class="case__scroll" aria-hidden="true">
-        Scroll
-        <span class="case__scroll-line"></span>
-      </span>
+      {/* --- facts: along the foot of the hero, over the picture on desktop */}
+      <div class="case__ledger" role="group" aria-label="Project details">
+        <dl class="case__ledger-inner shell">
+          {
+            facts.map((fact, i) => (
+              <div class="case__fact" data-reveal data-reveal-delay={i * 0.08}>
+                <dt class="label-mono">{fact.label.toUpperCase()}</dt>
+                <dd>{fact.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
     </header>
 
-    {/* --- facts: a thin ledger closing off the hero -------------------- */}
-    <section class="case__ledger" aria-label="Project details">
-      <dl class="case__ledger-inner shell">
-        {
-          facts.map((fact, i) => (
-            <div class="case__fact" data-reveal data-reveal-delay={i * 0.08}>
-              <dt class="label-mono">{fact.label.toUpperCase()}</dt>
-              <dd>{fact.value}</dd>
-            </div>
-          ))
-        }
-      </dl>
-    </section>
 
     {/* --- alternating bands -------------------------------------------- */}
     {
       bands.map((band, i) => (
-        <section class="band" data-tone={i % 2 === 0 ? 'ink' : 'ice'}>
+        <section class="band" data-tone={toneOf(i)}>
           <div class="band__inner shell">
             <div
               class:list={[
@@ -418,43 +424,71 @@ const nextGlow = nextImage ? await getImage({ src: nextImage, width: 480, format
       )
     }
 
-    {/* --- next project: the text and a preview of it, on the page ground */}
+    {/* --- next project: the split or the cinema, on the second ground ---- */}
     {
-      next && (
-        <a class="nextup" href={'/projects/' + next.id} data-card>
-          <div class="nextup__inner shell">
-            {nextGlow && <img class="nextup__glow" src={nextGlow.src} alt="" aria-hidden="true" decoding="async" loading="lazy" />}
-            <div class="nextup__text" data-reveal>
-              {nextGlow && <img class="nextup__tint" src={nextGlow.src} alt="" aria-hidden="true" decoding="async" loading="lazy" />}
-              <span class="nextup__shade" aria-hidden="true"></span>
+      next && !nextCinema && (
+        <a class="nextup nextup--split" href={'/projects/' + next.id} data-card>
+          <span class="nextup__text" data-reveal>
+            <span class="label-mono nextup__label">NEXT PROJECT</span>
+            <span class="nextup__title" style={`--len: ${next.data.title.length}`}>
+              {next.data.title}
+            </span>
+            <span class="nextup__line">{next.data.description}</span>
+            <span class="nextup__go">
+              View project
+              <Icon name="lucide:arrow-right" aria-hidden="true" />
+            </span>
+          </span>
+          <span class="nextup__pic">
+            {nextImage ? (
+              <Image
+                src={nextImage}
+                alt=""
+                layout="none"
+                widths={[640, 960, 1280, 1600, 2000]}
+                quality={90}
+                sizes="(max-width: 800px) 100vw, 50vw"
+                class="nextup__img"
+                loading="lazy"
+              />
+            ) : (
+              <span class="nextup__blank label-mono" aria-hidden="true">
+                {next.data.title}
+              </span>
+            )}
+          </span>
+        </a>
+      )
+    }
+    {
+      next && nextCinema && nextWide && (
+        <a class="nextup nextup--cinema" href={'/projects/' + next.id} data-card>
+          <Image
+            src={nextWide}
+            alt=""
+            layout="none"
+            widths={[768, 1280, 1920, 2560]}
+            quality={90}
+            sizes="100vw"
+            class="nextup__img"
+            loading="lazy"
+          />
+          <span class="nextup__scrim" aria-hidden="true"></span>
+          <span class="nextup__body shell" data-reveal>
+            <span class="nextup__head">
               <span class="label-mono nextup__label">NEXT PROJECT</span>
               <span class="nextup__title" style={`--len: ${next.data.title.length}`}>
                 {next.data.title}
               </span>
+            </span>
+            <span class="nextup__side">
               <span class="nextup__line">{next.data.description}</span>
-              <span class="nextup__go">
+              <span class="nextup__go nextup__go--plain">
                 View project
                 <Icon name="lucide:arrow-right" aria-hidden="true" />
               </span>
-            </div>
-            <div class="nextup__preview" data-reveal data-reveal-delay="0.1">
-              {nextImage ? (
-                <Image
-                  src={nextImage}
-                  alt=""
-                  layout="none"
-                  widths={[640, 960, 1280, 1600]}
-                  quality={90}
-                  sizes="(max-width: 900px) 100vw, 50vw"
-                  class="nextup__img"
-                />
-              ) : (
-                <span class="nextup__blank label-mono" aria-hidden="true">
-                  {next.data.title}
-                </span>
-              )}
-            </div>
-          </div>
+            </span>
+          </span>
         </a>
       )
     }
@@ -478,10 +512,11 @@ const nextGlow = nextImage ? await getImage({ src: nextImage, width: 480, format
   .case__hero {
     position: relative;
     display: flex;
-    align-items: flex-end;
+    flex-direction: column;
+    justify-content: flex-end;
     min-height: 100svh;
     overflow: hidden;
-    background: var(--ink-950);
+    background: var(--background);
     isolation: isolate;
   }
 
@@ -527,19 +562,27 @@ const nextGlow = nextImage ? await getImage({ src: nextImage, width: 480, format
   }
 
   /* Type sits on the picture, so the picture is made safe for type rather than
-     the type given a box to hide in. */
+     the type given a box to hide in. The shade is the page ground: light in
+     light mode with dark type, ink in dark mode with light type (Hans's
+     choice: no black grounds in light mode). */
   .case__hero-scrim {
     position: absolute;
     inset: 0;
     z-index: -1;
     background:
-      linear-gradient(to top, rgb(12 16 22 / 0.88) 0%, rgb(12 16 22 / 0.25) 46%, transparent 72%),
-      linear-gradient(to right, rgb(12 16 22 / 0.55), transparent 60%);
+      linear-gradient(
+        to top,
+        color-mix(in srgb, var(--background) 92%, transparent) 0%,
+        color-mix(in srgb, var(--background) 30%, transparent) 46%,
+        transparent 72%
+      ),
+      linear-gradient(to right, color-mix(in srgb, var(--background) 60%, transparent), transparent 60%);
   }
 
   .case__hero-body {
+    width: 100%;
     padding-bottom: 88px;
-    color: var(--ice-100);
+    color: var(--foreground);
   }
 
   .case__eyebrow {
@@ -547,12 +590,12 @@ const nextGlow = nextImage ? await getImage({ src: nextImage, width: 480, format
     flex-wrap: wrap;
     align-items: center;
     gap: 12px;
-    color: rgb(238 242 244 / 0.72);
+    color: var(--foreground-secondary);
   }
 
   .case__badge {
     padding: 6px 13px;
-    border: 1px solid rgb(238 242 244 / 0.28);
+    border: 1px solid var(--border-strong);
     border-radius: var(--radius-full);
   }
 
@@ -573,35 +616,17 @@ const nextGlow = nextImage ? await getImage({ src: nextImage, width: 480, format
     max-width: 46ch;
     font-size: clamp(1.0625rem, 1.5vw, 1.375rem);
     line-height: 1.5;
-    color: rgb(238 242 244 / 0.82);
+    color: var(--foreground-secondary);
   }
 
-  .case__scroll {
-    position: absolute;
-    right: var(--gutter);
-    bottom: 88px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: rgb(238 242 244 / 0.72);
-  }
-
-  .case__scroll-line {
-    display: block;
-    width: 1.5px;
-    height: 48px;
-    background: rgb(238 242 244 / 0.9);
-    animation: sw-scrollpulse 1.8s ease-in-out infinite;
-  }
 
   /* --- ledger ---------------------------------------------------------- */
 
   .case__ledger {
-    background: var(--ink-950);
-    color: var(--ice-100);
-    border-top: 1px solid rgb(238 242 244 / 0.14);
+    width: 100%;
+    background: var(--background);
+    color: var(--foreground);
+    border-top: 1px solid var(--border-strong);
   }
 
   .case__ledger-inner {
@@ -612,7 +637,7 @@ const nextGlow = nextImage ? await getImage({ src: nextImage, width: 480, format
   }
 
   .case__fact dt {
-    color: rgb(238 242 244 / 0.55);
+    color: var(--foreground-muted);
   }
 
   .case__fact dd {
@@ -627,21 +652,15 @@ const nextGlow = nextImage ? await getImage({ src: nextImage, width: 480, format
     padding-block: clamp(80px, 11vw, 160px);
   }
 
-  .band[data-tone='ink'] {
-    background: var(--ink-950);
-    color: var(--ice-100);
+  /* The zebra: the page ground and the second ground, in turn (toneOf). */
+  .band[data-tone='base'] {
+    background: var(--background);
+    color: var(--foreground);
   }
 
-  .band[data-tone='ice'] {
-    background: var(--color-background);
-    color: var(--color-foreground);
-  }
-
-  /* In dark mode the page itself is ink, so the light band would match the
-     dark one and the alternation would vanish: it lifts one step instead,
-     to the grey of the footer and the cards (Hans's choice). */
-  :global(.dark) .band[data-tone='ice'] {
-    background: var(--ink-900);
+  .band[data-tone='alt'] {
+    background: var(--background-secondary);
+    color: var(--foreground);
   }
 
   .band__inner {
@@ -688,11 +707,6 @@ const nextGlow = nextImage ? await getImage({ src: nextImage, width: 480, format
      picture instead of running into the page. */
   .band__shot--framed {
     border: 1px solid var(--color-border-strong);
-  }
-
-  /* On the dark band the border is a light line, or it would disappear. */
-  .band[data-tone='ink'] .band__shot--framed {
-    border-color: rgb(238 242 244 / 0.28);
   }
 
   /* A link in the band text: the text's own colour, underlined. */
@@ -745,14 +759,6 @@ const nextGlow = nextImage ? await getImage({ src: nextImage, width: 480, format
     margin-top: 40px;
     padding-top: 32px;
     border-top: 1px solid var(--color-border);
-  }
-
-  .band[data-tone='ink'] .band__extras {
-    border-top-color: rgb(238 242 244 / 0.14);
-  }
-
-  .band[data-tone='ink'] .case__chips li {
-    border-color: rgb(238 242 244 / 0.3);
   }
 
   /* --- build ----------------------------------------------------------- */
@@ -824,122 +830,51 @@ const nextGlow = nextImage ? await getImage({ src: nextImage, width: 480, format
   }
 
   /* --- next project -----------------------------------------------------
-     On the page ground, so it stands apart from the ink footer below: on
-     the left a dark card with the next project's label, title, line and a
-     violet button, tinted with that project's picture; on the right a
-     preview card of it (its picture, or the violet glow when it has none
-     yet), with the picture's colours glowing behind it (Hans's choice). */
+     Two designs on the second ground, taking turns down the portfolio
+     (Hans's choice): the split, with the text on the left and the next
+     project's picture filling the right half, and the cinema, with the
+     picture across the width and the title large at its foot. */
   .nextup {
     display: block;
-    padding-block: clamp(64px, 8vw, 112px);
-    border-top: 1px solid var(--color-border);
-    color: var(--color-foreground);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--background-secondary);
+    color: var(--foreground);
     text-decoration: none;
   }
 
-  .nextup__inner {
-    position: relative;
-    isolation: isolate;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-    gap: clamp(32px, 5vw, 72px);
-    align-items: stretch;
-  }
-
-  /* The text card: ink in both modes, so it reads the same on the light and
-     the dark page, with the next project's picture blurred into it. The
-     title is sized to the card's width (container units), so a long name
-     stays inside it. */
-  .nextup__text {
-    container-type: inline-size;
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    padding: clamp(36px, 4vw, 64px);
-    border: 1px solid rgb(238 242 244 / 0.08);
-    border-radius: 24px;
-    background: var(--ink-950);
-    color: var(--ice-100);
-  }
-
-  .nextup__tint {
-    position: absolute;
-    z-index: -2;
-    inset: -20%;
-    width: 140%;
-    height: 140%;
-    object-fit: cover;
-    filter: blur(80px) saturate(1.3);
-    opacity: 0.55;
-  }
-
-  .nextup__shade {
-    position: absolute;
-    z-index: -1;
-    inset: 0;
-    background: linear-gradient(135deg, rgb(10 10 12 / 0.35), rgb(10 10 12 / 0.78));
-  }
-
-  /* The preview's colours, blurred, behind it: in the preview's grid cell,
-     outside the preview, so its hover zoom stays inside its corners. */
-  .nextup__glow {
-    grid-column: 2;
-    grid-row: 1;
-    z-index: -1;
-    align-self: center;
-    width: 100%;
-    aspect-ratio: 16 / 10;
-    object-fit: cover;
-    transform: translateY(6%) scale(0.92);
-    filter: blur(70px) saturate(1.4);
-    opacity: 0.6;
-    pointer-events: none;
-    transition: opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
-  }
-
-  /* The glow waits for the preview it lights, and comes up behind it. */
-  :global(html.js) .nextup__inner:has(.nextup__preview:not(.is-in)) .nextup__glow {
-    opacity: 0;
-    transition: none;
+  .nextup:focus-visible {
+    outline: 2px solid var(--hero-accent, var(--orbit-600));
+    outline-offset: -6px;
   }
 
   .nextup__label {
-    color: rgb(238 242 244 / 0.72);
+    display: block;
+    color: var(--foreground-muted);
   }
 
   .nextup__title {
     display: block;
-    margin-top: 14px;
     font-family: var(--font-display);
     font-weight: var(--display-weight);
     text-transform: var(--display-case);
-    font-size: min(6vw, 88px, calc(100cqi / (var(--len, 10) * 0.52)));
-    line-height: 1;
     letter-spacing: var(--display-tracking);
+    line-height: 0.92;
   }
 
   .nextup__line {
     display: block;
-    max-width: 44ch;
-    margin-top: 18px;
+    max-width: 38ch;
     font-size: 18px;
     line-height: 1.55;
-    color: rgb(238 242 244 / 0.84);
+    color: var(--foreground-secondary);
   }
 
   .nextup__go {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    margin-top: 32px;
-    padding: 16px 28px;
-    border-radius: var(--radius-full);
-    background: var(--orbit-fill);
-    color: #fff;
     font-weight: 600;
     font-size: 16px;
   }
@@ -954,38 +889,66 @@ const nextGlow = nextImage ? await getImage({ src: nextImage, width: 480, format
     transform: translateX(4px);
   }
 
-  .nextup:focus-visible {
-    outline: 2px solid var(--hero-accent, var(--orbit-600));
-    outline-offset: -4px;
-  }
-
-  .nextup__preview {
-    position: relative;
-    grid-column: 2;
-    grid-row: 1;
-    align-self: center;
-    aspect-ratio: 16 / 10;
-    overflow: hidden;
-    border-radius: 18px;
-    background-color: #0c1016;
-    background-image: radial-gradient(
-      circle at 0% 100%,
-      color-mix(in srgb, var(--orbit-600) 55%, transparent),
-      color-mix(in srgb, var(--orbit-600) 0%, transparent) 55%
-    );
-  }
-
   .nextup__img {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.9s var(--ease-sw);
+    transition: scale 1.2s var(--ease-sw);
   }
 
   .nextup:hover .nextup__img {
-    transform: scale(1.04);
+    scale: 1.04;
+  }
+
+  /* The split: the text in the left half, from the page's left edge, the
+     picture in the right half from the middle to the edge of the screen. */
+  .nextup--split {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    min-height: min(80svh, 820px);
+  }
+
+  .nextup--split .nextup__text {
+    container-type: inline-size;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 96px clamp(32px, 5vw, 80px) 96px var(--gutter);
+  }
+
+  .nextup--split .nextup__title {
+    width: 100%;
+    margin: 18px 0 24px;
+    font-size: min(7rem, calc(100cqi / (var(--len, 10) * 0.52)));
+  }
+
+  .nextup--split .nextup__line {
+    margin-bottom: 32px;
+  }
+
+  .nextup--split .nextup__go {
+    padding: 16px 28px;
+    border-radius: var(--radius-full);
+    background: var(--orbit-fill);
+    color: #fff;
+  }
+
+  .nextup--split:hover .nextup__go {
+    background: var(--orbit-fill-hover, var(--orbit-fill));
+  }
+
+  .nextup__pic {
+    position: relative;
+    overflow: hidden;
+    background-color: #0c1016;
+    background-image: radial-gradient(
+      circle at 0% 100%,
+      color-mix(in srgb, var(--orbit-600) 55%, transparent),
+      color-mix(in srgb, var(--orbit-600) 0%, transparent) 55%
+    );
   }
 
   .nextup__blank {
@@ -997,24 +960,79 @@ const nextGlow = nextImage ? await getImage({ src: nextImage, width: 480, format
     text-transform: uppercase;
   }
 
-  @media (max-width: 900px) {
-    .nextup__inner {
+  /* The cinema: the picture fills the band; the second ground rises over
+     its foot, so the title reads in either mode. */
+  .nextup--cinema {
+    display: flex;
+    align-items: flex-end;
+    height: min(76svh, 780px);
+    min-height: 540px;
+  }
+
+  .nextup--cinema .nextup__img {
+    z-index: -2;
+    object-position: 50% 35%;
+  }
+
+  .nextup__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      to top,
+      var(--background-secondary) 6%,
+      color-mix(in srgb, var(--background-secondary) 72%, transparent) 36%,
+      transparent 70%
+    );
+  }
+
+  .nextup__body {
+    container-type: inline-size;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 34ch);
+    align-items: end;
+    gap: 48px;
+    width: 100%;
+    padding-bottom: 56px;
+  }
+
+  .nextup--cinema .nextup__title {
+    margin-top: 16px;
+    font-size: min(9rem, calc((100cqi - 34ch - 48px) / (var(--len, 10) * 0.52)));
+  }
+
+  .nextup--cinema .nextup__line {
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 800px) {
+    .nextup--split {
       grid-template-columns: minmax(0, 1fr);
+      min-height: 0;
     }
 
-    /* One column: the preview and its glow first, the card under them. */
-    .nextup__preview,
-    .nextup__glow {
-      grid-column: 1;
-      grid-row: 1;
+    .nextup__pic {
+      order: -1;
+      aspect-ratio: 4 / 3;
     }
 
-    .nextup__text {
-      grid-row: 2;
+    .nextup--split .nextup__text {
+      padding: 48px var(--gutter) 64px;
     }
 
-    .nextup__title {
-      font-size: min(13vw, calc(100cqi / (var(--len, 10) * 0.52)));
+    .nextup--cinema {
+      height: auto;
+      min-height: 88svh;
+    }
+
+    .nextup__body {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 20px;
+      padding-bottom: 48px;
+    }
+
+    .nextup--cinema .nextup__title {
+      font-size: min(15vw, calc(100cqi / (var(--len, 10) * 0.52)));
     }
   }
 
@@ -1077,10 +1095,6 @@ const nextGlow = nextImage ? await getImage({ src: nextImage, width: 480, format
       margin-top: 20px;
     }
 
-    .case__scroll {
-      display: none;
-    }
-
     .case__build-inner {
       grid-template-columns: minmax(0, 1fr);
       gap: 40px;
@@ -1120,96 +1134,75 @@ const nextGlow = nextImage ? await getImage({ src: nextImage, width: 480, format
 
   }
 
-  /* Desktop, laptop and tablet landscape: the title and its line side by side
-     at the top, the picture below them as a wide stage (Hans's choice). The
-     laptop in the picture is about twice the size it had in a card beside
-     the text, and the picture's colours glow into the ink around it, so the
-     hero isn't a small card on a black page. */
+  /* Desktop and landscape tablets: the cinema (Hans's choice). The picture
+     fills the whole hero, edge to edge; the title sits large at the bottom
+     left over a gradient in the page ground, the line beside it on the right, and the
+     facts run along the foot in a strip of frosted glass. The unveil opens
+     the whole picture from the bottom up. */
   @media (min-width: 801px) and (orientation: landscape), (min-width: 1101px) {
-    /* A card under the title: the unveil keeps its rounded corners. */
-    .case__hero:has(.case__hero-picture) .case__hero-img {
-      --hero-clip-radius: var(--radius-xl);
+    .case__hero:has(.case__hero-picture) {
+      padding-top: calc(var(--sw-nav-h, 72px) + 24px);
     }
 
-    .case__hero:has(.case__hero-picture) {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      grid-template-rows: auto auto;
-      align-content: center;
-      column-gap: clamp(32px, 4vw, 64px);
-      row-gap: clamp(28px, 4vh, 48px);
-      min-height: 100svh;
-      padding: calc(var(--sw-nav-h, 72px) + 24px) var(--gutter) 48px;
+    /* In the project pictures the laptop sits in the upper part. */
+    .case__hero:has(.case__hero-picture) .case__hero-img {
+      object-position: 50% 35%;
+    }
+
+    .case__hero:has(.case__hero-picture) .case__hero-scrim {
+      background:
+        linear-gradient(
+          to top,
+          color-mix(in srgb, var(--background) 94%, transparent) 0%,
+          color-mix(in srgb, var(--background) 60%, transparent) 30%,
+          transparent 62%
+        ),
+        linear-gradient(to bottom, color-mix(in srgb, var(--background) 55%, transparent), transparent 22%);
     }
 
     .case__hero:has(.case__hero-picture) .case__hero-body {
       display: grid;
-      grid-template-columns: subgrid;
-      grid-column: 1 / -1;
-      grid-row: 1;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 36ch);
       align-items: end;
-      width: auto;
-      max-width: none;
-      margin: 0;
-      padding: 0;
+      column-gap: 48px;
+      padding-bottom: 48px;
     }
 
     .case__hero:has(.case__hero-picture) .case__eyebrow {
       grid-column: 1;
       grid-row: 1;
-      margin-bottom: 18px;
+      margin-bottom: 14px;
     }
 
-    /* The title fits its half of the row: about 0.52em per character. */
+    /* The title fits its column: about 0.52em per character. */
     .case__hero:has(.case__hero-picture) .case__title {
       grid-column: 1;
       grid-row: 2;
       margin: 0;
-      font-size: min(7vw, 112px, calc((50vw - 96px) / (var(--len, 10) * 0.52)));
+      font-size: min(9vw, 144px, calc((100vw - 96px - 36ch - 48px) / (var(--len, 10) * 0.52)));
+      line-height: 0.9;
     }
 
     .case__hero:has(.case__hero-picture) .case__lede {
       grid-column: 2;
       grid-row: 1 / span 2;
       align-self: end;
-      max-width: 34ch;
-      margin: 0 0 8px;
+      max-width: 36ch;
+      margin: 0 0 10px;
       font-size: 19px;
       line-height: 1.55;
+      color: var(--foreground-secondary);
     }
 
-    /* The picture's top: in the project pictures the laptop sits in the
-       upper part, so a 21:9 crop loses only gradient at the bottom. */
-    .case__hero:has(.case__hero-picture) .case__hero-img {
-      position: relative;
-      inset: auto;
-      z-index: 0;
-      grid-column: 1 / -1;
-      grid-row: 2;
-      height: auto;
-      aspect-ratio: 21 / 9;
-      object-position: 50% 0%;
-      border-radius: var(--radius-xl);
-      box-shadow: 0 40px 120px -30px rgb(0 0 0 / 0.8);
+    /* The facts over the foot of the picture, in frosted glass. */
+    .case__hero:has(.case__hero-picture) .case__ledger {
+      background: color-mix(in srgb, var(--background) 55%, transparent);
+      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px);
     }
 
-    .case__hero:has(.case__hero-picture) .case__hero-glow {
-      display: block;
-      position: absolute;
-      z-index: -1;
-      left: 10%;
-      bottom: 0;
-      width: 80%;
-      height: 55%;
-      object-fit: cover;
-      filter: blur(110px) saturate(1.4);
-      opacity: 0.5;
-      pointer-events: none;
-    }
-
-    .case__hero:has(.case__hero-picture) .case__hero-scrim,
-    .case__hero:has(.case__hero-picture) .case__scroll {
-      display: none;
+    .case__hero:has(.case__hero-picture) .case__ledger-inner {
+      padding-block: 26px 30px;
     }
   }
 
@@ -1231,10 +1224,6 @@ const nextGlow = nextImage ? await getImage({ src: nextImage, width: 480, format
       border-radius: var(--radius-xl);
       -webkit-mask-image: none;
       mask-image: none;
-    }
-
-    .case__hero:has(.case__hero-img--has-mobile) .case__scroll {
-      display: none;
     }
   }
 
