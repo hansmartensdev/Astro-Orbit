@@ -1039,3 +1039,13 @@ html.js [data-cinema]:not(.is-in) [data-cinema-picture] {
   clip-path: inset(100% 0 0 0);
   scale: 1.08;
 }
+
+/* A blog post in the second colour (lib/post-tone.ts): emerald in place of
+   the violet, for the card art and the post's hero. */
+.tone-emerald {
+  --orbit-50: #ecfdf5;
+  --orbit-200: #a7f3d0;
+  --orbit-300: #6ee7b7;
+  --orbit-fill: #047857;
+  --orbit-950: #022c22;
+}

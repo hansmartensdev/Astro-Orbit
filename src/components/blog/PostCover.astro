@@ -10,12 +10,13 @@
  * decorative, so it is hidden from screen readers.
  */
 import CardArt from '@/components/blog/CardArt.astro';
+import type { PostTone } from '@/lib/post-tone';
 
 interface Props {
   /** The post's own image. Without it the card art is drawn. */
   src?: string;
   /** What the card art needs: the post's slug, icon, tags and card word. */
-  art?: { slug: string; icon?: string; tags?: string[]; word?: string };
+  art?: { slug: string; icon?: string; tags?: string[]; word?: string; tone?: PostTone };
   class?: string;
 }
 

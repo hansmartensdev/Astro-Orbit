@@ -5,6 +5,7 @@ import { html } from 'satori-html';
 import sharp from 'sharp';
 import siteConfig from '@/config/site.config';
 import { brandRoles, brandShades } from '@/lib/brand';
+import { EMERALD, type PostTone } from '@/lib/post-tone';
 
 export interface OGImageOptions {
   title: string;
@@ -201,20 +202,27 @@ export async function generateBlogCover(options: {
   slug: string;
   icon?: string;
   tags?: string[];
+  /** The post's colour (lib/post-tone.ts): emerald for Performance. */
+  tone?: PostTone;
 }): Promise<Buffer> {
-  const { title, slug, tags = [] } = options;
+  const { title, slug, tags = [], tone = 'violet' } = options;
+  // The ground and glows in the post's colour.
+  const shade =
+    tone === 'emerald'
+      ? { ink: EMERALD.ink, 600: EMERALD[600], 400: EMERALD[400], 300: EMERALD[300] }
+      : { ink: INK, 600: BRAND[600], 400: BRAND[400], 300: BRAND[300] };
   const seed = seedOf(slug);
   const glow = GLOW_AT[seed % GLOW_AT.length];
   const glow2 = GLOW_AT[(seed >>> 7) % GLOW_AT.length];
   const body = lucideBody(coverIcon(options.icon, tags))!
-    .replace(/currentColor/g, BRAND[300])
+    .replace(/currentColor/g, shade[300])
     .replace(/stroke-width="2"/g, 'stroke-width="1.25"');
   const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220" viewBox="0 0 24 24">${body}</svg>`;
   const iconSrc = `data:image/svg+xml;base64,${Buffer.from(iconSvg).toString('base64')}`;
   const titleSize = title.length > 70 ? 50 : title.length > 46 ? 58 : 66;
 
   const markup = html`
-    <div style="box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; width: 100%; height: 100%; padding: 64px 72px; font-family: 'Outfit'; background-color: ${INK}; background-image: radial-gradient(circle at ${glow}, ${tint(BRAND[600], 0.6)} 0%, ${tint(BRAND[600], 0)} 60%), radial-gradient(circle at ${glow2}, ${tint(BRAND[400], 0.22)} 0%, ${tint(BRAND[400], 0)} 45%);">
+    <div style="box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; width: 100%; height: 100%; padding: 64px 72px; font-family: 'Outfit'; background-color: ${shade.ink}; background-image: radial-gradient(circle at ${glow}, ${tint(shade[600], 0.6)} 0%, ${tint(shade[600], 0)} 60%), radial-gradient(circle at ${glow2}, ${tint(shade[400], 0.22)} 0%, ${tint(shade[400], 0)} 45%);">
       <div style="display: flex; justify-content: space-between; align-items: flex-start;">
         <span style="font-size: 26px; font-weight: 600; color: ${ICE}; letter-spacing: -0.04em;">${siteConfig.mark}</span>
         <img src="${iconSrc}" style="width: 220px; height: 220px;" />
