@@ -1,10 +1,13 @@
 /**
- * Project page hero: the picture's arrival.
+ * The cinema heroes' arrival: the project pages (.case__hero) and the
+ * shared hero of the posts, About, contact and projects (`data-cinema`,
+ * components/site/CinemaHero.astro).
  *
  * The picture is the only thing in the hero that moves: the label, title
  * and line stand still. It is unveiled from the bottom up while it settles
  * from slightly larger, and its glow follows. The motion itself is CSS
- * (`.case__hero.is-in` in the project page's styles); this script only
+ * (`.case__hero.is-in` in the project page's styles, `[data-cinema].is-in`
+ * in styles/global.css); this script only
  * decides when, by adding `.is-in` once the picture has loaded, so the
  * arrival never plays over an empty frame. A slow picture is not waited on
  * for more than 2.5s.
@@ -12,7 +15,7 @@
 const MAX_WAIT = 2500;
 
 export function initCase(reduced: boolean): VoidFunction {
-  const hero = document.querySelector<HTMLElement>('.case__hero');
+  const hero = document.querySelector<HTMLElement>('.case__hero, [data-cinema]');
   if (!hero || hero.classList.contains('is-in')) return () => {};
 
   let frame = 0;
@@ -28,7 +31,8 @@ export function initCase(reduced: boolean): VoidFunction {
     return () => {};
   }
 
-  const img = hero.querySelector<HTMLImageElement>('img.case__hero-img');
+  // The violet grid has no picture to wait for; a photo does.
+  const img = hero.querySelector<HTMLImageElement>('img.case__hero-img, [data-cinema-picture] img');
   if (!img || (img.complete && img.naturalWidth > 0)) arrive();
   else img.decode().then(arrive, arrive);
   const timer = window.setTimeout(arrive, MAX_WAIT);

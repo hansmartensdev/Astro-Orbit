@@ -3,18 +3,17 @@
  * Contact page
  * URL: /contact
  *
- * In the style of the project, blog and About pages (Hans's choice): a
- * cinema hero (the violet grid with a mail icon, the title large at its
- * foot, the line beside it, and the ways to reach me in a frosted strip),
- * then the form in the card with the violet glow (Hans's earlier choice),
+ * In the style of the project, blog and About pages (Hans's choice): the
+ * shared cinema hero (site/CinemaHero.astro) with a mail icon and the ways
+ * to reach me in its strip, then the form in the card with the violet glow (Hans's earlier choice),
  * on the second ground. Velocity's form and /api/contact endpoint; the
  * submit handler is carried over unchanged.
  */
 import SiteLayout from '@/layouts/SiteLayout.astro';
+import CinemaHero from '@/components/site/CinemaHero.astro';
 import Input from '@/components/ui/form/Input/Input.astro';
 import Textarea from '@/components/ui/form/Textarea/Textarea.astro';
 import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
-import { lucideBody } from '@/lib/og';
 import siteConfig from '@/config/site.config';
 
 const channels = [
@@ -23,9 +22,6 @@ const channels = [
   { label: 'WhatsApp', value: 'Send a message', href: siteConfig.whatsapp, external: true },
   { label: 'Based in', value: siteConfig.location },
 ];
-
-// Drawn inline from Lucide's data with thin lines, as on the blog posts.
-const mailIcon = lucideBody('mail')?.replace(/stroke-width="2"/g, 'stroke-width="1"');
 ---
 
 <SiteLayout
@@ -33,60 +29,15 @@ const mailIcon = lucideBody('mail')?.replace(/stroke-width="2"/g, 'stroke-width=
   description="Let's talk Astro. An idea for a website, a question about a theme, a blog post or something on GitHub: say hello to Hans Martens."
   includeOrgSchema
 >
-  {/* --- hero: the cinema of the other pages ----------------------------- */}
-  <header class="ct-hero">
-    <div class="ct-hero__art">
-      {
-        mailIcon && (
-          <svg
-            class="ct-hero__icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-            set:html={mailIcon}
-          />
-        )
-      }
-    </div>
-    <div class="ct-hero__scrim" aria-hidden="true"></div>
-
-    <div class="ct-hero__body shell">
-      <span class="label-mono ct-hero__label">CONTACT</span>
-      <h1 class="ct-hero__title">Let’s talk <em>Astro</em></h1>
-      <p class="ct-hero__desc">
-        An idea for a website, a question about one of my themes, a blog post or something I shared on
-        GitHub? Everybody is welcome. I read and answer every message myself.
-      </p>
-    </div>
-
-    <div class="ct-hero__ledger" role="group" aria-label="Other ways to reach me">
-      <dl class="ct-hero__facts shell">
-        {
-          channels.map((channel) => (
-            <div>
-              <dt class="label-mono">{channel.label.toUpperCase()}</dt>
-              <dd>
-                {channel.href ? (
-                  <a
-                    href={channel.href}
-                    target={channel.external ? '_blank' : undefined}
-                    rel={channel.external ? 'noopener noreferrer' : undefined}
-                  >
-                    {channel.value}
-                  </a>
-                ) : (
-                  channel.value
-                )}
-              </dd>
-            </div>
-          ))
-        }
-      </dl>
-    </div>
-  </header>
+  <CinemaHero
+    label="CONTACT"
+    title="Let’s talk Astro"
+    accent="Astro"
+    description="An idea for a website, a question about one of my themes, a blog post or something I shared on GitHub? Everybody is welcome. I read and answer every message myself."
+    facts={channels}
+    factsLabel="Other ways to reach me"
+    icon="mail"
+  />
 
   {/* --- the form: the glow card, on the second ground ------------------- */}
   <section class="ct">
@@ -124,147 +75,6 @@ const mailIcon = lucideBody('mail')?.replace(/stroke-width="2"/g, 'stroke-width=
 </SiteLayout>
 
 <style>
-  /* --- hero ------------------------------------------------------------ */
-  .ct-hero {
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    min-height: 100svh;
-    padding-top: calc(var(--sw-nav-h, 72px) + 24px);
-    background: var(--background);
-  }
-
-  .ct-hero__art {
-    position: absolute;
-    inset: 0;
-    z-index: -2;
-    background: linear-gradient(
-      to bottom,
-      color-mix(in srgb, var(--orbit-950) 14%, var(--orbit-fill)),
-      var(--orbit-950)
-    );
-  }
-
-  .ct-hero__art::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    opacity: 0.16;
-    background-image:
-      linear-gradient(rgb(255 255 255 / 0.35) 1px, transparent 1px),
-      linear-gradient(90deg, rgb(255 255 255 / 0.35) 1px, transparent 1px);
-    background-size: 64px 64px;
-  }
-
-  .ct-hero__icon {
-    position: absolute;
-    left: 50%;
-    top: 40%;
-    translate: -50% -50%;
-    width: min(22vw, 30svh);
-    height: auto;
-    color: #fff;
-    filter: drop-shadow(0 0 60px rgb(255 255 255 / 0.35));
-  }
-
-  .ct-hero__scrim {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background:
-      linear-gradient(
-        to top,
-        color-mix(in srgb, var(--background) 96%, transparent) 0%,
-        color-mix(in srgb, var(--background) 62%, transparent) 30%,
-        transparent 62%
-      ),
-      linear-gradient(to bottom, color-mix(in srgb, var(--background) 55%, transparent), transparent 22%);
-  }
-
-  .ct-hero__body {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 38ch);
-    align-items: end;
-    column-gap: 48px;
-    width: 100%;
-    padding-bottom: 48px;
-    color: var(--foreground);
-  }
-
-  .ct-hero__label {
-    grid-column: 1;
-    margin-bottom: 14px;
-    color: var(--foreground-secondary);
-  }
-
-  .ct-hero__title {
-    grid-column: 1;
-    margin: 0;
-    font-family: var(--font-display);
-    font-weight: var(--display-weight);
-    text-transform: var(--display-case);
-    letter-spacing: var(--display-tracking);
-    font-size: clamp(3.4rem, 9vw, 9rem);
-    line-height: 0.9;
-  }
-
-  .ct-hero__title em {
-    font-style: normal;
-    color: var(--hero-accent);
-  }
-
-  .ct-hero__desc {
-    grid-column: 2;
-    grid-row: 1 / span 2;
-    align-self: end;
-    margin: 0 0 10px;
-    font-size: 19px;
-    line-height: 1.55;
-    color: var(--foreground-secondary);
-  }
-
-  .ct-hero__ledger {
-    width: 100%;
-    border-top: 1px solid var(--border-strong);
-    background: color-mix(in srgb, var(--background) 55%, transparent);
-    -webkit-backdrop-filter: blur(14px);
-    backdrop-filter: blur(14px);
-    color: var(--foreground);
-  }
-
-  .ct-hero__facts {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 32px;
-    margin: 0;
-    padding-block: 26px 30px;
-  }
-
-  .ct-hero__facts dt {
-    color: var(--foreground-muted);
-  }
-
-  .ct-hero__facts dd {
-    margin: 12px 0 0;
-    font-size: 17px;
-    line-height: 1.45;
-    overflow-wrap: anywhere;
-  }
-
-  .ct-hero__facts a {
-    color: inherit;
-    text-decoration: underline;
-    text-decoration-thickness: 1.5px;
-    text-underline-offset: 4px;
-  }
-
-  .ct-hero__facts a:hover {
-    text-decoration-thickness: 2.5px;
-  }
-
   /* --- the form -------------------------------------------------------- */
   .ct {
     padding-block: clamp(88px, 11vw, 160px);
@@ -334,60 +144,6 @@ const mailIcon = lucideBody('mail')?.replace(/stroke-width="2"/g, 'stroke-width=
   @media (max-width: 640px) {
     .contact__form > :global(div:nth-of-type(-n + 2)) {
       grid-column: 1 / -1;
-    }
-  }
-
-  /* Phones and tablets held upright: the art at the top, fading out, and
-     the title, the line and the ways to reach me under it. */
-  @media (max-width: 800px), (max-width: 1100px) and (orientation: portrait) {
-    .ct-hero {
-      min-height: 0;
-      padding-top: 0;
-    }
-
-    .ct-hero__art {
-      position: relative;
-      inset: auto;
-      height: 56svh;
-      -webkit-mask-image: linear-gradient(#000 70%, transparent);
-      mask-image: linear-gradient(#000 70%, transparent);
-    }
-
-    .ct-hero__icon {
-      top: 52%;
-      width: min(32vw, 24svh);
-    }
-
-    .ct-hero__scrim {
-      display: none;
-    }
-
-    .ct-hero__body {
-      grid-template-columns: minmax(0, 1fr);
-      margin-top: -24px;
-      padding-bottom: 40px;
-    }
-
-    .ct-hero__desc {
-      grid-column: 1;
-      grid-row: auto;
-      margin: 20px 0 0;
-      font-size: 17px;
-    }
-
-    .ct-hero__title {
-      font-size: clamp(2.8rem, 14vw, 4.4rem);
-    }
-
-    .ct-hero__ledger {
-      background: var(--background);
-      -webkit-backdrop-filter: none;
-      backdrop-filter: none;
-    }
-
-    .ct-hero__facts {
-      grid-template-columns: minmax(0, 1fr);
-      gap: 20px;
     }
   }
 </style>
