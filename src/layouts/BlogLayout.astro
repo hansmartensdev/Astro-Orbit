@@ -109,6 +109,7 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
       <!-- Article Content -->
       <div
         data-pagefind-body
+        data-reveal-content
         class="prose prose-lg prose-headings:font-display prose-headings:font-bold prose-code:text-brand-600 prose-code:bg-brand-50 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-background-secondary prose-pre:border prose-pre:border-border dark:prose-invert dark:prose-code:text-brand-400 dark:prose-code:bg-brand-900/30 max-w-none"
       >
         <slot />
