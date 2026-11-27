@@ -22,6 +22,9 @@ interface Props {
   category?: string;
   image?: ImageMetadata;
   imageAlt?: string;
+  /** A photo for the hero only (the share image stays the cover). */
+  heroImage?: ImageMetadata;
+  heroImageAlt?: string;
   /** The generated cover (/covers/<slug>.png), used when there is no image. */
   cover?: string;
   tags?: string[];
@@ -43,6 +46,8 @@ const {
   category,
   image,
   imageAlt,
+  heroImage,
+  heroImageAlt,
   cover,
   tags = [],
   slug = '',
@@ -90,8 +95,8 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
     author={author}
     category={category}
     tags={tags}
-    image={image}
-    imageAlt={imageAlt}
+    image={heroImage ?? image}
+    imageAlt={heroImage ? heroImageAlt : imageAlt}
     readingTime={readingTime}
     icon={icon}
   />
