@@ -1,0 +1,75 @@
+---
+/**
+ * /workspace/verify?t=… : where the sign-in link lands.
+ *
+ * The link itself signs no one in: some mail programs open every link in
+ * an email to check it, and would use up a single-use link. This page asks
+ * for one click, and that click (a POST) signs in.
+ */
+import SiteLayout from '@/layouts/SiteLayout.astro';
+import CinemaHero from '@/components/site/CinemaHero.astro';
+import Panel from '@/components/workspace/Panel.astro';
+import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
+import { config, ready } from '@/lib/workspace/config';
+import { roleOf, startSession } from '@/lib/workspace/session';
+import { LINK_LIFETIME, verify } from '@/lib/workspace/sign';
+import { useOnce } from '@/lib/workspace/store';
+
+export const prerender = false;
+
+let token = Astro.url.searchParams.get('t') ?? '';
+let problem = false;
+
+if (ready && Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  token = form.get('t')?.toString() ?? '';
+  const payload = await verify(token, 'link', config.secret);
+  if (payload?.n && (await useOnce(payload.n, LINK_LIFETIME / 1000 + 60))) {
+    const role = await roleOf(payload.e);
+    if (role) {
+      await startSession(Astro.cookies, payload.e, Astro.url.protocol === 'https:');
+      return Astro.redirect(role === 'admin' ? '/workspace/admin' : '/workspace', 303);
+    }
+  }
+  problem = true;
+} else if (ready) {
+  problem = !(await verify(token, 'link', config.secret));
+}
+---
+
+<SiteLayout title="Sign in" description="Sign in to the workspace." noindex navOverMedia>
+  <CinemaHero
+    label="WORKSPACE"
+    title="Sign in"
+    description="One more click and you're in."
+    facts={[
+      { label: '1 · Your email', value: 'The address I invited' },
+      { label: '2 · The link', value: 'Arrives in your inbox' },
+      { label: '3 · You’re in', value: 'No password needed' },
+    ]}
+    factsLabel="How signing in works"
+    icon="key-round"
+    short
+  />
+  {
+    !ready || problem ? (
+      <Panel label="THIS LINK DOESN'T WORK">
+        <div class="wsp-done" role="status">
+          <h2>This link doesn't work</h2>
+          <p>A sign-in link works once, within 15 minutes. Ask for a new one and it arrives in a moment.</p>
+          <a class="wsp-link" href="/workspace">Ask for a new link</a>
+        </div>
+      </Panel>
+    ) : (
+      <Panel label="SIGN IN">
+        <form method="post" data-astro-reload>
+          <input type="hidden" name="t" value={token} />
+          <p class="wsp-note">Click the button to sign in on this device. You stay signed in for 30 days.</p>
+          <ArrowFillButton type="submit" icon="lucide:log-in" class="justify-self-start">
+            Sign in
+          </ArrowFillButton>
+        </form>
+      </Panel>
+    )
+  }
+</SiteLayout>

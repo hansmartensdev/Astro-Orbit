@@ -1,0 +1,112 @@
+---
+/**
+ * SignedIn
+ *
+ * The bar right under the workspace's hero: who is signed in, and the way
+ * out (Hans's choice: the person must see it at once). On Hans's own pages
+ * it links between the workspace and its admin page.
+ */
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  email: string;
+  /** Hans: a link to the other page. */
+  link?: { href: string; label: string };
+}
+
+const { email, link } = Astro.props;
+---
+
+<div class="si">
+  <div class="si__inner shell">
+    <span class="si__who">
+      <Icon name="lucide:circle-user-round" aria-hidden="true" />
+      <span>Signed in as <strong>{email}</strong></span>
+    </span>
+    <span class="si__actions">
+      {link && <a class="si__btn" href={link.href}>{link.label}</a>}
+      <form method="post" action="/workspace/signout" data-astro-reload>
+        <button type="submit" class="si__btn">
+          <Icon name="lucide:log-out" aria-hidden="true" />
+          Sign out
+        </button>
+      </form>
+    </span>
+  </div>
+</div>
+
+<style>
+  .si {
+    background: var(--background);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .si__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 20px;
+    padding-block: 16px;
+    font-size: 15px;
+    color: var(--foreground-secondary);
+  }
+
+  .si__who {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .si__who strong {
+    color: var(--foreground);
+  }
+
+  .si__who :global(svg) {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    color: var(--hero-accent);
+  }
+
+  :global(.dark) .si__who :global(svg) {
+    color: var(--orbit-on-dark);
+  }
+
+  .si__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .si__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 16px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: none;
+    color: var(--foreground);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .si__btn:hover {
+    border-color: var(--foreground);
+  }
+
+  .si__btn:focus-visible {
+    outline: 2px solid var(--hero-accent, var(--orbit-600));
+    outline-offset: 3px;
+  }
+
+  .si__btn :global(svg) {
+    width: 16px;
+    height: 16px;
+  }
+</style>

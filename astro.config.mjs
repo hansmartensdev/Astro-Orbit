@@ -74,6 +74,18 @@ export default defineConfig({
       // too. Confirmed subscribers go into this Resend segment, the list
       // its broadcasts are sent to.
       NEWSLETTER_SEGMENT_ID: envField.string({ context: 'server', access: 'public', optional: true }),
+      // The workspace (/workspace, src/lib/workspace/README.md). Without
+      // these it shows "not set up yet" and the rest of the site is
+      // unaffected. The secret signs sign-in links and sessions; the admin
+      // address is Hans's own; the store is an Upstash Redis database (the
+      // Vercel Marketplace integration sets KV_REST_API_* or
+      // UPSTASH_REDIS_REST_*, either works).
+      WORKSPACE_SECRET: envField.string({ context: 'server', access: 'secret', optional: true }),
+      WORKSPACE_ADMIN_EMAIL: envField.string({ context: 'server', access: 'secret', optional: true }),
+      KV_REST_API_URL: envField.string({ context: 'server', access: 'secret', optional: true }),
+      KV_REST_API_TOKEN: envField.string({ context: 'server', access: 'secret', optional: true }),
+      UPSTASH_REDIS_REST_URL: envField.string({ context: 'server', access: 'secret', optional: true }),
+      UPSTASH_REDIS_REST_TOKEN: envField.string({ context: 'server', access: 'secret', optional: true }),
       GOOGLE_SITE_VERIFICATION: envField.string({
         context: 'server',
         access: 'public',
