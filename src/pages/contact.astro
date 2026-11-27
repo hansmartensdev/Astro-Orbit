@@ -3,29 +3,29 @@
  * Contact page
  * URL: /contact
  *
- * Velocity's contact form and /api/contact endpoint, wearing the studio's
- * type. The submit handler is carried over from the stock page unchanged.
+ * In the style of the project, blog and About pages (Hans's choice): a
+ * cinema hero (the violet grid with a mail icon, the title large at its
+ * foot, the line beside it, and the ways to reach me in a frosted strip),
+ * then the form in the card with the violet glow (Hans's earlier choice),
+ * on the second ground. Velocity's form and /api/contact endpoint; the
+ * submit handler is carried over unchanged.
  */
-import { Icon } from 'astro-icon/components';
 import SiteLayout from '@/layouts/SiteLayout.astro';
-import SectionHead from '@/components/sections/SectionHead.astro';
 import Input from '@/components/ui/form/Input/Input.astro';
 import Textarea from '@/components/ui/form/Textarea/Textarea.astro';
 import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
+import { lucideBody } from '@/lib/og';
 import siteConfig from '@/config/site.config';
 
 const channels = [
-  { label: 'EMAIL', value: siteConfig.email, href: 'mailto:' + siteConfig.email, icon: 'mail' },
+  { label: 'Email', value: siteConfig.email, href: 'mailto:' + siteConfig.email },
   // Messages, not calls: they come in from everywhere.
-  {
-    label: 'WHATSAPP',
-    value: 'Send a message',
-    href: siteConfig.whatsapp,
-    icon: 'message-circle',
-    external: true,
-  },
-  { label: 'BASED IN', value: siteConfig.location, href: undefined, icon: 'map-pin' },
+  { label: 'WhatsApp', value: 'Send a message', href: siteConfig.whatsapp, external: true },
+  { label: 'Based in', value: siteConfig.location },
 ];
+
+// Drawn inline from Lucide's data with thin lines, as on the blog posts.
+const mailIcon = lucideBody('mail')?.replace(/stroke-width="2"/g, 'stroke-width="1"');
 ---
 
 <SiteLayout
@@ -33,103 +33,262 @@ const channels = [
   description="Let's talk Astro. An idea for a website, a question about a theme, a blog post or something on GitHub: say hello to Hans Martens."
   includeOrgSchema
 >
-  <header class="contact__head shell pt-[180px] max-[800px]:pt-[130px]">
-    <SectionHead
-      as="h1"
-      title="Let’s talk Astro"
-      accent="Astro"
-      blurb="An idea for a website, a question about one of my themes, a blog post or something I shared on GitHub? Everybody is welcome. I read and answer every message myself."
-    />
-  </header>
-
-  {/* The form in a card with a violet glow behind it, the same glow as on
-      the project pages, and the ways to reach me as buttons under it. One
-      centred column at every width (Hans's choice). */}
-  <section class="contact shell">
-    <div class="contact__stage" data-reveal>
-      <div class="contact__card">
-        <form id="contact-form" action="/api/contact" method="POST" class="contact__form">
-          <Input label="Your name" name="name" type="text" required autocomplete="name" />
-          <Input label="Email address" name="email" type="email" required autocomplete="email" />
-          <Input label="Subject" name="subject" type="text" />
-          <Textarea
-            label="Message"
-            name="message"
-            placeholder="Your idea, your question, or just hello."
-            rows={6}
-            required
+  {/* --- hero: the cinema of the other pages ----------------------------- */}
+  <header class="ct-hero">
+    <div class="ct-hero__art">
+      {
+        mailIcon && (
+          <svg
+            class="ct-hero__icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            set:html={mailIcon}
           />
+        )
+      }
+    </div>
+    <div class="ct-hero__scrim" aria-hidden="true"></div>
 
-          <!-- Honeypot field for spam protection -->
-          <div class="hidden" aria-hidden="true">
-            <input type="text" name="honeypot" tabindex="-1" autocomplete="off" />
-          </div>
-
-          <div id="form-message" class="hidden text-sm" role="status" aria-live="polite"></div>
-
-          <ArrowFillButton type="submit" id="submit-button" icon="lucide:send" class="self-start">
-            Send message
-          </ArrowFillButton>
-        </form>
-      </div>
+    <div class="ct-hero__body shell">
+      <span class="label-mono ct-hero__label">CONTACT</span>
+      <h1 class="ct-hero__title">Let’s talk <em>Astro</em></h1>
+      <p class="ct-hero__desc">
+        An idea for a website, a question about one of my themes, a blog post or something I shared on
+        GitHub? Everybody is welcome. I read and answer every message myself.
+      </p>
     </div>
 
-    <ul class="contact__chips" data-reveal data-reveal-delay="0.1">
-      {
-        channels.map((channel) => (
-          <li>
-            {channel.href ? (
-              <a
-                class="chip"
-                href={channel.href}
-                target={'external' in channel && channel.external ? '_blank' : undefined}
-                rel={'external' in channel && channel.external ? 'noopener noreferrer' : undefined}
-              >
-                <Icon name={'lucide:' + channel.icon} aria-hidden="true" />
-                <span class="sr-only">{channel.label}: </span>
-                {channel.value}
-              </a>
-            ) : (
-              <span class="chip">
-                <Icon name={'lucide:' + channel.icon} aria-hidden="true" />
-                <span class="sr-only">{channel.label}: </span>
-                {channel.value}
-              </span>
-            )}
-          </li>
-        ))
-      }
-    </ul>
-  </section>
+    <div class="ct-hero__ledger" role="group" aria-label="Other ways to reach me">
+      <dl class="ct-hero__facts shell">
+        {
+          channels.map((channel) => (
+            <div>
+              <dt class="label-mono">{channel.label.toUpperCase()}</dt>
+              <dd>
+                {channel.href ? (
+                  <a
+                    href={channel.href}
+                    target={channel.external ? '_blank' : undefined}
+                    rel={channel.external ? 'noopener noreferrer' : undefined}
+                  >
+                    {channel.value}
+                  </a>
+                ) : (
+                  channel.value
+                )}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </header>
 
-  <div class="h-[140px] max-[800px]:h-[100px]"></div>
+  {/* --- the form: the glow card, on the second ground ------------------- */}
+  <section class="ct">
+    <div class="ct__inner shell">
+      <span class="label-mono ct__label" data-reveal>SEND A MESSAGE</span>
+      <div class="ct__stage" data-reveal>
+        <div class="ct__card">
+          <form id="contact-form" action="/api/contact" method="POST" class="contact__form">
+            <Input label="Your name" name="name" type="text" required autocomplete="name" />
+            <Input label="Email address" name="email" type="email" required autocomplete="email" />
+            <Input label="Subject" name="subject" type="text" />
+            <Textarea
+              label="Message"
+              name="message"
+              placeholder="Your idea, your question, or just hello."
+              rows={6}
+              required
+            />
+
+            <!-- Honeypot field for spam protection -->
+            <div class="hidden" aria-hidden="true">
+              <input type="text" name="honeypot" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <div id="form-message" class="hidden text-sm" role="status" aria-live="polite"></div>
+
+            <ArrowFillButton type="submit" id="submit-button" icon="lucide:send" class="self-start">
+              Send message
+            </ArrowFillButton>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
 </SiteLayout>
 
 <style>
-  /* The heading and its line, centred above the card. */
-  .contact__head :global(header) {
+  /* --- hero ------------------------------------------------------------ */
+  .ct-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 22px;
-    text-align: center;
+    justify-content: flex-end;
+    min-height: 100svh;
+    padding-top: calc(var(--sw-nav-h, 72px) + 24px);
+    background: var(--background);
   }
 
-  .contact__head :global(header > p) {
-    max-width: 52ch;
+  .ct-hero__art {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background: linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--orbit-950) 14%, var(--orbit-fill)),
+      var(--orbit-950)
+    );
   }
 
-  .contact {
+  .ct-hero__art::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.16;
+    background-image:
+      linear-gradient(rgb(255 255 255 / 0.35) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(255 255 255 / 0.35) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+
+  .ct-hero__icon {
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    translate: -50% -50%;
+    width: min(22vw, 30svh);
+    height: auto;
+    color: #fff;
+    filter: drop-shadow(0 0 60px rgb(255 255 255 / 0.35));
+  }
+
+  .ct-hero__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      linear-gradient(
+        to top,
+        color-mix(in srgb, var(--background) 96%, transparent) 0%,
+        color-mix(in srgb, var(--background) 62%, transparent) 30%,
+        transparent 62%
+      ),
+      linear-gradient(to bottom, color-mix(in srgb, var(--background) 55%, transparent), transparent 22%);
+  }
+
+  .ct-hero__body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 38ch);
+    align-items: end;
+    column-gap: 48px;
+    width: 100%;
+    padding-bottom: 48px;
+    color: var(--foreground);
+  }
+
+  .ct-hero__label {
+    grid-column: 1;
+    margin-bottom: 14px;
+    color: var(--foreground-secondary);
+  }
+
+  .ct-hero__title {
+    grid-column: 1;
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: var(--display-weight);
+    text-transform: var(--display-case);
+    letter-spacing: var(--display-tracking);
+    font-size: clamp(3.4rem, 9vw, 9rem);
+    line-height: 0.9;
+  }
+
+  .ct-hero__title em {
+    font-style: normal;
+    color: var(--hero-accent);
+  }
+
+  .ct-hero__desc {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: end;
+    margin: 0 0 10px;
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--foreground-secondary);
+  }
+
+  .ct-hero__ledger {
+    width: 100%;
+    border-top: 1px solid var(--border-strong);
+    background: color-mix(in srgb, var(--background) 55%, transparent);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    color: var(--foreground);
+  }
+
+  .ct-hero__facts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 32px;
+    margin: 0;
+    padding-block: 26px 30px;
+  }
+
+  .ct-hero__facts dt {
+    color: var(--foreground-muted);
+  }
+
+  .ct-hero__facts dd {
+    margin: 12px 0 0;
+    font-size: 17px;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+  }
+
+  .ct-hero__facts a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 4px;
+  }
+
+  .ct-hero__facts a:hover {
+    text-decoration-thickness: 2.5px;
+  }
+
+  /* --- the form -------------------------------------------------------- */
+  .ct {
+    padding-block: clamp(88px, 11vw, 160px);
+    background: var(--background-secondary);
+  }
+
+  .ct__inner {
     max-width: 820px;
-    margin-top: 56px;
+  }
+
+  .ct__label {
+    display: block;
+    margin-bottom: 24px;
+    text-align: center;
+    color: var(--foreground-muted);
   }
 
   /* The violet glow behind the card: the brand colour, blurred. */
-  .contact__stage {
+  .ct__stage {
     position: relative;
     isolation: isolate;
   }
 
-  .contact__stage::before {
+  .ct__stage::before {
     content: '';
     position: absolute;
     z-index: -1;
@@ -141,11 +300,11 @@ const channels = [
     pointer-events: none;
   }
 
-  :global(.dark) .contact__stage::before {
+  :global(.dark) .ct__stage::before {
     opacity: 0.45;
   }
 
-  .contact__card {
+  .ct__card {
     padding: clamp(28px, 4vw, 52px);
     border: 1px solid var(--border);
     border-radius: 28px;
@@ -178,45 +337,58 @@ const channels = [
     }
   }
 
-  /* The ways to reach me, as buttons under the card. */
-  .contact__chips {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 12px;
-    margin: 32px 0 0;
-    padding: 0;
-    list-style: none;
-  }
+  /* Phones and tablets held upright: the art at the top, fading out, and
+     the title, the line and the ways to reach me under it. */
+  @media (max-width: 800px), (max-width: 1100px) and (orientation: portrait) {
+    .ct-hero {
+      min-height: 0;
+      padding-top: 0;
+    }
 
-  .chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 20px;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    background: var(--background-elevated, #fff);
-    color: inherit;
-    font-size: 16px;
-    text-decoration: none;
-    transition: border-color 0.25s ease;
-  }
+    .ct-hero__art {
+      position: relative;
+      inset: auto;
+      height: 56svh;
+      -webkit-mask-image: linear-gradient(#000 70%, transparent);
+      mask-image: linear-gradient(#000 70%, transparent);
+    }
 
-  a.chip:hover {
-    border-color: var(--border-strong);
-  }
+    .ct-hero__icon {
+      top: 52%;
+      width: min(32vw, 24svh);
+    }
 
-  a.chip:focus-visible {
-    outline: 2px solid var(--hero-accent, var(--orbit-600));
-    outline-offset: 3px;
-  }
+    .ct-hero__scrim {
+      display: none;
+    }
 
-  .chip :global(svg) {
-    width: 16px;
-    height: 16px;
-    stroke-width: 1.75;
-    flex: none;
+    .ct-hero__body {
+      grid-template-columns: minmax(0, 1fr);
+      margin-top: -24px;
+      padding-bottom: 40px;
+    }
+
+    .ct-hero__desc {
+      grid-column: 1;
+      grid-row: auto;
+      margin: 20px 0 0;
+      font-size: 17px;
+    }
+
+    .ct-hero__title {
+      font-size: clamp(2.8rem, 14vw, 4.4rem);
+    }
+
+    .ct-hero__ledger {
+      background: var(--background);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+
+    .ct-hero__facts {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 20px;
+    }
   }
 </style>
 
