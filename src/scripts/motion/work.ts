@@ -18,26 +18,37 @@
  * arrived it stays, and scrolling back up does not replay it. (The lead is
  * the reel's to deliver and take back; the cards around it stay built.)
  *
- * Hover: the picture eases up to a slight zoom, on the same clock as the
- * stylesheet's colour dissolve. It doesn't follow the pointer, and the
- * card's own box never moves, so it can never reach across the grid gap
- * into a neighbour. Pointer-only — touch has no hover, and the stylesheet
- * shows the work in full there.
+ * Hover: the picture and the caption drift against each other under the
+ * pointer, on springs, and the picture eases up to a slight zoom on the same
+ * clock as the stylesheet's colour dissolve. Only the layers inside the card
+ * move; the card's own box never does, so it can never reach across the grid
+ * gap into a neighbour. Pointer-only — touch has no hover, and the
+ * stylesheet shows the work in full there.
  *
  * Every transform here is owned by Motion: x, y and scale are motion values
  * bound to the elements with styleEffect, so the arrival zoom and the hover
  * zoom animate the same value and can never fight over one property.
+ *
+ * That now includes the card's own box. Its arrival (opacity, y) used to go
+ * through animate(card, …), which writes style.transform from a separate
+ * VisualElement and would clobber anything else on the element. It is a
+ * styleEffect now too, so flow.ts can compose skewY/scaleY onto the same
+ * transform — styleEffect calls on one element share one state.
  */
 import {
   animate,
   hover,
   motionValue,
   styleEffect,
+  springValue,
+  transformValue,
 } from 'motion';
 
 /** The site's one reveal curve: a clean ease-out, no spring. */
 const REVEAL_EASE = [0.16, 1, 0.3, 1] as const;
 
+const MEDIA_DRIFT = 6; // px, capped against the hover zoom's 3% overhang
+const CAPTION_DRIFT = 4; // px, the other way
 
 export function initWork(reduced: boolean): VoidFunction {
   const grid = document.querySelector<HTMLElement>('[data-work-grid]');
@@ -75,22 +86,30 @@ export function initWork(reduced: boolean): VoidFunction {
 
   for (const card of grid.querySelectorAll<HTMLElement>('.card')) {
     const media = card.querySelector<HTMLElement>('.card__media');
+    const caption = card.querySelector<HTMLElement>('.card__caption');
     if (!media) continue;
 
-    // Owned values: scale is animated directly so arrival and hover both
-    // drive it with their own curves.
+    // Owned values. Position springs chase the pointer; scale is animated
+    // directly so arrival and hover both drive it with their own curves.
     // cardY / cardOpacity are the card's arrival, bound below so the card's
     // transform has exactly one writer.
+    const px = motionValue(0);
+    const py = motionValue(0);
     const scale = motionValue(1);
-    const cardY = motionValue(reduced ? 0 : 16);
+    const cardY = motionValue(reduced ? 0 : 64);
     const cardOpacity = motionValue(reduced ? 1 : 0);
+    const sx = springValue(px, { stiffness: 180, damping: 24, mass: 0.9 });
+    const sy = springValue(py, { stiffness: 180, damping: 24, mass: 0.9 });
+    const cx = transformValue(() => -sx.get() * (CAPTION_DRIFT / MEDIA_DRIFT));
+    const cy = transformValue(() => -sy.get() * (CAPTION_DRIFT / MEDIA_DRIFT));
 
     // A delivered card (data-deliver) leaves opacity to the stylesheet: the
     // reel engine shows it by adding `is-in`, and an inline opacity would
     // beat the `:not(.is-in)` rule that hides it until then.
     const delivered = card.dataset.deliver !== undefined;
     stops.push(styleEffect(card, delivered ? { y: cardY } : { y: cardY, opacity: cardOpacity }));
-    stops.push(styleEffect(media, { scale }));
+    stops.push(styleEffect(media, { x: sx, y: sy, scale }));
+    if (caption) stops.push(styleEffect(caption, { x: cx, y: cy }));
 
     // Both pictures decoded before the first hover asks for them. Cheap, and
     // it keeps the colour layer's first frame from waiting on a decode.
@@ -117,12 +136,12 @@ export function initWork(reduced: boolean): VoidFunction {
         card.classList.add('is-in');
         warm();
         io.unobserve(card);
-        const at = columnOf(card, grid) * 0.06 + extra;
+        const at = columnOf(card, grid) * 0.1 + extra;
         // The card itself, as one unit: its values, not the element, so the
         // write goes through the styleEffect above rather than a second
         // transform owner.
-        animate(cardY, 0, { duration: 0.8, ease: REVEAL_EASE, delay: at });
-        animate(cardOpacity, 1, { duration: 0.6, ease: REVEAL_EASE, delay: at });
+        animate(cardY, 0, { duration: 1.1, ease: REVEAL_EASE, delay: at });
+        animate(cardOpacity, 1, { duration: 0.8, ease: REVEAL_EASE, delay: at });
       };
       // A card arrives once a fifth of it is showing. One that was waiting
       // for the lead and leaves view before the lead lands no longer owes an
@@ -154,13 +173,30 @@ export function initWork(reduced: boolean): VoidFunction {
     // --- hover -----------------------------------------------------------
     if (!fine || reduced) continue;
 
-    // The picture eases up to a slight zoom under the pointer, and back.
-    // It doesn't follow the pointer: the card stays still.
+    let rect: DOMRect | null = null;
+    const invalidate = () => {
+      rect = null;
+    };
+    const onMove = (event: PointerEvent) => {
+      rect ??= card.getBoundingClientRect();
+      const x = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
+      const y = Math.min(1, Math.max(0, (event.clientY - rect.top) / rect.height));
+      px.set((0.5 - x) * 2 * MEDIA_DRIFT);
+      py.set((0.5 - y) * 2 * MEDIA_DRIFT);
+    };
+
     stops.push(
       hover(card, () => {
-        animate(scale, 1.04, { duration: 0.7, ease: REVEAL_EASE });
+        invalidate();
+        animate(scale, 1.06, { type: 'spring', visualDuration: 1.0, bounce: 0 });
+        card.addEventListener('pointermove', onMove);
+        window.addEventListener('scroll', invalidate, { passive: true });
         return () => {
-          animate(scale, 1, { duration: 0.6, ease: REVEAL_EASE });
+          card.removeEventListener('pointermove', onMove);
+          window.removeEventListener('scroll', invalidate);
+          px.set(0);
+          py.set(0);
+          animate(scale, 1, { type: 'spring', visualDuration: 0.9, bounce: 0 });
         };
       })
     );

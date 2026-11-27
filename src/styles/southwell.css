@@ -259,10 +259,9 @@
 
   /* -----------------------------------------------------------------------
      Reveals
-     One soft motion for every arrival on the site: a short fade with 16px of
-     rise, on a clean ease-out with no spring or bounce. Kept small on
-     purpose: the page settles rather than performs (Hans's choice). Page
-     titles and running text don't move at all.
+     One motion for every arrival on the site, as in Astro Rocket: a clean
+     ease-out with no spring or bounce. The opacity settles in 0.8s while the
+     movement glides on for 1.1s, so an element arrives rather than appears.
      src/scripts/motion/reveal.ts only adds `.is-in` when it's time. The
      hidden state applies only once `html.js` says the script is coming, so
      without JS nothing is ever hidden.
@@ -277,19 +276,41 @@
   [data-reveal]:where(.is-in) {
     --reveal-ease: cubic-bezier(0.16, 1, 0.3, 1);
     transition:
-      opacity 0.6s var(--reveal-ease),
-      transform 0.8s var(--reveal-ease);
+      opacity 0.8s var(--reveal-ease),
+      transform 1.1s var(--reveal-ease);
   }
 
   html.js [data-reveal]:not(.is-in) {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(64px);
   }
 
-  /* A page's main heading is there at once: it doesn't move. */
+  /* A lift rises without fading: a page's main heading paints at once. */
   html.js [data-reveal='lift']:not(.is-in) {
     opacity: 1;
-    transform: none;
+    transform: translateY(64px);
+  }
+
+  /* Running text, block by block (reveal.ts, data-reveal-content): the same
+     curve, a little quicker and a shorter way, so a page of paragraphs reads
+     as settling rather than as a row of separate arrivals. A long list's
+     items travel half as far again. */
+  [data-reveal-content] > :where(.is-in),
+  [data-reveal-items] > li:where(.is-in) {
+    --reveal-ease: cubic-bezier(0.16, 1, 0.3, 1);
+    transition:
+      opacity 0.7s var(--reveal-ease),
+      transform 0.9s var(--reveal-ease);
+  }
+
+  html.js [data-reveal-content] > :not(.is-in) {
+    opacity: 0;
+    transform: translateY(56px);
+  }
+
+  html.js [data-reveal-content] > [data-reveal-items] > li:not(.is-in) {
+    opacity: 0;
+    transform: translateY(28px);
   }
 
   /* A masked rise starts below its clipping parent, fully opaque. */
