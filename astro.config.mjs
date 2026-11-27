@@ -70,6 +70,10 @@ export default defineConfig({
         optional: true,
       }),
       NEWSLETTER_API_KEY: envField.string({ context: 'server', access: 'secret', optional: true }),
+      // The newsletter (/api/newsletter) uses RESEND_API_KEY and CONTACT_FROM
+      // too. Confirmed subscribers go into this Resend segment, the list
+      // its broadcasts are sent to.
+      NEWSLETTER_SEGMENT_ID: envField.string({ context: 'server', access: 'public', optional: true }),
       GOOGLE_SITE_VERIFICATION: envField.string({
         context: 'server',
         access: 'public',
