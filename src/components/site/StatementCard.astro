@@ -36,11 +36,11 @@ const words = phrases.flatMap((phrase) =>
 );
 ---
 
-<figure class:list={['stmt', surface && 'stmt--surface']}>
+<figure class:list={['stmt', surface && 'stmt--surface']} style={`--n: ${words.length}`}>
   <p class="stmt__label label-mono">What drives me</p>
 
   <blockquote class="stmt__quote">
-    <p class="stmt__text" style={`--n: ${words.length}`}>
+    <p class="stmt__text">
       {
         words.map((word, i) => (
           <>
@@ -111,9 +111,25 @@ const words = phrases.flatMap((phrase) =>
     color: var(--statement-accent, var(--orbit-500));
   }
 
+  /* The button comes in once the statement has been read: it fades up
+     over the last stretch of the reading, after the last word has lit
+     (--reel-read from n/(n+1) to 1). Without the engine the variable
+     falls back to 1 and the button simply shows. A keyboard user who tabs
+     to it sees it at once. */
   .stmt__foot {
+    --foot-in: clamp(0, calc(var(--reel-read, 1) * (var(--n) + 1) - var(--n)), 1);
     display: flex;
     align-items: center;
+    opacity: var(--foot-in);
+    translate: 0 calc((1 - var(--foot-in)) * 16px);
+    transition:
+      opacity 0.12s linear,
+      translate 0.12s linear;
+  }
+
+  .stmt__foot:focus-within {
+    opacity: 1;
+    translate: none;
   }
 
   /* The site's arrow button, turned round for the ink card: a light pill
