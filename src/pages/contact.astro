@@ -96,7 +96,9 @@ const channels = [
     color: var(--foreground-muted);
   }
 
-  /* The violet glow behind the card: the brand colour, blurred. */
+  /* The violet glow behind the card: the brand colour, blurred. Light
+     mode only: on the dark ground a wide blur shows its steps as rings,
+     so dark mode has a close glow round the card instead (below). */
   .ct__stage {
     position: relative;
     isolation: isolate;
@@ -115,7 +117,15 @@ const channels = [
   }
 
   :global(.dark) .ct__stage::before {
-    opacity: 0.45;
+    display: none;
+  }
+
+  /* Dark mode: a thin violet edge and a short glow round the card, close
+     enough to show no rings (Hans's choice). */
+  :global(.dark) .ct__card {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--orbit-fill) 35%, transparent),
+      0 24px 80px -24px color-mix(in srgb, var(--orbit-fill) 55%, transparent);
   }
 
   .ct__card {
