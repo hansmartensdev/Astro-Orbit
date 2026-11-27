@@ -19,7 +19,10 @@ import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
 
 <section class="cta relative overflow-hidden">
   <div class="cta__field" aria-hidden="true">
-    <span class="cta__watermark display-mark">{siteConfig.mark}</span>
+    {/* Drawn by CSS (content: attr(data-mark)), not as text: it is faint on
+        purpose, and as text the contrast check counted it as unreadable
+        writing. */}
+    <span class="cta__watermark display-mark" data-mark={siteConfig.mark}></span>
   </div>
 
   <div
@@ -121,6 +124,10 @@ import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
     white-space: nowrap;
     pointer-events: none;
     user-select: none;
+  }
+
+  .cta__watermark::before {
+    content: attr(data-mark);
   }
 
   /* Dark mode. The service-card tokens the field borrows go blue-grey on
