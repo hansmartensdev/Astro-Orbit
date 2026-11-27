@@ -23,6 +23,11 @@ const blog = defineCollection({
       author: z.string().default('Hans Martens'),
       image: image().optional(),
       imageAlt: z.string().optional(),
+      /** A photo for the post's hero only: the cards and the share image
+       *  keep the card art (or `image`). A portrait photo stands on the
+       *  right of the hero on a wide screen. */
+      heroImage: image().optional(),
+      heroImageAlt: z.string().optional(),
       /** One of three categories, for filtering the blog once there are enough
        *  posts to filter: Astro (building with Astro), Themes (the free themes,
        *  and how they're made) or Performance (speed, Lighthouse, SEO). */
