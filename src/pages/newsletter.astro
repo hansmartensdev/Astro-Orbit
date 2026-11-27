@@ -1,0 +1,127 @@
+---
+/**
+ * Newsletter
+ * URL: /newsletter
+ *
+ * Where the link in the confirmation email leads (/newsletter/?t=<token>).
+ * The page is static; its script reads the token and posts it to
+ * /api/newsletter when the reader clicks Confirm. The click is the reader's
+ * own: a mail program that opens links to scan them confirms nothing.
+ *
+ * `?status=` shows how a step ended when it was sent without JavaScript
+ * (/api/newsletter redirects here): sent, done, expired or failed.
+ * Without a token or a status, the page says the link isn't valid. Kept out
+ * of search results.
+ */
+import SiteLayout from '@/layouts/SiteLayout.astro';
+import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
+
+const c = {
+  title: 'Confirm your subscription',
+  text: 'Click the button to confirm that you want new posts by email.',
+  button: 'Confirm',
+  confirming: 'Confirming…',
+  done: 'Subscription confirmed',
+  doneText: "Thanks. You'll get an email when a new post is published.",
+  expired: "This link has expired or isn't valid. Subscribe again under any post to get a new link.",
+  failed: 'Something went wrong. Please try again later.',
+  sent: 'Almost done: check your inbox and click the link in the email to confirm.',
+  back: 'To the blog',
+  metaDescription: 'Confirm your subscription to new posts by email.',
+};
+---
+
+<SiteLayout title={c.title} description={c.metaDescription} noindex>
+  <section
+    class="shell pt-[180px] pb-[140px] max-[800px]:pt-[130px] max-[800px]:pb-[100px]"
+    data-newsletter-confirm
+    data-title={c.title}
+    data-text={c.text}
+    data-confirming={c.confirming}
+    data-confirm={c.button}
+    data-done={c.done}
+    data-done-text={c.doneText}
+    data-expired={c.expired}
+    data-failed={c.failed}
+    data-sent={c.sent}
+  >
+    <div class="max-w-[640px]">
+      <h1 class="display-section m-0" data-confirm-title>{c.title}</h1>
+      <p class="text-foreground-secondary mt-6 mb-0 text-[18px] leading-[1.55]" data-confirm-text role="status" aria-live="polite">
+        {c.text}
+      </p>
+
+      <form class="mt-10" action="/api/newsletter" method="POST" data-confirm-form>
+        <input type="hidden" name="token" value="" />
+        <ArrowFillButton type="submit" icon="lucide:check">{c.button}</ArrowFillButton>
+      </form>
+
+      <a href="/blog" class="mt-10 hidden text-[17px] font-medium underline underline-offset-4" data-confirm-back>
+        {c.back}
+      </a>
+    </div>
+  </section>
+</SiteLayout>
+
+<script>
+  function initConfirm() {
+    const root = document.querySelector<HTMLElement>('[data-newsletter-confirm]');
+    if (!root || root.dataset.ready) return;
+    root.dataset.ready = 'true';
+
+    const title = root.querySelector<HTMLElement>('[data-confirm-title]');
+    const text = root.querySelector<HTMLElement>('[data-confirm-text]');
+    const form = root.querySelector<HTMLFormElement>('[data-confirm-form]');
+    const back = root.querySelector<HTMLElement>('[data-confirm-back]');
+    const button = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const input = form?.querySelector<HTMLInputElement>('input[name="token"]');
+    if (!title || !text || !form || !back || !button || !input) return;
+
+    const d = root.dataset;
+    const setLabel = (label: string) =>
+      button.querySelectorAll('.afb__label').forEach((el) => (el.textContent = label));
+
+    /** One of the page's states: its heading and line, and whether the button shows. */
+    const show = (state: string) => {
+      const states: Record<string, [string, string]> = {
+        done: [d.done ?? '', d.doneText ?? ''],
+        expired: [d.title ?? '', d.expired ?? ''],
+        failed: [d.title ?? '', d.failed ?? ''],
+        sent: [d.title ?? '', d.sent ?? ''],
+      };
+      const [heading, line] = states[state] ?? states.failed;
+      title.textContent = heading;
+      text.textContent = line;
+      form.hidden = true;
+      back.classList.toggle('hidden', state !== 'done');
+    };
+
+    const params = new URLSearchParams(location.search);
+    const status = params.get('status');
+    const token = params.get('t');
+    if (status) return show(status);
+    if (!token) return show('expired');
+    input.value = token;
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      button.disabled = true;
+      setLabel(d.confirming ?? '');
+      try {
+        const response = await fetch(form.action, { method: 'POST', body: new FormData(form) });
+        const data = await response.json();
+        show(data.state ?? (data.success ? 'done' : 'failed'));
+        // Leave the token out of the address bar and the history.
+        history.replaceState(null, '', location.pathname);
+      } catch {
+        show('failed');
+      } finally {
+        button.disabled = false;
+        setLabel(d.confirm ?? '');
+      }
+    });
+  }
+
+  initConfirm();
+  document.addEventListener('astro:after-swap', initConfirm);
+</script>

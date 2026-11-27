@@ -1,0 +1,205 @@
+---
+/**
+ * NewsletterSignup
+ *
+ * Under every post (BlogLayout): a heading, a line, an email field and a
+ * button. The address goes to /api/newsletter, which mails a link to
+ * confirm; only the click on that link puts it on the list. Ported from
+ * Astro Orbit, with the words here (the site is in English only).
+ *
+ * A card like the blog's post cards: the theme's own surface and border, so
+ * it reads as part of the page in light and dark mode.
+ */
+import Input from '@/components/ui/form/Input/Input.astro';
+import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
+
+const text = {
+  title: 'New posts by email',
+  // Hans's own line, from the homepage's blog section.
+  line: 'I write about building themes, Astro, and what makes websites fast. Get an email when a new post is published.',
+  email: 'Email address',
+  placeholder: 'you@example.com',
+  subscribe: 'Subscribe',
+  sending: 'Sending…',
+  sent: 'Almost done: check your inbox and click the link in the email to confirm.',
+  failed: 'Something went wrong. Please try again later.',
+  note: 'You can unsubscribe at any time.',
+  privacy: 'Privacy',
+};
+---
+
+<section class="nl" aria-labelledby="nl-title" data-reveal>
+  <div>
+    <h2 id="nl-title" class="nl__title">{text.title}</h2>
+    <p class="nl__text">{text.line}</p>
+  </div>
+
+  <form
+    class="nl__form"
+    action="/api/newsletter"
+    method="POST"
+    data-newsletter-form
+    data-subscribe={text.subscribe}
+    data-sending={text.sending}
+    data-sent={text.sent}
+    data-failed={text.failed}
+  >
+    <div class="nl__row">
+      <Input
+        label={text.email}
+        name="email"
+        type="email"
+        required
+        autocomplete="email"
+        placeholder={text.placeholder}
+      />
+      <ArrowFillButton type="submit" icon="lucide:send" class="nl__button">
+        {text.subscribe}
+      </ArrowFillButton>
+    </div>
+
+    <!-- Honeypot field for spam protection -->
+    <div class="hidden" aria-hidden="true">
+      <input type="text" name="honeypot" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <p class="nl__message hidden" role="status" aria-live="polite"></p>
+
+    <p class="nl__note">
+      {text.note} <a href="/privacy/">{text.privacy}</a>
+    </p>
+  </form>
+</section>
+
+<style>
+  .nl {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    align-items: end;
+    gap: 40px;
+    margin-top: 56px;
+    padding: clamp(28px, 4vw, 48px);
+    /* The theme's own tokens, as the post cards use them (see PostCard). */
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    background: var(--background-elevated, #fff);
+  }
+
+  .nl__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: var(--display-weight);
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    line-height: 1.05;
+    letter-spacing: var(--display-tracking);
+    text-transform: var(--display-case);
+  }
+
+  .nl__text {
+    margin: 14px 0 0;
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--color-foreground-secondary);
+  }
+
+  .nl__form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .nl__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 12px;
+  }
+
+  /* The field is the Input component's markup, outside this component's
+     scope: it takes the row's width, and the button sits beside it where
+     there's room and under it where there isn't. */
+  .nl__row > :global(:first-child) {
+    flex: 1 1 220px;
+    min-width: 0;
+  }
+
+  .nl__row :global(input[type='email']) {
+    width: 100%;
+  }
+
+  .nl__message,
+  .nl__note {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .nl__note {
+    color: var(--color-foreground-secondary);
+  }
+
+  .nl__note a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .nl__note a:hover {
+    color: var(--hero-accent, var(--orbit-600));
+  }
+
+  @media (max-width: 800px) {
+    .nl {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 24px;
+    }
+  }
+</style>
+
+<script>
+  function initNewsletter() {
+    for (const form of document.querySelectorAll<HTMLFormElement>('[data-newsletter-form]')) {
+      if (form.dataset.ready) continue;
+      form.dataset.ready = 'true';
+      const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      const message = form.querySelector<HTMLParagraphElement>('.nl__message');
+      if (!button || !message) continue;
+
+      // The button carries its label twice (the pill and the disc's copy).
+      const setLabel = (text: string) =>
+        button.querySelectorAll('.afb__label').forEach((el) => (el.textContent = text));
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        button.disabled = true;
+        setLabel(form.dataset.sending ?? '');
+        message.classList.add('hidden');
+
+        try {
+          const response = await fetch(form.action, { method: 'POST', body: new FormData(form) });
+          const data = await response.json();
+          if (data.success) {
+            message.textContent = form.dataset.sent ?? '';
+            message.className = 'nl__message text-success';
+            form.reset();
+          } else {
+            message.textContent = data.errors
+              ? Object.values(data.errors).flat().join(', ')
+              : (form.dataset.failed ?? '');
+            message.className = 'nl__message text-destructive';
+          }
+        } catch {
+          message.textContent = form.dataset.failed ?? '';
+          message.className = 'nl__message text-destructive';
+        } finally {
+          button.disabled = false;
+          setLabel(form.dataset.subscribe ?? '');
+          message.classList.remove('hidden');
+        }
+      });
+    }
+  }
+
+  initNewsletter();
+  document.addEventListener('astro:after-swap', initNewsletter);
+</script>

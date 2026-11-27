@@ -9,6 +9,9 @@
  *
  *   contact form   name, email, optional subject, message; sent by email
  *                  through Resend (src/pages/api/contact.ts), not stored
+ *   newsletter     email address, added to a Resend contact list only once
+ *                  the subscriber clicks the link in the confirmation email
+ *                  (src/pages/api/newsletter.ts)
  *   analytics      none: Analytics.astro loads Google Analytics or Tag
  *                  Manager only when PUBLIC_GA_MEASUREMENT_ID or
  *                  PUBLIC_GTM_ID is set. If either is ever set, this page
@@ -25,7 +28,7 @@ import SiteLayout from '@/layouts/SiteLayout.astro';
 import SectionHead from '@/components/sections/SectionHead.astro';
 import siteConfig from '@/config/site.config';
 
-const updated = new Date('2026-11-26');
+const updated = new Date('2026-11-27');
 const updatedLabel = updated.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 const mail = `mailto:${siteConfig.email}`;
 import { darkOnly } from '@/config/mode.config';
@@ -68,6 +71,16 @@ import { darkOnly } from '@/config/mode.config';
         only to read your message and answer you.
       </p>
       <p>Legal basis: my legitimate interest in answering the messages people send me.</p>
+
+      <h2>The newsletter</h2>
+      <p>
+        If you subscribe to new posts by email, I receive your email address. You first get an
+        email with a link to confirm. Only when you click it is your address added to my mailing
+        list, which is kept at the email service Resend. Resend also sends the newsletter. I use
+        your address only to email you when a new post is published.
+      </p>
+      <p>You can unsubscribe at any time, with the link in every newsletter or by emailing me.</p>
+      <p>Legal basis: your consent, which you give by confirming your subscription.</p>
 
       <h2>Email and WhatsApp</h2>
       <p>
@@ -113,7 +126,7 @@ import { darkOnly } from '@/config/mode.config';
       <p>I share personal data only with the services needed to run this website:</p>
       <ul>
         <li><strong>Vercel</strong>: hosting the website</li>
-        <li><strong>Resend</strong>: delivering contact form messages</li>
+        <li><strong>Resend</strong>: delivering contact form messages, and keeping the newsletter list and sending the newsletter</li>
       </ul>
       <p>
         Both are based in the United States. Where data is transferred outside the European Economic
@@ -124,6 +137,9 @@ import { darkOnly } from '@/config/mode.config';
 
       <h2>How long I keep it</h2>
       <p>I keep messages, from the contact form, email or WhatsApp, as long as I need them to answer you.</p>
+      <p>
+        I keep your email address for the newsletter until you unsubscribe or ask me to delete it.
+      </p>
 
       <h2>Your rights</h2>
       <p>Under the GDPR you have the right to:</p>

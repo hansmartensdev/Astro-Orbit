@@ -8,6 +8,7 @@ import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
 import ArticleHero from '@/components/blog/ArticleHero.astro';
 import ShareButtons from '@/components/blog/ShareButtons.astro';
 import RelatedPosts from '@/components/blog/RelatedPosts.astro';
+import NewsletterSignup from '@/components/blog/NewsletterSignup.astro';
 import TableOfContents from '@/components/blog/TableOfContents.astro';
 import type { MarkdownHeading } from 'astro';
 
@@ -139,6 +140,9 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
           <ShareButtons title={title} url={fullUrl} />
         </div>
       </footer>
+
+      <!-- New posts by email -->
+      <NewsletterSignup />
       </div>
 
       {hasToc && (
