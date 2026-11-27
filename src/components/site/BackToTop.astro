@@ -7,8 +7,9 @@
  * the reader scrolls down the page. It slides in once the page has scrolled
  * 400px, and a click goes back to the top.
  *
- * The trip up is the browser's own smooth scroll, and straight to the top
- * under reduced motion. The scroll position and page
+ * Here the scroll goes through Lenis (window.__lenis, the site's smooth
+ * scrolling) when it runs, so the trip up is as smooth as the page, and
+ * straight to the top under reduced motion. The scroll position and page
  * height come from scroll events and a ResizeObserver, never from a layout
  * read before first paint. Its window listeners are set once, since the
  * ClientRouter keeps the script between pages.
@@ -182,7 +183,9 @@
     if (btn && !btn.dataset.bttInit) {
       btn.dataset.bttInit = 'true';
       btn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+        const lenis = (window as unknown as { __lenis?: { scrollTo: (t: number) => void } }).__lenis;
+        if (lenis && !reduced) lenis.scrollTo(0);
+        else window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
       });
     }
     // The first reading after first paint, and after each page change.
