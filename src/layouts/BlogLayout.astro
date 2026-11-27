@@ -18,6 +18,8 @@ interface Props {
   publishedAt: Date;
   updatedAt?: Date;
   author?: string;
+  /** Astro, Themes or Performance: shown in the hero's facts. */
+  category?: string;
   image?: ImageMetadata;
   imageAlt?: string;
   /** The generated cover (/covers/<slug>.png), used when there is no image. */
@@ -38,6 +40,7 @@ const {
   publishedAt,
   updatedAt,
   author = 'Hans Martens',
+  category,
   image,
   imageAlt,
   cover,
@@ -83,6 +86,8 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
     description={description}
     publishedAt={publishedAt}
     updatedAt={updatedAt}
+    author={author}
+    category={category}
     tags={tags}
     image={image}
     imageAlt={imageAlt}
@@ -155,11 +160,13 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
     </div>
   </article>
 
-  <!-- Related Posts -->
+  <!-- Related Posts, on the second ground: the zebra of the project pages -->
   {
     tags.length > 0 && (
-      <div class="shell pb-16">
-        <RelatedPosts currentSlug={slug} tags={tags} locale="en" maxPosts={4} />
+      <div class="bg-background-secondary">
+        <div class="shell pb-24">
+          <RelatedPosts currentSlug={slug} tags={tags} locale="en" maxPosts={4} />
+        </div>
       </div>
     )
   }
