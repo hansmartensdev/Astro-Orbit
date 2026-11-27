@@ -134,8 +134,8 @@ const heroMobile = heroMobileSrc
       quality: 90,
     })
   : null;
-// The hero is ink in both modes (hero-ink), so the nav is white over it
-// until the page scrolls (navOverMedia).
+// The hero takes the page ground: light in light mode, ink in dark mode,
+// so the nav keeps its own colours over it.
 const shots = feature && cover ? [{ src: cover, alt: coverAlt ?? title }, ...gallery] : gallery;
 
 /* The written half of a case study, split across two bands. Most projects have
@@ -195,12 +195,10 @@ const toneOf = (i: number) =>
   image={picture?.src}
   imageAlt={coverAlt ?? title}
   navContext={client ?? title}
-  navOverMedia
 >
   <article class="case">
     {/* --- hero: full-bleed, viewport tall, type over the picture -------- */}
-    {/* Dark in both modes (hero-ink in global.css, Hans's choice). */}
-    <header class="case__hero hero-ink">
+    <header class="case__hero">
       {
         hero ? (
           <picture class="case__hero-picture">
