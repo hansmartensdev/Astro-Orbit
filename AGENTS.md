@@ -26,7 +26,7 @@ Before you say a change is done, run `pnpm lint`, `pnpm check`, `pnpm test` and 
 
 | Path | What it holds |
 |------|---------------|
-| `src/config/theme.config.ts` | The owner's texts and choices: `language`, `brandColor`, `darkOnly`, `home`, `about`, `pages`, `signOff`, `newsletter`, `footer`. Components read from it. |
+| `src/config/theme.config.ts` | The owner's texts and choices: `language`, `brandColor`, `darkOnly`, `showcase`, `home`, `about`, `pages`, `signOff`, `newsletter`, `footer`. Components read from it. |
 | `src/config/site.config.ts` | The owner's name, mark, email, location, WhatsApp link, social links and the site's description. |
 | `src/config/nav.config.ts`, `footer.config.ts` | The menu and the footer's columns. |
 | `src/config/services.config.ts` | Four service cards for the homepage; `show: false` in the demo. |
@@ -42,7 +42,8 @@ Before you say a change is done, run `pnpm lint`, `pnpm check`, `pnpm test` and 
 | `src/components/sections/` | Homepage and page sections: Hero, Reel, WorkGrid, FeaturedPosts, Services, StackMarquee, Cta (the sign-off). |
 | `src/components/site/` | Nav, Footer, `CinemaHero` (the hero of About, contact, projects, blog and posts), StatementCard (the droplet's card), the hero scene, buttons. |
 | `src/components/blog/` | The post hero, post cards, related posts, table of contents, newsletter signup. |
-| `src/components/ui/`, `src/components/patterns/` | Velocity's design-system components, listed in `component-registry.json`. |
+| `src/components/ui/`, `src/components/patterns/` | Velocity's design-system components, listed in `component-registry.json` with a description and an example each. The files are Velocity's, unchanged, except three fixes to carry over to a later version: `Progress` puts `aria-label` on the bar, `FormField` takes an `id` for its label, and the toast's notifications area has `role="region"`. |
+| `src/pages/[showcase].astro`, `src/lib/showcase.ts` | The `/components` page: every component, live, with its registry description and example. Built when `showcase` is true and in `pnpm dev`. A new component goes in a group in `showcase.ts` too. |
 | `src/pages/projects/[...slug].astro` | The project page: its hero, the sections, the next project (`split` or `cinema`). |
 | `src/scripts/hero-scene.ts` | The 3D scene in the hero (three.js). |
 | `src/scripts/reel/` | The droplet's journey down the homepage and its card. |
