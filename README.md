@@ -22,7 +22,8 @@
 
 ---
 
-## Contents
+<details>
+<summary><img src=".github/readme/contents-pill.svg" alt="Contents" height="40" /></summary>
 
 - [What it is](#what-it-is)
 - [What's in it](#whats-in-it)
@@ -39,6 +40,8 @@
 - [Deploying](#deploying)
 - [Where things live](#where-things-live)
 - [Credits and licence](#credits-and-licence)
+
+</details>
 
 ## What it is
 
