@@ -7,8 +7,6 @@ category: "Themes"
 tags: ["Astro Orbit", "Components", "Velocity"]
 icon: "component"
 cardWord: "46 components"
-# Describes a feature from the old Orbit; update before publishing.
-draft: true
 ---
 
 Astro Orbit is built on [Velocity](https://github.com/southwellmedia/velocity), the Astro starter by Southwell Media, and comes with its design-system components: 46 of them, from Velocity 2.7.3. Buttons, form fields, cards, tables, dialogs, tabs, an accordion, a carousel, a video that loads only when you press play, and more.
@@ -35,8 +33,8 @@ They take their colours from the theme, so they follow your brand colour and wor
 
 ## On your own site
 
-The components page is part of the theme's demo. When you set `demo = false` in `theme.config.ts`, your site doesn't publish it, but it's still there while you work on your site: run `pnpm dev` and open `http://localhost:4321/components`.
+The components page is part of the theme's demo. When you set `showcase = false` in `theme.config.ts`, your site doesn't publish it, but it's still there while you work on your site: run `pnpm dev` and open `http://localhost:4321/components`.
 
 ## Where they come from
 
-The files are Velocity 2.7.3's, unchanged, except for three fixes: the progress bar takes its `aria-label` on the bar itself, the form field takes an `id` so its label points at the field, and the notifications area of the toast has a role, so screen readers can name it. The cookie banner and the logo are Orbit's own.
+The files are Velocity 2.7.3's, unchanged, except for three fixes: the progress bar takes its `aria-label` on the bar itself, the form field takes an `id` so its label points at the field, and the notifications area of the toast has a role, so screen readers can name it.

@@ -1,0 +1,152 @@
+---
+/**
+ * Specimen
+ *
+ * One component on the /components page: the component itself, live, on a
+ * stage, then its name, its description and its folder from
+ * component-registry.json, and the registry's example under "Show the code".
+ * The text comes from the registry, so the page says what the registry says.
+ */
+import CodeBlock from '@/components/ui/content/CodeBlock/CodeBlock.astro';
+import registry from '../../../component-registry.json';
+
+interface Props {
+  /** The component's key in component-registry.json, e.g. 'toggle-group'. */
+  id: string;
+  /** Give the sample the stage's full width (forms, tables, tabs). */
+  wide?: boolean;
+  /** A line under the description: what the sample on this page can't show. */
+  note?: string;
+}
+
+const { id, wide = false, note } = Astro.props;
+type Entry = { name: string; description?: string; files: string[]; example?: string };
+const entry = (registry.components as unknown as Record<string, Entry>)[id];
+if (!entry) throw new Error(`Specimen: no component "${id}" in component-registry.json`);
+
+const folder = entry.files[0].replace(/\/[^/]+$/, '/');
+// The registry's example without its import lines, which every example has.
+const example = (entry.example ?? '').split('---').pop()?.trim() ?? '';
+---
+
+<article class="spec" id={id}>
+  <div class:list={['spec__stage', wide && 'spec__stage--wide']}>
+    <slot />
+  </div>
+  <div class="spec__meta">
+    <h3 class="spec__name">{entry.name}</h3>
+    <p class="spec__desc">{entry.description}</p>
+    {note && <p class="spec__note">{note}</p>}
+    <code class="spec__path">{folder}</code>
+    {
+      example && (
+        <details class="spec__code">
+          <summary>Show the code</summary>
+          <CodeBlock code={example} showLineNumbers={false} />
+        </details>
+      )
+    }
+  </div>
+</article>
+
+<style>
+  .spec {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--color-border-strong);
+    border-radius: calc(var(--radius-xl) + 6px);
+    background: var(--color-card);
+    scroll-margin-top: 120px;
+  }
+
+  /* The stage is a shade apart from the card, in both modes, so the sample
+     reads as sitting on something. */
+  .spec__stage {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-height: 200px;
+    padding: 40px 32px;
+    background: var(--color-background-secondary);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  /* In dark mode the card is ink-900, as background-secondary is: the stage
+     takes the page's deeper ink instead. */
+  :global(.dark) .spec__stage {
+    background: var(--color-background);
+  }
+
+  .spec__stage--wide {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .spec__stage--wide > :global(*) {
+    width: 100%;
+  }
+
+  .spec__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 24px 28px 26px;
+  }
+
+  .spec__name {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 600;
+  }
+
+  .spec__desc,
+  .spec__note {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--color-foreground-secondary);
+  }
+
+  .spec__note {
+    color: var(--color-foreground-muted);
+  }
+
+  .spec__path {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-foreground-muted);
+    overflow-wrap: anywhere;
+  }
+
+  .spec__code summary {
+    width: fit-content;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-foreground);
+  }
+
+  .spec__code summary:focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  .spec__code[open] summary {
+    margin-bottom: 12px;
+  }
+
+  @media (max-width: 600px) {
+    .spec__stage {
+      padding: 32px 20px;
+    }
+
+    .spec__meta {
+      padding: 20px 20px 22px;
+    }
+  }
+</style>

@@ -48,6 +48,7 @@ The theme opens in dark mode, and visitors can switch to light mode with the but
 - **Blog:** posts in Markdown or MDX, with a table of contents, search (Pagefind), a category filter, related posts and a reading time. Each post gets a card picture with an icon and a short phrase, made at build time, so posts don't need images. Posts in the Performance category are emerald, the others the brand colour.
 - **Contact:** a form that sends the message to your email through [Resend](https://resend.com).
 - **Newsletter:** a signup under every post, with a confirmation email before an address is added.
+- **Components page:** `/components` shows the 46 design-system components that come with the theme, live, with their code. `showcase = false` in `theme.config.ts` keeps it off your published site; you still see it in `pnpm dev`.
 - **Share images:** every page gets its own picture for social media, made at build time.
 - **For search engines and AI assistants:** a sitemap, an RSS feed, structured data and `llms.txt`.
 - **Fonts:** Outfit, Archivo and IBM Plex Mono, served by the website itself.
@@ -71,7 +72,7 @@ The site runs at http://localhost:4321.
 The demo is filled in for a fictive designer, Alex Morgan. Two files make it yours:
 
 - **`src/config/site.config.ts`**: your name, your wordmark (`am/` in the demo, which unfolds into the name on hover), your email, location, WhatsApp link and social links.
-- **`src/config/theme.config.ts`**: every text a visitor reads that is about you: the homepage, the About page, the contact page, the page intros, the sign-off, the newsletter and the footer line. Also the language, the brand colour and dark mode only.
+- **`src/config/theme.config.ts`**: every text a visitor reads that is about you: the homepage, the About page, the contact page, the page intros, the sign-off, the newsletter and the footer line. Also the language, the brand colour, dark mode only and the components page (`showcase`).
 
 Then:
 
@@ -155,7 +156,7 @@ The theme builds for [Vercel](https://vercel.com). Every page is static, except 
 
 ```
 src/
-  config/theme.config.ts   your texts, language, brand colour, dark mode only
+  config/theme.config.ts   your texts, language, brand colour, dark mode only, showcase
   config/site.config.ts    your name, mark, email, location and links
   content/blog/<language>/ blog posts
   content/work/            projects
@@ -163,7 +164,8 @@ src/
   i18n/                    the theme's words per language, and the privacy page
   components/sections/     homepage and page sections
   components/site/         header, menu, footer, the heroes and the hero scene
-  components/ui/           Velocity's design-system components (component-registry.json)
+  components/ui/           Velocity's design-system components (component-registry.json),
+                           shown live at /components
   scripts/reel/            the droplet's animation down the homepage
   scripts/gpu.ts           decides whether the 3D scenes may run
   styles/themes/           colours and fonts
