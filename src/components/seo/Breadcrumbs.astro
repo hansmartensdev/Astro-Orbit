@@ -23,11 +23,12 @@ const schemaItems = items.map((item) => ({
 }));
 
 const schema = createBreadcrumbSchema(schemaItems);
+import { t } from '@/i18n';
 ---
 
 <JsonLd schema={schema} />
 
-<nav aria-label="Breadcrumb" class={cn('text-sm', className)}>
+<nav aria-label={t.nav.breadcrumb} class={cn('text-sm', className)}>
   <ol class="flex flex-wrap items-center gap-2">
     {
       items.map((item, index) => (

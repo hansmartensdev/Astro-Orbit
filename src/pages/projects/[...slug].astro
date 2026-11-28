@@ -105,11 +105,11 @@ const {
 
 // Only the facts that were actually filled in get a slot.
 const facts = [
-  // My own projects have no client: they are for the Astro community.
-  { label: 'Client', value: client || 'The Astro Community' },
-  year ? { label: 'Year', value: String(year) } : null,
-  { label: 'Discipline', value: discipline },
-  services.length ? { label: 'Services', value: services.join(', ') } : null,
+  // A project without a client: the text from theme.config.ts, or no slot.
+  client || pages.projects.noClient ? { label: t.projects.client, value: client || pages.projects.noClient } : null,
+  year ? { label: t.projects.year, value: String(year) } : null,
+  { label: t.projects.discipline, value: discipline },
+  services.length ? { label: t.projects.services, value: services.join(', ') } : null,
 ].filter((fact) => fact !== null);
 
 // The feature photograph leads the page the way it leads the card. The mockup
@@ -156,11 +156,11 @@ const inBand = (n: 1 | 2) =>
 const videos = video ? (Array.isArray(video) ? video : [video]) : [];
 
 const bands = [
-  { key: 'problem', label: 'WHY I BUILT IT', prose: challenge, shots: inBand(1) },
-  { key: 'solution', label: 'WHAT I BUILT', prose: solution, shots: inBand(2) },
+  { key: 'problem', label: upper(t.projects.why), prose: challenge, shots: inBand(1) },
+  { key: 'solution', label: upper(t.projects.what), prose: solution, shots: inBand(2) },
   ...sections.map((section, k) => ({
     key: `section-${k}`,
-    label: section.label.toUpperCase(),
+    label: upper(section.label),
     prose: section.text,
     shots: [] as ReturnType<typeof inBand>,
   })),
@@ -186,6 +186,8 @@ const nextCinema = nextLayout === 'cinema' && Boolean(nextWide);
 // second ground instead.
 const toneOf = (i: number) =>
   (bands.length - 1 - i + (next ? 0 : 1)) % 2 === 0 ? 'base' : 'alt';
+import { pages } from '@/config/theme.config';
+import { t, upper } from '@/i18n';
 ---
 
 <SiteLayout
@@ -247,12 +249,12 @@ const toneOf = (i: number) =>
       </div>
 
       {/* --- facts: along the foot of the hero, over the picture on desktop */}
-      <div class="case__ledger" role="group" aria-label="Project details">
+      <div class="case__ledger" role="group" aria-label={t.projects.details}>
         <dl class="case__ledger-inner shell">
           {
             facts.map((fact, i) => (
               <div class="case__fact" data-reveal data-reveal-delay={i * 0.08}>
-                <dt class="label-mono">{fact.label.toUpperCase()}</dt>
+                <dt class="label-mono">{upper(fact.label)}</dt>
                 <dd>{fact.value}</dd>
               </div>
             ))
@@ -287,7 +289,7 @@ const toneOf = (i: number) =>
                 <div class="band__extras" data-reveal>
                   {technologies.length > 0 && (
                     <div>
-                      <span class="band__label label-mono">STACK</span>
+                      <span class="band__label label-mono">{upper(t.projects.stack)}</span>
                       <ul class="case__chips">
                         {technologies.map((item) => (
                           <li>{item}</li>
@@ -297,7 +299,7 @@ const toneOf = (i: number) =>
                   )}
                   {features.length > 0 && (
                     <div>
-                      <span class="band__label label-mono">SHIPPED</span>
+                      <span class="band__label label-mono">{upper(t.projects.shipped)}</span>
                       <ul class="case__shipped">
                         {features.map((item) => (
                           <li>{item}</li>
@@ -309,13 +311,13 @@ const toneOf = (i: number) =>
                     <div class="case__buttons">
                       {url && (
                         <PillButton href={url} target="_blank" variant="solid">
-                          {urlLabel ?? 'Visit the site'}
+                          {urlLabel ?? t.projects.visit}
                           <Icon name="lucide:arrow-up-right" aria-hidden="true" />
                         </PillButton>
                       )}
                       {repo && (
                         <PillButton href={repo} target="_blank" variant="outline">
-                          View on GitHub
+                          {t.projects.github}
                           <Icon name="fa6-brands:github" aria-hidden="true" />
                         </PillButton>
                       )}
@@ -374,7 +376,7 @@ const toneOf = (i: number) =>
           <div class="case__build-inner shell">
             {technologies.length > 0 && (
               <div data-reveal>
-                <span class="label-mono text-foreground-muted">STACK</span>
+                <span class="label-mono text-foreground-muted">{upper(t.projects.stack)}</span>
                 <ul class="case__chips">
                   {technologies.map((item) => (
                     <li>{item}</li>
@@ -384,7 +386,7 @@ const toneOf = (i: number) =>
             )}
             {features.length > 0 && (
               <div data-reveal data-reveal-delay="0.1">
-                <span class="label-mono text-foreground-muted">SHIPPED</span>
+                <span class="label-mono text-foreground-muted">{upper(t.projects.shipped)}</span>
                 <ul class="case__shipped">
                   {features.map((item) => (
                     <li>{item}</li>
@@ -412,13 +414,13 @@ const toneOf = (i: number) =>
         <div class="case__visit case__buttons shell" data-reveal>
           {url && (
             <PillButton href={url} target="_blank" variant="solid">
-              {urlLabel ?? 'Visit the site'}
+              {urlLabel ?? t.projects.visit}
               <Icon name="lucide:arrow-up-right" aria-hidden="true" />
             </PillButton>
           )}
           {repo && (
             <PillButton href={repo} target="_blank" variant="outline">
-              View on GitHub
+              {t.projects.github}
               <Icon name="fa6-brands:github" aria-hidden="true" />
             </PillButton>
           )}
@@ -431,13 +433,13 @@ const toneOf = (i: number) =>
       next && !nextCinema && (
         <a class="nextup nextup--split" href={'/projects/' + next.id} data-card>
           <span class="nextup__text" data-reveal>
-            <span class="label-mono nextup__label">NEXT PROJECT</span>
+            <span class="label-mono nextup__label">{upper(t.projects.next)}</span>
             <span class="nextup__title" style={`--len: ${next.data.title.length}`}>
               {next.data.title}
             </span>
             <span class="nextup__line">{next.data.description}</span>
             <span class="nextup__go">
-              View project
+              {t.projects.view}
               <Icon name="lucide:arrow-right" aria-hidden="true" />
             </span>
           </span>
@@ -478,7 +480,7 @@ const toneOf = (i: number) =>
           <span class="nextup__scrim" aria-hidden="true"></span>
           <span class="nextup__body shell" data-reveal>
             <span class="nextup__head">
-              <span class="label-mono nextup__label">NEXT PROJECT</span>
+              <span class="label-mono nextup__label">{upper(t.projects.next)}</span>
               <span class="nextup__title" style={`--len: ${next.data.title.length}`}>
                 {next.data.title}
               </span>
@@ -486,7 +488,7 @@ const toneOf = (i: number) =>
             <span class="nextup__side">
               <span class="nextup__line">{next.data.description}</span>
               <span class="nextup__go nextup__go--plain">
-                View project
+                {t.projects.view}
                 <Icon name="lucide:arrow-right" aria-hidden="true" />
               </span>
             </span>

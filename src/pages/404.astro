@@ -4,11 +4,12 @@
  */
 import SiteLayout from '@/layouts/SiteLayout.astro';
 import PillButton from '@/components/site/PillButton.astro';
+import { t } from '@/i18n';
 ---
 
 <SiteLayout
-  title="Page not found"
-  description="That page has either moved, been deleted, or never existed."
+  title={t.notFound.title}
+  description={t.notFound.description}
   noindex
 >
   <section
@@ -17,16 +18,16 @@ import PillButton from '@/components/site/PillButton.astro';
     <p class="label-mono mb-8 text-foreground-muted">404</p>
 
     <h1 class="display-hero m-0">
-      Nothing<br /><em>here.</em>
+      {t.notFound.lead}<br /><em>{t.notFound.leadAccent}</em>
     </h1>
 
     <p class="mt-9 max-w-[420px] text-[17px] leading-[1.6] text-foreground-secondary">
-      That page has either moved, been deleted, or never existed in the first place.
+      {t.notFound.text}
     </p>
 
     <div class="mt-13 flex flex-wrap gap-[18px]">
-      <PillButton href="/">Back to home</PillButton>
-      <PillButton href="/projects" variant="outline">See my projects</PillButton>
+      <PillButton href="/">{t.notFound.home}</PillButton>
+      <PillButton href="/projects" variant="outline">{t.notFound.projects}</PillButton>
     </div>
   </section>
 </SiteLayout>

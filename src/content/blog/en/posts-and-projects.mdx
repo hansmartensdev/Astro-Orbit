@@ -1,0 +1,66 @@
+---
+title: "Writing Posts and Adding Projects"
+description: "Where posts and projects live in Astro Orbit, and the fields that control their pages, cards and pictures."
+publishedAt: 2026-11-24T10:00:00Z
+author: "Alex Morgan"
+category: "Themes"
+tags: ["Astro Orbit", "Content"]
+icon: "pen-line"
+cardWord: "posts & projects"
+featured: true
+---
+
+Posts and projects are files in `src/content/`. Each file is one post or one project, with its settings at the top.
+
+## Posts
+
+Posts go in the folder of the site's language, `src/content/blog/en/` for an English site, as Markdown (`.md`) or MDX (`.mdx`). The top of a post looks like this:
+
+```yaml
+---
+title: "Use Your Own Brand Colour"
+description: "One setting changes the colour of the whole theme."
+publishedAt: 2026-11-24T10:00:00Z
+author: "Alex Morgan"
+category: "Themes"
+tags: ["Astro Orbit", "Colour"]
+icon: "palette"
+cardWord: "your own colour"
+---
+```
+
+| Field | What it does |
+|-------|--------------|
+| `title`, `description` | The title and the line under it, on the post and on its card. |
+| `publishedAt` | The date. The newest posts come first. |
+| `category` | `Astro`, `Themes` or `Performance`: the filters on the blog page. |
+| `tags` | Words that link related posts: the posts under a post share its tags. Without an `icon`, one is picked from them. |
+| `icon` | The icon on the card picture: any name from [lucide.dev/icons](https://lucide.dev/icons), or `astro` or `claude` for those logos. |
+| `cardWord` | A word or a short phrase, up to about 20 characters, under the icon. |
+| `featured` | The homepage shows four posts: the featured ones first, then the newest. |
+| `pinned` | `true` keeps a post first on the homepage, whatever its date. |
+| `heroImage`, `heroImageAlt` | A photo for the post's hero only. Its cards and its share image keep the card picture. |
+| `draft` | `true` keeps the post off the site. |
+| `toc` | `false` hides the table of contents. |
+
+The card picture is made when the site is built, from the icon, the phrase and the brand colour, so a post doesn't need an image of its own. Each post also gets a reading time, a share image, a place in the RSS feed and in the site's search.
+
+## Projects
+
+Projects go in `src/content/work/`, one file each.
+
+| Field | What it does |
+|-------|--------------|
+| `title`, `discipline`, `description` | The name, the small label on the card, and one line about the project. |
+| `client` | Shown in the facts under the project's hero. |
+| `feature` | The card picture. `featureMobile` is the version for phones. |
+| `pageHero`, `pageHeroMobile` | The picture at the top of the project page, for desktop and for phones. |
+| `video` | One or more short screen recordings, shown beside the first section. |
+| `challenge`, `solution` | The text of the first and the second section. |
+| `gallery` | More pictures. `band: 1` or `band: 2` puts a picture beside the first or the second section. |
+| `sections` | More sections after the first two, each with a label and text. |
+| `order` | Lower comes first. The homepage shows the first four. |
+| `nextLayout` | How the next project is shown at the foot of the page: `split` or `cinema`. Without it, the two take turns. |
+| `draft` | `true` keeps the project off the site. |
+
+A project without a picture stays out of the sitemap, and search engines don't index it until it has one.

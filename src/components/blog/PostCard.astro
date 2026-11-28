@@ -23,7 +23,9 @@ interface Props {
 }
 
 const { post, as: Heading = 'h3', compact = false } = Astro.props;
-const slug = post.id.replace(/^[a-z]{2}\//, '');
+const slug = postSlug(post.id);
+import { t, upper } from '@/i18n';
+import { postSlug } from '@/lib/posts';
 ---
 
 <a class:list={['post', compact && 'post--compact']} href={`/blog/${slug}`} data-card>
@@ -39,12 +41,12 @@ const slug = post.id.replace(/^[a-z]{2}\//, '');
     }}
   />
   <span class="label-mono text-foreground-muted">
-    {formatDate(post.data.publishedAt).toUpperCase()}
+    {upper(formatDate(post.data.publishedAt))}
   </span>
   <Heading class="post__title">{post.data.title}</Heading>
   <p class="post__line">{post.data.description}</p>
   <span class="post__more">
-    Read the post
+    {t.blog.readPost}
     <Icon name="lucide:arrow-right" aria-hidden="true" />
   </span>
 </a>

@@ -59,30 +59,32 @@ export interface SiteConfig {
 }
 
 const siteConfig: SiteConfig = {
-  name: 'Hans Martens',
+  // Demo details: the fictive designer Alex Morgan. Put your own here.
+  name: 'Alex Morgan',
   description:
-    'Hans Martens is an Astro developer based in Veghel, the Netherlands, building fast & beautiful websites.',
-  url: SITE_URL || 'https://hansmartens.dev',
+    'Alex Morgan is an Astro developer in Amsterdam, the Netherlands, building fast & beautiful websites.',
+  url: SITE_URL || 'https://orbit.hansmartens.dev',
   ogImage: '/og-default.png',
-  author: 'Hans Martens',
-  email: 'hello@hansmartens.dev',
-  phone: '+31 6 5188 8008',
-  phoneHref: '+31651888008',
-  whatsapp: 'https://wa.me/31651888008',
-  location: 'Veghel, the Netherlands',
-  mark: 'hm/',
+  author: 'Alex Morgan',
+  email: 'hello@example.com',
+  phoneHref: '',
+  // A wa.me link (https://wa.me/<number>) shows a WhatsApp button on the
+  // contact page, in the sign-off and in the footer; empty hides them.
+  whatsapp: '',
+  location: 'Amsterdam, the Netherlands',
+  mark: 'am/',
   // TODO: add the street address to promote Organization schema to
   // LocalBusiness. Deliberately absent rather than guessed — a wrong postal
   // address in structured data is worse than none at all.
   // Feeds Organization.sameAs in the JSON-LD.
-  socialLinks: ['https://www.linkedin.com/in/hansmartensdev/', 'https://github.com/hansmartensdev'],
+  socialLinks: ['https://www.linkedin.com/', 'https://github.com/'],
   verification: {
     google: GOOGLE_SITE_VERIFICATION,
     bing: BING_SITE_VERIFICATION,
   },
   branding: {
     logo: {
-      alt: 'Hans Martens',
+      alt: 'Alex Morgan',
     },
     favicon: {
       svg: '/favicon.svg',

@@ -20,6 +20,8 @@ interface Props {
 const { deep = false } = Astro.props;
 
 const year = new Date().getFullYear();
+import { footer } from '@/config/theme.config';
+import { t } from '@/i18n';
 ---
 
 <div class="footer-stage">
@@ -32,11 +34,11 @@ const year = new Date().getFullYear();
     <div class="shell">
       <div class="flex items-start justify-between gap-10 max-[900px]:flex-col max-[900px]:gap-12">
         {/* The large mark is a link home, like the wordmark in the header. */}
-        <a class="display-mark footer__mark" href="/" aria-label={`${siteConfig.mark} ${siteConfig.name}, home`}>
+        <a class="display-mark footer__mark" href="/" aria-label={t.footer.home(siteConfig.mark, siteConfig.name)}>
           {siteConfig.mark}
         </a>
 
-        <nav class="flex flex-wrap gap-[72px] text-[15px] max-[900px]:gap-10" aria-label="Footer">
+        <nav class="flex flex-wrap gap-[72px] text-[15px] max-[900px]:gap-10" aria-label={t.footer.label}>
           {
             footerColumns.map((column) => (
               <div class="flex flex-col gap-3">
@@ -64,9 +66,9 @@ const year = new Date().getFullYear();
         {/* The small print together: the copyright and the privacy link. */}
         <span
           >&copy; {year} {siteConfig.name} — {siteConfig.location} ·{' '}
-          <a class="footer__legal" href="/privacy">Privacy</a></span
+          <a class="footer__legal" href="/privacy">{t.footer.privacy}</a></span
         >
-        <span>Building beautiful &amp; fast websites</span>
+        <span>{footer.tagline}</span>
       </div>
     </div>
   </footer>

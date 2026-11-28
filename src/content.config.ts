@@ -1,3 +1,4 @@
+import siteConfig from '@/config/site.config';
 import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
@@ -20,7 +21,7 @@ const blog = defineCollection({
       description: z.string().max(200),
       publishedAt: z.coerce.date(),
       updatedAt: z.coerce.date().optional(),
-      author: z.string().default('Hans Martens'),
+      author: z.string().default(siteConfig.name),
       image: image().optional(),
       imageAlt: z.string().optional(),
       /** A photo for the post's hero only: the cards and the share image

@@ -9,11 +9,11 @@ interface Props {
   maxPosts?: number;
 }
 
-const { currentSlug, tags, locale = 'en', maxPosts = 3 } = Astro.props;
+const { currentSlug, tags, locale = lang, maxPosts = 3 } = Astro.props;
 
-// Get all published posts in the same locale
-const allPosts = await getCollection('blog', ({ data }) => {
-  return data.locale === locale && (import.meta.env.PROD ? data.draft !== true : true);
+// All published posts in the same language folder
+const allPosts = await getCollection('blog', ({ id, data }) => {
+  return postLanguage(id) === locale && (import.meta.env.PROD ? data.draft !== true : true);
 });
 
 // Filter to find posts with matching tags
@@ -36,12 +36,14 @@ const relatedPosts = allPosts
   })
   .slice(0, maxPosts);
 
+import { t, lang } from '@/i18n';
+import { postLanguage } from '@/lib/posts';
 ---
 
 {
   relatedPosts.length > 0 && (
     <section class:list={['related', relatedPosts.length === 4 && 'related--four']}>
-      <h2 class="related__title">Related posts</h2>
+      <h2 class="related__title">{t.blog.related}</h2>
       <ul class:list={['related__list', `related__list--${relatedPosts.length}`]}>
         {relatedPosts.map((post, i) => (
           <li data-reveal data-reveal-delay={i * 0.1}>

@@ -1,0 +1,181 @@
+---
+/**
+ * The privacy page's text in Spanish: a translation of en.astro, which says
+ * what this file gets and how to adapt it. The terms are the ones the
+ * Spanish text of the GDPR (the RGPD) uses. The GDPR applies to sites in the
+ * European Union and to sites that serve people there; a site run from the
+ * Americas may fall under its own country's law instead, so read the text
+ * against yours before you publish it.
+ */
+import siteConfig from '@/config/site.config';
+import { newsletter } from '@/config/theme.config';
+import { darkOnly } from '@/config/theme.config';
+
+interface Props {
+  /** The host's name: Vercel, Netlify or Cloudflare. */
+  host: string;
+}
+
+const { host } = Astro.props;
+const mail = `mailto:${siteConfig.email}`;
+---
+
+<p>
+  En esta página se explica qué datos personales recoge este sitio web, por qué y qué pasa con
+  ellos. Solo trato los datos que necesito para responderte y para que el sitio funcione, y nunca
+  los vendo.
+</p>
+
+<h2>Quién soy</h2>
+<p>
+  Este sitio web lo gestiona {siteConfig.name}, desde {siteConfig.location}. Soy responsable de los datos personales que se describen en esta página (el "responsable del
+  tratamiento" según el RGPD).
+</p>
+<p>Correo electrónico: <a href={mail}>{siteConfig.email}</a></p>
+
+<h2>El formulario de contacto</h2>
+<p>
+  Cuando envías un mensaje con el formulario de contacto, recibo tu nombre, tu correo electrónico,
+  el asunto si lo rellenas y tu mensaje. El formulario me lo envía como correo electrónico, a
+  través del servicio de correo Resend. No se guarda en ninguna base de datos de este sitio web.
+  Solo lo uso para leer tu mensaje y responderte.
+</p>
+<p>Base legal: mi interés legítimo en responder a los mensajes que me envían.</p>
+
+{
+  newsletter.show && (
+    <>
+      <h2>El boletín</h2>
+      <p>
+        Si te suscribes para recibir los nuevos artículos por correo electrónico, recibo tu
+        dirección de correo. Primero recibes un correo con un enlace para confirmar. Solo cuando
+        haces clic en él, tu dirección se añade a mi lista de correo, que se guarda en el servicio
+        de correo Resend. Resend también envía el boletín. Uso tu dirección solo para escribirte
+        cuando se publica un nuevo artículo.
+      </p>
+      <p>
+        Puedes darte de baja cuando quieras, con el enlace que hay en cada boletín o escribiéndome
+        un correo.
+      </p>
+      <p>Base legal: tu consentimiento, que das al confirmar tu suscripción.</p>
+    </>
+  )
+}
+
+{
+  siteConfig.whatsapp ? (
+    <>
+      <h2>Correo electrónico y WhatsApp</h2>
+      <p>
+        Si me escribes por correo electrónico o por WhatsApp, recibo lo que envías, junto con tu
+        correo electrónico o tu número de teléfono, y solo lo uso para responderte. El botón de
+        WhatsApp abre WhatsApp, un servicio de Meta, y solo cuando haces clic en él. Antes de eso,
+        no se carga nada de WhatsApp en este sitio web.
+      </p>
+    </>
+  ) : (
+    <>
+      <h2>Correo electrónico</h2>
+      <p>
+        Si me escribes por correo electrónico, recibo lo que envías, junto con tu correo
+        electrónico, y solo lo uso para responderte.
+      </p>
+    </>
+  )
+}
+
+<h2>Visitas</h2>
+<p>
+  Este sitio web no usa herramientas de analítica. No cuenta ni sigue a los visitantes, y no tiene
+  rastreadores de publicidad ni de redes sociales.
+</p>
+
+<h2>Alojamiento</h2>
+<p>
+  Este sitio web está alojado en {host}. Como cualquier proveedor de alojamiento, {host} trata
+  datos técnicos, como direcciones IP e información del navegador, en sus registros del servidor,
+  para servir el sitio web de forma segura y fiable.
+</p>
+<p>Base legal: mi interés legítimo en mantener un sitio web seguro.</p>
+
+<h2>Cookies y almacenamiento</h2>
+{
+  darkOnly ? (
+    <p>Este sitio web no usa cookies y no guarda nada en tu navegador.</p>
+  ) : (
+    <p>
+      Este sitio web no usa cookies. Si eliges el modo claro u oscuro con el botón de la cabecera,
+      tu navegador recuerda esa elección en su almacenamiento local, para que la siguiente página se
+      abra en el mismo modo. La elección se queda en tu dispositivo y no se me envía ni a mí ni a
+      nadie. Puedes borrarla eliminando los datos de este sitio web en tu navegador.
+    </p>
+  )
+}
+<p>
+  Las fuentes tipográficas se sirven desde este mismo sitio web, así que al cargar una página no se
+  contacta con ningún servicio de fuentes.
+</p>
+
+<h2>Quién recibe tus datos</h2>
+<p>Solo comparto datos personales con los servicios necesarios para que este sitio web funcione:</p>
+<ul>
+  <li><strong>{host}</strong>: alojamiento del sitio web</li>
+  <li>
+    <strong>Resend</strong>: entrega de los mensajes del formulario de contacto{
+      newsletter.show ? ', y la lista y el envío del boletín' : ''
+    }
+  </li>
+</ul>
+<p>
+  Ambos tienen su sede en los Estados Unidos. Cuando los datos se transfieren fuera del Espacio
+  Económico Europeo, se hace con garantías adecuadas, como el Marco de Privacidad de Datos UE-EE.
+  UU. o las cláusulas contractuales tipo de la Comisión Europea. Nunca vendo datos personales ni los
+  comparto con fines publicitarios.
+</p>
+
+<h2>Cuánto tiempo los guardo</h2>
+<p>
+  Guardo los mensajes, del formulario de contacto, del correo electrónico{
+    siteConfig.whatsapp ? ' o de WhatsApp' : ''
+  }, mientras los necesite para responderte.
+</p>
+
+{
+  newsletter.show && (
+    <p>Guardo tu dirección de correo para el boletín hasta que te des de baja o me pidas que la borre.</p>
+  )
+}
+
+<h2>Tus derechos</h2>
+<p>Según el RGPD, tienes derecho a:</p>
+<ul>
+  <li>ver los datos personales que tengo sobre ti;</li>
+  <li>pedir que se corrijan;</li>
+  <li>pedir que se eliminen;</li>
+  <li>limitar su tratamiento u oponerte a él;</li>
+  <li>recibirlos en un formato que puedas usar en otro lugar.</li>
+</ul>
+<p>
+  Para ejercer cualquiera de estos derechos, escríbeme a <a href={mail}>{siteConfig.email}</a>.
+  También puedes presentar una reclamación ante la autoridad neerlandesa de protección de datos, la <a
+    href="https://www.autoriteitpersoonsgegevens.nl"
+    target="_blank"
+    rel="noopener noreferrer">Autoriteit Persoonsgegevens</a
+  >.
+</p>
+
+<h2>Seguridad</h2>
+<p>Todo el tráfico hacia este sitio web está cifrado (HTTPS).</p>
+
+<h2>Cambios</h2>
+<p>
+  Cuando cambian el sitio web o los servicios que usa, actualizo esta página. La fecha de arriba
+  indica cuándo se modificó por última vez.
+</p>
+
+<h2>Preguntas</h2>
+<p>
+  Si algo de esta página no está claro, o tienes una pregunta sobre tus datos, escríbeme a <a
+    href={mail}>{siteConfig.email}</a
+  >.
+</p>

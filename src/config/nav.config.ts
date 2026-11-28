@@ -1,3 +1,4 @@
+import { t } from '@/i18n';
 /**
  * Navigation Configuration
  *
@@ -15,10 +16,10 @@ export interface NavItem {
 }
 
 export const navItems: NavItem[] = [
-  { label: 'About', href: '/about', order: 1 },
-  { label: 'Projects', href: '/projects', order: 2 },
-  { label: 'Blog', href: '/blog', order: 3 },
-  { label: 'Contact', href: '/contact', order: 4 },
+  { label: t.nav.about, href: '/about', order: 1 },
+  { label: t.nav.projects, href: '/projects', order: 2 },
+  { label: t.nav.blog, href: '/blog', order: 3 },
+  { label: t.nav.contact, href: '/contact', order: 4 },
 ];
 
 /**

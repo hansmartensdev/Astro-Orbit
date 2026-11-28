@@ -16,18 +16,20 @@ import Input from '@/components/ui/form/Input/Input.astro';
 import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
 
 const text = {
-  title: 'New posts by email',
-  // Hans's own line, from the homepage's blog section.
-  line: 'I write about building themes, Astro, and what makes websites fast. Get an email when a new post is published.',
-  email: 'Email address',
-  placeholder: 'you@example.com',
-  subscribe: 'Subscribe',
-  sending: 'Sending…',
-  sent: 'Almost done: check your inbox and click the link in the email to confirm.',
-  failed: 'Something went wrong. Please try again later.',
-  note: 'You can unsubscribe at any time.',
-  privacy: 'Privacy',
+  // The heading and the line, from theme.config.ts.
+  title: newsletter.title,
+  line: newsletter.text,
+  email: t.newsletter.email,
+  placeholder: t.newsletter.placeholder,
+  subscribe: t.newsletter.subscribe,
+  sending: t.newsletter.sending,
+  sent: t.newsletter.sent,
+  failed: t.newsletter.failed,
+  note: t.newsletter.note,
+  privacy: t.newsletter.privacy,
 };
+import { newsletter } from '@/config/theme.config';
+import { t } from '@/i18n';
 ---
 
 <section class="nl" aria-labelledby="nl-title" data-reveal>

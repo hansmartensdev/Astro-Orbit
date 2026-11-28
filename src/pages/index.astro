@@ -12,10 +12,11 @@ import Cta from '@/components/sections/Cta.astro';
 import Services from '@/components/sections/Services.astro';
 import { services } from '@/config/services.config';
 import siteConfig from '@/config/site.config';
+import { home } from '@/config/theme.config';
 ---
 
 <SiteLayout
-  title="Astro Developer in Veghel, the Netherlands"
+  title={home.title}
   description={siteConfig.description}
   includeOrgSchema
 >
@@ -31,17 +32,8 @@ import siteConfig from '@/config/site.config';
   <WorkGrid count={4} deliverLead />
   {/* What I do: the four stacked cards (config/services.config.ts; show: false removes them). */}
   {services.show && <Services />}
-  {
-    /* The violet band about Astro Orbit (@/components/sections/ThemeBand.astro,
-      with `released`) is parked off the homepage for now, to use elsewhere
-      later. */
-  }
   {/* Four posts across the full width: those marked featured: true first,
       then the newest. */}
   <FeaturedPosts count={4} />
-  {
-    /* The founder section (@/components/sections/Founder.astro) is parked
-      off the homepage for now; it runs on /about. */
-  }
   <Cta />
 </SiteLayout>

@@ -1,5 +1,5 @@
 /**
- * The brand colour's shades, from brand.config's brandColor.
+ * The brand colour's shades, from brandColor in theme.config.ts.
  *
  * The site uses one colour in eleven shades, 50 (palest) to 950 (deepest),
  * plus "ink", a near-black with a hint of the colour for text on a pale
@@ -10,7 +10,7 @@
  * BaseLayout writes the shades on :root as --orbit-50 ... --orbit-950 and
  * --orbit-ink; build-time code (share images) imports brandShades directly.
  */
-import { brandColor } from '@/config/brand.config';
+import { brandColor } from '@/config/theme.config';
 
 export type Shade = 50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 950 | 'ink';
 export type Shades = Record<Shade, string>;
@@ -49,7 +49,7 @@ const MIX: Record<Shade, number> = {
 function parse(hex: string): [number, number, number] {
   let h = hex.trim().replace(/^#/, '');
   if (h.length === 3) h = [...h].map((c) => c + c).join('');
-  if (!/^[0-9a-f]{6}$/i.test(h)) throw new Error(`brandColor in brand.config.ts must be a hex code such as '#7c3aed', not '${hex}'`);
+  if (!/^[0-9a-f]{6}$/i.test(h)) throw new Error(`brandColor in theme.config.ts must be a hex code such as '#7c3aed', not '${hex}'`);
   return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)) as [number, number, number];
 }
 

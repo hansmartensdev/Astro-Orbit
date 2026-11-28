@@ -1,0 +1,47 @@
+---
+title: "Make Astro Orbit Yours in One File"
+description: "Your name, your links, your colour and every line of text on the site: what's in theme.config.ts."
+publishedAt: 2026-11-22T10:00:00Z
+author: "Alex Morgan"
+category: "Themes"
+tags: ["Astro Orbit", "Settings"]
+icon: "sliders-horizontal"
+cardWord: "one settings file"
+# Describes a feature from the old Orbit; update before publishing.
+draft: true
+---
+
+Most of what makes Astro Orbit your website is in one file: `src/config/theme.config.ts`. The components read from it, so you don't need to open them to change a name or a line of text.
+
+## What's in it
+
+| Setting | What it holds |
+|---------|---------------|
+| `demo` | Shows the "About this theme" band above the sign-off. Set it to `false` on your own site. |
+| `brandColor` | The brand colour, or `'default'` for the theme's violet. See [Use Your Own Brand Colour](/blog/your-own-brand-colour/). |
+| `darkOnly` | `true` for dark mode only, without the light/dark switch. See [Use Dark Mode Only](/blog/dark-mode-only/). |
+| `language` | The site's language: `'en'` for English, `'es'` for Spanish, `'fr'` for French, `'nl'` for Dutch. See [Your Site in Your Language](/blog/your-language/). |
+| `profile` | Your name, your wordmark (`am/` in the demo), a sentence about you, the site's address, your email, phone and WhatsApp link, where you are, and your social profiles. |
+| `home` | The homepage: the browser tab title, the hero, the section the droplet falls into, the card it opens into, and the titles and lines above the projects and the posts. |
+| `about` | The About page: its description, the line beside the title, the violet card and the section under it. |
+| `testimonials` | The quote cards on the homepage: the title, the line beside it and each quote, with the person's name, their role and the project it's about. Use real quotes, with permission. `show: false` removes the section. |
+| `services` | The four stacked cards on the homepage: the title, the line beside it and each card's number, title, icon, tags and text. Use them for your services or for anything else. `show: false` removes the section. |
+| `pages` | For the projects, blog and contact pages: the description for search engines and the line beside the title, and the contact page's title. |
+| `menu` | The line in the menu. |
+| `signOff` | The sign-off above the footer: its title, its text and the labels of its two buttons. |
+
+In the longer texts, `[text](url)` becomes a link and `**text**` becomes bold. Everything else is plain text.
+
+## WhatsApp
+
+Add a WhatsApp link (`https://wa.me/<your number>`) to `profile.whatsapp`, and a WhatsApp button appears in the sign-off, the footer and on the contact page. Leave it empty to hide it.
+
+## After the settings
+
+1. Set `demo` to `false`.
+2. Write your posts in `src/content/blog/<language>/`: `en/` for an English site.
+3. Add your projects in `src/content/work/`.
+4. Add yourself as an author in `src/content/authors/`.
+5. Read the privacy page (`src/pages/privacy.astro`) and change what doesn't match your site.
+
+Posts and projects have a post of their own: [Writing Posts and Adding Projects](/blog/posts-and-projects/).

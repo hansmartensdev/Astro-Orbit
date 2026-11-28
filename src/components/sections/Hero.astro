@@ -49,6 +49,9 @@ const posters = await Promise.all(
     phoneTall: await getImage({ src: phoneTall, ...tall }),
   }))
 );
+import { home } from '@/config/theme.config';
+import { rich } from '@/lib/rich';
+import { t } from '@/i18n';
 ---
 
 <section class="hero shell flex min-h-screen flex-col justify-end pt-24 pb-9 max-[700px]:pt-[84px] min-[701px]:pb-6">
@@ -111,11 +114,11 @@ const posters = await Promise.all(
 
   <h1 class="hero__headline display-hero">
     <span class="hero__line"
-      ><span class="hero__word hero__word--1">An Astro developer</span></span
+      ><span class="hero__word hero__word--1">{home.hero.line1}</span></span
     >
     <span class="hero__line"
       ><span class="hero__word hero__word--2"
-        ><em>building <span class="hero__accent">beautiful</span> websites.</em>{
+        ><em>{home.hero.line2.before} <span class="hero__accent">{home.hero.line2.accent}</span> {home.hero.line2.after}</em>{
           /* A zero-size inline-block sat on the baseline: the reel's droplet
             lands on this line, and reads where the baseline is from here. */
         }<span class="hero__baseline" aria-hidden="true"></span></span
@@ -125,31 +128,27 @@ const posters = await Promise.all(
 
   <div class="hero__foot mt-9 flex items-end justify-between gap-10 min-[701px]:mt-6">
     <p class="text-foreground-secondary m-0 max-w-[440px] text-[17px] leading-[1.6]">
-      I'm <span class="whitespace-nowrap">Hans Martens</span>, an Astro developer in Veghel, the
-      Netherlands. I create free themes for Astro. The newest one, <a
-        class="hero__link"
-        href="/blog/introducing-astro-orbit/">Astro&nbsp;Orbit</a
-      >, has the same design as this website.
+      <Fragment set:html={rich(home.hero.intro)} />
     </p>
 
     <div class="hero__scroll" aria-hidden="true">
-      Scroll
+      {t.home.scroll}
       <span class="hero__scroll-line"></span>
     </div>
   </div>
 </section>
 
 <style>
-  /* The theme's name in the introduction: the text's own colour, underlined,
-     as the inline links elsewhere on the site. */
-  .hero__link {
+  /* A link in the introduction: the text's own colour, underlined, as the
+     inline links elsewhere on the site. */
+  .hero__foot :global(a) {
     color: var(--color-foreground);
     text-decoration: underline;
     text-decoration-thickness: 1.5px;
     text-underline-offset: 3px;
   }
 
-  .hero__link:hover {
+  .hero__foot :global(a:hover) {
     text-decoration-thickness: 2.5px;
   }
 

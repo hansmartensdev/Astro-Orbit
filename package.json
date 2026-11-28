@@ -1,7 +1,7 @@
 {
-  "name": "astro-droplet",
+  "name": "astro-orbit",
   "version": "0.1.0",
-  "description": "Astro Droplet: an Astro theme with a 3D droplet in the hero, in dark and light mode",
+  "description": "Astro Orbit: a portfolio and blog theme for Astro, with a 3D droplet in the hero, in four languages",
   "type": "module",
   "author": "Hans Martens",
   "license": "MIT",

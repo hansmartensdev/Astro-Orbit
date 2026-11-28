@@ -22,22 +22,18 @@ interface Props {
 
 const { surface = false } = Astro.props;
 
-// The statement, in phrases; `accent` phrases are set in the accent colour.
-const phrases: { text: string; accent?: boolean }[] = [
-  { text: 'Making something' },
-  { text: 'beautifully designed', accent: true },
-  { text: 'and' },
-  { text: 'technically solid', accent: true },
-  { text: '— that’s what I find genuinely satisfying.' },
-];
+// The statement, in phrases (theme.config.ts); `accent` phrases are set
+// in the accent colour.
+const phrases: { text: string; accent?: boolean }[] = home.statement.phrases;
 
 const words = phrases.flatMap((phrase) =>
   phrase.text.split(' ').map((text) => ({ text, accent: Boolean(phrase.accent) }))
 );
+import { home } from '@/config/theme.config';
 ---
 
 <figure class:list={['stmt', surface && 'stmt--surface']} style={`--n: ${words.length}`}>
-  <p class="stmt__label label-mono">What drives me</p>
+  <p class="stmt__label label-mono">{home.statement.label}</p>
 
   <blockquote class="stmt__quote">
     <p class="stmt__text">
@@ -56,7 +52,7 @@ const words = phrases.flatMap((phrase) =>
   {/* The way on to the About page, as a button so it is seen (Hans's
       choice): it replaced the signature row of name, role and place. */}
   <div class="stmt__foot">
-    <ArrowFillButton href="/about" class="stmt__button">More about me</ArrowFillButton>
+    <ArrowFillButton href="/about" class="stmt__button">{home.statement.button}</ArrowFillButton>
   </div>
 </figure>
 

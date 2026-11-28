@@ -26,19 +26,21 @@ const facts = (
     value: project.data.title,
     href: `/projects/${project.id}/`,
   }));
+import { pages } from '@/config/theme.config';
+import { t, upper } from '@/i18n';
 ---
 
 <SiteLayout
-  title="Projects"
-  description="Projects by Hans Martens, Astro developer in Veghel, the Netherlands."
+  title={t.projects.title}
+  description={pages.projects.description}
   navOverMedia
 >
   <CinemaHero
-    label="PROJECTS"
-    title="Projects"
-    description="A selection of projects I've designed and built, each one fast, accessible and made with love for the craft."
+    label={upper(t.hero.projects)}
+    title={t.projects.title}
+    description={pages.projects.blurb}
     facts={facts}
-    factsLabel="The projects"
+    factsLabel={t.hero.projectsFacts}
     icon="layout-grid"
   />
 

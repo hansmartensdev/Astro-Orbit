@@ -1,3 +1,5 @@
+import { t } from '@/i18n';
+import { home, about, pages } from '@/config/theme.config';
 import type { APIRoute, GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 import sharp from 'sharp';
@@ -10,11 +12,12 @@ import siteConfig from '@/config/site.config';
 // preview is a 404. Blog posts are not here: their cover is their preview
 // (src/pages/covers/[slug].png.ts).
 const STATIC_PAGES = [
-  { slug: 'index', title: 'An Astro developer for fast & beautiful websites.', description: siteConfig.description },
-  { slug: 'about', title: 'About', description: `Who ${siteConfig.name} is, and what drives the work.` },
-  { slug: 'projects', title: 'Projects', description: 'Websites I have designed and built, each one fast, accessible and made with love for the craft.' },
-  { slug: 'blog', title: 'Blog', description: 'Notes on Astro, web performance and building fast websites.' },
-  { slug: 'contact', title: 'Let’s talk Astro', description: 'An idea for a website, a question about a theme, a blog post or something on GitHub: say hello.' },
+  // The texts from theme.config.ts and the site's dictionary.
+  { slug: 'index', title: `${home.hero.line1} ${home.hero.line2.before} ${home.hero.line2.accent} ${home.hero.line2.after}`, description: siteConfig.description },
+  { slug: 'about', title: t.nav.about, description: about.description },
+  { slug: 'projects', title: t.projects.title, description: pages.projects.blurb },
+  { slug: 'blog', title: t.blog.title, description: pages.blog.blurb },
+  { slug: 'contact', title: pages.contact.title, description: pages.contact.blurb },
 ];
 
 export const getStaticPaths: GetStaticPaths = async () => {

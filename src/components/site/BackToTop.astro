@@ -14,9 +14,10 @@
  * read before first paint. Its window listeners are set once, since the
  * ClientRouter keeps the script between pages.
  */
+import { t } from '@/i18n';
 ---
 
-<button type="button" class="btt" id="back-to-top" aria-label="Back to top">
+<button type="button" class="btt" id="back-to-top" aria-label={t.nav.backToTop}>
   {/* The ring, turned so the arc starts at 12 o'clock. */}
   <svg class="btt__ring" viewBox="0 0 48 48" aria-hidden="true">
     <circle class="btt__track" cx="24" cy="24" r="21" />

@@ -17,18 +17,19 @@ import SiteLayout from '@/layouts/SiteLayout.astro';
 import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
 
 const c = {
-  title: 'Confirm your subscription',
-  text: 'Click the button to confirm that you want new posts by email.',
-  button: 'Confirm',
-  confirming: 'Confirming…',
-  done: 'Subscription confirmed',
-  doneText: "Thanks. You'll get an email when a new post is published.",
-  expired: "This link has expired or isn't valid. Subscribe again under any post to get a new link.",
-  failed: 'Something went wrong. Please try again later.',
-  sent: 'Almost done: check your inbox and click the link in the email to confirm.',
-  back: 'To the blog',
-  metaDescription: 'Confirm your subscription to new posts by email.',
+  title: t.newsletter.confirmTitle,
+  text: t.newsletter.confirmText,
+  button: t.newsletter.confirm,
+  confirming: t.newsletter.confirming,
+  done: t.newsletter.done,
+  doneText: t.newsletter.doneText,
+  expired: t.newsletter.expired,
+  failed: t.newsletter.failed,
+  sent: t.newsletter.sent,
+  back: t.newsletter.back,
+  metaDescription: t.newsletter.metaDescription,
 };
+import { t } from '@/i18n';
 ---
 
 <SiteLayout title={c.title} description={c.metaDescription} noindex>

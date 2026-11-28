@@ -1,0 +1,96 @@
+---
+title: "Getting Started with Astro Orbit"
+description: "Install Astro Orbit, run it on your computer and put it online on Vercel, Netlify or Cloudflare."
+publishedAt: 2026-11-26T10:00:00Z
+author: "Alex Morgan"
+category: "Themes"
+tags: ["Astro Orbit", "Getting started"]
+icon: "terminal"
+cardWord: "get started"
+featured: true
+# Describes a feature from the old Orbit; update before publishing.
+draft: true
+---
+
+Astro Orbit is a free portfolio and blog theme for Astro. It's MIT-licensed, so you can use it for your own website, change it and publish it.
+
+## What you need
+
+- Node 22.23.4 or later
+- pnpm 10
+- Git
+
+## Install it
+
+```bash
+git clone https://github.com/hansmartensdev/Astro-Orbit.git my-site
+cd my-site
+pnpm install
+pnpm dev
+```
+
+The site runs at `http://localhost:4321`. When you save a change, the page in your browser updates.
+
+## The commands
+
+| Command | What it does |
+|---------|--------------|
+| `pnpm dev` | Runs the site on your computer at `http://localhost:4321` |
+| `pnpm build` | Builds the static site, then the search index |
+| `pnpm preview` | Serves the build. Search only works here, not in `pnpm dev` |
+| `pnpm check` | Astro and TypeScript diagnostics |
+| `pnpm lint` | ESLint |
+
+## Put it online
+
+Astro Orbit builds for Vercel, Netlify and Cloudflare. Every page is a static file, except the contact form's endpoint, which runs as the host's function.
+
+### Vercel
+
+Vercel is the default. Push your copy to GitHub, import the repository in [Vercel](https://vercel.com), and it builds.
+
+### Netlify
+
+Add the Netlify adapter, and commit the change to `package.json` and `pnpm-lock.yaml`:
+
+```bash
+pnpm add -D @astrojs/netlify
+```
+
+Then import the repository in [Netlify](https://www.netlify.com). `netlify.toml` sets the build command, and `DEPLOY_TARGET=netlify`, which tells the theme to build for Netlify.
+
+### Cloudflare
+
+Add the Cloudflare adapter and Wrangler, Cloudflare's command-line tool, and commit the change:
+
+```bash
+pnpm add -D @astrojs/cloudflare wrangler
+```
+
+The site runs as a Cloudflare Worker, named `astro-orbit` in `wrangler.jsonc`. Change the name to your own. In the Cloudflare dashboard, create a Worker from your GitHub repository, with these settings:
+
+| Setting | Value |
+|---------|-------|
+| Build command | `pnpm build` |
+| Deploy command | `npx wrangler deploy` |
+| Build variable | `DEPLOY_TARGET` set to `cloudflare` |
+
+To deploy from your computer instead, run `DEPLOY_TARGET=cloudflare pnpm build`, then `npx wrangler deploy`.
+
+## The contact form
+
+The contact form sends messages through [Resend](https://resend.com). Set these in your host's environment variables:
+
+| Variable | What it does |
+|----------|--------------|
+| `RESEND_API_KEY` | Your Resend API key. Without it, the form doesn't send in production. |
+| `CONTACT_TO` | Where messages go. Defaults to the email in `theme.config.ts`. |
+| `CONTACT_FROM` | The sender, on a domain you've verified in Resend. |
+
+On Cloudflare, they go in two places. `RESEND_API_KEY` is a secret under the Worker's variables and secrets, because it's read when a message is sent. `CONTACT_TO` and `CONTACT_FROM` are build variables, because they're written into the site when it's built.
+
+On the demo there's no key, so the form accepts a message without sending it, and tells the visitor so.
+
+## Next
+
+Most of what makes the site yours is in one file. That's the next post: [Make Astro Orbit Yours in One File](/blog/make-it-yours/).

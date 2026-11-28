@@ -106,14 +106,16 @@ const SIZING: Record<'hero' | 'large' | 'wide' | 'standard', { widths: number[];
       sizes: '(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 448px',
     },
   };
+import { home } from '@/config/theme.config';
+import { t } from '@/i18n';
 ---
 
 <section class:list={['shell pt-[130px] pb-15 max-[800px]:pt-[90px]', className]}>
   {
     showHead && (
       <SectionHead
-        title="Latest projects"
-        blurb="A selection of projects I've designed and built, each one fast, accessible and made with love for the craft."
+        title={home.projects.title}
+        blurb={home.projects.blurb}
         id="work"
       />
     )
@@ -190,7 +192,7 @@ const SIZING: Record<'hero' | 'large' | 'wide' | 'standard', { widths: number[];
 
             <div class="card__view" aria-hidden="true">
               <span class="card__view-pill">
-                View project
+                {t.projects.view}
                 <Icon name="lucide:arrow-up-right" aria-hidden="true" />
               </span>
             </div>

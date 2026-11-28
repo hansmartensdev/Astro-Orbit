@@ -42,7 +42,7 @@ const {
   description,
   publishedAt,
   updatedAt,
-  author = 'Hans Martens',
+  author = siteConfig.name,
   category,
   image,
   imageAlt,
@@ -62,13 +62,17 @@ const hasToc = headings.filter((h) => h.depth >= 2 && h.depth <= 3).length >= 3;
 const ogImage = image?.src || cover || `/og${Astro.url.pathname.replace(/\/$/, '')}.png`;
 
 const breadcrumbs = [
-  { label: 'Home', href: '/' },
-  { label: 'Blog', href: '/blog' },
+  { label: t.nav.home, href: '/' },
+  { label: t.blog.title, href: '/blog' },
   { label: title },
 ];
 
 // Get full URL for sharing
 const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
+import { newsletter } from '@/config/theme.config';
+import siteConfig from '@/config/site.config';
+import { t } from '@/i18n';
+import {  } from '@/lib/posts';
 ---
 
 <BaseLayout
@@ -145,7 +149,7 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
               <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"
               ></path>
             </svg>
-            Back to Blog
+            {t.blog.back}
           </a>
 
           <!-- Share buttons -->
@@ -154,7 +158,7 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
       </footer>
 
       <!-- New posts by email -->
-      <NewsletterSignup />
+      {newsletter.show && <NewsletterSignup />}
       </div>
 
       {hasToc && (
@@ -171,7 +175,7 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
     tags.length > 0 && (
       <div class="bg-background-secondary">
         <div class="shell pb-24">
-          <RelatedPosts currentSlug={slug} tags={tags} locale="en" maxPosts={4} />
+          <RelatedPosts currentSlug={slug} tags={tags} maxPosts={4} />
         </div>
       </div>
     )

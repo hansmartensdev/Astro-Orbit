@@ -1,3 +1,4 @@
+import { t, upper } from '@/i18n';
 /**
  * Footer link columns
  *
@@ -23,37 +24,37 @@ export interface FooterColumn {
 
 export const footerColumns: FooterColumn[] = [
   {
-    heading: 'MENU',
+    heading: upper(t.footer.menu),
     links: [
-      { label: 'Home', href: '/' },
-      { label: 'About', href: '/about' },
-      { label: 'Projects', href: '/projects' },
-      { label: 'Blog', href: '/blog' },
-      { label: 'Contact', href: '/contact' },
+      { label: t.nav.home, href: '/' },
+      { label: t.nav.about, href: '/about' },
+      { label: t.nav.projects, href: '/projects' },
+      { label: t.nav.blog, href: '/blog' },
+      { label: t.nav.contact, href: '/contact' },
     ],
   },
   {
-    heading: 'SOCIAL',
+    heading: upper(t.footer.social),
     links: [
       {
         label: 'LinkedIn',
-        href: 'https://www.linkedin.com/in/hansmartensdev/',
+        href: 'https://www.linkedin.com/',
         external: true,
         icon: 'fa6-brands:linkedin-in',
       },
       {
         label: 'GitHub',
-        href: 'https://github.com/hansmartensdev',
+        href: 'https://github.com/',
         external: true,
         icon: 'fa6-brands:github',
       },
     ],
   },
   {
-    heading: 'SAY HI',
+    heading: upper(t.footer.sayHi),
     links: [
       { label: siteConfig.email, href: `mailto:${siteConfig.email}`, icon: 'lucide:mail' },
       { label: 'WhatsApp', href: siteConfig.whatsapp, external: true, icon: 'fa6-brands:whatsapp' },
-    ],
+    ].filter((link) => link.href),
   },
 ];

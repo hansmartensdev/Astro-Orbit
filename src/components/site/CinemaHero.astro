@@ -96,6 +96,7 @@ const parts =
   at >= 0 && accent
     ? [title.slice(0, at), accent, title.slice(at + accent.length)]
     : [title, '', ''];
+import { upper } from '@/i18n';
 ---
 
 <header
@@ -158,7 +159,7 @@ const parts =
       {
         facts.map((fact) => (
           <div>
-            <dt class="label-mono">{fact.label.toUpperCase()}</dt>
+            <dt class="label-mono">{upper(fact.label)}</dt>
             <dd>
               {fact.href ? (
                 <a

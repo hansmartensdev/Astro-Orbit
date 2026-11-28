@@ -26,7 +26,7 @@ const { count = 3 } = Astro.props;
 const posts = (
   await getCollection('blog', ({ data }) => (import.meta.env.PROD ? data.draft !== true : true))
 )
-  .filter((post) => post.data.locale === 'en')
+  .filter((post) => inSiteLanguage(post))
   .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
 
 const featured = posts.filter((post) => post.data.featured);
@@ -35,6 +35,9 @@ const shown = [...featured, ...posts.filter((post) => !post.data.featured)]
   .toSorted((a, b) => Number(b.data.pinned) - Number(a.data.pinned))
   .slice(0, count);
 
+import { home } from '@/config/theme.config';
+import { t } from '@/i18n';
+import { inSiteLanguage } from '@/lib/posts';
 ---
 
 {
@@ -42,8 +45,8 @@ const shown = [...featured, ...posts.filter((post) => !post.data.featured)]
     <section class="pt-[130px] max-[800px]:pt-[90px]">
       <div class="shell">
         <SectionHead
-          title="From the blog"
-          blurb="I write about building themes, Astro, and what makes websites fast."
+          title={home.blog.title}
+          blurb={home.blog.blurb}
         />
 
         <ul
@@ -63,7 +66,7 @@ const shown = [...featured, ...posts.filter((post) => !post.data.featured)]
 
         <div class="mt-14 flex justify-center max-[800px]:mt-10" data-reveal>
           <PillButton href="/blog" variant="outline" class="px-9 py-4">
-            All posts
+            {t.home.allPosts}
             <Icon name="lucide:arrow-right" aria-hidden="true" />
           </PillButton>
         </div>
