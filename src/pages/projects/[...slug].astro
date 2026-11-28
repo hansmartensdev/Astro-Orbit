@@ -48,11 +48,9 @@ export async function getStaticPaths() {
       const after = [...ring.slice(from + 1), ...ring.slice(0, Math.max(from, 0))];
       const next =
         parent ?? after.find((candidate) => candidate !== project && hasPicture(candidate));
-      // Two designs for the next project take turns down the portfolio, so
-      // a reader going from one project to the next sees both: the split
-      // (Hans's first choice) and the cinema. `nextLayout` overrides it.
-      const nextLayout =
-        project.data.nextLayout ?? (Math.max(from, 0) % 2 === 0 ? 'split' : 'cinema');
+      // The next project in the split design (text left, picture right),
+      // unless the project's `nextLayout` asks for the cinema.
+      const nextLayout = project.data.nextLayout ?? 'split';
       return { params: { slug: project.id }, props: { project, next, nextLayout } };
     })
     .filter(({ props }) => !props.project.data.story);
