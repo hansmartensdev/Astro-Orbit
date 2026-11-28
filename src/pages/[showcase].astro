@@ -1,0 +1,579 @@
+---
+/**
+ * Components
+ * URL: /components
+ *
+ * Every design-system component that comes with the theme, live, with its
+ * description and example from component-registry.json.
+ *
+ * The page is for the theme's demo (theme.config: showcase) and for `pnpm dev`:
+ * a site with showcase = false publishes no /components, and its owner still
+ * sees the page while building. That's why this is a route that makes the
+ * page only then, rather than src/pages/components.astro.
+ *
+ * Like Velocity's components page, its own text is English in every site
+ * language: it's for developers, and the names and descriptions come from
+ * the registry in English. The components on it use the site's language for
+ * their own labels.
+ */
+import SiteLayout from '@/layouts/SiteLayout.astro';
+import SectionHead from '@/components/sections/SectionHead.astro';
+import Specimen from '@/components/site/Specimen.astro';
+import { showcase } from '@/config/theme.config';
+import { showcaseGroups, showcaseCount } from '@/lib/showcase';
+// Form
+import Button from '@/components/ui/form/Button/Button.astro';
+import Input from '@/components/ui/form/Input/Input.astro';
+import Textarea from '@/components/ui/form/Textarea/Textarea.astro';
+import Select from '@/components/ui/form/Select/Select.astro';
+import Checkbox from '@/components/ui/form/Checkbox/Checkbox.astro';
+import Radio from '@/components/ui/form/Radio/Radio.astro';
+import Switch from '@/components/ui/form/Switch/Switch.astro';
+import ToggleGroup from '@/components/ui/form/ToggleGroup/ToggleGroup.astro';
+// Data display
+import Card from '@/components/ui/data-display/Card/Card.astro';
+import Badge from '@/components/ui/data-display/Badge/Badge.astro';
+import Avatar from '@/components/ui/data-display/Avatar/Avatar.astro';
+import AvatarGroup from '@/components/ui/data-display/AvatarGroup/AvatarGroup.astro';
+import Table from '@/components/ui/data-display/Table/Table.astro';
+import Pagination from '@/components/ui/data-display/Pagination/Pagination.astro';
+import Progress from '@/components/ui/data-display/Progress/Progress.astro';
+import Skeleton from '@/components/ui/data-display/Skeleton/Skeleton.astro';
+import Carousel from '@/components/ui/data-display/Carousel/Carousel.astro';
+import GoogleMap from '@/components/ui/data-display/GoogleMap/GoogleMap.astro';
+// Feedback
+import Alert from '@/components/ui/feedback/Alert/Alert.astro';
+import ToastSample from '@/components/site/ToastSample';
+import Tooltip from '@/components/ui/feedback/Tooltip/Tooltip.astro';
+import Spinner from '@/components/ui/feedback/Spinner/Spinner.astro';
+// Overlay
+import Dialog from '@/components/ui/overlay/Dialog/Dialog.astro';
+import Sheet from '@/components/ui/overlay/Sheet/Sheet.astro';
+import Dropdown from '@/components/ui/overlay/Dropdown/Dropdown.astro';
+import Popover from '@/components/ui/overlay/Popover/Popover.astro';
+import Tabs from '@/components/ui/overlay/Tabs/Tabs.astro';
+import VerticalTabs from '@/components/ui/overlay/VerticalTabs/VerticalTabs.astro';
+import Accordion from '@/components/ui/overlay/Accordion/Accordion.astro';
+// Content and layout
+import CodeBlock from '@/components/ui/content/CodeBlock/CodeBlock.astro';
+import Kbd from '@/components/ui/content/Kbd/Kbd.astro';
+import Separator from '@/components/ui/layout/Separator/Separator.astro';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+// Marketing
+import CTA from '@/components/ui/marketing/CTA/CTA.astro';
+import NpmCopyButton from '@/components/ui/marketing/NpmCopyButton/NpmCopyButton.astro';
+import SocialProof from '@/components/ui/marketing/SocialProof/SocialProof.astro';
+import TerminalDemo from '@/components/ui/marketing/TerminalDemo/TerminalDemo';
+import VideoEmbed from '@/components/ui/marketing/VideoEmbed/VideoEmbed.astro';
+import AnnouncementBar from '@/components/ui/marketing/AnnouncementBar/AnnouncementBar.astro';
+// Patterns
+import FormField from '@/components/patterns/FormField.astro';
+import SearchInput from '@/components/patterns/SearchInput.astro';
+import PasswordInput from '@/components/patterns/PasswordInput.astro';
+import StatCard from '@/components/patterns/StatCard.astro';
+import EmptyState from '@/components/patterns/EmptyState.astro';
+import PageHeader from '@/components/patterns/PageHeader.astro';
+import MediaSlot from '@/components/patterns/MediaSlot.astro';
+
+export function getStaticPaths() {
+  return showcase || import.meta.env.DEV ? [{ params: { showcase: 'components' } }] : [];
+}
+
+const groups = showcaseGroups;
+const count = showcaseCount;
+const head = (id: string) => {
+  const i = groups.findIndex((g) => g.id === id);
+  return { number: String(i + 1).padStart(2, '0'), size: groups[i].keys.length, title: groups[i].title };
+};
+---
+
+<SiteLayout
+  title="Components"
+  description={`The ${count} design-system components in Astro Orbit, from Velocity 2, each one live with its code.`}
+>
+  <header class="shell pt-[180px] max-[800px]:pt-[130px]">
+    <SectionHead
+      as="h1"
+      title="Components"
+      blurb={`The ${count} design-system components that come with Astro Orbit: Velocity 2's, in Orbit's colours. Each one is live here, with its code.`}
+    />
+  </header>
+
+  <div class="shell cmp">
+    <nav class="cmp__index" aria-label="Component groups">
+      <span class="label-mono cmp__index-label">Groups</span>
+      <ul>
+        {
+          groups.map((g) => (
+            <li>
+              <a href={`#${g.id}`} data-cmp-link={g.id}>
+                {g.title}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="cmp__body">
+      {/* ---------------------------------------------------------------- */}
+      <section id="form" class="cmp__group" data-cmp-group aria-labelledby="form-title">
+        <p class="label-mono cmp__count">{head('form').number} · {head('form').size} components</p>
+        <h2 class="cmp__title" id="form-title">{head('form').title}</h2>
+        <div class="cmp__grid">
+          <Specimen id="button">
+            <Button variant="brand" trailingIcon="arrow-right" href="/contact">Get in touch</Button>
+            <Button variant="outline">Outline</Button>
+            <Button variant="ghost">Ghost</Button>
+            <Button variant="outline" loading>Saving</Button>
+          </Specimen>
+          <Specimen id="input" wide>
+            <Input name="demo-email" type="email" label="Email" hint="We never share it." leadingIcon="mail" />
+          </Specimen>
+          <Specimen id="textarea" wide>
+            <Textarea name="demo-message" label="Message" rows={3} error="Please enter a message." />
+          </Specimen>
+          <Specimen id="select" wide>
+            <Select
+              name="demo-plan"
+              label="Plan"
+              placeholder="Choose a plan"
+              options={[
+                { value: 'starter', label: 'Starter' },
+                { value: 'pro', label: 'Pro' },
+              ]}
+            />
+          </Specimen>
+          <Specimen id="checkbox" wide>
+            <Checkbox name="demo-updates" label="Send me updates" description="You can unsubscribe at any time." />
+          </Specimen>
+          <Specimen id="radio" wide>
+            <fieldset class="space-y-3">
+              <legend class="text-sm font-medium">Billing</legend>
+              <Radio name="demo-billing" value="monthly" label="Monthly" checked />
+              <Radio name="demo-billing" value="yearly" label="Yearly" description="Two months free" variant="card">
+                <Icon slot="media" name="calendar" />
+              </Radio>
+            </fieldset>
+          </Specimen>
+          <Specimen id="switch" wide>
+            <Switch name="demo-switch" label="Product updates" description="One email a month." checked />
+          </Specimen>
+          <Specimen id="toggle-group">
+            <ToggleGroup
+              name="demo-period"
+              label="Billing period"
+              value="monthly"
+              options={[
+                { value: 'monthly', label: 'Monthly' },
+                { value: 'yearly', label: 'Yearly' },
+              ]}
+            />
+          </Specimen>
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------------------- */}
+      <section id="data-display" class="cmp__group" data-cmp-group aria-labelledby="data-display-title">
+        <p class="label-mono cmp__count">{head('data-display').number} · {head('data-display').size} components</p>
+        <h2 class="cmp__title" id="data-display-title">{head('data-display').title}</h2>
+        <div class="cmp__grid">
+          <Specimen id="card" wide>
+            <Card variant="elevated" padding="lg" hover href="/blog">
+              <h3 class="text-foreground font-semibold">Read the blog</h3>
+              <p class="text-foreground-muted text-sm">Guides and notes.</p>
+            </Card>
+          </Specimen>
+          <Specimen id="badge">
+            <Badge variant="brand" pill pulse>New release</Badge>
+            <Badge variant="success" size="sm">Live</Badge>
+            <Badge variant="default">Draft</Badge>
+          </Specimen>
+          <Specimen id="avatar" note="On this page the avatars show initials: the example's pictures aren't part of the theme.">
+            <Avatar alt="Ada Lovelace" size="lg" />
+            <Avatar fallback="GH" size="sm" />
+          </Specimen>
+          <Specimen id="avatar-group">
+            <AvatarGroup max={3} avatars={[{ alt: 'Ada Lovelace' }, { alt: 'Grace Hopper' }, { fallback: 'AT' }, { alt: 'Alan Kay' }]} />
+          </Specimen>
+          <Specimen id="table" wide>
+            <Table
+              caption="What each plan includes"
+              columns={[
+                { key: 'feature', label: 'Feature', rowHeader: true },
+                { key: 'starter', label: 'Starter', align: 'center' },
+                { key: 'pro', label: 'Pro', align: 'center' },
+              ]}
+              rows={[
+                { feature: 'Projects', starter: '3', pro: 'Unlimited' },
+                { feature: 'Priority support', starter: { text: '–', label: 'Not included' }, pro: { icon: 'check', label: 'Included' } },
+              ]}
+            />
+          </Specimen>
+          <Specimen id="pagination">
+            <Pagination currentPage={2} totalPages={8} baseUrl="/components/#" />
+          </Specimen>
+          <Specimen id="progress" wide>
+            <Progress value={64} variant="brand" showLabel aria-label="Upload progress" />
+          </Specimen>
+          <Specimen id="skeleton" wide>
+            <div class="flex items-center gap-3">
+              <Skeleton variant="circular" width="40px" height="40px" />
+              <Skeleton variant="text" width="60%" />
+            </div>
+          </Specimen>
+          <Specimen id="carousel" wide>
+            <Carousel label="Example slides" perView={2}>
+              <Card>One</Card>
+              <Card>Two</Card>
+              <Card>Three</Card>
+              <Card>Four</Card>
+            </Carousel>
+          </Specimen>
+          <Specimen id="google-map" wide note="The demo has no Google Maps API key, so the map shows what it shows without one. With PUBLIC_GOOGLE_MAPS_API_KEY set, it shows the map.">
+            <GoogleMap address="Dam, Amsterdam" zoom={14} size="sm" ariaLabel="Map of the Dam in Amsterdam" />
+          </Specimen>
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------------------- */}
+      <section id="feedback" class="cmp__group" data-cmp-group aria-labelledby="feedback-title">
+        <p class="label-mono cmp__count">{head('feedback').number} · {head('feedback').size} components</p>
+        <h2 class="cmp__title" id="feedback-title">{head('feedback').title}</h2>
+        <div class="cmp__grid">
+          <Specimen id="alert" wide>
+            <Alert variant="warning" title="Scheduled maintenance" dismissible>
+              The site is read-only on Sunday from 02:00 to 04:00 UTC.
+            </Alert>
+          </Specimen>
+          <Specimen id="toast">
+            <ToastSample client:visible />
+          </Specimen>
+          <Specimen id="tooltip">
+            <Tooltip content="Copy to clipboard" position="bottom">
+              <Button variant="outline" size="sm" icon leadingIcon="copy" aria-label="Copy" />
+            </Tooltip>
+          </Specimen>
+          <Specimen id="spinner">
+            <Spinner size="sm" label="Loading results" />
+            <Spinner label="Loading results" />
+          </Specimen>
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------------------- */}
+      <section id="overlay" class="cmp__group" data-cmp-group aria-labelledby="overlay-title">
+        <p class="label-mono cmp__count">{head('overlay').number} · {head('overlay').size} components</p>
+        <h2 class="cmp__title" id="overlay-title">{head('overlay').title}</h2>
+        <div class="cmp__grid">
+          <Specimen id="dialog">
+            <Button variant="destructive" data-dialog-open="demo-dialog">Delete project</Button>
+            <Dialog id="demo-dialog" title="Delete project?" description="This can't be undone." size="sm">
+              <p class="text-foreground-muted text-sm">All deployments will be removed.</p>
+              <div slot="footer" class="flex justify-end gap-3 px-6 pb-6">
+                <Button variant="outline" data-dialog-close>Cancel</Button>
+                <Button variant="destructive" data-dialog-close>Delete</Button>
+              </div>
+            </Dialog>
+          </Specimen>
+          <Specimen id="sheet">
+            <Button variant="outline" data-sheet-open="demo-sheet">Filters</Button>
+            <Sheet id="demo-sheet" title="Filters" side="right">
+              <p>Filter controls go here.</p>
+              <Button slot="footer" data-sheet-close fullWidth>Show results</Button>
+            </Sheet>
+          </Specimen>
+          <Specimen id="dropdown">
+            <Dropdown
+              align="end"
+              items={[
+                { label: 'Edit', href: '/components/#dropdown', icon: 'pencil' },
+                { label: '', separator: true },
+                { label: 'Archive', href: '/components/#dropdown', icon: 'archive', disabled: true },
+              ]}
+            >
+              <Button slot="trigger" variant="outline" trailingIcon="chevron-down">Actions</Button>
+            </Dropdown>
+          </Specimen>
+          <Specimen id="popover">
+            <Popover label="Plan details">
+              <Fragment slot="trigger">Details</Fragment>
+              <p>Billed yearly. Cancel any time.</p>
+            </Popover>
+          </Specimen>
+          <Specimen id="tabs" wide>
+            <Tabs tabs={[{ id: 'overview', label: 'Overview' }, { id: 'pricing', label: 'Pricing' }]}>
+              <div data-tab-content="overview" class="text-foreground-secondary pt-4 text-sm">The first tab's content.</div>
+              <div data-tab-content="pricing" class="text-foreground-secondary pt-4 text-sm">The second tab's content.</div>
+            </Tabs>
+          </Specimen>
+          <Specimen id="vertical-tabs" wide>
+            <VerticalTabs
+              mobileVariant="sheet"
+              tabs={[
+                { id: 'account', label: 'Account', description: 'Profile and email', icon: 'settings' },
+                { id: 'security', label: 'Security', description: 'Password and 2FA', icon: 'shield' },
+              ]}
+            >
+              <div data-tab-content="account">Account settings</div>
+              <div data-tab-content="security">Security settings</div>
+            </VerticalTabs>
+          </Specimen>
+          <Specimen id="accordion" wide>
+            <Accordion
+              variant="card"
+              exclusive
+              items={[
+                { title: 'Is it free?', content: 'Yes, Astro Orbit is MIT-licensed.', defaultOpen: true },
+                { title: 'Can I use React?', content: 'Yes, as islands.' },
+              ]}
+            />
+          </Specimen>
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------------------- */}
+      <section id="content" class="cmp__group" data-cmp-group aria-labelledby="content-title">
+        <p class="label-mono cmp__count">{head('content').number} · {head('content').size} components</p>
+        <h2 class="cmp__title" id="content-title">{head('content').title}</h2>
+        <div class="cmp__grid">
+          <Specimen id="code-block" wide>
+            <CodeBlock filename="astro.config.mjs" code={`export default defineConfig({\n  site: 'https://example.com',\n});`} />
+          </Specimen>
+          <Specimen id="kbd">
+            <p class="text-sm">Press <Kbd keys={['⌘', 'K']} /> to search, or <Kbd>Esc</Kbd> to close.</p>
+          </Specimen>
+          <Specimen id="separator" wide>
+            <Separator label="or" />
+            <div class="flex h-6 items-center gap-3 text-sm">Docs <Separator orientation="vertical" /> Blog</div>
+          </Specimen>
+          <Specimen id="icon">
+            <Icon name="calendar-check" size="sm" />
+            <Icon name="rocket" />
+            <Icon name="sparkles" size="lg" />
+          </Specimen>
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------------------- */}
+      <section id="marketing" class="cmp__group" data-cmp-group aria-labelledby="marketing-title">
+        <p class="label-mono cmp__count">{head('marketing').number} · {head('marketing').size} components</p>
+        <h2 class="cmp__title" id="marketing-title">{head('marketing').title}</h2>
+        <div class="cmp__grid">
+          <Specimen id="cta" wide>
+            <CTA variant="invert" size="md">
+              <h2 slot="heading">Ready to launch?</h2>
+              <p slot="description">Start from a site that is fast, accessible and translated.</p>
+              <Button slot="actions" size="lg" href="/contact">Get in touch</Button>
+            </CTA>
+          </Specimen>
+          <Specimen id="npm-copy-button">
+            <NpmCopyButton command="pnpm create astro@latest" size="md" />
+          </Specimen>
+          <Specimen id="social-proof">
+            <SocialProof text="Used by people who build with Astro" avatarCount={4} size="md" />
+          </Specimen>
+          <Specimen id="terminal-demo" wide note="The animation is Velocity's own: it types the commands that start a Velocity project.">
+            <TerminalDemo client:visible />
+          </Specimen>
+          <Specimen id="video-embed" wide note="Nothing loads from YouTube until you press play.">
+            <VideoEmbed provider="youtube" videoId="dQw4w9WgXcQ" title="Product tour" />
+          </Specimen>
+          <Specimen id="announcement-bar" wide>
+            <AnnouncementBar id="demo-announcement" href="/blog/" linkLabel="Read the blog" tone="brand">
+              Astro Orbit is a free Astro theme.
+            </AnnouncementBar>
+          </Specimen>
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------------------- */}
+      <section id="patterns" class="cmp__group" data-cmp-group aria-labelledby="patterns-title">
+        <p class="label-mono cmp__count">{head('patterns').number} · {head('patterns').size} components</p>
+        <h2 class="cmp__title" id="patterns-title">{head('patterns').title}</h2>
+        <div class="cmp__grid">
+          <Specimen id="form-field" wide>
+            <FormField id="demo-colour" label="Favourite colour" hint="Pick any colour.">
+              <input slot="input" id="demo-colour" type="color" name="demo-colour" class="border-border h-10 w-16 rounded-md border" />
+            </FormField>
+          </Specimen>
+          <Specimen id="search-input" wide>
+            <form action="/components/" role="search">
+              <SearchInput name="demo-q" placeholder="Search the docs" aria-label="Search" />
+            </form>
+          </Specimen>
+          <Specimen id="password-input" wide>
+            <PasswordInput name="demo-password" label="Password" autocomplete="new-password" hint="At least 12 characters." />
+          </Specimen>
+          <Specimen id="stat-card" wide>
+            <StatCard label="Monthly visitors" value="48.2k" trend="up" trendText="+12% from last month" icon="users" />
+          </Specimen>
+          <Specimen id="empty-state" wide>
+            <EmptyState icon="search" title="No results" description="Try a different search term." actionLabel="Clear search" actionHref="/components/#empty-state" />
+          </Specimen>
+          <Specimen id="page-header" wide>
+            <PageHeader eyebrow="Company" title="About us" lead="We build fast, accessible websites." />
+          </Specimen>
+          <Specimen id="media-slot" wide note="Without a photo in src/assets/photos/, the slot holds its place with a placeholder, as here.">
+            <MediaSlot photo="team" alt="The team outside the office" label="Team photo" ratio="4/3" />
+          </Specimen>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="pb-[120px] max-[800px]:pb-[80px]"></div>
+</SiteLayout>
+
+<script>
+  // The group in view is the current one in the index.
+  function initIndex() {
+    const links = new Map(
+      [...document.querySelectorAll<HTMLAnchorElement>('[data-cmp-link]')].map((a) => [a.dataset.cmpLink, a])
+    );
+    if (links.size === 0) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          for (const a of links.values()) a.removeAttribute('aria-current');
+          links.get(entry.target.id)?.setAttribute('aria-current', 'true');
+        }
+      },
+      { rootMargin: '-30% 0px -60% 0px' }
+    );
+    document.querySelectorAll('[data-cmp-group]').forEach((group) => observer.observe(group));
+  }
+  initIndex();
+</script>
+
+<style>
+  .cmp {
+    display: grid;
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: 64px;
+    margin-top: 72px;
+  }
+
+  .cmp__index {
+    position: sticky;
+    top: 120px;
+    align-self: start;
+  }
+
+  .cmp__index-label {
+    display: block;
+    margin-bottom: 16px;
+    color: var(--color-foreground-muted);
+  }
+
+  .cmp__index ul {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cmp__index a {
+    font-size: 15px;
+    color: var(--color-foreground-secondary);
+    text-decoration: none;
+  }
+
+  .cmp__index a:hover,
+  .cmp__index a[aria-current] {
+    color: var(--color-foreground);
+  }
+
+  .cmp__index a[aria-current] {
+    font-weight: 600;
+  }
+
+  .cmp__index a:focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  .cmp__group {
+    scroll-margin-top: 110px;
+  }
+
+  .cmp__group + .cmp__group {
+    margin-top: 96px;
+  }
+
+  /* Small text in the brand colour: the text roles, not --hero-accent,
+     which is the line colour in dark mode. */
+  .cmp__count {
+    margin: 0 0 12px;
+    color: var(--orbit-text);
+  }
+
+  :global(.dark) .cmp__count {
+    color: var(--orbit-on-dark);
+  }
+
+  .cmp__title {
+    margin: 0 0 32px;
+    font-family: var(--font-display);
+    font-size: clamp(36px, 4vw, 52px);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: var(--display-tracking);
+    text-transform: var(--display-case);
+  }
+
+  .cmp__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    align-items: start;
+  }
+
+  @media (max-width: 1100px) {
+    .cmp__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 900px) {
+    .cmp {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 32px;
+      margin-top: 40px;
+    }
+
+    .cmp__index {
+      position: static;
+      margin-inline: calc(var(--gutter, 20px) * -1);
+      padding-inline: var(--gutter, 20px);
+      overflow-x: auto;
+    }
+
+    .cmp__index-label {
+      display: none;
+    }
+
+    .cmp__index ul {
+      display: flex;
+      gap: 8px;
+      width: max-content;
+    }
+
+    .cmp__index a {
+      display: block;
+      padding: 8px 14px;
+      border: 1px solid var(--color-border-strong);
+      border-radius: 999px;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .cmp__index a[aria-current] {
+      background: var(--color-foreground);
+      color: var(--color-background);
+    }
+  }
+</style>

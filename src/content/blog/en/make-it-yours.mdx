@@ -1,47 +1,54 @@
 ---
-title: "Make Astro Orbit Yours in One File"
+title: "Make Astro Orbit Yours"
 description: "Your name, your links, your colour and every line of text on the site: what's in theme.config.ts."
 publishedAt: 2026-11-22T10:00:00Z
 author: "Alex Morgan"
 category: "Themes"
 tags: ["Astro Orbit", "Settings"]
 icon: "sliders-horizontal"
-cardWord: "one settings file"
-# Describes a feature from the old Orbit; update before publishing.
-draft: true
+cardWord: "two settings files"
 ---
 
-Most of what makes Astro Orbit your website is in one file: `src/config/theme.config.ts`. The components read from it, so you don't need to open them to change a name or a line of text.
+The demo is filled in for a fictive designer, Alex Morgan. Two files make the site yours, and the components read from them, so you don't need to open the components to change a name or a line of text.
 
-## What's in it
+## Who you are: site.config.ts
+
+`src/config/site.config.ts` holds:
+
+- your name, and a sentence about you for search engines;
+- your wordmark, `am/` in the demo. On hover it unfolds into your name when each letter is the first letter of a word of it;
+- your email, where you are, and your social profiles;
+- a WhatsApp link (`https://wa.me/<your number>`). With one, a WhatsApp button appears in the sign-off, the footer and on the contact page, and the privacy page mentions WhatsApp. Empty hides all of them.
+
+## Your texts and choices: theme.config.ts
+
+`src/config/theme.config.ts` holds:
 
 | Setting | What it holds |
 |---------|---------------|
-| `demo` | Shows the "About this theme" band above the sign-off. Set it to `false` on your own site. |
+| `language` | The site's language: `'en'`, `'es'`, `'fr'` or `'nl'`. See [Your Site in Your Language](/blog/your-language/). |
 | `brandColor` | The brand colour, or `'default'` for the theme's violet. See [Use Your Own Brand Colour](/blog/your-own-brand-colour/). |
-| `darkOnly` | `true` for dark mode only, without the light/dark switch. See [Use Dark Mode Only](/blog/dark-mode-only/). |
-| `language` | The site's language: `'en'` for English, `'es'` for Spanish, `'fr'` for French, `'nl'` for Dutch. See [Your Site in Your Language](/blog/your-language/). |
-| `profile` | Your name, your wordmark (`am/` in the demo), a sentence about you, the site's address, your email, phone and WhatsApp link, where you are, and your social profiles. |
-| `home` | The homepage: the browser tab title, the hero, the section the droplet falls into, the card it opens into, and the titles and lines above the projects and the posts. |
-| `about` | The About page: its description, the line beside the title, the violet card and the section under it. |
-| `testimonials` | The quote cards on the homepage: the title, the line beside it and each quote, with the person's name, their role and the project it's about. Use real quotes, with permission. `show: false` removes the section. |
-| `services` | The four stacked cards on the homepage: the title, the line beside it and each card's number, title, icon, tags and text. Use them for your services or for anything else. `show: false` removes the section. |
-| `pages` | For the projects, blog and contact pages: the description for search engines and the line beside the title, and the contact page's title. |
-| `menu` | The line in the menu. |
-| `signOff` | The sign-off above the footer: its title, its text and the labels of its two buttons. |
+| `darkOnly` | `true` for dark mode only. See [Use Dark Mode Only](/blog/dark-mode-only/). |
+| `showcase` | The [components page](/components/). Set it to `false` on your own site; you still see it in `pnpm dev`. |
+| `home` | The homepage: the browser tab title, the hero's headline and line, the section the droplet lands in, the card it opens into, and the titles above the projects and the posts. |
+| `about` | The About page: its hero and facts, the years, a few words on how you work, recent projects and your tools. |
+| `pages` | The projects, blog and contact pages: the description for search engines, the line beside the title, the contact page's title, and what a project without a client shows. |
+| `signOff` | The sign-off above the footer: its title, text and button labels. |
+| `newsletter` | The signup under every post. `show: false` removes it. |
+| `footer` | The line beside the copyright. |
 
-In the longer texts, `[text](url)` becomes a link and `**text**` becomes bold. Everything else is plain text.
+In the longer texts, `[text](url)` becomes a link and `**text**` bold.
 
-## WhatsApp
+## Your photo
 
-Add a WhatsApp link (`https://wa.me/<your number>`) to `profile.whatsapp`, and a WhatsApp button appears in the sign-off, the footer and on the contact page. Leave it empty to hide it.
+The About page's hero shows your mark until you give it a photo. Put the photo in `src/assets/about/` and import it at the top of `src/pages/about.astro`; the comment there shows how. A portrait photo stands on the right of the hero on a wide screen.
 
 ## After the settings
 
-1. Set `demo` to `false`.
-2. Write your posts in `src/content/blog/<language>/`: `en/` for an English site.
-3. Add your projects in `src/content/work/`.
-4. Add yourself as an author in `src/content/authors/`.
-5. Read the privacy page (`src/pages/privacy.astro`) and change what doesn't match your site.
+1. Write your posts in `src/content/blog/<language>/`: `en/` for an English site.
+2. Add your projects in `src/content/work/`, with their pictures in `src/assets/work/`.
+3. Add yourself as an author in `src/content/authors/`.
+4. The menu is in `src/config/nav.config.ts`, the footer's columns in `src/config/footer.config.ts`.
+5. Read the privacy page (`src/i18n/privacy/<language>.astro`) and change what doesn't match your site.
 
 Posts and projects have a post of their own: [Writing Posts and Adding Projects](/blog/posts-and-projects/).

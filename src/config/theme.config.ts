@@ -38,6 +38,14 @@ export const brandColor: string = 'default';
  */
 export const darkOnly: boolean = false;
 
+/**
+ * The /components page: every design-system component the theme comes
+ * with, live, with its description and an example. On for the theme's
+ * demo; set it to false for your own site, and the page is only there in
+ * `pnpm dev`, for you.
+ */
+export const showcase: boolean = true;
+
 /** Homepage. */
 export const home = {
   /** The page title in the browser tab and in search results. */
