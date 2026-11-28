@@ -7,6 +7,16 @@
 </p>
 
 <p align="center">
+  <a href="https://astro.build"><img src="https://img.shields.io/badge/Astro-7.4-bc52ee?logo=astro&logoColor=white" alt="Astro 7.4" /></a>
+  <a href="https://tailwindcss.com"><img src="https://img.shields.io/badge/Tailwind-4-38bdf8?logo=tailwindcss&logoColor=white" alt="Tailwind CSS 4" /></a>
+  <a href="https://threejs.org"><img src="https://img.shields.io/badge/three.js-0.170-000000?logo=threedotjs&logoColor=white" alt="three.js 0.170" /></a>
+  <a href="https://www.typescriptlang.org"><img src="https://img.shields.io/badge/TypeScript-5.9-3178c6?logo=typescript&logoColor=white" alt="TypeScript 5.9" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-22c55e" alt="MIT licence" /></a>
+  <a href="https://github.com/hansmartensdev/Astro-Orbit"><img src="https://img.shields.io/github/stars/hansmartensdev/Astro-Orbit?style=flat&label=%E2%AD%90%20Star%20on%20GitHub&color=f59e0b" alt="Star on GitHub" /></a>
+  <a href="https://github.com/hansmartensdev/Astro-Orbit"><img src="https://visitor-badge.laobi.icu/badge?page_id=hansmartensdev.astro-orbit" alt="Visitors" /></a>
+</p>
+
+<p align="center">
   <a href="https://orbit.hansmartens.dev"><strong>Live demo: orbit.hansmartens.dev</strong></a> · <a href="https://hansmartens.dev">Made by Hans Martens</a>
 </p>
 
