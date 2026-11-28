@@ -47,7 +47,7 @@ const {
 const schemas: Array<WithContext<WebSite> | WithContext<Person>> = [createWebsiteSchema(), createPersonSchema()];
 void includeOrgSchema;
 import { brandCss } from '@/lib/brand';
-import { darkOnly } from '@/config/mode.config';
+import { darkOnly } from '@/config/theme.config';
 
 // Set before first paint (see the comment at the script in <head>).
 const themeScript = `(function () {
@@ -85,7 +85,7 @@ import { t, lang } from '@/i18n';
         the share images use and stays the light ground. */}
     <meta name="theme-color" content="#0e0e0e" id="theme-color" />
 
-    {/* The brand colour's shades (config/brand.config.ts, see lib/brand.ts),
+    {/* The brand colour's shades (config/theme.config.ts, see lib/brand.ts),
         before any stylesheet that uses them. */}
     <style is:inline set:html={brandCss()} />
 
@@ -132,7 +132,7 @@ import { t, lang } from '@/i18n';
          (localStorage.theme = 'light'). Dark comes first for everyone on
          arrival (the 3D scene is at its best on ink). Sets
          .dark for the theme and the browser bar's colour.
-         Dark mode only (config/mode.config darkOnly): .dark is in the markup
+         Dark mode only (config/theme.config darkOnly): .dark is in the markup
          above, and a colour choice stored earlier is cleared. -->
     <script is:inline set:html={darkOnly ? clearThemeScript : themeScript} />
   </head>

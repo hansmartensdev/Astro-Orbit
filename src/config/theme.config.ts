@@ -20,6 +20,24 @@
  */
 export const language = 'en';
 
+/**
+ * The brand colour, as a hex code such as '#2563eb'. Pick one with any
+ * colour picker and paste it here: the site works out the lighter and
+ * darker shades from it (src/lib/brand.ts), for the accent words, the
+ * travelling ball in the hero, the cards, the share images and the
+ * buttons, and checks each shade's contrast in dark and light mode.
+ * 'default' is the theme's violet.
+ */
+export const brandColor: string = 'default';
+
+/**
+ * The site opens in dark mode, and visitors can switch to light with the
+ * sun/moon button in the header. true makes it dark mode only: the button
+ * goes, and the site stores nothing in the visitor's browser (the privacy
+ * page says so).
+ */
+export const darkOnly: boolean = false;
+
 /** Homepage. */
 export const home = {
   /** The page title in the browser tab and in search results. */

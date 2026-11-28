@@ -11,13 +11,13 @@
  *
  * The menu control is the word "Menu" in the bar's text colour ("Close"
  * while the menu is open), beside the theme toggle (ThemeToggle.astro), a two-state sun/moon button,
- * and the home icon. darkOnly in config/mode.config leaves the toggle out.
+ * and the home icon. darkOnly in config/theme.config leaves the toggle out.
  */
 import { Icon } from 'astro-icon/components';
 import { getNavItems } from '@/config/nav.config';
 import siteConfig from '@/config/site.config';
 import ThemeToggle from '@/components/site/ThemeToggle.astro';
-import { darkOnly } from '@/config/mode.config';
+import { darkOnly } from '@/config/theme.config';
 
 interface Props {
   /**
