@@ -12,15 +12,16 @@ import { getCollection } from 'astro:content';
 import sharp from 'sharp';
 import { generateBlogCover } from '@/lib/og';
 import { toneFor } from '@/lib/post-tone';
+import { postSlug, inSiteLanguage } from '@/lib/posts';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await getCollection('blog', ({ data }) =>
     import.meta.env.PROD ? data.draft !== true : true
   );
   return posts
-    .filter((post) => post.data.locale === 'en')
+    .filter((post) => inSiteLanguage(post))
     .map((post) => {
-      const slug = post.id.replace(/^en\//, '');
+      const slug = postSlug(post.id);
       return {
         params: { slug },
         props: {

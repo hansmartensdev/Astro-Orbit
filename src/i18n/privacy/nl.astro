@@ -1,0 +1,176 @@
+---
+/**
+ * The privacy page's text in Dutch: a translation of en.astro, which says
+ * what this file gets and how to adapt it. The terms are the ones the AVG
+ * (the Dutch name of the GDPR) uses.
+ */
+import siteConfig from '@/config/site.config';
+import { newsletter } from '@/config/theme.config';
+import { darkOnly } from '@/config/mode.config';
+
+interface Props {
+  /** The host's name: Vercel, Netlify or Cloudflare. */
+  host: string;
+}
+
+const { host } = Astro.props;
+const mail = `mailto:${siteConfig.email}`;
+---
+
+<p>
+  Op deze pagina lees je welke persoonsgegevens deze website verzamelt, waarom, en wat ermee
+  gebeurt. Ik verwerk alleen de gegevens die ik nodig heb om je te antwoorden en om de website te
+  laten werken, en ik verkoop ze nooit.
+</p>
+
+<h2>Wie ik ben</h2>
+<p>
+  Deze website wordt beheerd door {siteConfig.name}, een Astro-ontwikkelaar in {siteConfig.location}.
+  Ik ben verantwoordelijk voor de persoonsgegevens die op deze pagina worden beschreven (de
+  "verwerkingsverantwoordelijke" in de AVG).
+</p>
+<p>E-mail: <a href={mail}>{siteConfig.email}</a></p>
+
+<h2>Het contactformulier</h2>
+<p>
+  Als je een bericht stuurt met het contactformulier, ontvang ik je naam, je e-mailadres, het
+  onderwerp als je dat invult, en je bericht. Het formulier stuurt dat als e-mail naar mijn
+  mailbox, via de e-maildienst Resend. Het wordt niet opgeslagen in een database op deze website.
+  Ik gebruik het alleen om je bericht te lezen en je te antwoorden.
+</p>
+<p>Grondslag: mijn gerechtvaardigd belang bij het beantwoorden van berichten die mensen me sturen.</p>
+
+{
+  newsletter.show && (
+    <>
+      <h2>De nieuwsbrief</h2>
+      <p>
+        Als je je aanmeldt voor nieuwe berichten per e-mail, ontvang ik je e-mailadres. Je krijgt
+        eerst een e-mail met een link om te bevestigen. Pas als je daarop klikt, wordt je adres
+        toegevoegd aan mijn mailinglijst, die bewaard wordt bij de e-maildienst Resend. Resend
+        verstuurt ook de nieuwsbrief. Ik gebruik je adres alleen om je te mailen als er een nieuw
+        bericht verschijnt.
+      </p>
+      <p>Je kunt je op elk moment afmelden, met de link in elke nieuwsbrief of door me te mailen.</p>
+      <p>Grondslag: je toestemming, die je geeft door je aanmelding te bevestigen.</p>
+    </>
+  )
+}
+
+{
+  siteConfig.whatsapp ? (
+    <>
+      <h2>E-mail en WhatsApp</h2>
+      <p>
+        Als je me mailt of een WhatsApp-bericht stuurt, ontvang ik wat je stuurt, samen met je
+        e-mailadres of telefoonnummer, en gebruik ik het alleen om je te antwoorden. De
+        WhatsApp-knop opent WhatsApp, een dienst van Meta, en alleen als je erop klikt. Daarvoor
+        wordt er niets van WhatsApp op deze website geladen.
+      </p>
+    </>
+  ) : (
+    <>
+      <h2>E-mail</h2>
+      <p>
+        Als je me mailt, ontvang ik wat je stuurt, samen met je e-mailadres, en gebruik ik het
+        alleen om je te antwoorden.
+      </p>
+    </>
+  )
+}
+
+<h2>Bezoeken</h2>
+<p>
+  Deze website gebruikt geen analytics. Ze telt of volgt geen bezoekers, en er staan geen
+  trackers van advertentienetwerken of sociale media op.
+</p>
+
+<h2>Hosting</h2>
+<p>
+  Deze website wordt gehost door {host}. Zoals elke hostingpartij verwerkt {host} technische
+  gegevens, zoals IP-adressen en browsergegevens, in de serverlogs, om de website veilig en
+  betrouwbaar te leveren.
+</p>
+<p>Grondslag: mijn gerechtvaardigd belang bij een veilige website.</p>
+
+<h2>Cookies en opslag</h2>
+{
+  darkOnly ? (
+    <p>Deze website plaatst geen cookies en slaat niets op in je browser.</p>
+  ) : (
+    <p>
+      Deze website plaatst geen cookies. Als je met de knop in de kop van de pagina kiest voor de
+      lichte of donkere modus, onthoudt je browser die keuze in zijn lokale opslag, zodat de
+      volgende pagina in dezelfde modus opent. De keuze blijft op je apparaat en wordt niet naar mij
+      of iemand anders gestuurd. Je verwijdert hem door de gegevens van deze website in je browser
+      te wissen.
+    </p>
+  )
+}
+<p>
+  De lettertypen komen van deze website zelf, dus bij het laden van een pagina wordt geen
+  lettertypedienst benaderd.
+</p>
+
+<h2>Wie je gegevens ontvangt</h2>
+<p>Ik deel persoonsgegevens alleen met de diensten die nodig zijn om deze website te laten werken:</p>
+<ul>
+  <li><strong>{host}</strong>: hosting van de website</li>
+  <li>
+    <strong>Resend</strong>: bezorging van berichten uit het contactformulier{
+      newsletter.show ? ', en het bijhouden en versturen van de nieuwsbrief' : ''
+    }
+  </li>
+</ul>
+<p>
+  Beide zijn gevestigd in de Verenigde Staten. Als gegevens buiten de Europese Economische Ruimte
+  worden doorgegeven, gebeurt dat met passende waarborgen, zoals het EU-VS Data Privacy Framework of
+  de standaardcontractbepalingen van de Europese Commissie. Ik verkoop nooit persoonsgegevens en
+  deel ze niet voor advertenties.
+</p>
+
+<h2>Hoe lang ik ze bewaar</h2>
+<p>
+  Ik bewaar berichten, uit het contactformulier, per e-mail{siteConfig.whatsapp ? ' of via WhatsApp' : ''},
+  zolang ik ze nodig heb om je te antwoorden.
+</p>
+
+{
+  newsletter.show && (
+    <p>Je e-mailadres voor de nieuwsbrief bewaar ik tot je je afmeldt of me vraagt het te verwijderen.</p>
+  )
+}
+
+<h2>Je rechten</h2>
+<p>Onder de AVG heb je het recht om:</p>
+<ul>
+  <li>de persoonsgegevens in te zien die ik over je heb;</li>
+  <li>ze te laten corrigeren;</li>
+  <li>ze te laten verwijderen;</li>
+  <li>de verwerking te beperken of er bezwaar tegen te maken;</li>
+  <li>ze te ontvangen in een vorm die je elders kunt gebruiken.</li>
+</ul>
+<p>
+  Om een van deze rechten te gebruiken, mail je me op <a href={mail}>{siteConfig.email}</a>. Je kunt
+  ook een klacht indienen bij de <a
+    href="https://www.autoriteitpersoonsgegevens.nl"
+    target="_blank"
+    rel="noopener noreferrer">Autoriteit Persoonsgegevens</a
+  >.
+</p>
+
+<h2>Beveiliging</h2>
+<p>Al het verkeer naar deze website is versleuteld (HTTPS).</p>
+
+<h2>Wijzigingen</h2>
+<p>
+  Als de website of de diensten die ze gebruikt veranderen, werk ik deze pagina bij. De datum
+  bovenaan laat zien wanneer ze voor het laatst is gewijzigd.
+</p>
+
+<h2>Vragen</h2>
+<p>
+  Is er iets op deze pagina onduidelijk, of heb je een vraag over je gegevens? Mail me op <a
+    href={mail}>{siteConfig.email}</a
+  >.
+</p>

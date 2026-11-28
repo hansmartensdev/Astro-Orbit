@@ -64,6 +64,7 @@ const unfurl =
     : null;
 const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
 const isCurrent = (href: string) => path === href || (href !== '/' && path.startsWith(href + '/'));
+import { t } from '@/i18n';
 ---
 
 <header
@@ -84,7 +85,7 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
           ("click hm") finds the link (WCAG 2.5.3, axe:
           label-content-name-mismatch). The pieces sit flush, with no
           whitespace between them: spaces made the visible text "h m". */}
-      <a href="/" class="mark" aria-label={siteConfig.mark + ' ' + siteConfig.name + ', home'}
+      <a href="/" class="mark" aria-label={t.footer.home(siteConfig.mark, siteConfig.name)}
         >{
           unfurl ? (
             unfurl.map((part) => (
@@ -110,7 +111,7 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
       <a
         class="sw-nav__home"
         href="/"
-        aria-label="Home"
+        aria-label={t.nav.homeLabel}
         aria-current={path === '/' ? 'page' : undefined}
       >
         <Icon name="lucide:house" aria-hidden="true" />
@@ -126,10 +127,10 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
             and "Close" while the menu is open. Screen readers get the
             label below instead. */}
         <span class="burger__word" aria-hidden="true">
-          <span class="burger__word-open">Menu</span>
-          <span class="burger__word-close">Close</span>
+          <span class="burger__word-open">{t.nav.menu}</span>
+          <span class="burger__word-close">{t.nav.close}</span>
         </span>
-        <span class="sr-only" id="sw-nav-toggle-label">Open menu</span>
+        <span class="sr-only" id="sw-nav-toggle-label" data-open={t.nav.openMenu} data-close={t.nav.closeMenu}>{t.nav.openMenu}</span>
       </button>
     </div>
   </div>
@@ -145,7 +146,7 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
   id="sw-menu-scrim"
   type="button"
   tabindex="-1"
-  aria-label="Close menu"
+  aria-label={t.nav.closeMenu}
   data-tone={menuTone}
   inert></button>
 
@@ -174,7 +175,7 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
   }
   <div class="sw-menu__fill" aria-hidden="true"></div>
   <div class="sw-menu__inner shell">
-    <nav class="sw-menu__nav" aria-label="Main">
+    <nav class="sw-menu__nav" aria-label={t.nav.main}>
       <ul class="sw-menu__list">
         {
           items.map((item) => (
@@ -823,7 +824,7 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
       nav.dataset.menuOpen = String(next);
       menu.dataset.state = next ? 'open' : 'closed';
       toggle.setAttribute('aria-expanded', String(next));
-      if (label) label.textContent = next ? 'Close menu' : 'Open menu';
+      if (label) label.textContent = (next ? label.dataset.close : label.dataset.open) ?? '';
 
       // inert keeps the closed overlay out of the tab order and the
       // accessibility tree — visibility: hidden alone would not.

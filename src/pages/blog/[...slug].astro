@@ -4,12 +4,12 @@ import { getCollection, render } from 'astro:content';
 import { coverIcon, coverPath } from '@/lib/og';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog', ({ data }) => {
-    return data.locale === 'en' && (import.meta.env.PROD ? data.draft !== true : true);
+  const posts = await getCollection('blog', (post) => {
+    return inSiteLanguage(post) && (import.meta.env.PROD ? post.data.draft !== true : true);
   });
 
   return posts.map((post) => ({
-    params: { slug: post.id.replace('en/', '') },
+    params: { slug: postSlug(post.id) },
     props: { post },
   }));
 }
@@ -18,6 +18,7 @@ const { post } = Astro.props;
 const { Content, headings } = await render(post);
 // About 220 words a minute, from the Markdown source.
 const readingTime = Math.max(1, Math.round((post.body ?? '').split(/\s+/).filter(Boolean).length / 220));
+import { postSlug, inSiteLanguage } from '@/lib/posts';
 ---
 
 <BlogLayout
@@ -31,7 +32,7 @@ const readingTime = Math.max(1, Math.round((post.body ?? '').split(/\s+/).filter
   imageAlt={post.data.imageAlt}
   heroImage={post.data.heroImage}
   heroImageAlt={post.data.heroImageAlt}
-  cover={coverPath(post.id.replace(/^en\//, ''))}
+  cover={coverPath(postSlug(post.id))}
   tags={post.data.tags}
   slug={post.id}
   headings={post.data.toc ? headings : []}

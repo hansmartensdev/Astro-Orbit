@@ -11,6 +11,15 @@
  * (see lib/rich.ts).
  */
 
+/**
+ * The site's language: en, es, fr or nl (src/i18n/<code>.ts). It sets the
+ * theme's own words, dates and <html lang>, and the folder posts are read
+ * from: src/content/blog/<language>/. Write the texts below in it too.
+ * Another language: copy src/i18n/en.ts to src/i18n/<code>.ts and
+ * src/i18n/privacy/en.astro to <code>.astro, and translate them.
+ */
+export const language = 'en';
+
 /** Homepage. */
 export const home = {
   /** The page title in the browser tab and in search results. */

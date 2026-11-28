@@ -107,6 +107,7 @@ const SIZING: Record<'hero' | 'large' | 'wide' | 'standard', { widths: number[];
     },
   };
 import { home } from '@/config/theme.config';
+import { t } from '@/i18n';
 ---
 
 <section class:list={['shell pt-[130px] pb-15 max-[800px]:pt-[90px]', className]}>
@@ -191,7 +192,7 @@ import { home } from '@/config/theme.config';
 
             <div class="card__view" aria-hidden="true">
               <span class="card__view-pill">
-                View project
+                {t.projects.view}
                 <Icon name="lucide:arrow-up-right" aria-hidden="true" />
               </span>
             </div>

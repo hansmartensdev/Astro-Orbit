@@ -27,19 +27,20 @@ const facts = (
     href: `/projects/${project.id}/`,
   }));
 import { pages } from '@/config/theme.config';
+import { t, upper } from '@/i18n';
 ---
 
 <SiteLayout
-  title="Projects"
+  title={t.projects.title}
   description={pages.projects.description}
   navOverMedia
 >
   <CinemaHero
-    label="PROJECTS"
-    title="Projects"
+    label={upper(t.hero.projects)}
+    title={t.projects.title}
     description={pages.projects.blurb}
     facts={facts}
-    factsLabel="The projects"
+    factsLabel={t.hero.projectsFacts}
     icon="layout-grid"
   />
 

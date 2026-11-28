@@ -34,20 +34,21 @@ const work = (
 )
   .sort((a, b) => a.data.order - b.data.order)
   .slice(0, 3);
+import { t, upper } from '@/i18n';
 ---
 
 <SiteLayout
-  title="About"
+  title={t.nav.about}
   description={about.description}
   includeOrgSchema
   navOverMedia
 >
   <CinemaHero
-    label="ABOUT"
+    label={upper(t.hero.about)}
     title={about.hero.title}
     description={about.hero.intro}
     facts={about.hero.facts.slice(0, 4)}
-    factsLabel="About me in short"
+    factsLabel={t.hero.aboutFacts}
     image={portrait}
     imageAlt={about.hero.photoAlt}
     imagePosition="50% 30%"
@@ -57,7 +58,7 @@ const work = (
   {/* --- the years ------------------------------------------------------- */}
   <section class="ab">
     <div class="shell">
-      <span class="label-mono ab__label" data-reveal>{about.timeline.label.toUpperCase()}</span>
+      <span class="label-mono ab__label" data-reveal>{upper(about.timeline.label)}</span>
       <h2 class="ab__h" data-reveal>{about.timeline.title}</h2>
       <ol class="ab-tl">
         {
@@ -97,7 +98,7 @@ const work = (
   {/* --- what I build now ------------------------------------------------ */}
   <section class="ab">
     <div class="shell">
-      <span class="label-mono ab__label" data-reveal>{about.work.label.toUpperCase()}</span>
+      <span class="label-mono ab__label" data-reveal>{upper(about.work.label)}</span>
       <h2 class="ab__h" data-reveal>{about.work.title}</h2>
       <div class="ab-work">
         {
@@ -115,10 +116,10 @@ const work = (
                   />
                 )}
               </span>
-              <span class="label-mono ab-work__discipline">{project.data.discipline.toUpperCase()}</span>
+              <span class="label-mono ab-work__discipline">{upper(project.data.discipline)}</span>
               <span class="ab-work__title">{project.data.title}</span>
               <span class="ab-work__go">
-                View project
+                {t.projects.view}
                 <Icon name="lucide:arrow-right" aria-hidden="true" />
               </span>
             </a>
@@ -132,7 +133,7 @@ const work = (
   <section class="ab ab--alt ab--tools">
     <div class="shell ab__split ab__split--tools">
       <div data-reveal>
-        <span class="label-mono ab__label">{about.tools.label.toUpperCase()}</span>
+        <span class="label-mono ab__label">{upper(about.tools.label)}</span>
         <h2 class="ab__h">{about.tools.title}</h2>
       </div>
       <p class="ab__line" data-reveal data-reveal-delay="0.1" set:html={rich(about.tools.text)} />

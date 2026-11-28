@@ -1,3 +1,5 @@
+import { t } from '@/i18n';
+import { home, about, pages } from '@/config/theme.config';
 /**
  * /llms.txt
  *
@@ -11,11 +13,12 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import siteConfig from '@/config/site.config';
+import { postSlug, inSiteLanguage } from '@/lib/posts';
 
 export const GET: APIRoute = async () => {
   const base = siteConfig.url.replace(/\/$/, '');
 
-  const posts = (await getCollection('blog', ({ data }) => data.draft !== true && data.locale === 'en')).sort(
+  const posts = (await getCollection('blog', (post) => post.data.draft !== true && inSiteLanguage(post))).sort(
     (a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf()
   );
   const projects = (await getCollection('work', ({ data }) => data.draft !== true))
@@ -27,15 +30,13 @@ export const GET: APIRoute = async () => {
     '',
     `> ${siteConfig.description}`,
     '',
-    `${siteConfig.name} is an Astro developer in ${siteConfig.location}. He designs, builds, optimises and maintains websites with Astro, including his own site and free, open-source Astro themes. He is not an agency and does not sell websites.`,
-    '',
     '## Pages',
     '',
-    `- [Home](${base}/): the homepage, with the 3D hero, projects, what I do and blog`,
-    `- [About](${base}/about/): about ${siteConfig.name}`,
-    `- [Projects](${base}/projects/): the projects`,
-    `- [Blog](${base}/blog/): posts about Astro, building themes and what makes websites fast`,
-    `- [Contact](${base}/contact/): contact form, email and WhatsApp`,
+    `- [${t.nav.home}](${base}/): ${home.hero.intro}`,
+    `- [${t.nav.about}](${base}/about/): ${about.description}`,
+    `- [${t.nav.projects}](${base}/projects/): ${pages.projects.description}`,
+    `- [${t.nav.blog}](${base}/blog/): ${pages.blog.description}`,
+    `- [${t.nav.contact}](${base}/contact/): ${pages.contact.description}`,
     '',
     // Left out while every project is still a placeholder.
     ...(projects.length
@@ -48,12 +49,12 @@ export const GET: APIRoute = async () => {
       : []),
     '## Blog',
     '',
-    ...posts.map(({ id, data }) => `- [${data.title}](${base}/blog/${id.replace(/^en\//, '')}/): ${data.description}`),
+    ...posts.map(({ id, data }) => `- [${data.title}](${base}/blog/${postSlug(id)}/): ${data.description}`),
     '',
     '## Contact',
     '',
-    `- Email: ${siteConfig.email}`,
-    `- Location: ${siteConfig.location}`,
+    `- ${t.contact.email}: ${siteConfig.email}`,
+    `- ${t.contact.basedIn}: ${siteConfig.location}`,
     ...siteConfig.socialLinks.map((link) => `- ${link}`),
     '',
   ];

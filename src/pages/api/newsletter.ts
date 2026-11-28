@@ -1,3 +1,4 @@
+import { t } from '@/i18n';
 /**
  * POST /api/newsletter
  *
@@ -31,15 +32,15 @@ export const prerender = false;
 
 const RESEND = 'https://api.resend.com';
 
-const INVALID = 'Please enter a valid email address';
-const FAILED = 'Something went wrong. Please try again later.';
+const INVALID = t.newsletter.invalid;
+const FAILED = t.newsletter.failed;
 
-/** The email with the link to confirm. */
+/** The email with the link to confirm, in the site's language. */
 const MAIL = {
-  subject: (site: string) => `Confirm your subscription to ${site}`,
-  intro: (site: string) => `Please confirm that you want an email from ${site} when a new post is published.`,
-  button: 'Confirm my subscription',
-  ignore: "Didn't ask for this? Then ignore this email: your address won't be added.",
+  subject: t.newsletter.mailSubject,
+  intro: t.newsletter.mailIntro,
+  button: t.newsletter.mailButton,
+  ignore: t.newsletter.mailIgnore,
 };
 
 const signupSchema = z.object({

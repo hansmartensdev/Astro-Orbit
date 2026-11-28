@@ -35,13 +35,14 @@ interface Props {
 const { headings, maxDepth = 3, minHeadings = 3, sticky = false, collapsible = false } = Astro.props;
 
 // A closed card must name its contents; an always-visible list only needs a label.
-const tocTitle = collapsible ? 'Table of contents' : 'On this page';
+const tocTitle = collapsible ? t.blog.tocToggle : t.blog.toc;
 
 const items = headings.filter((h) => h.depth >= 2 && h.depth <= maxDepth);
 const shouldRender = items.length >= minHeadings;
 // Unique per instance: the sidebar and the collapsed card mount on the same
 // page, and duplicate ids would be invalid and break aria-labelledby.
 const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
+import { t } from '@/i18n';
 ---
 
 {
@@ -59,8 +60,8 @@ const headingId = `toc-heading-${Math.random().toString(36).slice(2, 9)}`;
               <Icon name="lucide:list" class="toc__icon" aria-hidden="true" />
               {tocTitle}
               <span class="toc-hint">
-                <span class="toc-hint-show">Show</span>
-                <span class="toc-hint-hide">Hide</span>
+                <span class="toc-hint-show">{t.blog.show}</span>
+                <span class="toc-hint-hide">{t.blog.hide}</span>
                 <Icon name="lucide:chevron-down" class="toc-chevron" aria-hidden="true" />
               </span>
             </summary>

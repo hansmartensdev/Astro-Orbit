@@ -1,3 +1,4 @@
+import { t } from '@/i18n';
 /**
  * POST /api/contact
  *
@@ -17,10 +18,10 @@ import { RESEND_API_KEY, CONTACT_TO, CONTACT_FROM } from 'astro:env/server';
 export const prerender = false;
 
 const contactSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters').max(100),
-  email: z.email('Please enter a valid email address'),
+  name: z.string().min(2, t.contact.nameShort).max(100),
+  email: z.email(t.newsletter.invalid),
   subject: z.string().max(200).optional(),
-  message: z.string().min(10, 'Message must be at least 10 characters').max(5000),
+  message: z.string().min(10, t.contact.messageShort).max(5000),
   /** Where it came from. Only the contact page sends messages now. */
   source: z.enum(['chat', 'contact']).optional(),
   honeypot: z.string().max(0), // Anti-spam: must be empty
@@ -112,6 +113,6 @@ export const POST: APIRoute = async ({ request }) => {
     return json({ success: true });
   } catch (error) {
     console.error('Contact form error:', error);
-    return json({ success: false, errors: { form: ['An unexpected error occurred'] } }, 500);
+    return json({ success: false, errors: { form: [t.contact.unexpected] } }, 500);
   }
 };

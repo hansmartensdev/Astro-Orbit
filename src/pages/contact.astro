@@ -17,29 +17,30 @@ import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
 import siteConfig from '@/config/site.config';
 
 const channels = [
-  { label: 'Email', value: siteConfig.email, href: 'mailto:' + siteConfig.email },
+  { label: t.contact.email, value: siteConfig.email, href: 'mailto:' + siteConfig.email },
   // Messages, not calls: they come in from everywhere.
-  { label: 'WhatsApp', value: 'Send a message', href: siteConfig.whatsapp, external: true },
-  { label: 'Based in', value: siteConfig.location },
+  { label: t.contact.whatsapp, value: t.contact.whatsappValue, href: siteConfig.whatsapp, external: true },
+  { label: t.contact.basedIn, value: siteConfig.location },
   // WhatsApp only with a link in site.config.ts.
-].filter((channel) => channel.label !== 'WhatsApp' || channel.href);
+].filter((channel) => channel.label !== t.contact.whatsapp || channel.href);
 import { pages } from '@/config/theme.config';
+import { t, upper } from '@/i18n';
 ---
 
 <SiteLayout
-  title="Contact"
+  title={t.contact.title}
   description={pages.contact.description}
   includeOrgSchema
   navOverMedia
   footerDeep
 >
   <CinemaHero
-    label="CONTACT"
+    label={upper(t.hero.contact)}
     title={pages.contact.title}
     accent={pages.contact.accent}
     description={pages.contact.blurb}
     facts={channels}
-    factsLabel="Other ways to reach me"
+    factsLabel={t.hero.contactFacts}
     icon="mail"
     short
   />
@@ -47,17 +48,27 @@ import { pages } from '@/config/theme.config';
   {/* --- the form: the glow card, on the second ground ------------------- */}
   <section class="ct">
     <div class="ct__inner shell">
-      <span class="label-mono ct__label" data-reveal>SEND A MESSAGE</span>
+      <span class="label-mono ct__label" data-reveal>{upper(t.contact.label)}</span>
       <div class="ct__stage" data-reveal>
         <div class="ct__card">
-          <form id="contact-form" action="/api/contact" method="POST" class="contact__form">
-            <Input label="Your name" name="name" type="text" required autocomplete="name" />
-            <Input label="Email address" name="email" type="email" required autocomplete="email" />
-            <Input label="Subject" name="subject" type="text" />
+          <form
+            id="contact-form"
+            action="/api/contact"
+            method="POST"
+            class="contact__form"
+            data-send={t.contact.send}
+            data-sending={t.contact.sending}
+            data-sent={t.contact.sent}
+            data-error={t.contact.error}
+            data-failed={t.contact.failed}
+          >
+            <Input label={t.contact.name} name="name" type="text" required autocomplete="name" />
+            <Input label={t.contact.emailAddress} name="email" type="email" required autocomplete="email" />
+            <Input label={t.contact.subject} name="subject" type="text" />
             <Textarea
-              label="Message"
+              label={t.contact.message}
               name="message"
-              placeholder="Your idea, your question, or just hello."
+              placeholder={t.contact.placeholder}
               rows={6}
               required
             />
@@ -70,7 +81,7 @@ import { pages } from '@/config/theme.config';
             <div id="form-message" class="hidden text-sm" role="status" aria-live="polite"></div>
 
             <ArrowFillButton type="submit" id="submit-button" icon="lucide:send" class="self-start">
-              Send message
+              {t.contact.send}
             </ArrowFillButton>
           </form>
         </div>
@@ -180,7 +191,7 @@ import { pages } from '@/config/theme.config';
       const setLabel = (text: string) =>
         button.querySelectorAll('.afb__label').forEach((el) => (el.textContent = text));
       button.disabled = true;
-      setLabel('Sending…');
+      setLabel(form.dataset.sending ?? '');
       message.classList.add('hidden');
 
       try {
@@ -193,22 +204,22 @@ import { pages } from '@/config/theme.config';
         const data = await response.json();
 
         if (data.success) {
-          message.textContent = "Message sent. I'll get back to you by email.";
+          message.textContent = form.dataset.sent ?? '';
           message.className = 'text-sm text-success';
           form.reset();
         } else {
           const errors = data.errors
             ? Object.values(data.errors).flat().join(', ')
-            : 'Something went wrong';
+            : (form.dataset.error ?? '');
           message.textContent = errors;
           message.className = 'text-sm text-destructive';
         }
       } catch {
-        message.textContent = 'Failed to send message. Please try again later.';
+        message.textContent = form.dataset.failed ?? '';
         message.className = 'text-sm text-destructive';
       } finally {
         button.disabled = false;
-        setLabel('Send message');
+        setLabel(form.dataset.send ?? '');
         message.classList.remove('hidden');
       }
     });

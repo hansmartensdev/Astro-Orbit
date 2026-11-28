@@ -1,7 +1,8 @@
+import { lang } from '@/i18n';
 /**
  * Format a date for display
  */
-export function formatDate(date: Date, locale = 'en-US'): string {
+export function formatDate(date: Date, locale: string = lang): string {
   return new Intl.DateTimeFormat(locale, {
     year: 'numeric',
     month: 'long',

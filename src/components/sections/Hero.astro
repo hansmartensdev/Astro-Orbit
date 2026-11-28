@@ -51,6 +51,7 @@ const posters = await Promise.all(
 );
 import { home } from '@/config/theme.config';
 import { rich } from '@/lib/rich';
+import { t } from '@/i18n';
 ---
 
 <section class="hero shell flex min-h-screen flex-col justify-end pt-24 pb-9 max-[700px]:pt-[84px] min-[701px]:pb-6">
@@ -131,7 +132,7 @@ import { rich } from '@/lib/rich';
     </p>
 
     <div class="hero__scroll" aria-hidden="true">
-      Scroll
+      {t.home.scroll}
       <span class="hero__scroll-line"></span>
     </div>
   </div>

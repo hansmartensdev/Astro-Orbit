@@ -43,18 +43,19 @@ const {
 } = Astro.props;
 
 const topic = category ?? tags[0];
-const label = ['Blog', topic].filter(Boolean).join(' · ').toUpperCase();
+const label = upper([t.blog.title, topic].filter(Boolean).join(' · '));
 
 const facts = (
   [
-    { label: 'Written by', value: author },
-    { label: 'Published', value: formatDate(publishedAt), date: publishedAt },
-    updatedAt ? { label: 'Updated', value: formatDate(updatedAt), date: updatedAt } : null,
-    readingTime ? { label: 'Reading time', value: `${readingTime} min read` } : null,
-    topic ? { label: 'Category', value: topic } : null,
+    { label: t.blog.writtenBy, value: author },
+    { label: t.blog.published, value: formatDate(publishedAt), date: publishedAt },
+    updatedAt ? { label: t.blog.updated, value: formatDate(updatedAt), date: updatedAt } : null,
+    readingTime ? { label: t.blog.readingTime, value: t.blog.minRead(readingTime) } : null,
+    topic ? { label: t.blog.category, value: topic } : null,
   ].filter((fact) => fact !== null) as CinemaFact[]
 ).slice(0, 4);
 import siteConfig from '@/config/site.config';
+import { t, upper } from '@/i18n';
 ---
 
 <CinemaHero
@@ -62,7 +63,7 @@ import siteConfig from '@/config/site.config';
   title={title}
   description={description}
   facts={facts}
-  factsLabel="Post details"
+  factsLabel={t.hero.postFacts}
   icon={icon}
   tone={toneFor(category)}
   image={image}

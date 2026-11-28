@@ -66,10 +66,11 @@ const themeScript = `(function () {
   if (bar) bar.setAttribute('content', dark ? '#0e0e0e' : '#eef2f4');
 })();`;
 const clearThemeScript = `try { localStorage.removeItem('theme'); } catch {}`;
+import { t, lang } from '@/i18n';
 ---
 
 <!doctype html>
-<html lang="en" class={darkOnly ? 'dark' : undefined}>
+<html lang={lang} class={darkOnly ? 'dark' : undefined}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -107,7 +108,7 @@ const clearThemeScript = `try { localStorage.removeItem('theme'); } catch {}`;
     <link
       rel="alternate"
       type="application/rss+xml"
-      title={`${siteConfig.name} RSS Feed`}
+      title={t.footer.rss(siteConfig.name)}
       href="/rss.xml"
     />
 
@@ -142,7 +143,7 @@ const clearThemeScript = `try { localStorage.removeItem('theme'); } catch {}`;
       href="#main-content"
       class="focus:bg-primary focus:text-primary-foreground sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:px-4 focus:py-2"
     >
-      Skip to content
+      {t.nav.skip}
     </a>
 
     <slot name="header" />

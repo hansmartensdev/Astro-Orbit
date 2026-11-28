@@ -19,16 +19,17 @@ const text = {
   // The heading and the line, from theme.config.ts.
   title: newsletter.title,
   line: newsletter.text,
-  email: 'Email address',
-  placeholder: 'you@example.com',
-  subscribe: 'Subscribe',
-  sending: 'Sending…',
-  sent: 'Almost done: check your inbox and click the link in the email to confirm.',
-  failed: 'Something went wrong. Please try again later.',
-  note: 'You can unsubscribe at any time.',
-  privacy: 'Privacy',
+  email: t.newsletter.email,
+  placeholder: t.newsletter.placeholder,
+  subscribe: t.newsletter.subscribe,
+  sending: t.newsletter.sending,
+  sent: t.newsletter.sent,
+  failed: t.newsletter.failed,
+  note: t.newsletter.note,
+  privacy: t.newsletter.privacy,
 };
 import { newsletter } from '@/config/theme.config';
+import { t } from '@/i18n';
 ---
 
 <section class="nl" aria-labelledby="nl-title" data-reveal>

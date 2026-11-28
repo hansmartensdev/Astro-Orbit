@@ -62,8 +62,8 @@ const hasToc = headings.filter((h) => h.depth >= 2 && h.depth <= 3).length >= 3;
 const ogImage = image?.src || cover || `/og${Astro.url.pathname.replace(/\/$/, '')}.png`;
 
 const breadcrumbs = [
-  { label: 'Home', href: '/' },
-  { label: 'Blog', href: '/blog' },
+  { label: t.nav.home, href: '/' },
+  { label: t.blog.title, href: '/blog' },
   { label: title },
 ];
 
@@ -71,6 +71,8 @@ const breadcrumbs = [
 const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
 import { newsletter } from '@/config/theme.config';
 import siteConfig from '@/config/site.config';
+import { t } from '@/i18n';
+import {  } from '@/lib/posts';
 ---
 
 <BaseLayout
@@ -147,7 +149,7 @@ import siteConfig from '@/config/site.config';
               <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"
               ></path>
             </svg>
-            Back to Blog
+            {t.blog.back}
           </a>
 
           <!-- Share buttons -->
@@ -173,7 +175,7 @@ import siteConfig from '@/config/site.config';
     tags.length > 0 && (
       <div class="bg-background-secondary">
         <div class="shell pb-24">
-          <RelatedPosts currentSlug={slug} tags={tags} locale="en" maxPosts={4} />
+          <RelatedPosts currentSlug={slug} tags={tags} maxPosts={4} />
         </div>
       </div>
     )
