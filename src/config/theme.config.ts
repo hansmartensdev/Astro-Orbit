@@ -87,6 +87,54 @@ export const home = {
   },
 };
 
+/**
+ * "What clients say" on the homepage: one quote at a time, on a dark panel,
+ * with a button per quote to switch. `show: false` removes the section.
+ * The demo's quotes are fictive, like Alex Morgan.
+ */
+export const testimonials = {
+  show: true,
+  title: 'What clients say',
+  blurb: 'A few words from people I’ve designed and built for.',
+  quotes: [
+    {
+      quote:
+        'Alex turned our typefaces from pictures into a type tester. Visitors now set their own text in every weight before they buy a licence, and they arrive at the shop knowing which font they want.',
+      accent: 'set their own text in every weight',
+      name: 'Mara Lindqvist',
+      role: 'Founder, Kern Foundry',
+      project: 'kern-foundry',
+    },
+    {
+      quote:
+        'Alex brought our documentation together in one place. Each component page shows the Figma component and the React code side by side, so our designers and developers read the same version.',
+      accent: 'read the same version',
+      name: 'Tom Verhoef',
+      role: 'Design lead, Lumen',
+      project: 'lumen',
+    },
+    {
+      quote:
+        'Our landing page and our docs are one site now. Alex asked the right questions on the first call, and the pages load before our install command has finished.',
+      accent: 'one site now',
+      name: 'Sanne de Wit',
+      role: 'Co-founder, Relay',
+      project: 'relay',
+    },
+  ] as Testimonial[],
+};
+
+export interface Testimonial {
+  quote: string;
+  /** Optional: a phrase in the quote to set in the brand colour. */
+  accent?: string;
+  name: string;
+  role: string;
+  /** Optional: the project the quote is about, its file name in
+   *  src/content/work/. Its title labels the quote's button. */
+  project?: string;
+}
+
 /** The About page. */
 export const about = {
   description: 'About Alex Morgan, an Astro developer in Amsterdam, the Netherlands.',

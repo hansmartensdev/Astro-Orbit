@@ -24,6 +24,12 @@ gallery:
   - src: "../../assets/work/astro-orbit/iphone.webp"
     alt: "The homepage in dark mode on an iPhone: the 3D droplet and the violet ball above the headline, on the violet grid"
     band: 1
+  - src: "../../assets/work/astro-orbit/services.webp"
+    alt: "The services on the homepage in dark mode, on a MacBook and an iPhone: four rows, with web development open in violet, showing its icon, tags and text"
+    band: 2
+  - src: "../../assets/work/astro-orbit/quotes.webp"
+    alt: "What clients say on the homepage in light mode, on a MacBook and an iPhone: one large quote on a dark panel with the violet grid, and a button per project to switch quotes"
+    band: 2
 coverAlt: "The homepage in dark mode on a MacBook: the 3D droplet above the headline, on a violet ground"
 challenge: "I wanted a portfolio with a blog in one website: fast, in dark and light mode, and with something a visitor remembers. This website is built with Astro and the Astro Orbit theme.\n\nThe homepage hero has a 3D animation. A droplet comes out of the hero, follows a track down the homepage and turns into a card whose words light up one by one as you scroll. Then the card becomes a droplet again, follows the track further and turns into the first project card. You can see it in the videos on this page."
 sections:
