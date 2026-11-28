@@ -27,6 +27,7 @@
 
 - [What it is](#what-it-is)
 - [What's in it](#whats-in-it)
+- [Lighthouse](#lighthouse)
 - [Getting started](#getting-started)
 - [Make it yours](#make-it-yours)
   - [The brand colour](#the-brand-colour)
@@ -66,6 +67,21 @@ The theme opens in dark mode, and visitors can switch to light mode with the but
 - **For search engines and AI assistants:** a sitemap, an RSS feed, structured data and `llms.txt`.
 - **Fonts:** Outfit, Archivo and IBM Plex Mono, served by the website itself.
 - **Without a graphics chip:** the 3D scenes only run on a device with one. Other devices, and Lighthouse, see a still picture of the hero.
+
+## Lighthouse
+
+The demo's homepage scores 100 in all four Lighthouse categories on mobile.
+
+<p align="center">
+  <a href="https://pagespeed.web.dev/analysis/https-orbit-hansmartens-dev/9q2z7z86w4qmrl8969m0lc?form_factor=mobile">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset=".github/readme/lighthouse-dark.svg" />
+      <img src=".github/readme/lighthouse-light.svg" alt="Lighthouse on mobile for orbit.hansmartens.dev: Performance 100, Accessibility 100, Best Practices 100, SEO 100" width="880" />
+    </picture>
+  </a>
+</p>
+
+<p align="center"><a href="https://pagespeed.web.dev/analysis/https-orbit-hansmartens-dev/9q2z7z86w4qmrl8969m0lc?form_factor=mobile">See the PageSpeed report</a></p>
 
 ## Getting started
 

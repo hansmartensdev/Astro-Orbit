@@ -1,0 +1,158 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="190" viewBox="0 0 880 190" role="img" aria-label="Lighthouse on mobile: Performance 100, Accessibility 100, Best Practices 100, SEO 100">
+<style>
+.r{fill:none;stroke:#059669;stroke-width:8;stroke-linecap:round;stroke-dasharray:263.89;stroke-dashoffset:263.89;animation:fill 1.4s cubic-bezier(.25,1,.5,1) forwards}
+@keyframes fill{to{stroke-dashoffset:0}}
+.s{animation:roll 1.4s steps(29,end) forwards}
+@keyframes roll{to{transform:translateY(-1160px)}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+@media (prefers-reduced-motion:reduce){.r,.s{animation-duration:1ms}}
+</style>
+<rect x="0.5" y=".5" width="204" height="189" rx="14" fill="#f6f8fa" stroke="#d1d9e0"/>
+<circle cx="102.5" cy="78" r="42" fill="none" stroke="rgba(5,150,105,.16)" stroke-width="8"/>
+<circle class="r" style="animation-delay:0.00s" cx="102.5" cy="78" r="42" transform="rotate(-90 102.5 78)"/>
+<clipPath id="c0"><rect x="62.5" y="58" width="80" height="40"/></clipPath>
+<g clip-path="url(#c0)"><g class="s" style="animation-delay:0.00s">
+<text x="102.5" y="88" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">0</text>
+<text x="102.5" y="128" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">13</text>
+<text x="102.5" y="168" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">25</text>
+<text x="102.5" y="208" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">35</text>
+<text x="102.5" y="248" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">45</text>
+<text x="102.5" y="288" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">53</text>
+<text x="102.5" y="328" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">60</text>
+<text x="102.5" y="368" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">67</text>
+<text x="102.5" y="408" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">73</text>
+<text x="102.5" y="448" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">77</text>
+<text x="102.5" y="488" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">82</text>
+<text x="102.5" y="528" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">85</text>
+<text x="102.5" y="568" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">88</text>
+<text x="102.5" y="608" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">91</text>
+<text x="102.5" y="648" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">93</text>
+<text x="102.5" y="688" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">95</text>
+<text x="102.5" y="728" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">96</text>
+<text x="102.5" y="768" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">97</text>
+<text x="102.5" y="808" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">98</text>
+<text x="102.5" y="848" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">99</text>
+<text x="102.5" y="888" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">99</text>
+<text x="102.5" y="928" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">99</text>
+<text x="102.5" y="968" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+<text x="102.5" y="1008" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+<text x="102.5" y="1048" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+<text x="102.5" y="1088" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+<text x="102.5" y="1128" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+<text x="102.5" y="1168" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+<text x="102.5" y="1208" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+<text x="102.5" y="1248" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+</g></g>
+<text x="102.5" y="164" text-anchor="middle" font-size="15" fill="#424a53">Performance</text>
+<rect x="225.5" y=".5" width="204" height="189" rx="14" fill="#f6f8fa" stroke="#d1d9e0"/>
+<circle cx="327.5" cy="78" r="42" fill="none" stroke="rgba(5,150,105,.16)" stroke-width="8"/>
+<circle class="r" style="animation-delay:0.12s" cx="327.5" cy="78" r="42" transform="rotate(-90 327.5 78)"/>
+<clipPath id="c1"><rect x="287.5" y="58" width="80" height="40"/></clipPath>
+<g clip-path="url(#c1)"><g class="s" style="animation-delay:0.12s">
+<text x="327.5" y="88" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">0</text>
+<text x="327.5" y="128" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">13</text>
+<text x="327.5" y="168" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">25</text>
+<text x="327.5" y="208" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">35</text>
+<text x="327.5" y="248" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">45</text>
+<text x="327.5" y="288" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">53</text>
+<text x="327.5" y="328" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">60</text>
+<text x="327.5" y="368" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">67</text>
+<text x="327.5" y="408" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">73</text>
+<text x="327.5" y="448" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">77</text>
+<text x="327.5" y="488" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">82</text>
+<text x="327.5" y="528" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">85</text>
+<text x="327.5" y="568" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">88</text>
+<text x="327.5" y="608" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">91</text>
+<text x="327.5" y="648" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">93</text>
+<text x="327.5" y="688" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">95</text>
+<text x="327.5" y="728" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">96</text>
+<text x="327.5" y="768" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">97</text>
+<text x="327.5" y="808" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">98</text>
+<text x="327.5" y="848" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">99</text>
+<text x="327.5" y="888" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">99</text>
+<text x="327.5" y="928" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">99</text>
+<text x="327.5" y="968" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+<text x="327.5" y="1008" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+<text x="327.5" y="1048" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+<text x="327.5" y="1088" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+<text x="327.5" y="1128" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+<text x="327.5" y="1168" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+<text x="327.5" y="1208" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+<text x="327.5" y="1248" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+</g></g>
+<text x="327.5" y="164" text-anchor="middle" font-size="15" fill="#424a53">Accessibility</text>
+<rect x="450.5" y=".5" width="204" height="189" rx="14" fill="#f6f8fa" stroke="#d1d9e0"/>
+<circle cx="552.5" cy="78" r="42" fill="none" stroke="rgba(5,150,105,.16)" stroke-width="8"/>
+<circle class="r" style="animation-delay:0.24s" cx="552.5" cy="78" r="42" transform="rotate(-90 552.5 78)"/>
+<clipPath id="c2"><rect x="512.5" y="58" width="80" height="40"/></clipPath>
+<g clip-path="url(#c2)"><g class="s" style="animation-delay:0.24s">
+<text x="552.5" y="88" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">0</text>
+<text x="552.5" y="128" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">13</text>
+<text x="552.5" y="168" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">25</text>
+<text x="552.5" y="208" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">35</text>
+<text x="552.5" y="248" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">45</text>
+<text x="552.5" y="288" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">53</text>
+<text x="552.5" y="328" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">60</text>
+<text x="552.5" y="368" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">67</text>
+<text x="552.5" y="408" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">73</text>
+<text x="552.5" y="448" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">77</text>
+<text x="552.5" y="488" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">82</text>
+<text x="552.5" y="528" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">85</text>
+<text x="552.5" y="568" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">88</text>
+<text x="552.5" y="608" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">91</text>
+<text x="552.5" y="648" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">93</text>
+<text x="552.5" y="688" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">95</text>
+<text x="552.5" y="728" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">96</text>
+<text x="552.5" y="768" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">97</text>
+<text x="552.5" y="808" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">98</text>
+<text x="552.5" y="848" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">99</text>
+<text x="552.5" y="888" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">99</text>
+<text x="552.5" y="928" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">99</text>
+<text x="552.5" y="968" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+<text x="552.5" y="1008" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+<text x="552.5" y="1048" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+<text x="552.5" y="1088" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+<text x="552.5" y="1128" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+<text x="552.5" y="1168" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+<text x="552.5" y="1208" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+<text x="552.5" y="1248" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+</g></g>
+<text x="552.5" y="164" text-anchor="middle" font-size="15" fill="#424a53">Best Practices</text>
+<rect x="675.5" y=".5" width="204" height="189" rx="14" fill="#f6f8fa" stroke="#d1d9e0"/>
+<circle cx="777.5" cy="78" r="42" fill="none" stroke="rgba(5,150,105,.16)" stroke-width="8"/>
+<circle class="r" style="animation-delay:0.36s" cx="777.5" cy="78" r="42" transform="rotate(-90 777.5 78)"/>
+<clipPath id="c3"><rect x="737.5" y="58" width="80" height="40"/></clipPath>
+<g clip-path="url(#c3)"><g class="s" style="animation-delay:0.36s">
+<text x="777.5" y="88" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">0</text>
+<text x="777.5" y="128" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">13</text>
+<text x="777.5" y="168" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">25</text>
+<text x="777.5" y="208" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">35</text>
+<text x="777.5" y="248" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">45</text>
+<text x="777.5" y="288" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">53</text>
+<text x="777.5" y="328" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">60</text>
+<text x="777.5" y="368" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">67</text>
+<text x="777.5" y="408" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">73</text>
+<text x="777.5" y="448" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">77</text>
+<text x="777.5" y="488" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">82</text>
+<text x="777.5" y="528" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">85</text>
+<text x="777.5" y="568" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">88</text>
+<text x="777.5" y="608" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">91</text>
+<text x="777.5" y="648" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">93</text>
+<text x="777.5" y="688" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">95</text>
+<text x="777.5" y="728" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">96</text>
+<text x="777.5" y="768" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">97</text>
+<text x="777.5" y="808" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">98</text>
+<text x="777.5" y="848" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">99</text>
+<text x="777.5" y="888" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">99</text>
+<text x="777.5" y="928" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">99</text>
+<text x="777.5" y="968" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+<text x="777.5" y="1008" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+<text x="777.5" y="1048" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+<text x="777.5" y="1088" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+<text x="777.5" y="1128" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+<text x="777.5" y="1168" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+<text x="777.5" y="1208" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+<text x="777.5" y="1248" text-anchor="middle" font-size="28" font-weight="700" fill="#047857">100</text>
+</g></g>
+<text x="777.5" y="164" text-anchor="middle" font-size="15" fill="#424a53">SEO</text>
+</svg>
