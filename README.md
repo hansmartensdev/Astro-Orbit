@@ -1,5 +1,5 @@
 <p align="center">
-  <img src=".github/readme/banner.webp" alt="Astro Orbit: a free Astro theme, designed by Hans Martens. The demo homepage on a MacBook and an iPhone, on a violet ground" width="880" />
+  <img src=".github/readme/banner.webp" alt="Astro Orbit, a free theme for Astro 7 under the MIT licence: a portfolio and blog theme with a 3D droplet in the hero. Dark and light mode, 4 languages, 46 components, a perfect Lighthouse score on mobile and desktop. The demo homepage on a MacBook and an iPhone, on a violet ground" width="880" />
 </p>
 
 <p align="center">
