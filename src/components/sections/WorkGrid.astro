@@ -59,7 +59,6 @@ const mobileSources = await Promise.all(
       : null
   )
 );
-const remaining = projects.length - shown.length;
 
 // A card's span decides how wide it actually renders, so it has to decide the
 // srcset too. One shared `sizes` would either starve the full-width lead card
@@ -212,7 +211,7 @@ import { t } from '@/i18n';
     showMore && (
       <div class="mt-[72px] flex justify-center" data-reveal>
         <PillButton href="/projects" variant="outline" class="px-9 py-4">
-          {remaining > 0 ? 'See all ' + projects.length + ' projects' : 'See all work'}
+          {t.projects.seeAll(projects.length)}
           <Icon name="lucide:arrow-right" aria-hidden="true" />
         </PillButton>
       </div>
