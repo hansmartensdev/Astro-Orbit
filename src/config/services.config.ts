@@ -1,17 +1,18 @@
 /**
  * What I do
  *
- * The four cards on the homepage that stack as you scroll (Services.astro):
- * the owner's services, or anything else in four parts. Each card is one shade deeper of the brand colour
- * (lib/brand.ts). Set show to false to leave the section off the homepage.
+ * The rows on the homepage (Services.astro), one open at a time: the
+ * owner's services, or anything else in a few parts. A closed row shows its
+ * number, title and first paragraph; the open row adds the icon, the tags,
+ * the other paragraphs and the link. Set show to false to leave the section
+ * off the homepage.
  */
 
 export interface ServiceCard {
   num: string;
-  /** The heading: one line, or two when given two parts. */
+  /** The title, in one or two parts; the row shows them on one line. */
   title: [string] | [string, string];
-  /** A Lucide icon (lucide.dev/icons), drawn large above the title on
-   *  desktop. */
+  /** A Lucide icon (lucide.dev/icons), shown in the open row. */
   icon: string;
   tags: string[];
   /** One or more paragraphs. A paragraph may hold a link written as
@@ -22,8 +23,8 @@ export interface ServiceCard {
 }
 
 export const services = {
-  // Off the homepage in the demo; true puts the four cards on it.
-  show: false,
+  // false leaves the section off the homepage.
+  show: true,
   title: 'Services',
   blurb: 'I design, build, optimise and maintain websites with Astro.',
   cards: [

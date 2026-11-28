@@ -148,7 +148,8 @@ export function brandRoles(hex: string = brandColor): Roles {
 }
 
 /**
- * The four stacked cards on the homepage (Services.astro): one shade deeper
+ * Four cards in the brand colour, as --orbit-card-1 to 4, for a section that
+ * wants them (the services were once four such stacked cards): one shade deeper
  * per card, starting at the fill shade (white text at 4.5:1 or more), and in
  * dark mode one step deeper again. For the default violet: 600, 700, 800, 900
  * in light and 700, 800, 900, 950 in dark, the ramp the cards were designed with.

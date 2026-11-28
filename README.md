@@ -56,7 +56,7 @@ The theme opens in dark mode, and visitors can switch to light mode with the but
 
 ## What's in it
 
-- **Homepage:** the 3D hero, the droplet's track and its card, your latest six projects and four posts, and a sign-off with a contact button.
+- **Homepage:** the 3D hero, the droplet's track and its card, your latest six projects, your services in rows that open one at a time, quotes from clients, your latest four posts, and a sign-off with a contact button. The services are in `src/config/services.config.ts`; the quotes in `theme.config.ts`. `show: false` takes either off the homepage.
 - **About page:** a hero with your photo or your mark, your facts, the years of your work (they count up as they come into view), a few words on how you work, recent projects and the tools you use.
 - **Projects:** a page for each project, with a hero picture, sections of text beside pictures or videos, the stack, and the next project at the foot in one of two designs.
 - **Blog:** posts in Markdown or MDX, with a table of contents, search (Pagefind), a category filter, related posts and a reading time. Each post gets a card picture with an icon and a short phrase, made at build time, so posts don't need images. Posts in the Performance category are emerald, the others the brand colour.
