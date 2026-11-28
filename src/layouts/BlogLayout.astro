@@ -42,7 +42,7 @@ const {
   description,
   publishedAt,
   updatedAt,
-  author = 'Hans Martens',
+  author = siteConfig.name,
   category,
   image,
   imageAlt,
@@ -69,6 +69,8 @@ const breadcrumbs = [
 
 // Get full URL for sharing
 const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
+import { newsletter } from '@/config/theme.config';
+import siteConfig from '@/config/site.config';
 ---
 
 <BaseLayout
@@ -154,7 +156,7 @@ const fullUrl = new URL(Astro.url.pathname, Astro.site).toString();
       </footer>
 
       <!-- New posts by email -->
-      <NewsletterSignup />
+      {newsletter.show && <NewsletterSignup />}
       </div>
 
       {hasToc && (

@@ -44,13 +44,14 @@ interface Props {
 }
 
 const {
-  title = 'Fast sites, built to last.',
-  blurb = 'Design and Astro development in one pair of hands, from the first sketch to the last deploy.',
+  title = home.reel.title,
+  blurb = home.reel.blurb,
   // Long enough to read the statement without dwelling: the card opens over
   // the first fifth, the words light up over about a third (READ_* in morph.ts).
   hold = '200vh',
   class: className,
 } = Astro.props;
+import { home } from '@/config/theme.config';
 ---
 
 <section class:list={['reel', className]} data-reel style={`--reel-hold-set: ${hold}`}>

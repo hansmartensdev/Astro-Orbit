@@ -7,7 +7,7 @@ import { signToken } from '@/lib/newsletter';
 vi.mock('astro:env/server', async (importOriginal) => ({
   ...(await importOriginal<Record<string, unknown>>()),
   RESEND_API_KEY: 're_test_key',
-  CONTACT_FROM: 'Hans Martens <hello@example.com>',
+  CONTACT_FROM: 'Alex Morgan <hello@example.com>',
   NEWSLETTER_SEGMENT_ID: 'seg_123',
 }));
 
@@ -48,7 +48,7 @@ describe('newsletter signup', () => {
     const [mail] = calls;
     expect(mail.url).toBe('https://api.resend.com/emails');
     expect(mail.body?.to).toEqual(['reader@example.com']);
-    expect(mail.body?.from).toBe('Hans Martens <hello@example.com>');
+    expect(mail.body?.from).toBe('Alex Morgan <hello@example.com>');
     expect(String(mail.body?.text)).toMatch(/https:\/\/site\.example\.com\/newsletter\/\?t=[\w-]+\.[\w-]+/);
   });
 

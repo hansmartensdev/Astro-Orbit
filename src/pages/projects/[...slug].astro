@@ -105,8 +105,8 @@ const {
 
 // Only the facts that were actually filled in get a slot.
 const facts = [
-  // My own projects have no client: they are for the Astro community.
-  { label: 'Client', value: client || 'The Astro Community' },
+  // A project without a client: the text from theme.config.ts, or no slot.
+  client || pages.projects.noClient ? { label: 'Client', value: client || pages.projects.noClient } : null,
   year ? { label: 'Year', value: String(year) } : null,
   { label: 'Discipline', value: discipline },
   services.length ? { label: 'Services', value: services.join(', ') } : null,
@@ -186,6 +186,7 @@ const nextCinema = nextLayout === 'cinema' && Boolean(nextWide);
 // second ground instead.
 const toneOf = (i: number) =>
   (bands.length - 1 - i + (next ? 0 : 1)) % 2 === 0 ? 'base' : 'alt';
+import { pages } from '@/config/theme.config';
 ---
 
 <SiteLayout

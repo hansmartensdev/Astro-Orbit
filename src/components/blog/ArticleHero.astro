@@ -33,7 +33,7 @@ const {
   description,
   publishedAt,
   updatedAt,
-  author = 'Hans Martens',
+  author = siteConfig.name,
   category,
   tags = [],
   image,
@@ -54,6 +54,7 @@ const facts = (
     topic ? { label: 'Category', value: topic } : null,
   ].filter((fact) => fact !== null) as CinemaFact[]
 ).slice(0, 4);
+import siteConfig from '@/config/site.config';
 ---
 
 <CinemaHero

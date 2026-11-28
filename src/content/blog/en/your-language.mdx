@@ -1,0 +1,44 @@
+---
+title: "Your Site in Your Language"
+description: "Astro Orbit comes in English, Spanish, French and Dutch. One setting picks the language, and another language takes one file to translate."
+publishedAt: 2026-11-26T12:00:00Z
+author: "Alex Morgan"
+category: "Themes"
+tags: ["Astro Orbit", "Languages", "Settings"]
+icon: "languages"
+cardWord: "your language"
+# Describes a feature from the old Orbit; update before publishing.
+draft: true
+---
+
+Astro Orbit comes in English, Spanish, French and Dutch. The language decides the theme's own words: the menu, the buttons, the contact form's messages, the labels on a project page and the privacy page. It also decides how dates are written: "November 26, 2026" in English, "26 de noviembre de 2026" in Spanish, "26 novembre 2026" in French, "26 november 2026" in Dutch.
+
+## Pick the language
+
+The setting is in `src/config/theme.config.ts`:
+
+```ts
+export const language = 'es';
+```
+
+Your own text, in `theme.config.ts`, your posts and your projects, you write in that language yourself.
+
+## Your posts
+
+Posts go in a folder named after the language: `src/content/blog/es/` for a Spanish site. The folder doesn't appear in the address, so `src/content/blog/es/hola.mdx` is `/blog/hola/`. If the folder for your language is empty while another one has posts, the build says so.
+
+## Another language
+
+For a language the theme doesn't have yet, such as Chinese, with the code `zh`:
+
+1. Copy `src/i18n/en.ts` to `src/i18n/zh.ts`, and translate the text between the quotes. `pnpm test` fails when a line is missing, so nothing stays in English by accident.
+2. Copy `src/i18n/privacy/en.astro` to `src/i18n/privacy/zh.astro`, and translate the privacy text. Until it's there, the privacy page stays in English, and the build says so.
+3. Set `language = 'zh'` in `theme.config.ts`.
+
+The browser's language data writes the dates, so a Chinese site shows "2026年11月26日" without a rule from you. Chinese and Japanese don't put spaces between words, so the reading time on a post counts their characters instead of their words.
+
+## A font for the share images
+
+The share images and the blog covers are drawn when the site is built, with the theme's fonts, Outfit and Archivo. They have the Latin alphabet only. For a language in another script, put a font that has its letters in `src/fonts/`, as a static `.ttf`, `.otf` or `.woff` file (not a variable font, and not `.woff2`): for Chinese, for example, Noto Sans SC from Google Fonts, whose download has static files in its `static` folder. The images use it for every letter the theme's fonts don't have. Without it, those letters come out as boxes, and the build log names the title that needs the font.
+
+The pages themselves don't need the font: a browser shows the letters with a font of its own.

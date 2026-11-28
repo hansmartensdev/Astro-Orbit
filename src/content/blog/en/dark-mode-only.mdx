@@ -1,0 +1,45 @@
+---
+title: "Use Dark Mode Only"
+description: "Astro Orbit opens in dark mode, with a switch to light. One setting makes the site dark only and removes the switch."
+publishedAt: 2026-11-21T10:00:00Z
+author: "Alex Morgan"
+category: "Themes"
+tags: ["Astro Orbit", "Dark mode", "Settings"]
+icon: "moon"
+cardWord: "dark mode only"
+# Describes a feature from the old Orbit; update before publishing.
+draft: true
+---
+
+Astro Orbit opens in dark mode for every visitor. A sun and moon button in the header lets a visitor switch to light mode, and their browser remembers that choice, so the next page opens in the same mode.
+
+If you want your site in dark mode only, you change one setting.
+
+## Change it
+
+In `src/config/theme.config.ts`:
+
+```ts
+export const darkOnly = true;
+```
+
+## What changes
+
+- **Every visitor gets dark mode,** whatever their device is set to.
+- **The sun and moon button disappears** from the header.
+- **Nothing is stored in the visitor's browser.** A choice a visitor made before you changed the setting is removed on their next visit.
+- **The privacy page follows:** its section on cookies and storage then says that the site sets no cookies and stores nothing in the browser.
+
+The light theme stays in the code, so you can switch back at any time. Visitors don't download anything extra for it: the light still picture of the hero only loads when light mode shows it.
+
+## Go back to both modes
+
+```ts
+export const darkOnly = false;
+```
+
+The button is back, and visitors can choose again.
+
+## Before you publish
+
+Read the privacy page once more (`src/pages/privacy.astro`), as you would after any change to what the site stores. It's written for the theme as it comes, and you know best what your own site does.

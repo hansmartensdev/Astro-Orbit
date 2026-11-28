@@ -5,7 +5,7 @@
  *
  * What the site does with personal data, under the GDPR (in the
  * Netherlands, the AVG). Adapted from the privacy page on the previous
- * hansmartens.dev and checked against this site's code on 2026-11-23:
+ * the site and checked against this theme's code on 2026-11-23:
  *
  *   contact form   name, email, optional subject, message; sent by email
  *                  through Resend (src/pages/api/contact.ts), not stored
@@ -36,7 +36,7 @@ import { darkOnly } from '@/config/mode.config';
 
 <SiteLayout
   title="Privacy"
-  description="What hansmartens.dev does with your personal data: the contact form, hosting, and your rights under the GDPR."
+  description="What this website does with your personal data: the contact form, hosting, and your rights under the GDPR."
 >
   <header class="shell pt-[180px] max-[800px]:pt-[130px]">
     <SectionHead
@@ -82,13 +82,24 @@ import { darkOnly } from '@/config/mode.config';
       <p>You can unsubscribe at any time, with the link in every newsletter or by emailing me.</p>
       <p>Legal basis: your consent, which you give by confirming your subscription.</p>
 
-      <h2>Email and WhatsApp</h2>
-      <p>
-        If you email me or send me a WhatsApp message, I receive what you send, together with your
-        email address or phone number, and use it only to answer you. The WhatsApp button opens
-        WhatsApp, a service of Meta, and only when you click it. Nothing from WhatsApp is loaded on
-        this website before that.
-      </p>
+      {
+        siteConfig.whatsapp ? (
+          <>
+            <h2>Email and WhatsApp</h2>
+            <p>
+              If you email me or send me a WhatsApp message, I receive what you send, together with your
+              email address or phone number, and use it only to answer you. The WhatsApp button opens
+              WhatsApp, a service of Meta, and only when you click it. Nothing from WhatsApp is loaded on
+              this website before that.
+            </p>
+          </>
+        ) : (
+          <>
+            <h2>Email</h2>
+            <p>If you email me, I receive what you send, together with your email address, and use it only to answer you.</p>
+          </>
+        )
+      }
 
       <h2>Visits</h2>
       <p>

@@ -15,6 +15,7 @@
  */
 import siteConfig from '@/config/site.config';
 import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
+import { signOff } from '@/config/theme.config';
 ---
 
 <section class="cta relative overflow-hidden">
@@ -30,28 +31,26 @@ import ArrowFillButton from '@/components/site/ArrowFillButton.astro';
     class="shell relative flex flex-col items-center pt-[130px] pb-[130px] max-[800px]:pt-[100px] max-[800px]:pb-[100px]"
   >
     <h2 class="cta__title display-section m-0 text-center">
-      <span class="block">Let&rsquo;s talk</span>
-      <span class="block"><em>Astro.</em></span>
+      <span class="block">{signOff.title[0]}</span>
+      <span class="block"><em>{signOff.title[1]}</em></span>
     </h2>
 
     <p
       class="text-foreground-secondary m-0 mt-6 max-w-[440px] text-center text-[18px] leading-[1.55] max-[800px]:mt-5 max-[800px]:text-base"
     >
-      A question about Astro, one of my themes or a blog post? I read and answer every message
-      myself.
+      {signOff.text}
     </p>
 
     <div class="mt-10 flex flex-wrap justify-center gap-[18px] max-[800px]:mt-8">
-      <ArrowFillButton href="/contact" icon="fa6-solid:envelope"
-        >Start a conversation</ArrowFillButton
-      >
-      {/* Messages, not meetings: WhatsApp opens a chat with Hans. */}
-      <ArrowFillButton
-        href={siteConfig.whatsapp}
-        target="_blank"
-        icon="fa6-brands:whatsapp"
-        variant="outline">WhatsApp me</ArrowFillButton
-      >
+      <ArrowFillButton href="/contact" icon="fa6-solid:envelope">{signOff.contactLabel}</ArrowFillButton>
+      {/* Messages, not meetings: only with a WhatsApp link in site.config.ts. */}
+      {
+        siteConfig.whatsapp && (
+          <ArrowFillButton href={siteConfig.whatsapp} target="_blank" icon="fa6-brands:whatsapp" variant="outline">
+            {signOff.whatsappLabel}
+          </ArrowFillButton>
+        )
+      }
     </div>
   </div>
 </section>

@@ -1,0 +1,42 @@
+---
+title: "How the 3D Droplet in the Hero Works"
+description: "What the 3D scene in Astro Orbit's hero does, and how it stays fast on phones, on devices without a graphics chip and in Lighthouse."
+publishedAt: 2026-11-23T10:00:00Z
+author: "Alex Morgan"
+category: "Performance"
+tags: ["Astro Orbit", "three.js", "Performance"]
+icon: "orbit"
+cardWord: "the droplet"
+---
+
+The hero of Astro Orbit has a 3D scene, made with [three.js](https://threejs.org): a droplet in a studio, with small spheres orbiting it. This post is about what it does, and what it does on devices that can't run it.
+
+## What it does
+
+The droplets orbit, collide and merge. Bring the cursor toward them and they come together into one smooth form. Scroll down and they do the same.
+
+As you scroll, a violet sphere leaves the hero and follows a track down the homepage. It turns into a card whose words light up one by one, becomes a droplet again, and turns into the first project card.
+
+## Without a graphics chip
+
+The scene needs a graphics chip. Without one, the browser draws 3D in software, which keeps the page busy on every frame. Before it starts, the theme checks whether the device has a graphics chip. Without one, the hero shows a still picture of the scene, and the violet sphere doesn't travel: the first project card is there straight away. three.js isn't downloaded at all on those devices.
+
+The machines that run Lighthouse and PageSpeed Insights have no graphics chip, so they get the still picture too.
+
+The still comes in two tones, for dark and light mode, and in three shapes: wide for a desktop, near-square for most phones, and tall for phones whose hero is taller than it's wide. Every phone also shows it for a moment, until the scene has started.
+
+## With reduced motion
+
+If a visitor has asked their device for less motion, the scene shows one still pose, and the sphere doesn't travel.
+
+## Keeping it fast
+
+The scene is the most expensive part of the site, so it only takes what the device can spare:
+
+- It's drawn only while the hero is on screen and the tab is visible.
+- With no cursor movement and no scrolling, it draws every other frame.
+- When frames take too long, it lowers its quality step by step, and raises it again when there's room.
+
+## On phones
+
+On a phone the hero fills the screen you see when the page opens, with Safari's address bar showing. On a phone whose hero is taller than it's wide, the scene is framed by its width, so the droplet fits.

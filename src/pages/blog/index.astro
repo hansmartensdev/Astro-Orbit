@@ -38,17 +38,18 @@ const facts = [
   latest ? { label: 'Latest', value: latest.data.title, href: postUrl(latest.id) } : null,
   { label: 'Follow', value: 'RSS feed', href: '/rss.xml' },
 ].filter((fact) => fact !== null);
+import { pages } from '@/config/theme.config';
 ---
 
 <SiteLayout
   title="Blog"
-  description="Notes on Astro, web performance and building fast websites, by Hans Martens."
+  description={pages.blog.description}
   navOverMedia
 >
   <CinemaHero
     label="BLOG"
     title="Blog"
-    description="Notes on Astro, web performance and building fast websites: what I'm working on, and what I learn along the way."
+    description={pages.blog.blurb}
     facts={facts}
     factsLabel="The blog in short"
     icon="pen-line"

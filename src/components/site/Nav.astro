@@ -5,8 +5,8 @@
  * A wordmark, a theme toggle and a menu control. Transparent over the hero,
  * frosted-solid once you scroll past it.
  *
- * The wordmark unfurls on hover: "hans martens" is already hiding inside
- * "hm" — h-ans m-artens — so the missing letters grow out from between the two
+ * The wordmark unfurls on hover: the name is already hiding inside the
+ * mark (am/: a-lex m-organ), so the missing letters grow out from between the two
  * visible ones rather than a second label fading in beside them.
  *
  * The menu control is the word "Menu" in the bar's text colour ("Close"
@@ -51,6 +51,17 @@ interface Props {
 const { context, overMedia = false, tone, menuTone = 'light', progress = false } = Astro.props;
 
 const items = getNavItems();
+
+// The wordmark unfurls into the name: each letter of the mark before the
+// slash is the first letter of a word of the name (am/ → Alex Morgan). If
+// they don't match, the mark stays as it is.
+const markLetters = siteConfig.mark.replace(/\/$/, '');
+const nameWords = siteConfig.name.toLowerCase().split(/\s+/).filter(Boolean);
+const unfurl =
+  nameWords.length === markLetters.length &&
+  nameWords.every((word, i) => word[0] === markLetters[i].toLowerCase())
+    ? nameWords.map((word, i) => ({ seen: markLetters[i], hidden: word.slice(1) + (i < nameWords.length - 1 ? '\u00a0' : '') }))
+    : null;
 const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
 const isCurrent = (href: string) => path === href || (href !== '/' && path.startsWith(href + '/'));
 ---
@@ -74,11 +85,20 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
           label-content-name-mismatch). The pieces sit flush, with no
           whitespace between them: spaces made the visible text "h m". */}
       <a href="/" class="mark" aria-label={siteConfig.mark + ' ' + siteConfig.name + ', home'}
-        ><span class="mark__seen">h</span><span class="mark__grow"
-          ><span class="mark__hidden">ans&nbsp;</span></span
-        ><span class="mark__seen">m</span><span class="mark__grow"
-          ><span class="mark__hidden">artens</span></span
-        ><span class="mark__seen mark__slash">/</span>
+        >{
+          unfurl ? (
+            unfurl.map((part) => (
+              <>
+                <span class="mark__seen">{part.seen}</span>
+                <span class="mark__grow">
+                  <span class="mark__hidden">{part.hidden}</span>
+                </span>
+              </>
+            ))
+          ) : (
+            <span class="mark__seen">{markLetters}</span>
+          )
+        }<span class="mark__seen mark__slash">/</span>
       </a>
 
       {context && <span class="mark__context">{context}</span>}
@@ -179,7 +199,7 @@ const isCurrent = (href: string) => path === href || (href !== '/' && path.start
     }
     <aside class="sw-menu__aside">
       <p class="sw-menu__blurb">
-        An Astro developer based in Veghel, the Netherlands, building fast &amp; beautiful websites.
+        {siteConfig.description}
       </p>
       <div class="sw-menu__contact">
         <a href={'mailto:' + siteConfig.email}>

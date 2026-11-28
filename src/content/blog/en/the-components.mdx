@@ -1,0 +1,42 @@
+---
+title: "The Components in Astro Orbit"
+description: "Astro Orbit comes with the 46 design-system components of Velocity 2. One page shows each of them, live and with its code."
+publishedAt: 2026-11-26T14:00:00Z
+author: "Alex Morgan"
+category: "Themes"
+tags: ["Astro Orbit", "Components", "Velocity"]
+icon: "component"
+cardWord: "46 components"
+# Describes a feature from the old Orbit; update before publishing.
+draft: true
+---
+
+Astro Orbit is built on [Velocity](https://github.com/southwellmedia/velocity), the Astro starter by Southwell Media, and comes with its design-system components: 46 of them, from Velocity 2.7.3. Buttons, form fields, cards, tables, dialogs, tabs, an accordion, a carousel, a video that loads only when you press play, and more.
+
+## See them all
+
+The [components page](/components/) shows every one of them, live, in Orbit's colours. Each card has the component's name, what it does, the folder it's in, and its code under "Show the code". The groups on the left (on a phone, the row at the top) take you to forms, data display, feedback, overlays, content, marketing and patterns.
+
+## Use one
+
+The components are in `src/components/ui/` and `src/components/patterns/`. Import one and use it in any page or component:
+
+```astro
+---
+import Button from '@/components/ui/form/Button/Button.astro';
+---
+
+<Button variant="brand" trailingIcon="arrow-right" href="/contact">Get in touch</Button>
+```
+
+`component-registry.json` lists them all, with what each one does, an example and the components it uses. An AI assistant that works on your site reads it there.
+
+They take their colours from the theme, so they follow your brand colour and work in dark and light mode. Their own labels, such as "Close" on a dialog or "Loading" on a spinner, follow your site's language: they are in the `ui` part of each language's file in `src/i18n/`.
+
+## On your own site
+
+The components page is part of the theme's demo. When you set `demo = false` in `theme.config.ts`, your site doesn't publish it, but it's still there while you work on your site: run `pnpm dev` and open `http://localhost:4321/components`.
+
+## Where they come from
+
+The files are Velocity 2.7.3's, unchanged, except for three fixes: the progress bar takes its `aria-label` on the bar itself, the form field takes an `id` so its label points at the field, and the notifications area of the toast has a role, so screen readers can name it. The cookie banner and the logo are Orbit's own.

@@ -37,13 +37,13 @@ export const footerColumns: FooterColumn[] = [
     links: [
       {
         label: 'LinkedIn',
-        href: 'https://www.linkedin.com/in/hansmartensdev/',
+        href: 'https://www.linkedin.com/',
         external: true,
         icon: 'fa6-brands:linkedin-in',
       },
       {
         label: 'GitHub',
-        href: 'https://github.com/hansmartensdev',
+        href: 'https://github.com/',
         external: true,
         icon: 'fa6-brands:github',
       },
@@ -54,6 +54,6 @@ export const footerColumns: FooterColumn[] = [
     links: [
       { label: siteConfig.email, href: `mailto:${siteConfig.email}`, icon: 'lucide:mail' },
       { label: 'WhatsApp', href: siteConfig.whatsapp, external: true, icon: 'fa6-brands:whatsapp' },
-    ],
+    ].filter((link) => link.href),
   },
 ];

@@ -3,51 +3,29 @@
  * About page
  * URL: /about (was /studio; the old address redirects, see astro.config.mjs)
  *
- * In the style of the project and blog pages (Hans's choice): the shared
- * cinema hero (site/CinemaHero.astro) with Hans's photo (Hans's own,
- * assets/about/hans-martens.jpg), then sections that take turns on the
- * page ground and the second ground. The facts come from the earlier About
- * page and Hans's post "Hi, I'm Hans Martens".
- *
- * The About card (sections/Founder.astro) is parked, not deleted.
+ * The shared cinema hero (site/CinemaHero.astro) with your photo, or your
+ * mark on the violet grid, then sections that take turns on the page ground
+ * and the second ground: the years, a few words on how you work, recent
+ * projects and your tools. All texts are in config/theme.config.ts.
  */
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
+import type { ImageMetadata } from 'astro';
+import { rich } from '@/lib/rich';
 import SiteLayout from '@/layouts/SiteLayout.astro';
 import CinemaHero from '@/components/site/CinemaHero.astro';
-import portrait from '@/assets/about/hans-martens.jpg';
 import StackMarquee from '@/components/sections/StackMarquee.astro';
 import Cta from '@/components/sections/Cta.astro';
 
-const facts = [
-  { label: 'Based in', value: 'Veghel, the Netherlands' },
-  { label: 'Websites since', value: '2010' },
-  { label: 'Astro since', value: '2022' },
-  { label: 'Builds with', value: 'Claude Code' },
-];
+import siteConfig from '@/config/site.config';
+import { about } from '@/config/theme.config';
 
-// From "Hi, I'm Hans Martens", one sentence a year.
-const timeline = [
-  {
-    year: '1992',
-    text: "I bought a new computer, and I've been interested in both the operating system and the hardware ever since.",
-  },
-  { year: '1998', text: 'I built my first computer from parts.' },
-  {
-    year: '2000',
-    text: 'I started working as a computer service engineer, repairing laptops, seconded to the Eindhoven University of Technology.',
-  },
-  {
-    year: '2010',
-    text: "I built my first website with WordPress, for myself, and I've never stopped building websites.",
-  },
-  { year: '2022', text: 'I moved to Astro and stayed.' },
-  {
-    year: 'Now',
-    text: 'I work with Astro every day. I build websites and free Astro themes for the Astro community.',
-  },
-];
+// Your photo for the hero: put it in src/assets/about/ and import it here,
+// e.g. `import portrait from '@/assets/about/me.jpg';`, then set
+// `const portrait = …` and about.hero.photoAlt in theme.config.ts. Without
+// one, the hero shows your mark on the violet grid.
+const portrait: ImageMetadata | undefined = undefined;
 
 // The projects with a picture, in portfolio order: the placeholders have
 // none, so they stay out.
@@ -60,29 +38,30 @@ const work = (
 
 <SiteLayout
   title="About"
-  description="About Hans Martens, an Astro developer in Veghel, the Netherlands, building fast &amp; beautiful websites."
+  description={about.description}
   includeOrgSchema
   navOverMedia
 >
   <CinemaHero
     label="ABOUT"
-    title="Hans Martens"
-    description="I'm Hans Martens, an Astro developer in Veghel, the Netherlands. I design and build my own websites and free Astro themes."
-    facts={facts}
+    title={about.hero.title}
+    description={about.hero.intro}
+    facts={about.hero.facts.slice(0, 4)}
     factsLabel="About me in short"
     image={portrait}
-    imageAlt="Hans Martens in a green field under a blue sky with white clouds"
+    imageAlt={about.hero.photoAlt}
     imagePosition="50% 30%"
+    mark={portrait ? undefined : siteConfig.mark}
   />
 
   {/* --- the years ------------------------------------------------------- */}
   <section class="ab">
     <div class="shell">
-      <span class="label-mono ab__label" data-reveal>FROM 1992 TO NOW</span>
-      <h2 class="ab__h" data-reveal>Computers first, then websites</h2>
+      <span class="label-mono ab__label" data-reveal>{about.timeline.label.toUpperCase()}</span>
+      <h2 class="ab__h" data-reveal>{about.timeline.title}</h2>
       <ol class="ab-tl">
         {
-          timeline.map((item, i) => (
+          about.timeline.items.map((item, i) => (
             <li data-reveal data-reveal-delay={(i % 3) * 0.08}>
               {/* A year counts up when it scrolls into view (the script
                   below); screen readers get the year itself. */}
@@ -104,17 +83,13 @@ const work = (
     </div>
   </section>
 
-  {/* --- why, in Hans's own words ---------------------------------------- */}
+  {/* --- why, in the owner's own words ------------------------------------ */}
   <section class="ab ab--alt">
     <div class="shell ab__split">
-      <h2 class="ab__big" data-reveal>Design and code, <em>for the love of it</em></h2>
+      <h2 class="ab__big" data-reveal>{about.craft.title} <em>{about.craft.accent}</em></h2>
       <div class="ab__prose" data-reveal data-reveal-delay="0.1">
-        <p class="ab__first">Web design and development are my craft.</p>
-        <p>
-          What draws me to this work is where design and technology meet. Getting that intersection
-          right — making something that is both beautifully designed and technically solid — is what I
-          find satisfying. That's why I keep doing it.
-        </p>
+        <p class="ab__first">{about.craft.lead}</p>
+        <p set:html={rich(about.craft.text)} />
       </div>
     </div>
   </section>
@@ -122,8 +97,8 @@ const work = (
   {/* --- what I build now ------------------------------------------------ */}
   <section class="ab">
     <div class="shell">
-      <span class="label-mono ab__label" data-reveal>WHAT I BUILD NOW</span>
-      <h2 class="ab__h" data-reveal>My website and my free themes</h2>
+      <span class="label-mono ab__label" data-reveal>{about.work.label.toUpperCase()}</span>
+      <h2 class="ab__h" data-reveal>{about.work.title}</h2>
       <div class="ab-work">
         {
           work.map((project, i) => (
@@ -157,13 +132,10 @@ const work = (
   <section class="ab ab--alt ab--tools">
     <div class="shell ab__split ab__split--tools">
       <div data-reveal>
-        <span class="label-mono ab__label">TOOLS</span>
-        <h2 class="ab__h">What I work with</h2>
+        <span class="label-mono ab__label">{about.tools.label.toUpperCase()}</span>
+        <h2 class="ab__h">{about.tools.title}</h2>
       </div>
-      <p class="ab__line" data-reveal data-reveal-delay="0.1">
-        I use Claude Code to build my websites. I often use Ubuntu Linux on my dual-boot laptop, I'm
-        interested in the Raspberry Pi, and my phone is an iPhone.
-      </p>
+      <p class="ab__line" data-reveal data-reveal-delay="0.1" set:html={rich(about.tools.text)} />
     </div>
     <div class="ab__marquee" data-reveal>
       <StackMarquee />

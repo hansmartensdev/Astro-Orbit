@@ -1,0 +1,53 @@
+---
+title: "Use Your Own Brand Colour"
+description: "One setting changes the colour of the whole theme, and the theme keeps every shade readable in dark and light mode."
+publishedAt: 2026-11-25T10:00:00Z
+author: "Alex Morgan"
+category: "Themes"
+tags: ["Astro Orbit", "Colour", "Accessibility"]
+icon: "palette"
+cardWord: "your own colour"
+featured: true
+# Describes a feature from the old Orbit; update before publishing.
+draft: true
+---
+
+Astro Orbit has one brand colour, violet by default. You can change it with one setting.
+
+## Change it
+
+Pick a colour with any colour picker and copy its hex code. Then set it in `src/config/theme.config.ts`:
+
+```ts
+export const brandColor = '#2563eb';
+```
+
+The theme works out eleven shades from that one colour, from very pale to very deep. It uses them for the accent words, the travelling ball in the hero, the About card, the blog cards, the share images and the buttons.
+
+## Go back to the default
+
+Set it to `'default'`:
+
+```ts
+export const brandColor = 'default';
+```
+
+That gives the theme's own violet, `#7c3aed`, with the shades it was designed with.
+
+## Readable in dark and light mode
+
+A colour that reads well on a dark page can be hard to read on a light one, and the other way round. So the theme gives each use of the colour its own shade, and checks its contrast against the background it sits on:
+
+| Use | Against | Minimum contrast |
+|-----|---------|------------------|
+| Accent text and links | the light page | 4.5:1 |
+| Accent text | the dark page | 4.5:1 |
+| Small text and marks | dark cards | 4.5:1 |
+| Lines, borders and outlines | the dark page | 3:1 |
+| Buttons and cards with white text | white | 4.5:1 |
+
+These are the WCAG levels that the accessibility check in Lighthouse uses. Each use starts at the shade the violet uses and steps darker or lighter until it reaches its minimum. A bright yellow, for example, stays yellow on the dark page and turns a dark gold on the light one.
+
+## What doesn't change
+
+Pictures are image files, so they keep their own colours: the project pictures and the phone screenshot on the About card, for example. Replace those with your own.

@@ -20,6 +20,7 @@ interface Props {
 const { deep = false } = Astro.props;
 
 const year = new Date().getFullYear();
+import { footer } from '@/config/theme.config';
 ---
 
 <div class="footer-stage">
@@ -66,7 +67,7 @@ const year = new Date().getFullYear();
           >&copy; {year} {siteConfig.name} — {siteConfig.location} ·{' '}
           <a class="footer__legal" href="/privacy">Privacy</a></span
         >
-        <span>Building beautiful &amp; fast websites</span>
+        <span>{footer.tagline}</span>
       </div>
     </div>
   </footer>
